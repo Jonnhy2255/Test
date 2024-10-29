@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Analyse</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f9fc;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        h1 {
+            color: #000; /* Noir */
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .consigne {
+            width: 90%;
+            max-width: 400px;
+            padding: 10px;
+            border-left: 5px solid red; /* Trait rouge uniquement à gauche */
+            border-radius: 5px;
+            background-color: #fff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .odds-container, .scores-container {
+            display: none; /* Masquer par défaut */
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .match-box {
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #e3f2fd; /* Couleur bleu clair */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 10px 0; /* Espacement entre les cases */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        input {
+            width: 50px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px; /* Espace entre les boutons */
+        }
+
+        button {
+            padding: 12px 30px; /* Augmenter la taille des boutons */
+            font-size: 18px; /* Taille de police agrandie */
+            color: #fff;
+            background-color: #555; /* Gris foncé */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #333; /* Un gris plus foncé au survol */
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #777;
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Football Analyse</h1>
+
+    <div class="consigne" id="instructions">
+        Entrez les cotes pour chaque équipe (ex: 1.50)
+    </div>
+
+    <div class="odds-container" id="oddsContainer">
+        <div class="match-box">
+            <div class="label">Domicile</div>
+            <input type="number" id="team1-odds" placeholder="Cote" step="0.01" required>
+            <div class="error" id="error-team1" style="display:none;">Veuillez saisir une cote valide.</div>
+        </div>
+        <div class="match-box">
+            <div class="label">Nul</div>
+            <input type="number" id="draw-odds" placeholder="Cote" step="0.01" required>
+            <div class="error" id="error-draw" style="display:none;">Veuillez saisir une cote valide.</div>
+        </div>
+        <div class="match-box">
+            <div class="label">Extérieur</div>
+            <input type="number" id="team2-odds" placeholder="Cote" step="0.01" required>
+            <div class="error" id="error-team2" style="display:none;">Veuillez saisir une cote valide.</div>
+        </div>
+    </div>
+
+    <div class="scores-container" id="scoresContainer">
+        <div class="consigne">
+            Veuillez entrer les scores des derniers matchs pour chaque équipe.
+        </div>
+        <!-- Ajoutez jusqu'à 5 matchs -->
+        <div class="match-box">
+            <div class="match-label">Match 1</div>
+            <input type="number" placeholder="Domicile" required>
+            <input type="number" placeholder="Extérieur" required>
+        </div>
+        <div class="match-box">
+            <div class="match-label">Match 2</div>
+            <input type="number" placeholder="Domicile" required>
+            <input type="number" placeholder="Extérieur" required>
+        </div>
+        <div class="match-box">
+            <div class="match-label">Match 3</div>
+            <input type="number" placeholder="Domicile" required>
+            <input type="number" placeholder="Extérieur" required>
+        </div>
+        <div class="match-box">
+            <div class="match-label">Match 4</div>
+            <input type="number" placeholder="Domicile" required>
+            <input type="number" placeholder="Extérieur" required>
+        </div>
+        <div class="match-box">
+            <div class="match-label">Match 5</div>
+            <input type="number" placeholder="Domicile" required>
+            <input type="number" placeholder="Extérieur" required>
+        </div>
+
+        <div class="button-container">
+            <button onclick="goBack()">Retour</button>
+            <button onclick="predictScores()">Prédiction</button>
+        </div>
+    </div>
+
+    <div class="button-container" id="buttonContainer">
+        <button onclick="goToIndex()">Retour à l'accueil</button>
+        <button onclick="goNext()">Suivant</button>
+    </div>
+
+    <div class="footer">
+        &copy; 2024 Pronos IA. Tous droits réservés.
+    </div>
+
+    <script>
+    function goToIndex() {
+        window.location.href = "index.html"; // Redirection vers index.html
+    }
+
+    function goNext() {
+        const team1Odds = parseFloat(document.getElementById("team1-odds").value);
+        const drawOdds = parseFloat(document.getElementById("draw-odds").value);
+        const team2Odds = parseFloat(document.getElementById("team2-odds").value);
+
+        // Réinitialiser les messages d'erreur
+        document.getElementById("error-team1").style.display = "none";
+        document.getElementById("error-draw").style.display = "none";
+        document.getElementById("error-team2").style.display = "none";
+
+        let valid = true;
+
+        // Vérification des cotes
+        if (isNaN(team1Odds) || team1Odds <= 1) {
+            document.getElementById("error-team1").style.display = "block";
+            valid = false;
+        }
+        if (isNaN(drawOdds) || drawOdds <= 1) {
+            document.getElementById("error-draw").style.display = "block";
+            valid = false;
+        }
+        if (isNaN(team2Odds) || team2Odds <= 1) {
+            document.getElementById("error-team2").style.display = "block";
+            valid = false;
+        }
+
+        if (valid) {
+            // Masquer les éléments de la section des cotes
+            document.getElementById("instructions").style.display = "none"; // Masquer la consigne
+            document.getElementById("buttonContainer").style.display = "none"; // Masquer les boutons
+            // Afficher la section des scores
+            document.getElementById("oddsContainer").style.display = "none";
+            document.getElementById("scoresContainer").style.display = "block";
+        }
+    }
+
+    function goBack() {
+        // Afficher la section des cotes et masquer les scores
+        document.getElementById("scoresContainer").style.display = "none";
+        document.getElementById("oddsContainer").style.display = "block";
+        document.getElementById("instructions").style.display = "block"; // Afficher la consigne
+        document.getElementById("buttonContainer").style.display = "flex"; // Afficher les boutons
+    }
+
+    function predictScores() {
+        // Récupérer les cotes saisies
+        const team1Odds = parseFloat(document.getElementById("team1-odds").value);
+        const drawOdds = parseFloat(document.getElementById("draw-odds").value);
+        const team2Odds = parseFloat(document.getElementById("team2-odds").value);
+
+        // Récupérer les scores saisis
+        const scores = [];
+        const matchBoxes = document.querySelectorAll('.scores-container .match-box');
+        let totalHomeScores = 0;
+        let totalAwayScores = 0;
+        let valid = true;
+
+        matchBoxes.forEach(box => {
+            const homeScore = parseFloat(box.querySelector('input[type="number"]').value);
+            const awayScore = parseFloat(box.querySelectorAll('input[type="number"]')[1].value);
+
+            // Vérification des scores
+            if (isNaN(homeScore) || isNaN(awayScore)) {
+                alert("Veuillez saisir tous les scores pour chaque match.");
+                valid = false;
+                return; // Sortir de la boucle
+            }
+
+            scores.push({
+                homeScore: homeScore,
+                awayScore: awayScore
+            });
+
+            totalHomeScores += homeScore;
+            totalAwayScores += awayScore;
+        });
+
+        if (valid) {
+            // Calculer le nombre moyen de buts par match
+            const totalMatches = scores.length;
+            const averageHomeGoals = totalHomeScores / totalMatches;
+            const averageAwayGoals = totalAwayScores / totalMatches;
+
+            // Calculer les pourcentages de victoire
+            const totalOdds = team1Odds + drawOdds + team2Odds;
+            const winPercentageTeam1 = ((team1Odds / totalOdds) * 100).toFixed(2);
+            const winPercentageDraw = ((drawOdds / totalOdds) * 100).toFixed(2);
+            const winPercentageTeam2 = ((team2Odds / totalOdds) * 100).toFixed(2);
+
+            // Calculer les doubles chances
+            const doubleChanceTeam1 = (winPercentageTeam1 + winPercentageDraw).toFixed(2);
+            const doubleChanceTeam2 = (winPercentageTeam2 + winPercentageDraw).toFixed(2);
+
+            // Créer l'URL avec les paramètres de prédiction
+            const url = `prédictions.html?team1Odds=${encodeURIComponent(team1Odds)}&drawOdds=${encodeURIComponent(drawOdds)}&team2Odds=${encodeURIComponent(team2Odds)}&averageHomeGoals=${encodeURIComponent(averageHomeGoals.toFixed(2))}&averageAwayGoals=${encodeURIComponent(averageAwayGoals.toFixed(2))}&winPercentageTeam1=${encodeURIComponent(winPercentageTeam1)}&winPercentageDraw=${encodeURIComponent(winPercentageDraw)}&winPercentageTeam2=${encodeURIComponent(winPercentageTeam2)}&doubleChanceTeam1=${encodeURIComponent(doubleChanceTeam1)}&doubleChanceTeam2=${encodeURIComponent(doubleChanceTeam2)}`;
+            
+            window.location.href = url; // Redirection vers prédictions.html
+        }
+    }
+
+    // Afficher la section des cotes au chargement de la page
+    window.onload = function() {
+        document.getElementById("oddsContainer").style.display = "block"; // Afficher la section des cotes par défaut
+        document.getElementById("scoresContainer").style.display = "none"; // Masquer la section des scores
+    };
+</script>
+
+</body>
+</html>t
+            document.getElementById("scoresContainer").style.display = "none"; // Masquer la section des scores
+        };
+    </script>
+
+</body>
+</html>
