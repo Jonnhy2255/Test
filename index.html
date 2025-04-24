@@ -917,6 +917,44 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.5); }
         }
+        
+        /* Système de logs de débogage */
+        #debug-logs {
+            position: fixed; 
+            bottom: 20px;
+            left: 20px;
+            max-height: 200px;
+            width: 80%;
+            overflow-y: auto;
+            background-color: rgba(0,0,0,0.8);
+            color: #00FF00;
+            border-radius: 5px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 9999;
+            display: none;
+        }
+        #debug-logs.show {
+            display: block;
+        }
+        .log-entry {
+            margin-bottom: 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 4px;
+        }
+        .log-entry.error {
+            color: #FF6B6B;
+        }
+        .log-entry.warn {
+            color: #FFD93D;
+        }
+        .log-entry.info {
+            color: #6BCB77;
+        }
+        .log-entry.debug {
+            color: #4D96FF;
+        }
     </style>
 </head>
 
@@ -1203,6 +1241,12 @@
 
         <!-- Zone de notification -->
         <div id="notification-area"></div>
+
+        <!-- Zone de logs de débogage -->
+        <div id="debug-logs" class="hide-scrollbar">
+            <h3>Logs de débogage</h3>
+            <div id="log-container"></div>
+        </div>
     </div>
 
     <!-- Firebase SDK -->
@@ -1210,7 +1254,7 @@
         // Import Firebase SDK
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js';
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, deleteUser, updateProfile } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js';
-        import { getFirestore, collection, doc, getDoc,getDocs, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js';
+        import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js';
         import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/11.6.0/firebase-storage.js';
 
         // Firebase configuration - utilizing the provided config
@@ -1224,11 +1268,88 @@
             measurementId: "G-4HVY16QT8M"
         };
 
+        // Système de logs amélioré pour le débogage
+        const Logger = {
+            isDebugMode: true,
+            logContainer: document.getElementById('log-container'),
+            
+            init: function() {
+                // Montrer les logs en maintenant Alt+D
+                window.addEventListener('keydown', (e) => {
+                    if (e.altKey && e.code === 'KeyD') {
+                        document.getElementById('debug-logs').classList.add('show');
+                    }
+                });
+                
+                window.addEventListener('keyup', (e) => {
+                    if (e.code === 'KeyD') {
+                        document.getElementById('debug-logs').classList.remove('show');
+                    }
+                });
+                
+                // Initialiser les logs
+                this.clearLogs();
+                this.log('Système de logs initialisé', 'info');
+            },
+            
+            log: function(message, level = 'debug') {
+                if (!this.isDebugMode) return;
+                
+                console.log(`[${level.toUpperCase()}] ${message}`);
+                
+                if (this.logContainer) {
+                    const entry = document.createElement('div');
+                    entry.className = `log-entry ${level}`;
+                    entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                    this.logContainer.appendChild(entry);
+                    
+                    // Limiter le nombre d'entrées à 50
+                    while (this.logContainer.children.length > 50) {
+                        this.logContainer.removeChild(this.logContainer.firstChild);
+                    }
+                    
+                    // Scroll to bottom
+                    this.logContainer.scrollTop = this.logContainer.scrollHeight;
+                }
+            },
+            
+            error: function(message, error = null) {
+                let fullMessage = message;
+                if (error) {
+                    fullMessage += `: ${error.message || error}`;
+                    console.error(error);
+                }
+                this.log(fullMessage, 'error');
+            },
+            
+            warn: function(message) {
+                this.log(message, 'warn');
+            },
+            
+            info: function(message) {
+                this.log(message, 'info');
+            },
+            
+            clearLogs: function() {
+                if (this.logContainer) {
+                    this.logContainer.innerHTML = '';
+                }
+            }
+        };
+
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
+        try {
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const db = getFirestore(app);
+            const storage = getStorage(app);
+            
+            Logger.init();
+            Logger.info('Firebase initialisé avec succès');
+        } catch (error) {
+            Logger.error('Erreur lors de l\'initialisation de Firebase', error);
+            alert('Erreur de connexion. Veuillez réessayer plus tard.');
+        }
 
         // Polyfill pour Array.from pour iOS 12
         if (!Array.from) {
@@ -1273,7 +1394,14 @@
             isOnline: true,
             typingTimeout: null,
             currentChatUser: null,
-            currentFile: null
+            currentFile: null,
+            // Stockage des unsubscribe functions
+            unsubscribers: {
+                messages: null,
+                typing: null,
+                user: null,
+                conversations: null
+            }
         };
 
         // Elements DOM
@@ -1335,15 +1463,19 @@
             // Créer un compte
             register: async function(username, email, phone, password) {
                 try {
+                    Logger.info(`Tentative d'inscription pour l'utilisateur: ${username}`);
+                    
                     // Vérifier si l'utilisateur existe déjà
                     const usernameExists = await this.checkUsernameExists(username);
                     if (usernameExists) {
+                        Logger.warn(`Nom d'utilisateur déjà pris: ${username}`);
                         return { success: false, message: "Ce nom d'utilisateur est déjà pris" };
                     }
 
                     // Créer l'utilisateur dans Firebase Auth
                     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                     const user = userCredential.user;
+                    Logger.info(`Utilisateur créé dans Firebase Auth: ${user.uid}`);
 
                     // Créer le profil dans Firestore
                     await setDoc(doc(db, "users", user.uid), {
@@ -1355,11 +1487,13 @@
                         lastSeen: serverTimestamp(),
                         createdAt: serverTimestamp()
                     });
+                    Logger.info(`Profil utilisateur créé dans Firestore: ${user.uid}`);
 
                     // Mettre à jour le profil dans Auth
                     await updateProfile(user, {
                         displayName: username
                     });
+                    Logger.info(`Profil Auth mis à jour: ${username}`);
 
                     // Stocker l'utilisateur courant
                     appData.currentUser = {
@@ -1372,7 +1506,7 @@
 
                     return { success: true, user: appData.currentUser };
                 } catch (error) {
-                    console.error("Erreur d'inscription:", error);
+                    Logger.error("Erreur d'inscription", error);
                     let message = "Une erreur s'est produite lors de l'inscription.";
                     if (error.code === 'auth/email-already-in-use') {
                         message = "Cette adresse email est déjà utilisée.";
@@ -1384,11 +1518,14 @@
             // Vérifier si un nom d'utilisateur existe déjà
             checkUsernameExists: async function(username) {
                 try {
+                    Logger.info(`Vérification de l'existence du nom d'utilisateur: ${username}`);
                     const q = query(collection(db, "users"), where("username", "==", username));
                     const querySnapshot = await getDocs(q);
-                    return !querySnapshot.empty;
+                    const exists = !querySnapshot.empty;
+                    Logger.info(`Nom d'utilisateur ${username} ${exists ? 'existe' : 'n\'existe pas'}`);
+                    return exists;
                 } catch (error) {
-                    console.error("Erreur lors de la vérification du nom d'utilisateur:", error);
+                    Logger.error("Erreur lors de la vérification du nom d'utilisateur", error);
                     return false;
                 }
             },
@@ -1396,19 +1533,26 @@
             // Connexion
             login: async function(email, password) {
                 try {
+                    Logger.info(`Tentative de connexion pour: ${email}`);
                     const userCredential = await signInWithEmailAndPassword(auth, email, password);
                     const user = userCredential.user;
+                    Logger.info(`Connexion réussie: ${user.uid}`);
 
                     // Récupérer les données du profil
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                     if (userDoc.exists()) {
                         const userData = userDoc.data();
+                        Logger.info(`Données utilisateur récupérées: ${JSON.stringify({
+                            username: userData.username,
+                            email: userData.email
+                        })}`);
                         
                         // Mettre à jour le statut en ligne
                         await updateDoc(doc(db, "users", user.uid), {
                             online: true,
                             lastSeen: serverTimestamp()
                         });
+                        Logger.info(`Statut en ligne mis à jour pour: ${user.uid}`);
                         
                         appData.currentUser = {
                             uid: user.uid,
@@ -1420,11 +1564,12 @@
                         
                         return { success: true, user: appData.currentUser };
                     } else {
+                        Logger.warn(`Profil utilisateur introuvable pour: ${user.uid}`);
                         await signOut(auth);
                         return { success: false, message: "Profil utilisateur introuvable." };
                     }
                 } catch (error) {
-                    console.error("Erreur de connexion:", error);
+                    Logger.error("Erreur de connexion", error);
                     let message = "Identifiants incorrects";
                     if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
                         message = "Email ou mot de passe incorrect";
@@ -1436,28 +1581,74 @@
             // Déconnexion
             logout: async function() {
                 try {
+                    Logger.info("Tentative de déconnexion");
                     if (auth.currentUser) {
                         // Mettre à jour le statut hors ligne
                         await updateDoc(doc(db, "users", auth.currentUser.uid), {
                             online: false,
                             lastSeen: serverTimestamp()
                         });
+                        Logger.info(`Statut hors ligne mis à jour pour: ${auth.currentUser.uid}`);
                     }
+                    
+                    // Nettoyer les unsubscribers avant la déconnexion
+                    this.cleanupSubscriptions();
+                    
                     await signOut(auth);
+                    Logger.info("Déconnexion réussie");
+                    
                     appData.currentUser = null;
                     return { success: true };
                 } catch (error) {
-                    console.error("Erreur de déconnexion:", error);
+                    Logger.error("Erreur de déconnexion", error);
                     return { success: false, message: "Erreur lors de la déconnexion" };
+                }
+            },
+            
+            // Nettoyer les souscriptions actives
+            cleanupSubscriptions: function() {
+                Logger.info("Nettoyage des souscriptions");
+                
+                // Désinscrire des messages
+                if (typeof appData.unsubscribers.messages === 'function') {
+                    Logger.info("Désinscription des messages");
+                    appData.unsubscribers.messages();
+                    appData.unsubscribers.messages = null;
+                }
+                
+                // Désinscrire du statut de typing
+                if (typeof appData.unsubscribers.typing === 'function') {
+                    Logger.info("Désinscription du statut de typing");
+                    appData.unsubscribers.typing();
+                    appData.unsubscribers.typing = null;
+                }
+                
+                // Désinscrire des changements d'utilisateur
+                if (typeof appData.unsubscribers.user === 'function') {
+                    Logger.info("Désinscription des changements d'utilisateur");
+                    appData.unsubscribers.user();
+                    appData.unsubscribers.user = null;
+                }
+                
+                // Désinscrire des conversations
+                if (typeof appData.unsubscribers.conversations === 'function') {
+                    Logger.info("Désinscription des conversations");
+                    appData.unsubscribers.conversations();
+                    appData.unsubscribers.conversations = null;
                 }
             },
 
             // Changement de statut en ligne
             toggleOnlineStatus: async function() {
                 try {
-                    if (!auth.currentUser) return { success: false, message: "Utilisateur non connecté" };
+                    if (!auth.currentUser) {
+                        Logger.warn("Tentative de changement de statut sans être connecté");
+                        return { success: false, message: "Utilisateur non connecté" };
+                    }
                     
                     appData.isOnline = !appData.isOnline;
+                    Logger.info(`Changement de statut en ligne: ${appData.isOnline}`);
+                    
                     await updateDoc(doc(db, "users", auth.currentUser.uid), {
                         online: appData.isOnline,
                         lastSeen: serverTimestamp()
@@ -1468,7 +1659,7 @@
                     
                     return { success: true };
                 } catch (error) {
-                    console.error("Erreur de changement de statut:", error);
+                    Logger.error("Erreur de changement de statut", error);
                     return { success: false, message: "Erreur lors du changement de statut" };
                 }
             },
@@ -1476,24 +1667,34 @@
             // Supprimer le compte
             deleteAccount: async function() {
                 try {
-                    if (!auth.currentUser) return { success: false, message: "Utilisateur non connecté" };
+                    if (!auth.currentUser) {
+                        Logger.warn("Tentative de suppression de compte sans être connecté");
+                        return { success: false, message: "Utilisateur non connecté" };
+                    }
                     
                     const userId = auth.currentUser.uid;
+                    Logger.info(`Suppression du compte: ${userId}`);
+                    
+                    // Nettoyer les souscriptions avant la suppression
+                    this.cleanupSubscriptions();
                     
                     // Supprimer les conversations
                     await ConversationManager.deleteAllUserConversations(userId);
+                    Logger.info(`Conversations supprimées pour: ${userId}`);
                     
                     // Supprimer le document utilisateur dans Firestore
                     await deleteDoc(doc(db, "users", userId));
+                    Logger.info(`Document utilisateur supprimé: ${userId}`);
                     
                     // Supprimer l'utilisateur dans Firebase Auth
                     await deleteUser(auth.currentUser);
+                    Logger.info(`Utilisateur supprimé de Firebase Auth: ${userId}`);
                     
                     appData.currentUser = null;
                     
                     return { success: true };
                 } catch (error) {
-                    console.error("Erreur de suppression de compte:", error);
+                    Logger.error("Erreur de suppression de compte", error);
                     return { success: false, message: "Erreur lors de la suppression du compte" };
                 }
             },
@@ -1501,29 +1702,39 @@
             // Mettre à jour l'avatar de l'utilisateur
             updateAvatar: async function(file) {
                 try {
-                    if (!auth.currentUser) return { success: false, message: "Utilisateur non connecté" };
+                    if (!auth.currentUser) {
+                        Logger.warn("Tentative de mise à jour d'avatar sans être connecté");
+                        return { success: false, message: "Utilisateur non connecté" };
+                    }
+                    
+                    Logger.info(`Mise à jour de l'avatar pour: ${auth.currentUser.uid}`);
                     
                     // Compresser l'image avant l'upload
+                    Logger.info("Compression de l'image...");
                     const compressedFile = await this.compressImage(file);
                     
                     // Créer une référence dans le stockage
                     const storageRef = ref(storage, `avatars/${auth.currentUser.uid}`);
                     
                     // Uploader l'image
+                    Logger.info("Upload de l'image...");
                     const snapshot = await uploadBytes(storageRef, compressedFile);
                     
                     // Récupérer l'URL de téléchargement
                     const downloadURL = await getDownloadURL(storageRef);
+                    Logger.info(`URL de téléchargement obtenue: ${downloadURL}`);
                     
                     // Mettre à jour le document utilisateur dans Firestore
                     await updateDoc(doc(db, "users", auth.currentUser.uid), {
                         avatar: downloadURL
                     });
+                    Logger.info("Document utilisateur mis à jour avec le nouvel avatar");
                     
                     // Mettre à jour le profil dans Auth
                     await updateProfile(auth.currentUser, {
                         photoURL: downloadURL
                     });
+                    Logger.info("Profil Auth mis à jour avec le nouvel avatar");
                     
                     // Mettre à jour l'état local
                     if (appData.currentUser) {
@@ -1532,7 +1743,7 @@
                     
                     return { success: true, url: downloadURL };
                 } catch (error) {
-                    console.error("Erreur de mise à jour de l'avatar:", error);
+                    Logger.error("Erreur de mise à jour de l'avatar", error);
                     return { success: false, message: "Erreur lors de la mise à jour de l'avatar" };
                 }
             },
@@ -1540,6 +1751,7 @@
             // Obtenir tous les utilisateurs
             getAllUsers: async function() {
                 try {
+                    Logger.info("Récupération de tous les utilisateurs");
                     const usersSnapshot = await getDocs(collection(db, "users"));
                     const users = [];
                     
@@ -1558,9 +1770,10 @@
                         }
                     });
                     
+                    Logger.info(`${users.length} utilisateurs récupérés`);
                     return users;
                 } catch (error) {
-                    console.error("Erreur de récupération des utilisateurs:", error);
+                    Logger.error("Erreur de récupération des utilisateurs", error);
                     throw error;
                 }
             },
@@ -1568,9 +1781,12 @@
             // Obtenir un utilisateur par ID
             getUserById: async function(userId) {
                 try {
+                    Logger.info(`Récupération de l'utilisateur: ${userId}`);
                     const userDoc = await getDoc(doc(db, "users", userId));
                     if (userDoc.exists()) {
                         const userData = userDoc.data();
+                        Logger.info(`Utilisateur trouvé: ${userData.username}`);
+                        
                         return {
                             uid: userId,
                             username: userData.username,
@@ -1581,34 +1797,53 @@
                             lastSeen: userData.lastSeen
                         };
                     }
+                    Logger.warn(`Utilisateur non trouvé: ${userId}`);
                     return null;
                 } catch (error) {
-                    console.error("Erreur de récupération de l'utilisateur:", error);
+                    Logger.error(`Erreur de récupération de l'utilisateur: ${userId}`, error);
                     throw error;
                 }
             },
 
             // Écouter les changements d'un utilisateur
             listenToUserChanges: function(userId, callback) {
-                return onSnapshot(doc(db, "users", userId), (doc) => {
-                    if (doc.exists()) {
-                        const userData = doc.data();
-                        callback({
-                            uid: userId,
-                            username: userData.username,
-                            email: userData.email,
-                            phone: userData.phone,
-                            avatar: userData.avatar,
-                            online: userData.online,
-                            lastSeen: userData.lastSeen
-                        });
-                    }
-                });
+                Logger.info(`Mise en place de l'écoute des changements pour l'utilisateur: ${userId}`);
+                
+                try {
+                    const unsubscribe = onSnapshot(doc(db, "users", userId), (doc) => {
+                        if (doc.exists()) {
+                            const userData = doc.data();
+                            Logger.info(`Changement détecté pour l'utilisateur: ${userId}, online: ${userData.online}`);
+                            
+                            callback({
+                                uid: userId,
+                                username: userData.username,
+                                email: userData.email,
+                                phone: userData.phone,
+                                avatar: userData.avatar,
+                                online: userData.online,
+                                lastSeen: userData.lastSeen
+                            });
+                        } else {
+                            Logger.warn(`Document utilisateur non trouvé lors de l'écoute: ${userId}`);
+                        }
+                    }, (error) => {
+                        Logger.error(`Erreur d'écoute des changements utilisateur: ${userId}`, error);
+                    });
+                    
+                    return unsubscribe;
+                } catch (error) {
+                    Logger.error(`Erreur lors de la mise en place de l'écoute utilisateur: ${userId}`, error);
+                    // Retourner une fonction vide par sécurité
+                    return function() {};
+                }
             },
 
             // Compresser une image
             compressImage: function(file) {
                 return new Promise((resolve, reject) => {
+                    Logger.info(`Compression de l'image: ${file.name}, taille: ${file.size} bytes`);
+                    
                     const reader = new FileReader();
                     reader.readAsDataURL(file);
                     reader.onload = function(event) {
@@ -1620,11 +1855,13 @@
                             const MAX_HEIGHT = 800;
                             let width = img.width;
                             let height = img.height;
+                            Logger.info(`Dimensions originales: ${width}x${height}`);
 
                             if (width > MAX_WIDTH || height > MAX_HEIGHT) {
                                 const ratio = Math.min(MAX_WIDTH / width, MAX_HEIGHT / height);
                                 width = Math.floor(width * ratio);
                                 height = Math.floor(height * ratio);
+                                Logger.info(`Redimensionnement à: ${width}x${height}`);
                             }
 
                             const canvas = document.createElement('canvas');
@@ -1641,19 +1878,25 @@
                                         type: 'image/jpeg',
                                         lastModified: Date.now()
                                     });
+                                    Logger.info(`Image compressée: ${compressedFile.size} bytes`);
                                     resolve(compressedFile);
                                 } else {
                                     // Fallback - utiliser le fichier original
+                                    Logger.warn("Compression échouée, utilisation du fichier original");
                                     resolve(file);
                                 }
                             }, 'image/jpeg', 0.8);
                         };
                         img.onerror = function() {
-                            reject(new Error("Impossible de charger l'image"));
+                            const errorMsg = "Impossible de charger l'image";
+                            Logger.error(errorMsg);
+                            reject(new Error(errorMsg));
                         };
                     };
                     reader.onerror = function() {
-                        reject(new Error("Impossible de lire le fichier"));
+                        const errorMsg = "Impossible de lire le fichier";
+                        Logger.error(errorMsg);
+                        reject(new Error(errorMsg));
                     };
                 });
             }
@@ -1664,14 +1907,17 @@
             // Créer ou récupérer une conversation entre deux utilisateurs
             getOrCreateConversation: async function(user1Id, user2Id) {
                 try {
+                    Logger.info(`Récupération/création de conversation entre ${user1Id} et ${user2Id}`);
                     // Trier les IDs pour avoir un ID de conversation consistant
                     const sortedIds = [user1Id, user2Id].sort();
                     const conversationId = sortedIds.join('_');
+                    Logger.info(`ID de conversation: ${conversationId}`);
                     
                     // Vérifier si la conversation existe
                     const conversationDoc = await getDoc(doc(db, "conversations", conversationId));
                     
                     if (!conversationDoc.exists()) {
+                        Logger.info(`Création d'une nouvelle conversation: ${conversationId}`);
                         // Créer une nouvelle conversation
                         await setDoc(doc(db, "conversations", conversationId), {
                             participants: sortedIds,
@@ -1679,11 +1925,13 @@
                             lastMessageTimestamp: serverTimestamp(),
                             createdAt: serverTimestamp()
                         });
+                    } else {
+                        Logger.info(`Conversation existante trouvée: ${conversationId}`);
                     }
                     
                     return conversationId;
                 } catch (error) {
-                    console.error("Erreur de création/récupération de conversation:", error);
+                    Logger.error("Erreur de création/récupération de conversation", error);
                     throw error;
                 }
             },
@@ -1691,29 +1939,43 @@
             // Envoyer un message
             sendMessage: async function(senderId, receiverId, text, fileURL = null) {
                 try {
+                    Logger.info(`Envoi d'un message de ${senderId} à ${receiverId}`);
+                    
                     // Obtenir l'ID de conversation
                     const conversationId = await this.getOrCreateConversation(senderId, receiverId);
                     
                     // Créer le message
-                    const messageRef = await addDoc(collection(db, "messages"), {
+                    const messageData = {
                         conversationId: conversationId,
                         senderId: senderId,
-                        text: text,
+                        text: text || "",
                         fileURL: fileURL,
                         timestamp: serverTimestamp(),
                         read: false
-                    });
+                    };
+                    
+                    Logger.info(`Création du message: ${JSON.stringify({
+                        conversationId: messageData.conversationId,
+                        senderId: messageData.senderId,
+                        text: messageData.text ? messageData.text.substring(0, 30) + (messageData.text.length > 30 ? '...' : '') : "",
+                        hasFile: !!messageData.fileURL
+                    })}`);
+                    
+                    const messageRef = await addDoc(collection(db, "messages"), messageData);
+                    Logger.info(`Message créé avec ID: ${messageRef.id}`);
                     
                     // Mettre à jour la conversation avec le dernier message
+                    const lastMessageText = text || fileURL ? "Image partagée" : "";
                     await updateDoc(doc(db, "conversations", conversationId), {
-                        lastMessage: text,
+                        lastMessage: lastMessageText,
                         lastMessageTimestamp: serverTimestamp(),
                         lastMessageSenderId: senderId
                     });
+                    Logger.info(`Conversation mise à jour avec le dernier message`);
                     
                     return { success: true, messageId: messageRef.id };
                 } catch (error) {
-                    console.error("Erreur d'envoi de message:", error);
+                    Logger.error("Erreur d'envoi de message", error);
                     return { success: false, message: "Erreur lors de l'envoi du message" };
                 }
             },
@@ -1721,6 +1983,8 @@
             // Marquer une conversation comme lue
             markConversationAsRead: async function(conversationId, userId) {
                 try {
+                    Logger.info(`Marquage des messages comme lus pour la conversation: ${conversationId}, utilisateur: ${userId}`);
+                    
                     // Récupérer tous les messages non lus de cette conversation
                     const q = query(
                         collection(db, "messages"),
@@ -1730,6 +1994,7 @@
                     );
                     
                     const querySnapshot = await getDocs(q);
+                    Logger.info(`${querySnapshot.size} messages non lus trouvés`);
                     
                     // Mettre à jour chaque message
                     const updatePromises = [];
@@ -1738,9 +2003,11 @@
                     });
                     
                     await Promise.all(updatePromises);
+                    Logger.info(`Tous les messages marqués comme lus`);
+                    
                     return { success: true };
                 } catch (error) {
-                    console.error("Erreur de marquage des messages comme lus:", error);
+                    Logger.error("Erreur de marquage des messages comme lus", error);
                     return { success: false, message: "Erreur lors du marquage des messages comme lus" };
                 }
             },
@@ -1748,6 +2015,7 @@
             // Récupérer les messages d'une conversation
             getMessages: async function(conversationId) {
                 try {
+                    Logger.info(`Récupération des messages pour la conversation: ${conversationId}`);
                     const q = query(
                         collection(db, "messages"),
                         where("conversationId", "==", conversationId),
@@ -1769,41 +2037,58 @@
                         });
                     });
                     
+                    Logger.info(`${messages.length} messages récupérés`);
                     return messages;
                 } catch (error) {
-                    console.error("Erreur de récupération des messages:", error);
+                    Logger.error("Erreur de récupération des messages", error);
                     throw error;
                 }
             },
 
             // Écouter les nouveaux messages d'une conversation
             listenToMessages: function(conversationId, callback) {
-                const q = query(
-                    collection(db, "messages"),
-                    where("conversationId", "==", conversationId),
-                    orderBy("timestamp", "asc")
-                );
+                Logger.info(`Mise en place de l'écoute des messages pour la conversation: ${conversationId}`);
                 
-                return onSnapshot(q, (querySnapshot) => {
-                    const messages = [];
-                    querySnapshot.forEach((doc) => {
-                        const messageData = doc.data();
-                        messages.push({
-                            id: doc.id,
-                            senderId: messageData.senderId,
-                            text: messageData.text,
-                            fileURL: messageData.fileURL,
-                            timestamp: messageData.timestamp?.toDate() || new Date(),
-                            read: messageData.read
+                try {
+                    const q = query(
+                        collection(db, "messages"),
+                        where("conversationId", "==", conversationId),
+                        orderBy("timestamp", "asc")
+                    );
+                    
+                    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+                        const messages = [];
+                        querySnapshot.forEach((doc) => {
+                            const messageData = doc.data();
+                            messages.push({
+                                id: doc.id,
+                                senderId: messageData.senderId,
+                                text: messageData.text,
+                                fileURL: messageData.fileURL,
+                                timestamp: messageData.timestamp?.toDate() || new Date(),
+                                read: messageData.read
+                            });
                         });
+                        
+                        Logger.info(`${messages.length} messages reçus dans l'écoute`);
+                        callback(messages);
+                    }, (error) => {
+                        Logger.error(`Erreur d'écoute des messages: ${conversationId}`, error);
                     });
-                    callback(messages);
-                });
+                    
+                    return unsubscribe;
+                } catch (error) {
+                    Logger.error(`Erreur lors de la mise en place de l'écoute des messages: ${conversationId}`, error);
+                    // Retourner une fonction vide par sécurité
+                    return function() {};
+                }
             },
 
             // Récupérer les conversations d'un utilisateur
             getUserConversations: async function(userId) {
                 try {
+                    Logger.info(`Récupération des conversations pour l'utilisateur: ${userId}`);
+                    
                     // Récupérer toutes les conversations où l'utilisateur est participant
                     const q = query(
                         collection(db, "conversations"),
@@ -1812,55 +2097,21 @@
                     
                     const querySnapshot = await getDocs(q);
                     const conversations = [];
+                    Logger.info(`${querySnapshot.size} conversations trouvées`);
                     
                     for (const doc of querySnapshot.docs) {
                         const conversationData = doc.data();
                         
                         // Trouver l'autre participant
                         const otherUserId = conversationData.participants.find(id => id !== userId);
+                        
+                        if (!otherUserId) {
+                            Logger.warn(`Aucun autre participant trouvé dans la conversation: ${doc.id}`);
+                            continue;
+                        }
                         
                         // Récupérer les informations de l'autre utilisateur
-                        const otherUser = await UserManager.getUserById(otherUserId);
-                        
-                        if (otherUser) {
-                            conversations.push({
-                                id: doc.id,
-                                otherUser: otherUser,
-                                lastMessage: conversationData.lastMessage,
-                                lastMessageTimestamp: conversationData.lastMessageTimestamp?.toDate() || new Date(),
-                                lastMessageSenderId: conversationData.lastMessageSenderId
-                            });
-                        }
-                    }
-                    
-                    // Trier par dernier message
-                    conversations.sort((a, b) => b.lastMessageTimestamp - a.lastMessageTimestamp);
-                    
-                    return conversations;
-                } catch (error) {
-                    console.error("Erreur de récupération des conversations:", error);
-                    throw error;
-                }
-            },
-
-            // Écouter les changements de conversations
-            listenToConversations: function(userId, callback) {
-                const q = query(
-                    collection(db, "conversations"),
-                    where("participants", "array-contains", userId)
-                );
-                
-                return onSnapshot(q, async (querySnapshot) => {
-                    const conversations = [];
-                    
-                    for (const doc of querySnapshot.docs) {
-                        const conversationData = doc.data();
-                        
-                        // Trouver l'autre participant
-                        const otherUserId = conversationData.participants.find(id => id !== userId);
-                        
                         try {
-                            // Récupérer les informations de l'autre utilisateur
                             const otherUser = await UserManager.getUserById(otherUserId);
                             
                             if (otherUser) {
@@ -1871,22 +2122,113 @@
                                     lastMessageTimestamp: conversationData.lastMessageTimestamp?.toDate() || new Date(),
                                     lastMessageSenderId: conversationData.lastMessageSenderId
                                 });
+                            } else {
+                                Logger.warn(`Utilisateur ${otherUserId} non trouvé pour la conversation ${doc.id}`);
                             }
-                        } catch (error) {
-                            console.error("Erreur lors de la récupération de l'utilisateur:", error);
+                        } catch (userError) {
+                            Logger.error(`Erreur lors de la récupération de l'utilisateur ${otherUserId}`, userError);
                         }
                     }
                     
                     // Trier par dernier message
                     conversations.sort((a, b) => b.lastMessageTimestamp - a.lastMessageTimestamp);
+                    Logger.info(`${conversations.length} conversations traitées et triées`);
                     
-                    callback(conversations);
-                });
+                    return conversations;
+                } catch (error) {
+                    Logger.error("Erreur de récupération des conversations", error);
+                    throw error;
+                }
+            },
+
+            // Écouter les changements de conversations
+            listenToConversations: function(userId, callback) {
+                Logger.info(`Mise en place de l'écoute des conversations pour l'utilisateur: ${userId}`);
+                
+                try {
+                    const q = query(
+                        collection(db, "conversations"),
+                        where("participants", "array-contains", userId)
+                    );
+                    
+                    const unsubscribe = onSnapshot(q, async (querySnapshot) => {
+                        Logger.info(`Mise à jour des conversations détectée, ${querySnapshot.size} conversations`);
+                        
+                        const conversations = [];
+                        const userPromises = [];
+                        const convData = [];
+                        
+                        // Collecter d'abord toutes les données de conversation et les promesses d'utilisateurs
+                        querySnapshot.forEach(doc => {
+                            const conversationData = doc.data();
+                            
+                            // Trouver l'autre participant
+                            const otherUserId = conversationData.participants.find(id => id !== userId);
+                            
+                            if (otherUserId) {
+                                // Stocker les données de conversation
+                                convData.push({
+                                    id: doc.id,
+                                    otherUserId: otherUserId,
+                                    lastMessage: conversationData.lastMessage,
+                                    lastMessageTimestamp: conversationData.lastMessageTimestamp?.toDate() || new Date(),
+                                    lastMessageSenderId: conversationData.lastMessageSenderId
+                                });
+                                
+                                // Récupérer l'utilisateur de manière asynchrone
+                                userPromises.push(UserManager.getUserById(otherUserId));
+                            } else {
+                                Logger.warn(`Aucun autre participant trouvé dans la conversation: ${doc.id}`);
+                            }
+                        });
+                        
+                        // Attendre que toutes les promesses d'utilisateurs soient résolues
+                        try {
+                            const users = await Promise.all(userPromises);
+                            
+                            // Associer les utilisateurs aux conversations
+                            for (let i = 0; i < convData.length; i++) {
+                                const conv = convData[i];
+                                const user = users[i];
+                                
+                                if (user) {
+                                    conversations.push({
+                                        id: conv.id,
+                                        otherUser: user,
+                                        lastMessage: conv.lastMessage,
+                                        lastMessageTimestamp: conv.lastMessageTimestamp,
+                                        lastMessageSenderId: conv.lastMessageSenderId
+                                    });
+                                }
+                            }
+                            
+                            // Trier par dernier message
+                            conversations.sort((a, b) => b.lastMessageTimestamp - a.lastMessageTimestamp);
+                            Logger.info(`${conversations.length} conversations traitées et triées`);
+                            
+                            callback(conversations);
+                        } catch (error) {
+                            Logger.error("Erreur lors de la récupération des utilisateurs pour les conversations", error);
+                            // Appeler le callback avec les résultats partiels
+                            callback([]);
+                        }
+                    }, (error) => {
+                        Logger.error(`Erreur d'écoute des conversations: ${userId}`, error);
+                    });
+                    
+                    return unsubscribe;
+                } catch (error) {
+                    Logger.error(`Erreur lors de la mise en place de l'écoute des conversations: ${userId}`, error);
+                    // Retourner une fonction vide par sécurité
+                    return function() {};
+                }
             },
 
             // Supprimer toutes les conversations d'un utilisateur
             deleteAllUserConversations: async function(userId) {
                 try {
+                    Logger.info(`Suppression de toutes les conversations pour l'utilisateur: ${userId}`);
+                    
                     // Récupérer toutes les conversations où l'utilisateur est participant
                     const q = query(
                         collection(db, "conversations"),
@@ -1894,6 +2236,7 @@
                     );
                     
                     const querySnapshot = await getDocs(q);
+                    Logger.info(`${querySnapshot.size} conversations trouvées à supprimer`);
                     
                     // Supprimer chaque conversation et ses messages
                     for (const doc of querySnapshot.docs) {
@@ -1904,6 +2247,7 @@
                         );
                         
                         const messagesSnapshot = await getDocs(messagesQuery);
+                        Logger.info(`${messagesSnapshot.size} messages à supprimer pour la conversation: ${doc.id}`);
                         
                         for (const messageDoc of messagesSnapshot.docs) {
                             await deleteDoc(messageDoc.ref);
@@ -1911,11 +2255,12 @@
                         
                         // Supprimer la conversation
                         await deleteDoc(doc.ref);
+                        Logger.info(`Conversation supprimée: ${doc.id}`);
                     }
                     
                     return { success: true };
                 } catch (error) {
-                    console.error("Erreur de suppression des conversations:", error);
+                    Logger.error("Erreur de suppression des conversations", error);
                     return { success: false, message: "Erreur lors de la suppression des conversations" };
                 }
             },
@@ -1926,6 +2271,8 @@
                     const sortedIds = [userId, otherUserId].sort();
                     const conversationId = sortedIds.join('_');
                     
+                    Logger.info(`Mise à jour du statut de typing pour ${userId} dans conversation ${conversationId}: ${isTyping}`);
+                    
                     await updateDoc(doc(db, "conversations", conversationId), {
                         [`typing_${userId}`]: isTyping,
                         typingUpdatedAt: serverTimestamp()
@@ -1933,28 +2280,47 @@
                     
                     return { success: true };
                 } catch (error) {
-                    console.error("Erreur de mise à jour du statut de typing:", error);
+                    Logger.error("Erreur de mise à jour du statut de typing", error);
                     return { success: false };
                 }
             },
 
             // Écouter le statut de typing
             listenToTypingStatus: function(conversationId, otherUserId, callback) {
-                return onSnapshot(doc(db, "conversations", conversationId), (doc) => {
-                    if (doc.exists()) {
-                        const data = doc.data();
-                        const isTyping = data[`typing_${otherUserId}`] || false;
-                        callback(isTyping);
-                    }
-                });
+                Logger.info(`Mise en place de l'écoute du statut de typing pour ${otherUserId} dans conversation ${conversationId}`);
+                
+                try {
+                    const unsubscribe = onSnapshot(doc(db, "conversations", conversationId), (doc) => {
+                        if (doc.exists()) {
+                            const data = doc.data();
+                            const isTyping = data[`typing_${otherUserId}`] || false;
+                            Logger.info(`Statut de typing de ${otherUserId}: ${isTyping}`);
+                            callback(isTyping);
+                        } else {
+                            Logger.warn(`Conversation non trouvée: ${conversationId}`);
+                            callback(false);
+                        }
+                    }, (error) => {
+                        Logger.error(`Erreur d'écoute du statut de typing: ${conversationId}`, error);
+                    });
+                    
+                    return unsubscribe;
+                } catch (error) {
+                    Logger.error(`Erreur lors de la mise en place de l'écoute du statut de typing: ${conversationId}`, error);
+                    // Retourner une fonction vide par sécurité
+                    return function() {};
+                }
             },
 
             // Télécharger un fichier pour un message
             uploadFile: async function(file, senderId, conversationId) {
                 try {
+                    Logger.info(`Upload de fichier pour conversation ${conversationId} par ${senderId}: ${file.name}, type: ${file.type}`);
+                    
                     // Compresser l'image si c'est une image
                     let fileToUpload = file;
                     if (file.type.startsWith('image/')) {
+                        Logger.info("Compression de l'image...");
                         fileToUpload = await UserManager.compressImage(file);
                     }
                     
@@ -1962,14 +2328,16 @@
                     const storageRef = ref(storage, `messages/${conversationId}/${senderId}_${Date.now()}_${file.name}`);
                     
                     // Uploader le fichier
+                    Logger.info("Upload du fichier en cours...");
                     const snapshot = await uploadBytes(storageRef, fileToUpload);
                     
                     // Récupérer l'URL de téléchargement
                     const downloadURL = await getDownloadURL(storageRef);
+                    Logger.info(`URL de téléchargement obtenue: ${downloadURL}`);
                     
                     return { success: true, url: downloadURL };
                 } catch (error) {
-                    console.error("Erreur d'upload de fichier:", error);
+                    Logger.error("Erreur d'upload de fichier", error);
                     return { success: false, message: "Erreur lors de l'upload du fichier" };
                 }
             }
@@ -1979,35 +2347,46 @@
         var UI = {
             showLoading: function(message) {
                 if (!message) message = "Chargement en cours...";
+                Logger.info(`Affichage du chargement: ${message}`);
                 elements.loadingText.textContent = message;
                 elements.loadingOverlay.classList.remove('hidden');
             },
 
             hideLoading: function() {
+                Logger.info("Masquage du chargement");
                 elements.loadingOverlay.classList.add('hidden');
             },
 
             updateProfileInfo: function() {
+                Logger.info("Mise à jour des informations de profil");
+                
                 if (appData.currentUser) {
-                    elements.profileUsername.textContent = appData.currentUser.username;
+                    elements.profileUsername.textContent = appData.currentUser.username || '';
                     elements.profileEmail.textContent = appData.currentUser.email || 'Non renseigné';
                     elements.profilePhone.textContent = appData.currentUser.phone || 'Non renseigné';
                     
                     if (appData.currentUser.avatar) {
+                        Logger.info(`Affichage de l'avatar: ${appData.currentUser.avatar}`);
                         elements.profileAvatar.innerHTML = '<img src="' + appData.currentUser.avatar + '" alt="Avatar" class="avatar-img">';
                     } else {
-                        elements.profileAvatar.innerHTML = appData.currentUser.username.charAt(0).toUpperCase();
+                        Logger.info("Utilisation de l'initiale comme avatar");
+                        const initial = appData.currentUser.username ? appData.currentUser.username.charAt(0).toUpperCase() : '?';
+                        elements.profileAvatar.innerHTML = initial;
                     }
 
                     // Mettre à jour le bouton de statut
                     elements.statusToggle.textContent = appData.isOnline ? "Passer hors ligne" : "Passer en ligne";
+                } else {
+                    Logger.warn("Tentative de mise à jour du profil sans utilisateur connecté");
                 }
             },
 
             renderConversations: function(conversations) {
+                Logger.info(`Rendu de ${conversations ? conversations.length : 0} conversations`);
                 elements.conversationsList.innerHTML = '';
                 
                 if (!conversations || conversations.length === 0) {
+                    Logger.info("Aucune conversation à afficher");
                     elements.conversationsList.innerHTML = '<p class="text-center p-4 text-gray-500">Aucune conversation</p>';
                     return;
                 }
@@ -2017,6 +2396,8 @@
                     const lastMessage = conversation.lastMessage;
                     const lastMessageSenderId = conversation.lastMessageSenderId;
                     const isLastMessageMine = lastMessageSenderId === auth.currentUser.uid;
+                    
+                    Logger.info(`Rendu de la conversation avec ${otherUser.username}, dernier message: ${lastMessage ? lastMessage.substring(0, 20) + (lastMessage.length > 20 ? '...' : '') : 'aucun'}`);
                     
                     const contactEl = document.createElement('div');
                     contactEl.className = 'p-3 mb-2 border border-gray-200 flex items-center hover:bg-gray-100 rounded-lg';
@@ -2065,17 +2446,23 @@
                     
                     elements.conversationsList.appendChild(contactEl);
                 });
+                
+                Logger.info("Rendu des conversations terminé");
             },
 
             renderUsers: function(users) {
+                Logger.info(`Rendu de ${users ? users.length : 0} utilisateurs`);
                 elements.usersList.innerHTML = '';
                 
                 if (!users || users.length === 0) {
+                    Logger.info("Aucun utilisateur à afficher");
                     elements.usersList.innerHTML = '<p class="text-center p-4 text-gray-500">Aucun utilisateur disponible</p>';
                     return;
                 }
                 
                 users.forEach(user => {
+                    Logger.info(`Rendu de l'utilisateur: ${user.username}, online: ${user.online}`);
+                    
                     const userEl = document.createElement('div');
                     userEl.className = 'p-3 mb-2 border border-gray-200 flex items-center hover:bg-gray-100 rounded-lg';
                     
@@ -2103,8 +2490,13 @@
                     if (user.online) {
                         lastSeenText = 'En ligne';
                     } else if (user.lastSeen) {
-                        const lastSeen = user.lastSeen.toDate ? user.lastSeen.toDate() : new Date(user.lastSeen);
-                        lastSeenText = `Vu ${this.formatTimeOrDate(lastSeen)}`;
+                        try {
+                            const lastSeen = user.lastSeen.toDate ? user.lastSeen.toDate() : new Date(user.lastSeen);
+                            lastSeenText = `Vu ${this.formatTimeOrDate(lastSeen)}`;
+                        } catch (error) {
+                            Logger.error(`Erreur de formatage du lastSeen pour ${user.username}`, error);
+                            lastSeenText = 'Dernière connexion inconnue';
+                        }
                     }
                     
                     userEl.innerHTML = `
@@ -2127,50 +2519,64 @@
                         const userId = btn.getAttribute('data-user-id');
                         
                         try {
+                            Logger.info(`Clic sur le bouton "Discuter" pour l'utilisateur: ${userId}`);
                             this.showLoading("Chargement de l'utilisateur...");
                             const user = await UserManager.getUserById(userId);
                             this.hideLoading();
                             
                             if (user) {
                                 this.openChat(user);
+                            } else {
+                                throw new Error("Utilisateur non trouvé");
                             }
                         } catch (error) {
                             this.hideLoading();
-                            console.error("Erreur lors de l'ouverture du chat:", error);
+                            Logger.error("Erreur lors de l'ouverture du chat", error);
                             this.showNotification("Erreur lors de l'ouverture du chat", "error");
                         }
                     });
                 });
+                
+                Logger.info("Rendu des utilisateurs terminé");
             },
 
             openChat: async function(user) {
+                Logger.info(`Ouverture du chat avec l'utilisateur: ${user.username} (${user.uid})`);
                 this.showLoading("Chargement de la conversation...");
                 
                 try {
                     // Stocker l'utilisateur en cours de discussion
                     appData.currentChatUser = user;
                     
+                    // Nettoyer les souscriptions précédentes avant d'en créer de nouvelles
+                    this.cleanupChatSubscriptions();
+                    
                     // Mettre à jour l'en-tête de la conversation
                     elements.chatContact.textContent = user.username;
+                    Logger.info(`En-tête de chat mis à jour: ${user.username}`);
                     
                     // Afficher l'avatar du contact
                     if (user.avatar) {
+                        Logger.info(`Affichage de l'avatar utilisateur: ${user.avatar}`);
                         elements.chatContactAvatar.innerHTML = `
                             <img src="${user.avatar}" alt="${user.username}" class="h-10 w-10 rounded-full" style="object-fit: cover;">
-                            ${user.online ? '<div id="online-status" class="online-indicator"></div>' : ''}
+                            ${user.online ? '<div id="online-status" class="online-indicator"></div>' : '<div id="online-status" class="online-indicator hidden"></div>'}
                         `;
                     } else {
+                        Logger.info(`Affichage de l'initiale comme avatar: ${user.username.charAt(0)}`);
                         elements.chatContactAvatar.innerHTML = `
                             ${user.username.charAt(0).toUpperCase()}
-                            ${user.online ? '<div id="online-status" class="online-indicator"></div>' : ''}
+                            ${user.online ? '<div id="online-status" class="online-indicator"></div>' : '<div id="online-status" class="online-indicator hidden"></div>'}
                         `;
                     }
                     
                     // Mettre à jour le statut en ligne
                     const onlineStatus = document.getElementById('online-status');
                     if (user.online) {
+                        Logger.info(`${user.username} est en ligne`);
                         onlineStatus.classList.remove('hidden');
                     } else {
+                        Logger.info(`${user.username} est hors ligne`);
                         onlineStatus.classList.add('hidden');
                     }
                     
@@ -2179,14 +2585,16 @@
                     elements.navigationBar.classList.add('hidden');
                     
                     // Obtenir l'ID de conversation
+                    Logger.info("Récupération de l'ID de conversation");
                     const conversationId = await ConversationManager.getOrCreateConversation(
                         auth.currentUser.uid,
                         user.uid
                     );
                     
-                    // Stocker l'ID de conversation dans l'élément
+                    // Stocker l'ID de conversation dans des attributs de données
                     elements.chatScreen.setAttribute('data-conversation-id', conversationId);
                     elements.chatScreen.setAttribute('data-other-user-id', user.uid);
+                    Logger.info(`Conversation ID: ${conversationId}, Other User ID: ${user.uid}`);
                     
                     // Vider le champ de message
                     elements.messageInput.value = '';
@@ -2196,18 +2604,21 @@
                     
                     // Afficher un indicateur de chargement des messages
                     elements.chatMessages.innerHTML = '<div class="flex justify-center p-4"><div class="loader"></div></div>';
+                    Logger.info("Indicateur de chargement des messages affiché");
                     
                     // Écouter les messages de la conversation
-                    const unsubscribeMessages = ConversationManager.listenToMessages(
-                        conversationId,
-                        (messages) => {
+                    Logger.info(`Mise en place de l'écoute des messages pour la conversation: ${conversationId}`);
+                    try {
+                        const messagesCallback = (messages) => {
                             // Supprimer l'indicateur de chargement
                             elements.chatMessages.innerHTML = '';
                             
                             // Afficher les messages
                             if (messages.length === 0) {
+                                Logger.info("Aucun message dans la conversation");
                                 elements.chatMessages.innerHTML = '<p class="text-center p-4 text-gray-500">Aucun message. Commencez la conversation !</p>';
                             } else {
+                                Logger.info(`Affichage de ${messages.length} messages`);
                                 messages.forEach(message => {
                                     this.addMessageToUI(message);
                                 });
@@ -2218,32 +2629,40 @@
                             
                             // Marquer les messages comme lus
                             ConversationManager.markConversationAsRead(conversationId, auth.currentUser.uid);
-                        }
-                    );
-                    
-                    // Stocker l'unsubscribe function
-                    elements.chatScreen.setAttribute('data-unsubscribe-messages', unsubscribeMessages);
-                    
-                    // Écouter le statut de typing
-                    const unsubscribeTyping = ConversationManager.listenToTypingStatus(
-                        conversationId,
-                        user.uid,
-                        (isTyping) => {
+                        };
+                        
+                        const unsubscribeMessages = ConversationManager.listenToMessages(conversationId, messagesCallback);
+                        
+                        // Stocker l'unsubscribe function dans l'objet appData
+                        appData.unsubscribers.messages = unsubscribeMessages;
+                        Logger.info("Écoute des messages configurée avec succès");
+                        
+                        // Écouter le statut de typing
+                        Logger.info(`Mise en place de l'écoute du statut de typing pour: ${user.uid}`);
+                        const typingCallback = (isTyping) => {
                             if (isTyping) {
+                                Logger.info(`${user.username} est en train d'écrire`);
                                 elements.typingStatus.classList.remove('hidden');
                             } else {
                                 elements.typingStatus.classList.add('hidden');
                             }
-                        }
-                    );
-                    
-                    // Stocker l'unsubscribe function
-                    elements.chatScreen.setAttribute('data-unsubscribe-typing', unsubscribeTyping);
-                    
-                    // Écouter les changements de l'utilisateur
-                    const unsubscribeUser = UserManager.listenToUserChanges(
-                        user.uid,
-                        (updatedUser) => {
+                        };
+                        
+                        const unsubscribeTyping = ConversationManager.listenToTypingStatus(
+                            conversationId,
+                            user.uid,
+                            typingCallback
+                        );
+                        
+                        // Stocker l'unsubscribe function dans l'objet appData
+                        appData.unsubscribers.typing = unsubscribeTyping;
+                        Logger.info("Écoute du statut de typing configurée avec succès");
+                        
+                        // Écouter les changements de l'utilisateur
+                        Logger.info(`Mise en place de l'écoute des changements pour l'utilisateur: ${user.uid}`);
+                        const userCallback = (updatedUser) => {
+                            Logger.info(`Mise à jour de l'utilisateur: ${updatedUser.username}, online: ${updatedUser.online}`);
+                            
                             // Mettre à jour le statut en ligne
                             const onlineStatus = document.getElementById('online-status');
                             if (updatedUser.online) {
@@ -2254,6 +2673,7 @@
                             
                             // Mettre à jour l'avatar si changé
                             if (updatedUser.avatar !== user.avatar) {
+                                Logger.info(`Mise à jour de l'avatar: ${updatedUser.avatar}`);
                                 if (updatedUser.avatar) {
                                     elements.chatContactAvatar.innerHTML = `
                                         <img src="${updatedUser.avatar}" alt="${updatedUser.username}" class="h-10 w-10 rounded-full" style="object-fit: cover;">
@@ -2269,24 +2689,58 @@
                             
                             // Mettre à jour l'objet utilisateur
                             appData.currentChatUser = updatedUser;
-                        }
-                    );
-                    
-                    // Stocker l'unsubscribe function
-                    elements.chatScreen.setAttribute('data-unsubscribe-user', unsubscribeUser);
-                    
-                    // Focus sur le champ de saisie de message
-                    elements.messageInput.focus();
+                        };
+                        
+                        const unsubscribeUser = UserManager.listenToUserChanges(user.uid, userCallback);
+                        
+                        // Stocker l'unsubscribe function dans l'objet appData
+                        appData.unsubscribers.user = unsubscribeUser;
+                        Logger.info("Écoute des changements utilisateur configurée avec succès");
+                        
+                        // Focus sur le champ de saisie de message
+                        elements.messageInput.focus();
+                        
+                    } catch (subscriptionError) {
+                        Logger.error("Erreur lors de la configuration des souscriptions", subscriptionError);
+                        this.showNotification("Erreur lors du chargement de la conversation", "error");
+                    }
                 } catch (error) {
-                    console.error("Erreur lors de l'ouverture de la conversation:", error);
-                    this.showNotification("Erreur lors de l'ouverture de la conversation", "error");
+                    Logger.error("Erreur lors de l'ouverture de la conversation", error);
+                    this.showNotification(`Erreur lors de l'ouverture de la conversation: ${error.message || "Erreur inconnue"}`, "error");
                 } finally {
                     this.hideLoading();
+                }
+            },
+            
+            // Nettoyer les souscriptions de chat
+            cleanupChatSubscriptions: function() {
+                Logger.info("Nettoyage des souscriptions de chat");
+                
+                // Désinscription des messages
+                if (typeof appData.unsubscribers.messages === 'function') {
+                    Logger.info("Désinscription des messages");
+                    appData.unsubscribers.messages();
+                    appData.unsubscribers.messages = null;
+                }
+                
+                // Désinscription du statut de typing
+                if (typeof appData.unsubscribers.typing === 'function') {
+                    Logger.info("Désinscription du statut de typing");
+                    appData.unsubscribers.typing();
+                    appData.unsubscribers.typing = null;
+                }
+                
+                // Désinscription des changements d'utilisateur
+                if (typeof appData.unsubscribers.user === 'function') {
+                    Logger.info("Désinscription des changements d'utilisateur");
+                    appData.unsubscribers.user();
+                    appData.unsubscribers.user = null;
                 }
             },
 
             addMessageToUI: function(message, isSending = false) {
                 const isSent = message.senderId === auth.currentUser.uid;
+                Logger.info(`Ajout d'un message à l'UI: ${isSent ? 'envoyé' : 'reçu'}, id: ${message.id || 'temporaire'}, texte: ${message.text ? message.text.substring(0, 30) + (message.text.length > 30 ? '...' : '') : 'vide'}`);
                 
                 const messageEl = document.createElement('div');
                 messageEl.className = 'flex ' + (isSent ? 'justify-end' : 'justify-start');
@@ -2300,8 +2754,10 @@
                 
                 // Si le message contient un fichier
                 if (message.fileURL) {
+                    Logger.info(`Message avec fichier: ${message.fileURL}`);
                     // Vérifier si c'est une image
                     if (this.isImageURL(message.fileURL)) {
+                        Logger.info("Affichage d'une image");
                         messageContent = `
                             <div class="mb-1">
                                 <img src="${message.fileURL}" alt="Image partagée" class="max-w-full rounded-lg" style="max-height: 200px;">
@@ -2309,6 +2765,7 @@
                         `;
                     } else {
                         // C'est un autre type de fichier
+                        Logger.info("Affichage d'un lien vers un fichier");
                         messageContent = `
                             <div class="mb-1">
                                 <a href="${message.fileURL}" target="_blank" class="flex items-center text-primary">
@@ -2353,6 +2810,7 @@
                             bubble.classList.remove('sending');
                             const indicator = bubble.querySelector('.sending-indicator');
                             if (indicator) indicator.remove();
+                            Logger.info(`Message marqué comme envoyé: ${message.id || 'temporaire'}`);
                         }
                     }, 500);
                 }
@@ -2369,32 +2827,39 @@
             },
 
             formatTimeOrDate: function(timestamp) {
-                const now = new Date();
-                const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
-                
-                // Si c'est aujourd'hui, afficher l'heure
-                if (date.toDateString() === now.toDateString()) {
-                    return this.formatTime(date);
+                try {
+                    const now = new Date();
+                    const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
+                    
+                    // Si c'est aujourd'hui, afficher l'heure
+                    if (date.toDateString() === now.toDateString()) {
+                        return this.formatTime(date);
+                    }
+                    
+                    // Si c'est hier, afficher "Hier"
+                    const yesterday = new Date(now);
+                    yesterday.setDate(now.getDate() - 1);
+                    if (date.toDateString() === yesterday.toDateString()) {
+                        return 'Hier';
+                    }
+                    
+                    // Si c'est cette semaine, afficher le jour
+                    const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+                    if (now.getTime() - date.getTime() < 7 * 24 * 60 * 60 * 1000) {
+                        return days[date.getDay()];
+                    }
+                    
+                    // Sinon, afficher la date
+                    return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+                } catch (error) {
+                    Logger.error("Erreur lors du formatage de la date", error);
+                    return "Date inconnue";
                 }
-                
-                // Si c'est hier, afficher "Hier"
-                const yesterday = new Date(now);
-                yesterday.setDate(now.getDate() - 1);
-                if (date.toDateString() === yesterday.toDateString()) {
-                    return 'Hier';
-                }
-                
-                // Si c'est cette semaine, afficher le jour
-                const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
-                if (now.getTime() - date.getTime() < 7 * 24 * 60 * 60 * 1000) {
-                    return days[date.getDay()];
-                }
-                
-                // Sinon, afficher la date
-                return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
             },
 
             showScreen: function(screenId) {
+                Logger.info(`Affichage de l'écran: ${screenId}`);
+                
                 // Masquer tous les écrans
                 elements.conversationsScreen.classList.add('hidden');
                 elements.usersScreen.classList.add('hidden');
@@ -2408,26 +2873,9 @@
                 if (screenId !== 'chat-screen') {
                     elements.navigationBar.classList.remove('hidden');
                     
-                    // Désinscrire des écouteurs si on quitte la vue chat
-                    if (elements.chatScreen.hasAttribute('data-unsubscribe-messages')) {
-                        const unsubscribeMessages = elements.chatScreen.getAttribute('data-unsubscribe-messages');
-                        if (typeof unsubscribeMessages === 'function') {
-                            unsubscribeMessages();
-                        }
-                    }
-                    
-                    if (elements.chatScreen.hasAttribute('data-unsubscribe-typing')) {
-                        const unsubscribeTyping = elements.chatScreen.getAttribute('data-unsubscribe-typing');
-                        if (typeof unsubscribeTyping === 'function') {
-                            unsubscribeTyping();
-                        }
-                    }
-                    
-                    if (elements.chatScreen.hasAttribute('data-unsubscribe-user')) {
-                        const unsubscribeUser = elements.chatScreen.getAttribute('data-unsubscribe-user');
-                        if (typeof unsubscribeUser === 'function') {
-                            unsubscribeUser();
-                        }
+                    // Nettoyer les souscriptions si on quitte la vue chat
+                    if (screenId !== 'chat-screen') {
+                        this.cleanupChatSubscriptions();
                     }
                 }
                 
@@ -2443,6 +2891,8 @@
             },
 
             showNotification: function(message, type = 'info') {
+                Logger.info(`Notification: ${message}, type: ${type}`);
+                
                 const notification = document.createElement('div');
                 notification.className = `notification ${type === 'error' ? 'bg-red-500' : 'bg-primary'}`;
                 notification.textContent = message;
@@ -2495,6 +2945,8 @@
         // Module de gestion des thèmes
         var ThemeManager = {
             init: function() {
+                Logger.info("Initialisation du gestionnaire de thèmes");
+                
                 // Vérifier les préférences système pour le mode sombre/clair
                 this.detectSystemTheme();
                 
@@ -2514,40 +2966,48 @@
                 
                 // Appliquer le thème actuel
                 this.applyTheme();
+                
+                Logger.info(`Thème initialisé: mode ${appData.theme.mode}, couleur ${appData.theme.color}`);
             },
             
             // Méthode de détection du thème système compatible avec iOS 12
             detectSystemTheme: function() {
                 try {
+                    Logger.info("Détection du thème système");
                     // Tentative d'utilisation de matchMedia si disponible
                     if (window.matchMedia) {
                         const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
                         this.setDarkMode(isDarkMode);
+                        Logger.info(`Thème système détecté: ${isDarkMode ? 'sombre' : 'clair'}`);
                         
                         // Essayer d'ajouter un listener pour les changements de préférence
                         try {
                             window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+                                Logger.info(`Changement de thème système détecté: ${e.matches ? 'sombre' : 'clair'}`);
                                 ThemeManager.setDarkMode(e.matches);
                             });
                         } catch(e) {
+                            Logger.warn("Impossible d'utiliser addListener, tentative avec addEventListener", e);
                             // iOS 12 n'a pas addListener, on utilise addEventListener comme fallback
                             try {
                                 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+                                    Logger.info(`Changement de thème système détecté: ${e.matches ? 'sombre' : 'clair'}`);
                                     ThemeManager.setDarkMode(e.matches);
                                 });
                             } catch(err) {
                                 // Si tout échoue, on reste sur le thème par défaut
-                                console.log("Impossible de détecter les changements de thème système");
+                                Logger.error("Impossible de détecter les changements de thème système", err);
                             }
                         }
                     }
                 } catch(e) {
                     // Si matchMedia n'est pas disponible ou échoue, utiliser la valeur par défaut
-                    console.log("Impossible de détecter le thème système");
+                    Logger.error("Impossible de détecter le thème système", e);
                 }
             },
             
             setDarkMode: function(isDark) {
+                Logger.info(`Changement de mode: ${isDark ? 'sombre' : 'clair'}`);
                 appData.theme.mode = isDark ? 'dark' : 'light';
                 this.applyTheme();
                 
@@ -2560,11 +3020,14 @@
             },
             
             setThemeColor: function(color) {
+                Logger.info(`Changement de couleur de thème: ${color}`);
                 appData.theme.color = color;
                 this.applyTheme();
             },
             
             applyTheme: function() {
+                Logger.info(`Application du thème: mode ${appData.theme.mode}, couleur ${appData.theme.color}`);
+                
                 // Appliquer le mode sombre/clair
                 if (appData.theme.mode === 'dark') {
                     document.body.classList.add('dark');
@@ -2580,8 +3043,10 @@
                 if (auth.currentUser) {
                     updateDoc(doc(db, "users", auth.currentUser.uid), {
                         theme: appData.theme
+                    }).then(() => {
+                        Logger.info("Préférences de thème sauvegardées");
                     }).catch(error => {
-                        console.error("Erreur lors de la sauvegarde des préférences de thème:", error);
+                        Logger.error("Erreur lors de la sauvegarde des préférences de thème", error);
                     });
                 }
             }
@@ -2589,19 +3054,25 @@
 
         // Initialisation de l'application
         document.addEventListener('DOMContentLoaded', function() {
+            Logger.info("Événement DOMContentLoaded - Démarrage de l'application");
+            
             // Initialiser le thème
             ThemeManager.init();
             
             // Écouter les changements d'authentification
             onAuthStateChanged(auth, async (user) => {
+                Logger.info(`État d'authentification changé: ${user ? 'connecté' : 'déconnecté'}`);
+                
                 if (user) {
                     // L'utilisateur est connecté
                     try {
+                        Logger.info(`Récupération des données utilisateur pour: ${user.uid}`);
                         // Récupérer les données utilisateur
                         const userDoc = await getDoc(doc(db, "users", user.uid));
                         
                         if (userDoc.exists()) {
                             const userData = userDoc.data();
+                            Logger.info(`Données utilisateur récupérées: ${userData.username}`);
                             
                             appData.currentUser = {
                                 uid: user.uid,
@@ -2613,6 +3084,7 @@
                             
                             // Récupérer les préférences de thème
                             if (userData.theme) {
+                                Logger.info(`Préférences de thème récupérées: ${JSON.stringify(userData.theme)}`);
                                 appData.theme = userData.theme;
                                 ThemeManager.applyTheme();
                             }
@@ -2630,23 +3102,31 @@
                             UI.updateProfileInfo();
                             
                             // Écouter les conversations
+                            Logger.info("Mise en place de l'écoute des conversations");
+                            const conversationsCallback = conversations => {
+                                UI.renderConversations(conversations);
+                            };
+                            
                             const unsubscribeConversations = ConversationManager.listenToConversations(
                                 user.uid,
-                                conversations => {
-                                    UI.renderConversations(conversations);
-                                }
+                                conversationsCallback
                             );
+                            
+                            // Stocker l'unsubscribe function
+                            appData.unsubscribers.conversations = unsubscribeConversations;
                             
                             // Charger la liste des utilisateurs
                             try {
+                                Logger.info("Chargement de la liste des utilisateurs");
                                 const users = await UserManager.getAllUsers();
                                 UI.renderUsers(users);
                             } catch (error) {
-                                console.error("Erreur lors du chargement des utilisateurs:", error);
+                                Logger.error("Erreur lors du chargement des utilisateurs", error);
                                 UI.showNotification("Erreur lors du chargement des utilisateurs", "error");
                             }
                         } else {
                             // Le document utilisateur n'existe pas, déconnecter l'utilisateur
+                            Logger.warn(`Profil utilisateur introuvable pour: ${user.uid}`);
                             await signOut(auth);
                             
                             elements.splashScreen.classList.add('hidden');
@@ -2656,7 +3136,7 @@
                             UI.showNotification("Profil utilisateur introuvable", "error");
                         }
                     } catch (error) {
-                        console.error("Erreur lors de la récupération des données utilisateur:", error);
+                        Logger.error("Erreur lors de la récupération des données utilisateur", error);
                         
                         elements.splashScreen.classList.add('hidden');
                         elements.authScreen.classList.remove('hidden');
@@ -2666,21 +3146,27 @@
                     }
                 } else {
                     // L'utilisateur n'est pas connecté
+                    Logger.info("Affichage de l'écran d'authentification");
                     elements.splashScreen.classList.add('hidden');
                     elements.authScreen.classList.remove('hidden');
                     elements.authScreen.classList.add('flex');
                     elements.appContainer.classList.add('hidden');
+                    
+                    // Nettoyer les souscriptions actives
+                    UserManager.cleanupSubscriptions();
                 }
             });
             
             // Afficher l'animation de lancement pour un court instant
             setTimeout(function() {
                 // Le splash screen sera automatiquement masqué par onAuthStateChanged
+                Logger.info("Temporisation du splash screen terminée");
             }, 1500);
         });
 
         // Gestion des onglets de connexion/inscription
         elements.loginTab.addEventListener('click', function() {
+            Logger.info("Onglet de connexion sélectionné");
             elements.loginTab.classList.add('active');
             elements.registerTab.classList.remove('active');
             
@@ -2689,6 +3175,7 @@
         });
 
         elements.registerTab.addEventListener('click', function() {
+            Logger.info("Onglet d'inscription sélectionné");
             elements.registerTab.classList.add('active');
             elements.loginTab.classList.remove('active');
             
@@ -2699,11 +3186,13 @@
         // Gestion formulaire de connexion
         elements.loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            Logger.info("Soumission du formulaire de connexion");
             
             const email = elements.loginEmail.value.trim();
             const password = elements.loginPassword.value;
             
             if (!email || !password) {
+                Logger.warn("Formulaire de connexion incomplet");
                 UI.showNotification("Veuillez remplir tous les champs", "error");
                 return;
             }
@@ -2711,17 +3200,20 @@
             UI.showLoading("Connexion en cours...");
             
             try {
+                Logger.info(`Tentative de connexion pour: ${email}`);
                 const result = await UserManager.login(email, password);
                 
                 if (result.success) {
+                    Logger.info("Connexion réussie");
                     // La redirection sera gérée par onAuthStateChanged
                 } else {
                     UI.hideLoading();
+                    Logger.warn(`Échec de connexion: ${result.message}`);
                     UI.showNotification(result.message, "error");
                 }
             } catch (error) {
                 UI.hideLoading();
-                console.error("Erreur d'authentification:", error);
+                Logger.error("Erreur d'authentification", error);
                 UI.showNotification("Une erreur s'est produite. Veuillez réessayer.", "error");
             }
         });
@@ -2729,6 +3221,7 @@
         // Gestion formulaire d'inscription
         elements.registerForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            Logger.info("Soumission du formulaire d'inscription");
             
             const username = elements.registerUsername.value.trim();
             const email = elements.registerEmail.value.trim();
@@ -2738,22 +3231,26 @@
             
             // Validation des champs
             if (!username || !email || !phone || !password || !confirmPassword) {
+                Logger.warn("Formulaire d'inscription incomplet");
                 UI.showNotification("Veuillez remplir tous les champs", "error");
                 return;
             }
             
             if (!Validator.validateEmail(email)) {
+                Logger.warn(`Email invalide: ${email}`);
                 UI.showNotification("Adresse email invalide", "error");
                 return;
             }
             
             if (!Validator.validatePhone(phone)) {
+                Logger.warn(`Téléphone invalide: ${phone}`);
                 UI.showNotification("Numéro de téléphone invalide", "error");
                 return;
             }
             
             const passwordValidation = Validator.validatePassword(password, confirmPassword);
             if (!passwordValidation.valid) {
+                Logger.warn(`Validation de mot de passe échouée: ${passwordValidation.message}`);
                 UI.showNotification(passwordValidation.message, "error");
                 return;
             }
@@ -2761,17 +3258,20 @@
             UI.showLoading("Création du compte...");
             
             try {
+                Logger.info(`Tentative d'inscription pour: ${username}, ${email}`);
                 const result = await UserManager.register(username, email, phone, password);
                 
                 if (result.success) {
+                    Logger.info("Inscription réussie");
                     // La redirection sera gérée par onAuthStateChanged
                 } else {
                     UI.hideLoading();
+                    Logger.warn(`Échec d'inscription: ${result.message}`);
                     UI.showNotification(result.message, "error");
                 }
             } catch (error) {
                 UI.hideLoading();
-                console.error("Erreur d'inscription:", error);
+                Logger.error("Erreur d'inscription", error);
                 UI.showNotification("Une erreur s'est produite. Veuillez réessayer.", "error");
             }
         });
@@ -2806,16 +3306,23 @@
         });
 
         async function sendMessageHandler() {
+            Logger.info("Tentative d'envoi de message");
+            
             const text = elements.messageInput.value.trim();
             const conversationId = elements.chatScreen.getAttribute('data-conversation-id');
             const otherUserId = elements.chatScreen.getAttribute('data-other-user-id');
             
-            if ((!text && !appData.currentFile) || !otherUserId) return;
+            if ((!text && !appData.currentFile) || !otherUserId) {
+                Logger.warn("Impossible d'envoyer un message vide ou sans destinataire");
+                return;
+            }
             
             // Désactiver le bouton d'envoi pendant le traitement
             elements.sendMessage.disabled = true;
             
             try {
+                Logger.info(`Envoi de message à ${otherUserId}: ${text ? text.substring(0, 30) + (text.length > 30 ? '...' : '') : 'sans texte'}, avec fichier: ${!!appData.currentFile}`);
+                
                 // Créer le message temporaire pour l'affichage
                 const tempMessage = {
                     id: Date.now().toString(),
@@ -2838,6 +3345,7 @@
                 // Si un fichier est attaché, l'uploader d'abord
                 let fileURL = null;
                 if (appData.currentFile) {
+                    Logger.info(`Upload de fichier en cours: ${appData.currentFile.name}`);
                     const uploadResult = await ConversationManager.uploadFile(
                         appData.currentFile,
                         auth.currentUser.uid,
@@ -2845,6 +3353,7 @@
                     );
                     
                     if (uploadResult.success) {
+                        Logger.info(`Fichier uploadé avec succès: ${uploadResult.url}`);
                         fileURL = uploadResult.url;
                     } else {
                         throw new Error("Erreur lors de l'upload du fichier");
@@ -2855,14 +3364,20 @@
                 }
                 
                 // Envoyer le message
-                await ConversationManager.sendMessage(
+                const result = await ConversationManager.sendMessage(
                     auth.currentUser.uid,
                     otherUserId,
                     text,
                     fileURL
                 );
+                
+                if (result.success) {
+                    Logger.info(`Message envoyé avec succès, ID: ${result.messageId}`);
+                } else {
+                    throw new Error("Erreur lors de l'envoi du message");
+                }
             } catch (error) {
-                console.error("Erreur lors de l'envoi du message:", error);
+                Logger.error("Erreur lors de l'envoi du message", error);
                 UI.showNotification("Erreur lors de l'envoi du message", "error");
             } finally {
                 // Réactiver le bouton d'envoi
@@ -2873,13 +3388,17 @@
 
         // Gestion de l'attachement de fichiers
         elements.attachFile.addEventListener('click', function() {
+            Logger.info("Clic sur le bouton d'attachement de fichier");
             elements.fileUpload.click();
         });
 
         elements.fileUpload.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
+                Logger.info(`Fichier sélectionné: ${file.name}, taille: ${file.size} bytes, type: ${file.type}`);
+                
                 if (file.size > 5 * 1024 * 1024) { // 5MB max
+                    Logger.warn(`Fichier trop volumineux: ${file.size} bytes`);
                     UI.showNotification("Le fichier ne doit pas dépasser 5MB", "error");
                     return;
                 }
@@ -2894,18 +3413,23 @@
 
         // Gestion du bouton de retour dans la conversation
         elements.backToConversations.addEventListener('click', function() {
+            Logger.info("Retour à la liste des conversations");
             UI.showScreen('conversations-screen');
         });
 
         // Gestion de la modification de l'avatar
         elements.changeAvatar.addEventListener('click', function() {
+            Logger.info("Clic sur le bouton de changement d'avatar");
             elements.avatarUpload.click();
         });
 
         elements.avatarUpload.addEventListener('change', async function(e) {
             const file = e.target.files[0];
             if (file) {
+                Logger.info(`Avatar sélectionné: ${file.name}, taille: ${file.size} bytes, type: ${file.type}`);
+                
                 if (file.size > 5 * 1024 * 1024) { // 5MB max
+                    Logger.warn(`Avatar trop volumineux: ${file.size} bytes`);
                     UI.showNotification("L'image ne doit pas dépasser 5MB", "error");
                     return;
                 }
@@ -2916,13 +3440,14 @@
                     const result = await UserManager.updateAvatar(file);
                     
                     if (result.success) {
+                        Logger.info("Avatar mis à jour avec succès");
                         UI.updateProfileInfo();
                         UI.showNotification("Avatar mis à jour avec succès");
                     } else {
                         throw new Error(result.message);
                     }
                 } catch (error) {
-                    console.error("Erreur lors de la mise à jour de l'avatar:", error);
+                    Logger.error("Erreur lors de la mise à jour de l'avatar", error);
                     UI.showNotification("Erreur lors de la mise à jour de l'avatar", "error");
                 } finally {
                     UI.hideLoading();
@@ -2933,12 +3458,14 @@
         // Gestion des thèmes
         elements.lightMode.addEventListener('change', function() {
             if (elements.lightMode.checked) {
+                Logger.info("Passage au mode clair");
                 ThemeManager.setDarkMode(false);
             }
         });
 
         elements.darkMode.addEventListener('change', function() {
             if (elements.darkMode.checked) {
+                Logger.info("Passage au mode sombre");
                 ThemeManager.setDarkMode(true);
             }
         });
@@ -2946,6 +3473,7 @@
         elements.themeColors.forEach(radio => {
             radio.addEventListener('change', function() {
                 if (radio.checked) {
+                    Logger.info(`Changement de couleur de thème: ${radio.value}`);
                     ThemeManager.setThemeColor(radio.value);
                 }
             });
@@ -2953,21 +3481,25 @@
 
         // Gestion de la déconnexion
         elements.logoutButton.addEventListener('click', async function() {
+            Logger.info("Tentative de déconnexion");
             UI.showLoading("Déconnexion en cours...");
             
             try {
                 await UserManager.logout();
+                Logger.info("Déconnexion réussie");
                 UI.showNotification("Déconnexion réussie");
                 // La redirection sera gérée par onAuthStateChanged
             } catch (error) {
                 UI.hideLoading();
-                console.error("Erreur de déconnexion:", error);
+                Logger.error("Erreur de déconnexion", error);
                 UI.showNotification("Erreur lors de la déconnexion", "error");
             }
         });
 
         // Gestion de la suppression du compte
         elements.deleteAccountButton.addEventListener('click', async function() {
+            Logger.info("Tentative de suppression de compte");
+            
             if (confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
                 UI.showLoading("Suppression du compte en cours...");
                 
@@ -2975,6 +3507,7 @@
                     const result = await UserManager.deleteAccount();
                     
                     if (result.success) {
+                        Logger.info("Compte supprimé avec succès");
                         UI.showNotification("Compte supprimé avec succès");
                         // La redirection sera gérée par onAuthStateChanged
                     } else {
@@ -2982,18 +3515,22 @@
                     }
                 } catch (error) {
                     UI.hideLoading();
-                    console.error("Erreur lors de la suppression du compte:", error);
+                    Logger.error("Erreur lors de la suppression du compte", error);
                     UI.showNotification("Erreur lors de la suppression du compte", "error");
                 }
+            } else {
+                Logger.info("Suppression de compte annulée par l'utilisateur");
             }
         });
 
         // Gestion du statut en ligne/hors ligne
         elements.statusToggle.addEventListener('click', async function() {
+            Logger.info("Clic sur le bouton de statut en ligne");
+            
             try {
                 await UserManager.toggleOnlineStatus();
             } catch (error) {
-                console.error("Erreur lors du changement de statut:", error);
+                Logger.error("Erreur lors du changement de statut", error);
                 UI.showNotification("Erreur lors du changement de statut", "error");
             }
         });
@@ -3002,10 +3539,13 @@
         elements.navButtons.forEach(btn => {
             btn.addEventListener('click', function() {
                 const screenId = btn.getAttribute('data-screen');
+                Logger.info(`Navigation vers l'écran: ${screenId}`);
+                
                 UI.showScreen(screenId);
                 
                 // Actualiser les données si nécessaire
                 if (screenId === 'profile-screen') {
+                    Logger.info("Actualisation des informations de profil");
                     UI.updateProfileInfo();
                 }
             });
@@ -3013,14 +3553,20 @@
 
         // Gestion du rafraîchissement des conversations
         elements.refreshConversations.addEventListener('click', async function() {
-            if (!auth.currentUser) return;
+            Logger.info("Rafraîchissement des conversations");
+            
+            if (!auth.currentUser) {
+                Logger.warn("Tentative de rafraîchissement des conversations sans utilisateur connecté");
+                return;
+            }
             
             try {
                 UI.showLoading("Actualisation des conversations...");
                 const conversations = await ConversationManager.getUserConversations(auth.currentUser.uid);
                 UI.renderConversations(conversations);
+                Logger.info(`${conversations.length} conversations actualisées`);
             } catch (error) {
-                console.error("Erreur lors de l'actualisation des conversations:", error);
+                Logger.error("Erreur lors de l'actualisation des conversations", error);
                 UI.showNotification("Erreur lors de l'actualisation des conversations", "error");
             } finally {
                 UI.hideLoading();
@@ -3029,12 +3575,15 @@
 
         // Gestion du rafraîchissement des utilisateurs
         elements.refreshUsers.addEventListener('click', async function() {
+            Logger.info("Rafraîchissement des utilisateurs");
+            
             try {
                 UI.showLoading("Actualisation des utilisateurs...");
                 const users = await UserManager.getAllUsers();
                 UI.renderUsers(users);
+                Logger.info(`${users.length} utilisateurs actualisés`);
             } catch (error) {
-                console.error("Erreur lors de l'actualisation des utilisateurs:", error);
+                Logger.error("Erreur lors de l'actualisation des utilisateurs", error);
                 UI.showNotification("Erreur lors de l'actualisation des utilisateurs", "error");
             } finally {
                 UI.hideLoading();
@@ -3044,6 +3593,7 @@
         // Gestion du mot de passe oublié
         elements.forgotPassword.addEventListener('click', function(e) {
             e.preventDefault();
+            Logger.info("Clic sur 'Mot de passe oublié'");
             alert("Cette fonctionnalité n'est pas encore disponible.");
         });
     </script>
