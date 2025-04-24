@@ -1371,7 +1371,13 @@
             typingTimeout: null,
             currentChatUser: null,
             currentFile: null,
-            debugVisible: false
+            debugVisible: false,
+            unsubscribers: {
+                messages: null,
+                typing: null,
+                user: null,
+                conversations: null
+            }
         };
 
         // Elements DOM
@@ -1445,10 +1451,12 @@
                 const timestamp = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
                 
                 logEl.innerHTML = `<span class="timestamp">${timestamp}</span>${message}`;
-                elements.debugLogs.appendChild(logEl);
                 
-                // Faire défiler vers le bas
-                elements.debugLogs.scrollTop = elements.debugLogs.scrollHeight;
+                if (elements.debugLogs) {
+                    elements.debugLogs.appendChild(logEl);
+                    // Faire défiler vers le bas
+                    elements.debugLogs.scrollTop = elements.debugLogs.scrollHeight;
+                }
                 
                 // Montrer le panel si c'est une erreur
                 if (type === 'error' && !appData.debugVisible) {
@@ -1473,7 +1481,9 @@
             },
             
             clear: function() {
-                elements.debugLogs.innerHTML = '';
+                if (elements.debugLogs) {
+                    elements.debugLogs.innerHTML = '';
+                }
             },
             
             toggleDebugPanel: function(show) {
@@ -1483,9 +1493,9 @@
                     appData.debugVisible = show;
                 }
                 
-                if (appData.debugVisible) {
+                if (appData.debugVisible && elements.debugPanel) {
                     elements.debugPanel.classList.remove('hidden');
-                } else {
+                } else if (elements.debugPanel) {
                     elements.debugPanel.classList.add('hidden');
                 }
             }
@@ -2024,7 +2034,15 @@
                     orderBy("timestamp", "asc")
                 );
                 
-                return onSnapshot(q, (querySnapshot) => {
+                // Désinscrire l'écouteur précédent si existant
+                if (appData.unsubscribers.messages && typeof appData.unsubscribers.messages === 'function') {
+                    Logger.info(`Désabonnement de l'écouteur de messages précédent`);
+                    appData.unsubscribers.messages();
+                    appData.unsubscribers.messages = null;
+                }
+                
+                // Nouvel écouteur
+                appData.unsubscribers.messages = onSnapshot(q, (querySnapshot) => {
                     const messages = [];
                     querySnapshot.forEach((doc) => {
                         const messageData = doc.data();
@@ -2042,6 +2060,8 @@
                 }, error => {
                     Logger.error(`Erreur dans l'écouteur de messages: ${error.message}`);
                 });
+                
+                return appData.unsubscribers.messages;
             },
 
             // Récupérer les conversations d'un utilisateur
@@ -2100,7 +2120,15 @@
                     where("participants", "array-contains", userId)
                 );
                 
-                return onSnapshot(q, async (querySnapshot) => {
+                // Désinscrire l'écouteur précédent si existant
+                if (appData.unsubscribers.conversations && typeof appData.unsubscribers.conversations === 'function') {
+                    Logger.info(`Désabonnement de l'écouteur de conversations précédent`);
+                    appData.unsubscribers.conversations();
+                    appData.unsubscribers.conversations = null;
+                }
+                
+                // Nouvel écouteur
+                appData.unsubscribers.conversations = onSnapshot(q, async (querySnapshot) => {
                     Logger.info(`${querySnapshot.size} conversations détectées par l'écouteur`);
                     const conversations = [];
                     
@@ -2138,6 +2166,8 @@
                 }, error => {
                     Logger.error(`Erreur dans l'écouteur de conversations: ${error.message}`);
                 });
+                
+                return appData.unsubscribers.conversations;
             },
 
             // Supprimer toutes les conversations d'un utilisateur
@@ -2203,7 +2233,16 @@
             // Écouter le statut de typing
             listenToTypingStatus: function(conversationId, otherUserId, callback) {
                 Logger.info(`Mise en place de l'écouteur de typing pour conversation ${conversationId}, utilisateur ${otherUserId}`);
-                return onSnapshot(doc(db, "conversations", conversationId), (doc) => {
+                
+                // Désinscrire l'écouteur précédent si existant
+                if (appData.unsubscribers.typing && typeof appData.unsubscribers.typing === 'function') {
+                    Logger.info(`Désabonnement de l'écouteur de typing précédent`);
+                    appData.unsubscribers.typing();
+                    appData.unsubscribers.typing = null;
+                }
+                
+                // Nouvel écouteur
+                appData.unsubscribers.typing = onSnapshot(doc(db, "conversations", conversationId), (doc) => {
                     if (doc.exists()) {
                         const data = doc.data();
                         const isTyping = data[`typing_${otherUserId}`] || false;
@@ -2213,6 +2252,8 @@
                 }, error => {
                     Logger.error(`Erreur dans l'écouteur de typing: ${error.message}`);
                 });
+                
+                return appData.unsubscribers.typing;
             },
 
             // Télécharger un fichier pour un message
@@ -2449,30 +2490,34 @@
                         Logger.info(`Affichage de l'avatar de l'utilisateur ${user.username}`);
                         elements.chatContactAvatar.innerHTML = `
                             <img src="${user.avatar}" alt="${user.username}" class="h-10 w-10 rounded-full" style="object-fit: cover;">
-                            ${user.online ? '<div id="online-status" class="online-indicator"></div>' : ''}
                         `;
+                        // Créer l'indicateur de statut séparément
+                        const statusDiv = document.createElement('div');
+                        statusDiv.id = 'online-status';
+                        statusDiv.className = user.online ? 'online-indicator' : 'online-indicator hidden';
+                        elements.chatContactAvatar.appendChild(statusDiv);
                     } else {
                         Logger.info(`Affichage de l'initiale comme avatar pour ${user.username}`);
-                        elements.chatContactAvatar.innerHTML = `
-                            ${user.username.charAt(0).toUpperCase()}
-                            ${user.online ? '<div id="online-status" class="online-indicator"></div>' : ''}
-                        `;
+                        elements.chatContactAvatar.innerHTML = user.username.charAt(0).toUpperCase();
+                        // Créer l'indicateur de statut séparément
+                        const statusDiv = document.createElement('div');
+                        statusDiv.id = 'online-status';
+                        statusDiv.className = user.online ? 'online-indicator' : 'online-indicator hidden';
+                        elements.chatContactAvatar.appendChild(statusDiv);
                     }
                     
-                    // Mettre à jour le statut en ligne
-                    const onlineStatus = document.getElementById('online-status');
-                    if (user.online) {
-                        Logger.info(`${user.username} est en ligne`);
-                        onlineStatus.classList.remove('hidden');
-                    } else {
-                        Logger.info(`${user.username} est hors ligne`);
-                        onlineStatus.classList.add('hidden');
-                    }
+                    // Afficher l'écran de chat
+                    Logger.info(`Affichage de l'écran de chat`);
+                    elements.conversationsScreen.classList.add('hidden');
+                    elements.usersScreen.classList.add('hidden');
+                    elements.profileScreen.classList.add('hidden');
+                    elements.chatScreen.classList.remove('hidden');
                     
-                    // Afficher l'écran de chat, masquer les autres et la barre de navigation
-                    this.showScreen('chat-screen');
-                    elements.navigationBar.classList.add('hidden');
-                    Logger.info(`Écran de chat affiché, barre de navigation masquée`);
+                    // Masquer la barre de navigation
+                    Logger.info(`Masquage de la barre de navigation`);
+                    if (elements.navigationBar) {
+                        elements.navigationBar.classList.add('hidden');
+                    }
                     
                     // Obtenir l'ID de conversation
                     this.showLoading("Création de la conversation...");
@@ -2499,21 +2544,8 @@
                             <div class="text-gray-500">Chargement des messages...</div>
                         </div>`;
                     
-                    // Désinscrire des écouteurs précédents si présents
-                    if (typeof elements.chatScreen.unsubscribeMessages === 'function') {
-                        Logger.info(`Désinscription de l'écouteur de messages précédent`);
-                        elements.chatScreen.unsubscribeMessages();
-                    }
-                    
-                    if (typeof elements.chatScreen.unsubscribeTyping === 'function') {
-                        Logger.info(`Désinscription de l'écouteur de typing précédent`);
-                        elements.chatScreen.unsubscribeTyping();
-                    }
-                    
-                    if (typeof elements.chatScreen.unsubscribeUser === 'function') {
-                        Logger.info(`Désinscription de l'écouteur d'utilisateur précédent`);
-                        elements.chatScreen.unsubscribeUser();
-                    }
+                    // Nettoyer les écouteurs précédents
+                    this.cleanupChatListeners();
                     
                     // Écouter les messages de la conversation
                     this.showLoading("Chargement des messages...");
@@ -2564,26 +2596,20 @@
                         }
                     );
                     
-                    // Stocker la fonction de désinscription
-                    elements.chatScreen.unsubscribeMessages = unsubscribeMessages;
-                    
                     // Écouter le statut de typing
                     Logger.info(`Mise en place de l'écouteur de typing pour ${user.username}`);
                     const unsubscribeTyping = ConversationManager.listenToTypingStatus(
                         conversationId,
                         user.uid,
                         (isTyping) => {
-                            if (isTyping) {
+                            if (isTyping && elements.typingStatus) {
                                 Logger.info(`${user.username} est en train d'écrire`);
                                 elements.typingStatus.classList.remove('hidden');
-                            } else {
+                            } else if (elements.typingStatus) {
                                 elements.typingStatus.classList.add('hidden');
                             }
                         }
                     );
-                    
-                    // Stocker la fonction de désinscription
-                    elements.chatScreen.unsubscribeTyping = unsubscribeTyping;
                     
                     // Écouter les changements de l'utilisateur
                     Logger.info(`Mise en place de l'écouteur de changements pour ${user.username}`);
@@ -2594,28 +2620,20 @@
                             
                             // Mettre à jour le statut en ligne
                             const onlineStatus = document.getElementById('online-status');
-                            if (updatedUser.online) {
-                                Logger.info(`${updatedUser.username} est maintenant en ligne`);
-                                onlineStatus.classList.remove('hidden');
-                            } else {
-                                Logger.info(`${updatedUser.username} est maintenant hors ligne`);
-                                onlineStatus.classList.add('hidden');
+                            if (onlineStatus) {
+                                if (updatedUser.online) {
+                                    Logger.info(`${updatedUser.username} est maintenant en ligne`);
+                                    onlineStatus.classList.remove('hidden');
+                                } else {
+                                    Logger.info(`${updatedUser.username} est maintenant hors ligne`);
+                                    onlineStatus.classList.add('hidden');
+                                }
                             }
                             
                             // Mettre à jour l'avatar si changé
                             if (updatedUser.avatar !== user.avatar) {
                                 Logger.info(`Avatar de ${updatedUser.username} mis à jour`);
-                                if (updatedUser.avatar) {
-                                    elements.chatContactAvatar.innerHTML = `
-                                        <img src="${updatedUser.avatar}" alt="${updatedUser.username}" class="h-10 w-10 rounded-full" style="object-fit: cover;">
-                                        ${updatedUser.online ? '<div id="online-status" class="online-indicator"></div>' : '<div id="online-status" class="online-indicator hidden"></div>'}
-                                    `;
-                                } else {
-                                    elements.chatContactAvatar.innerHTML = `
-                                        ${updatedUser.username.charAt(0).toUpperCase()}
-                                        ${updatedUser.online ? '<div id="online-status" class="online-indicator"></div>' : '<div id="online-status" class="online-indicator hidden"></div>'}
-                                    `;
-                                }
+                                this.updateChatAvatar(updatedUser);
                             }
                             
                             // Mettre à jour l'objet utilisateur
@@ -2623,25 +2641,62 @@
                         }
                     );
                     
-                    // Stocker la fonction de désinscription
-                    elements.chatScreen.unsubscribeUser = unsubscribeUser;
-                    
                     // Focus sur le champ de saisie de message
-                    elements.messageInput.focus();
+                    if (elements.messageInput) {
+                        elements.messageInput.focus();
+                    }
                     
                 } catch (error) {
                     Logger.error(`Erreur lors de l'ouverture de la conversation: ${error.message}`);
                     this.showNotification("Erreur lors de l'ouverture de la conversation. Veuillez réessayer.", "error");
                     
                     // Ajouter une visualisation de l'erreur dans l'interface de chat
-                    elements.chatMessages.innerHTML = `
-                        <div class="p-4 text-center">
-                            <div class="debug-log error">Erreur: ${error.message}</div>
-                            <p class="text-gray-500 mt-2">Veuillez retourner et réessayer</p>
-                        </div>`;
+                    if (elements.chatMessages) {
+                        elements.chatMessages.innerHTML = `
+                            <div class="p-4 text-center">
+                                <div class="debug-log error">Erreur: ${error.message}</div>
+                                <p class="text-gray-500 mt-2">Veuillez retourner et réessayer</p>
+                            </div>`;
+                    }
                 } finally {
                     this.hideLoading();
                 }
+            },
+            
+            updateChatAvatar: function(user) {
+                if (!elements.chatContactAvatar) return;
+                
+                // Sauvegarder l'élément de statut en ligne s'il existe
+                const existingStatus = document.getElementById('online-status');
+                const isOnlineVisible = existingStatus && !existingStatus.classList.contains('hidden');
+                
+                // Mettre à jour l'avatar
+                if (user.avatar) {
+                    elements.chatContactAvatar.innerHTML = `
+                        <img src="${user.avatar}" alt="${user.username}" class="h-10 w-10 rounded-full" style="object-fit: cover;">
+                    `;
+                } else {
+                    elements.chatContactAvatar.innerHTML = user.username.charAt(0).toUpperCase();
+                }
+                
+                // Recréer l'indicateur de statut
+                const newStatus = document.createElement('div');
+                newStatus.id = 'online-status';
+                newStatus.className = isOnlineVisible ? 'online-indicator' : 'online-indicator hidden';
+                elements.chatContactAvatar.appendChild(newStatus);
+            },
+            
+            cleanupChatListeners: function() {
+                // Désinscrire tous les écouteurs
+                Logger.info('Nettoyage des écouteurs de chat');
+                
+                Object.keys(appData.unsubscribers).forEach(key => {
+                    if (appData.unsubscribers[key] && typeof appData.unsubscribers[key] === 'function') {
+                        Logger.info(`Désabonnement de l'écouteur ${key}`);
+                        appData.unsubscribers[key]();
+                        appData.unsubscribers[key] = null;
+                    }
+                });
             },
 
             addMessageToUI: function(message, isSending = false) {
@@ -2709,27 +2764,33 @@
                     </div>
                 `;
                 
-                elements.chatMessages.appendChild(messageEl);
-                
-                // Défiler vers le bas
-                this.scrollToBottom();
-                
-                // Si le message était en cours d'envoi, marquer comme envoyé après un court délai
-                if (isSending) {
-                    setTimeout(function() {
-                        const bubble = messageEl.querySelector('.chat-bubble');
-                        if (bubble) {
-                            bubble.classList.remove('sending');
-                            const indicator = bubble.querySelector('.sending-indicator');
-                            if (indicator) indicator.remove();
-                            Logger.info(`Message marqué comme envoyé dans l'interface`);
-                        }
-                    }, 500);
+                if (elements.chatMessages) {
+                    elements.chatMessages.appendChild(messageEl);
+                    
+                    // Défiler vers le bas
+                    this.scrollToBottom();
+                    
+                    // Si le message était en cours d'envoi, marquer comme envoyé après un court délai
+                    if (isSending) {
+                        setTimeout(function() {
+                            const bubble = messageEl.querySelector('.chat-bubble');
+                            if (bubble) {
+                                bubble.classList.remove('sending');
+                                const indicator = bubble.querySelector('.sending-indicator');
+                                if (indicator) indicator.remove();
+                                Logger.info(`Message marqué comme envoyé dans l'interface`);
+                            }
+                        }, 500);
+                    }
+                } else {
+                    Logger.error("Impossible d'ajouter le message : l'élément chatMessages n'existe pas");
                 }
             },
 
             scrollToBottom: function() {
-                elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+                if (elements.chatMessages) {
+                    elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+                }
             },
 
             formatTime: function(timestamp) {
@@ -2773,30 +2834,22 @@
                 elements.profileScreen.classList.add('hidden');
                 
                 // Afficher l'écran demandé
-                document.getElementById(screenId).classList.remove('hidden');
+                const screenToShow = document.getElementById(screenId);
+                if (screenToShow) {
+                    screenToShow.classList.remove('hidden');
+                } else {
+                    Logger.error(`Écran ${screenId} introuvable`);
+                    return;
+                }
                 
                 // Afficher la barre de navigation si on n'est pas dans la vue chat
                 if (screenId !== 'chat-screen') {
-                    elements.navigationBar.classList.remove('hidden');
+                    if (elements.navigationBar) {
+                        elements.navigationBar.classList.remove('hidden');
+                    }
                     
                     // Désinscrire des écouteurs si on quitte la vue chat
-                    if (elements.chatScreen.unsubscribeMessages) {
-                        Logger.info(`Désinscription de l'écouteur de messages lors du changement d'écran`);
-                        elements.chatScreen.unsubscribeMessages();
-                        elements.chatScreen.unsubscribeMessages = null;
-                    }
-                    
-                    if (elements.chatScreen.unsubscribeTyping) {
-                        Logger.info(`Désinscription de l'écouteur de typing lors du changement d'écran`);
-                        elements.chatScreen.unsubscribeTyping();
-                        elements.chatScreen.unsubscribeTyping = null;
-                    }
-                    
-                    if (elements.chatScreen.unsubscribeUser) {
-                        Logger.info(`Désinscription de l'écouteur d'utilisateur lors du changement d'écran`);
-                        elements.chatScreen.unsubscribeUser();
-                        elements.chatScreen.unsubscribeUser = null;
-                    }
+                    this.cleanupChatListeners();
                 }
                 
                 // Mettre à jour le bouton de navigation actif
@@ -2816,15 +2869,20 @@
                 notification.className = `notification ${type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : type === 'warning' ? 'bg-yellow-500' : 'bg-primary'}`;
                 notification.textContent = message;
                 
-                elements.notificationArea.appendChild(notification);
-                
-                // Supprimer la notification après 3 secondes
-                setTimeout(() => {
-                    notification.classList.add('hide');
+                if (elements.notificationArea) {
+                    elements.notificationArea.appendChild(notification);
+                    
+                    // Supprimer la notification après 3 secondes
                     setTimeout(() => {
-                        notification.remove();
-                    }, 300);
-                }, 3000);
+                        notification.classList.add('hide');
+                        setTimeout(() => {
+                            notification.remove();
+                        }, 300);
+                    }, 3000);
+                } else {
+                    Logger.error("Impossible d'afficher la notification : l'élément notificationArea n'existe pas");
+                    alert(message); // Fallback
+                }
             },
 
             isImageURL: function(url) {
@@ -2921,10 +2979,12 @@
                 this.applyTheme();
                 
                 // Mettre à jour les boutons radio
-                if (isDark) {
-                    elements.darkMode.checked = true;
-                } else {
-                    elements.lightMode.checked = true;
+                if (elements.darkMode && elements.lightMode) {
+                    if (isDark) {
+                        elements.darkMode.checked = true;
+                    } else {
+                        elements.lightMode.checked = true;
+                    }
                 }
             },
             
