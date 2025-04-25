@@ -6,6 +6,7 @@
     <title>BetXchange</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon-192x192.png" type="image/png">
     <meta name="theme-color" content="#5D5CDE">
     <style>
         /* Styles de base */
@@ -431,44 +432,64 @@
             border-top: 1px solid var(--theme-dark-border);
         }
         
-        .message-input {
-            border-radius: 24px;
-            padding-left: 16px;
-            padding-right: 16px;
-            transition: all 0.3s ease;
+        .message-input-wrapper {
+            display: flex;
             background-color: var(--theme-light-bg);
-            color: var(--theme-light-text);
+            border-radius: 24px;
             border: 1px solid var(--theme-light-border);
-            height: 46px;
+            position: relative;
+            overflow: hidden;
         }
-        .dark .message-input {
+        
+        .dark .message-input-wrapper {
             background-color: var(--theme-dark-bg);
-            color: var(--theme-dark-text);
-            border: 1px solid var(--theme-dark-border);
+            border-color: var(--theme-dark-border);
         }
+        
+        .message-input {
+            border: none;
+            outline: none;
+            flex: 1;
+            padding: 0 16px;
+            height: 46px;
+            background-color: transparent;
+            color: var(--theme-light-text);
+            font-size: 16px;
+        }
+        
+        .dark .message-input {
+            color: var(--theme-dark-text);
+        }
+        
         .message-input:focus {
+            outline: none;
+        }
+        
+        .message-input-wrapper:focus-within {
             box-shadow: 0 0 0 2px rgba(93, 92, 222, 0.3);
             border-color: var(--theme-primary);
         }
         
         .send-button {
-            border-radius: 0 24px 24px 0;
+            background-color: var(--theme-primary);
+            color: white;
+            width: 56px; /* Augmenté de 48px à 56px */
             height: 46px;
-            width: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: none;
+            outline: none;
+            cursor: pointer;
             transition: all 0.3s ease;
-            background-color: var(--theme-primary);
-            color: white;
-            margin-left: -2px;
         }
+        
         .send-button:hover {
             background-color: var(--theme-primary-dark);
-            transform: translateY(-1px);
         }
+        
         .send-button:active {
-            transform: scale(0.98) translateY(0);
+            transform: scale(0.95);
         }
         
         /* Search input style */
@@ -1454,9 +1475,9 @@
                             </svg>
                         </button>
                         <input type="file" id="file-upload" class="hidden" accept="image/*">
-                        <div class="flex flex-1 relative">
-                            <input type="text" id="message-input" class="message-input flex-1 py-3 pr-12 text-base rounded-l-full" placeholder="Écrire un message...">
-                            <button id="send-message" class="send-button rounded-r-full border-0">
+                        <div class="message-input-wrapper flex-1">
+                            <input type="text" id="message-input" class="message-input text-base" placeholder="Écrire un message...">
+                            <button id="send-message" class="send-button">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                                 </svg>
@@ -1616,7 +1637,7 @@
             apiKey: "AIzaSyAHkI_ZfUX0jheLQyYy49iYLh1LUwxw26Y",
             authDomain: "nlp-9057d.firebaseapp.com",
             projectId: "nlp-9057d",
-            storageBucket: "nlp-9057d.firebaseapp.com",
+            storageBucket: "nlp-9057d.appspot.com",
             messagingSenderId: "713755293336",
             appId: "1:713755293336:web:89638ccb2839975f2802ed",
             measurementId: "G-4HVY16QT8M"
@@ -2054,6 +2075,7 @@
                     const users = [];
                     
                     usersSnapshot.forEach((doc) => {
+                        // Ne pas inclure l'utilisateur actuel dans la liste
                         if (auth.currentUser && doc.id !== auth.currentUser.uid) {
                             const userData = doc.data();
                             users.push({
@@ -2079,7 +2101,7 @@
                 }
             },
 
-            // Filtrer les utilisateurs par nom, email ou téléphone
+            // Filtrer les utilisateurs par nom ou téléphone (plus d'email)
             filterUsers: function(searchTerm) {
                 Logger.info(`Filtrage des utilisateurs avec le terme: "${searchTerm}"`);
                 if (!searchTerm || searchTerm.trim() === '') {
@@ -3527,14 +3549,6 @@
                             });
                             Logger.info(`Statut utilisateur mis à jour à "en ligne"`);
                             
-                            appData.currentUser = {
-                                uid: user.uid,
-                                username: userData.username,
-                                email: userData.email,
-                                phone: userData.phone,
-                                avatar: userData.avatar
-                            };
-                            
                             // Récupérer les préférences de thème
                             if (userData.theme) {
                                 appData.theme = userData.theme;
@@ -3542,6 +3556,14 @@
                                 ThemeManager.applyTheme();
                                 ThemeManager.updateUI();
                             }
+                            
+                            appData.currentUser = {
+                                uid: user.uid,
+                                username: userData.username,
+                                email: userData.email,
+                                phone: userData.phone,
+                                avatar: userData.avatar
+                            };
                             
                             // Mettre à jour le statut en ligne
                             appData.isOnline = userData.online !== undefined ? userData.online : true;
@@ -3631,16 +3653,18 @@
             
             // Initialisations supplémentaires
             initEventListeners();
-
-            // Enregistrer le service worker pour les fonctionnalités PWA
+            
+            // Initialiser le Service Worker
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js')
-                    .then((registration) => {
-                        Logger.info('Service Worker enregistré avec succès:', registration);
-                    })
-                    .catch((error) => {
-                        Logger.error('Erreur lors de l\'enregistrement du Service Worker:', error);
-                    });
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(registration => {
+                            Logger.success('Service Worker enregistré avec succès: ', registration.scope);
+                        })
+                        .catch(error => {
+                            Logger.error('Erreur d\'enregistrement du Service Worker: ', error);
+                        });
+                });
             }
         });
 
