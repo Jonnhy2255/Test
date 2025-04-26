@@ -7,9 +7,9 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="icon-192x192.png" type="image/png">
-    <meta name="theme-color" content="#5D5CDE">
+    <meta name="theme-color" content="#0065FF">
     <style>
-        /* Styles de base */
+        /* Base styles */
         * {
             margin: 0;
             padding: 0;
@@ -32,12 +32,14 @@
             color: #F5F5F5;
         }
         
-        /* Variables CSS */
+        /* CSS Variables */
         :root {
-            --theme-primary: #5D5CDE;
-            --theme-primary-light: #7D7CF0;
-            --theme-primary-dark: #4C4BAE;
-            --theme-secondary: #7D7CF0;
+            --theme-primary: #0065FF;
+            --theme-primary-light: #4D94FF;
+            --theme-primary-dark: #0046B5;
+            --theme-secondary: #4D94FF;
+            --theme-gradient-start: #0065FF;
+            --theme-gradient-end: #5D5CDE;
             --theme-success: #4CAF50;
             --theme-error: #EF4444;
             --theme-warning: #F59E0B;
@@ -61,33 +63,45 @@
             --transition-enter: 0.25s cubic-bezier(0, 0, 0.2, 1);
             --transition-leave: 0.2s cubic-bezier(0.4, 0, 1, 1);
             --transition-sharp: 0.15s cubic-bezier(0.4, 0, 0.6, 1);
+            
+            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
         }
         
-        /* Couleurs de thèmes prédéfinies */
+        /* Theme colors */
         .theme-default {
-            --theme-primary: #5D5CDE;
-            --theme-primary-light: #7D7CF0;
-            --theme-primary-dark: #4C4BAE;
+            --theme-primary: #0065FF;
+            --theme-primary-light: #4D94FF;
+            --theme-primary-dark: #0046B5;
+            --theme-gradient-start: #0065FF;
+            --theme-gradient-end: #5D5CDE;
         }
         .theme-blue {
             --theme-primary: #2196F3;
             --theme-primary-light: #64B5F6;
             --theme-primary-dark: #1976D2;
+            --theme-gradient-start: #2196F3;
+            --theme-gradient-end: #64B5F6;
         }
         .theme-green {
             --theme-primary: #4CAF50;
             --theme-primary-light: #81C784;
             --theme-primary-dark: #388E3C;
+            --theme-gradient-start: #4CAF50;
+            --theme-gradient-end: #81C784;
         }
         .theme-purple {
             --theme-primary: #9C27B0;
             --theme-primary-light: #BA68C8;
             --theme-primary-dark: #7B1FA2;
+            --theme-gradient-start: #9C27B0;
+            --theme-gradient-end: #BA68C8;
         }
         .theme-orange {
             --theme-primary: #FF9800;
             --theme-primary-light: #FFB74D;
             --theme-primary-dark: #F57C00;
+            --theme-gradient-start: #FF9800;
+            --theme-gradient-end: #FFB74D;
         }
         
         .bg-primary {
@@ -104,6 +118,10 @@
         }
         .border-primary {
             border-color: var(--theme-primary);
+        }
+        
+        .bg-gradient {
+            background: linear-gradient(135deg, var(--theme-gradient-start), var(--theme-gradient-end));
         }
         
         /* Surface colors */
@@ -191,7 +209,7 @@
             justify-content: space-between;
         }
         
-        /* Utilitaires */
+        /* Utilities */
         .hidden {
             display: none !important;
         }
@@ -218,29 +236,32 @@
             font-weight: 500;
         }
         
-        /* Animation de chargement */
-        .splash-logo {
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
+        /* Fixed positioning for chat header */
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
         }
         
-        .splash-logo-glow {
-            animation: glow 3s ease-in-out infinite;
+        /* Message input container fixed positioning */
+        .message-input-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            padding-bottom: calc(8px + var(--safe-area-inset-bottom));
         }
+        
+        /* Loading Animation */
         @keyframes glow {
-            0% { filter: drop-shadow(0 0 5px rgba(93, 92, 222, 0.4)); }
-            50% { filter: drop-shadow(0 0 15px rgba(93, 92, 222, 0.8)); }
-            100% { filter: drop-shadow(0 0 5px rgba(93, 92, 222, 0.4)); }
+            0% { filter: drop-shadow(0 0 5px rgba(0, 101, 255, 0.4)); }
+            50% { filter: drop-shadow(0 0 15px rgba(0, 101, 255, 0.8)); }
+            100% { filter: drop-shadow(0 0 5px rgba(0, 101, 255, 0.4)); }
         }
         
-        .loading-dots:after {
-            content: '...';
-            animation: dots 1.5s steps(4, end) infinite;
-        }
         @keyframes dots {
             0%, 20% { opacity: 0; }
             40% { opacity: 0.3; }
@@ -248,7 +269,7 @@
             80%, 100% { opacity: 1; }
         }
         
-        /* Styles des bulles de chat */
+        /* Chat bubble styles */
         .chat-bubble {
             max-width: 80%;
             word-wrap: break-word;
@@ -291,7 +312,7 @@
             }
         }
         
-        /* Envoi animation */
+        /* Sending animation */
         .sending-indicator {
             position: absolute;
             bottom: -5px;
@@ -305,7 +326,7 @@
             100% { opacity: 0.6; }
         }
         
-        /* Style scrollbar */
+        /* Scrollbar styling */
         .hide-scrollbar {
             -webkit-overflow-scrolling: touch;
             overflow-y: auto;
@@ -347,7 +368,7 @@
             position: absolute;
             bottom: 0;
             right: 0;
-            background-color: var(--theme-primary);
+            background: linear-gradient(135deg, var(--theme-gradient-start), var(--theme-gradient-end));
             width: 36px;
             height: 36px;
             border-radius: 50%;
@@ -371,7 +392,7 @@
         
         /* Loader spin */
         .loader {
-            border: 3px solid rgba(93, 92, 222, 0.1);
+            border: 3px solid rgba(0, 101, 255, 0.1);
             border-radius: 50%;
             border-top: 3px solid var(--theme-primary);
             width: 40px;
@@ -419,12 +440,13 @@
             to { transform: scale(1); opacity: 1; }
         }
         
-        /* Message input style */
+        /* Message input style - Redesigned */
         .message-input-container {
             box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
             background-color: var(--theme-light-surface);
             transition: all 0.3s ease;
             border-top: 1px solid var(--theme-light-border);
+            padding: 12px 16px;
         }
         .dark .message-input-container {
             background-color: var(--theme-dark-surface);
@@ -432,6 +454,7 @@
             border-top: 1px solid var(--theme-dark-border);
         }
         
+        /* Redesigned message input */
         .message-input-wrapper {
             display: flex;
             background-color: var(--theme-light-bg);
@@ -439,19 +462,22 @@
             border: 1px solid var(--theme-light-border);
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
         
         .dark .message-input-wrapper {
             background-color: var(--theme-dark-bg);
             border-color: var(--theme-dark-border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
         .message-input {
             border: none;
             outline: none;
             flex: 1;
-            padding: 0 16px;
-            height: 46px;
+            padding: 12px 16px;
+            height: 48px;
             background-color: transparent;
             color: var(--theme-light-text);
             font-size: 16px;
@@ -466,30 +492,43 @@
         }
         
         .message-input-wrapper:focus-within {
-            box-shadow: 0 0 0 2px rgba(93, 92, 222, 0.3);
+            box-shadow: 0 0 0 2px rgba(0, 101, 255, 0.3);
             border-color: var(--theme-primary);
+            transform: translateY(-1px);
         }
         
+        /* New send button design */
         .send-button {
-            background-color: var(--theme-primary);
-            color: white;
-            width: 56px; /* Augmenté de 48px à 56px */
-            height: 46px;
+            width: 48px;
+            height: 48px;
+            background: none;
+            border: none;
+            color: var(--theme-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            border: none;
-            outline: none;
             cursor: pointer;
             transition: all 0.3s ease;
+            border-radius: 0 24px 24px 0;
+            padding-right: 4px;
         }
         
-        .send-button:hover {
-            background-color: var(--theme-primary-dark);
-        }
-        
+        .send-button:hover, 
         .send-button:active {
-            transform: scale(0.95);
+            background-color: rgba(0, 101, 255, 0.1);
+            color: var(--theme-primary-dark);
+        }
+        
+        .send-button svg {
+            transition: transform 0.2s ease;
+        }
+        
+        .send-button:active svg {
+            transform: scale(0.9) translateX(2px);
+        }
+        
+        .message-input:not(:placeholder-shown) + .send-button {
+            color: var(--theme-primary);
         }
         
         /* Search input style */
@@ -501,24 +540,27 @@
         .search-input {
             width: 100%;
             border-radius: 24px;
-            height: 46px;
+            height: 48px;
             padding: 0 16px 0 44px;
             transition: all 0.3s ease;
             background-color: var(--theme-light-bg);
             color: var(--theme-light-text);
             border: 1px solid var(--theme-light-border);
             font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
         
         .dark .search-input {
             background-color: var(--theme-dark-bg);
             color: var(--theme-dark-text);
             border: 1px solid var(--theme-dark-border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
         
         .search-input:focus {
-            box-shadow: 0 0 0 2px rgba(93, 92, 222, 0.3);
+            box-shadow: 0 0 0 2px rgba(0, 101, 255, 0.3);
             border-color: var(--theme-primary);
+            transform: translateY(-1px);
         }
         
         .search-icon {
@@ -538,12 +580,19 @@
         .nav-bar {
             background-color: var(--theme-light-surface);
             border-top: 1px solid var(--theme-light-border);
-            padding: 8px 0;
+            padding: 8px 0 calc(8px + var(--safe-area-inset-bottom));
             transition: all 0.3s ease;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 30;
         }
         .dark .nav-bar {
             background-color: var(--theme-dark-surface);
             border-top: 1px solid var(--theme-dark-border);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
         }
         
         .nav-btn {
@@ -572,7 +621,7 @@
         
         .nav-btn.active svg {
             transform: translateY(-2px);
-            filter: drop-shadow(0 3px 5px rgba(93, 92, 222, 0.4));
+            filter: drop-shadow(0 3px 5px rgba(0, 101, 255, 0.4));
         }
         
         .nav-btn:after {
@@ -583,7 +632,7 @@
             transform: translateX(-50%) scaleX(0);
             width: 20px;
             height: 3px;
-            background-color: var(--theme-primary);
+            background: linear-gradient(90deg, var(--theme-gradient-start), var(--theme-gradient-end));
             border-radius: 3px;
             transition: transform 0.3s ease;
         }
@@ -624,13 +673,13 @@
             border-bottom: none;
         }
         .setting-option:hover {
-            background-color: rgba(93, 92, 222, 0.05);
+            background-color: rgba(0, 101, 255, 0.05);
         }
         .dark .setting-option:hover {
-            background-color: rgba(93, 92, 222, 0.1);
+            background-color: rgba(0, 101, 255, 0.1);
         }
         
-        /* Thème radio buttons */
+        /* Theme radio buttons */
         .theme-radio-label {
             display: inline-flex;
             align-items: center;
@@ -645,7 +694,7 @@
             border: 2px solid transparent;
         }
         .theme-radio-label:hover {
-            background-color: rgba(93, 92, 222, 0.1);
+            background-color: rgba(0, 101, 255, 0.1);
         }
         .theme-radio-label input {
             position: absolute;
@@ -662,7 +711,7 @@
         }
         .theme-radio-label.checked {
             border-color: var(--theme-primary);
-            background-color: rgba(93, 92, 222, 0.1);
+            background-color: rgba(0, 101, 255, 0.1);
         }
         
         .checkmark {
@@ -777,7 +826,7 @@
         }
         
         input:checked + .toggle-slider {
-            background-color: var(--theme-primary);
+            background: linear-gradient(135deg, var(--theme-gradient-start), var(--theme-gradient-end));
         }
         
         input:focus + .toggle-slider {
@@ -803,20 +852,20 @@
         }
         
         .btn-primary {
-            background-color: var(--theme-primary);
+            background: linear-gradient(135deg, var(--theme-gradient-start), var(--theme-gradient-end));
             color: white;
-            box-shadow: 0 3px 10px rgba(93, 92, 222, 0.2);
+            box-shadow: 0 3px 10px rgba(0, 101, 255, 0.2);
         }
         
         .btn-primary:hover {
-            background-color: var(--theme-primary-dark);
-            box-shadow: 0 5px 15px rgba(93, 92, 222, 0.3);
+            background: linear-gradient(135deg, var(--theme-primary-dark), var(--theme-primary));
+            box-shadow: 0 5px 15px rgba(0, 101, 255, 0.3);
             transform: translateY(-2px);
         }
         
         .btn-primary:active {
             transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(93, 92, 222, 0.2);
+            box-shadow: 0 2px 5px rgba(0, 101, 255, 0.2);
         }
         
         .btn-outline {
@@ -826,7 +875,7 @@
         }
         
         .btn-outline:hover {
-            background-color: rgba(93, 92, 222, 0.1);
+            background-color: rgba(0, 101, 255, 0.1);
             transform: translateY(-2px);
         }
         
@@ -897,38 +946,42 @@
         
         .form-input:focus {
             border-color: var(--theme-primary);
-            box-shadow: 0 0 0 3px rgba(93, 92, 222, 0.2);
+            box-shadow: 0 0 0 3px rgba(0, 101, 255, 0.2);
         }
         
-        /* Styles pour les notifications */
+        /* Notification styles - Redesigned as banners */
         .notification {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--theme-primary);
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--theme-gradient-start), var(--theme-gradient-end));
             color: white;
             padding: 14px 20px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
             z-index: 90;
-            animation: slide-in 0.3s ease-out forwards;
-            max-width: 300px;
+            animation: banner-in 0.3s ease-out forwards;
+            max-width: 80%;
+            min-width: 300px;
             display: flex;
             align-items: center;
+            text-align: center;
+            justify-content: center;
         }
         
-        @keyframes slide-in {
-            from { transform: translateY(100px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        @keyframes banner-in {
+            from { transform: translate(-50%, -100px); opacity: 0; }
+            to { transform: translate(-50%, 0); opacity: 1; }
         }
         
-        @keyframes slide-out {
-            from { transform: translateY(0); opacity: 1; }
-            to { transform: translateY(100px); opacity: 0; }
+        @keyframes banner-out {
+            from { transform: translate(-50%, 0); opacity: 1; }
+            to { transform: translate(-50%, -100px); opacity: 0; }
         }
         
         .notification.hide {
-            animation: slide-out 0.3s ease-out forwards;
+            animation: banner-out 0.3s ease-out forwards;
         }
         
         .notification svg {
@@ -937,22 +990,22 @@
         }
         
         .notification.success {
-            background-color: var(--theme-success);
+            background: linear-gradient(135deg, #4CAF50, #81C784);
         }
         
         .notification.error {
-            background-color: var(--theme-error);
+            background: linear-gradient(135deg, #EF4444, #F87171);
         }
         
         .notification.warning {
-            background-color: var(--theme-warning);
+            background: linear-gradient(135deg, #F59E0B, #FBBF24);
         }
         
         .notification.info {
-            background-color: var(--theme-info);
+            background: linear-gradient(135deg, #3B82F6, #60A5FA);
         }
         
-        /* Styles pour l'indicateur de statut en ligne */
+        /* Online status indicator */
         .online-indicator {
             width: 12px;
             height: 12px;
@@ -969,7 +1022,7 @@
             border-color: var(--theme-dark-surface);
         }
         
-        /* Styles pour l'indicateur de typing */
+        /* Typing indicator */
         .typing-indicator {
             display: inline-flex;
             align-items: center;
@@ -1004,7 +1057,7 @@
         
         /* Debug panel */
         .debug-panel {
-            position: absolute;
+            position: fixed;
             bottom: 60px;
             left: 0;
             right: 0;
@@ -1025,13 +1078,13 @@
         }
         
         .debug-toggle {
-            position: absolute;
+            position: fixed;
             bottom: 75px;
             right: 20px;
             width: 48px;
             height: 48px;
             border-radius: 50%;
-            background-color: var(--theme-primary);
+            background: linear-gradient(135deg, var(--theme-gradient-start), var(--theme-gradient-end));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1044,7 +1097,7 @@
         
         .debug-toggle:hover {
             transform: scale(1.1);
-            background-color: var(--theme-primary-dark);
+            background: linear-gradient(135deg, var(--theme-primary-dark), var(--theme-primary));
         }
         
         .debug-toggle svg {
@@ -1129,7 +1182,7 @@
             height: 50px;
             border-radius: 50%;
             overflow: hidden;
-            background-color: var(--theme-primary);
+            background: linear-gradient(135deg, var(--theme-gradient-start), var(--theme-gradient-end));
             color: white;
             display: flex;
             align-items: center;
@@ -1280,23 +1333,13 @@
             left: 0;
             width: 100%;
             height: 3px;
-            background-color: var(--theme-primary);
+            background: linear-gradient(90deg, var(--theme-gradient-start), var(--theme-gradient-end));
             transform: scaleX(0);
             transition: transform 0.3s ease;
         }
         
         .auth-tab.active:after {
             transform: scaleX(1);
-        }
-        
-        /* Splash screen animation */
-        @keyframes fade-out {
-            from { opacity: 1; }
-            to { opacity: 0; visibility: hidden; }
-        }
-        
-        .splash-fade-out {
-            animation: fade-out 0.5s ease-out forwards;
         }
         
         /* No results */
@@ -1309,39 +1352,145 @@
         .dark .no-results {
             color: var(--theme-dark-text-secondary);
         }
+        
+        /* Action buttons */
+        .action-button {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--theme-light-bg);
+            color: var(--theme-light-text-secondary);
+            border: 1px solid var(--theme-light-border);
+            transition: all 0.3s ease;
+            margin-right: 8px;
+        }
+        
+        .dark .action-button {
+            background-color: var(--theme-dark-bg);
+            color: var(--theme-dark-text-secondary);
+            border-color: var(--theme-dark-border);
+        }
+        
+        .action-button:hover {
+            background-color: rgba(0, 101, 255, 0.1);
+            color: var(--theme-primary);
+            transform: scale(1.05);
+        }
+        
+        .action-button:active {
+            transform: scale(0.95);
+        }
+        
+        /* Last seen status formatting */
+        .last-seen {
+            font-size: 0.75rem;
+            color: var(--theme-light-text-secondary);
+        }
+        
+        .dark .last-seen {
+            color: var(--theme-dark-text-secondary);
+        }
+        
+        /* App header */
+        .app-header {
+            background: linear-gradient(135deg, var(--theme-gradient-start), var(--theme-gradient-end));
+            color: white;
+            padding: 16px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .app-logo {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Modal dialog */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-container {
+            background-color: var(--theme-light-surface);
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            animation: scaleIn 0.3s ease;
+        }
+        
+        .dark .modal-container {
+            background-color: var(--theme-dark-surface);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--theme-light-text);
+        }
+        
+        .dark .modal-title {
+            color: var(--theme-dark-text);
+        }
+        
+        .modal-content {
+            margin-bottom: 24px;
+            color: var(--theme-light-text-secondary);
+        }
+        
+        .dark .modal-content {
+            color: var(--theme-dark-text-secondary);
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        
+        /* Content spacing for fixed elements */
+        .header-spacing {
+            height: 72px; /* Match header height */
+        }
+        
+        .input-spacing {
+            height: 90px; /* Match input container height + padding */
+        }
+        
+        .nav-spacing {
+            height: 70px; /* Match navbar height + padding */
+        }
     </style>
 </head>
 
 <body class="theme-default">
     <div class="app-container h-full w-full flex flex-col">
-        <!-- Écran de démarrage -->
-        <div id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-surface">
-            <div class="text-center">
-                <div class="splash-logo splash-logo-glow mb-8">
-                    <svg class="w-32 h-32 mx-auto text-primary" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                        <path d="M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 10-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 000-1.41c-.39-.39-1.03-.39-1.42 0z"/>
-                    </svg>
-                </div>
-                <h1 class="text-4xl font-bold text-primary mb-4">BetXchange</h1>
-                <p class="text-secondary mb-2 loading-dots">Chargement</p>
-            </div>
-        </div>
-
-        <!-- Overlay de chargement -->
-        <div id="loading-overlay" class="hidden fixed inset-0 z-40 bg-black bg-opacity-50 flex items-center justify-center">
-            <div class="bg-card p-6 rounded-lg shadow-lg flex flex-col items-center">
-                <div class="loader mb-4"></div>
-                <p id="loading-text" class="text-surface">Chargement en cours...</p>
-            </div>
-        </div>
-
-        <!-- Écran d'authentification avec onglets -->
+        <!-- Auth screen with tabs -->
         <div id="auth-screen" class="hidden flex-col items-center justify-center h-full p-4">
             <div class="w-full max-w-md">
-                <h1 class="text-4xl font-bold text-center mb-6 text-primary">BetXchange</h1>
+                <div class="app-header mb-6 rounded-t-lg">
+                    <h1 class="app-logo">BetXchange</h1>
+                </div>
                 
-                <!-- Onglets Connexion/Inscription -->
+                <!-- Login/Register Tabs -->
                 <div class="bg-card rounded-lg overflow-hidden shadow-lg scale-in">
                     <div class="auth-tabs mb-2">
                         <button id="login-tab" class="auth-tab active">Connexion</button>
@@ -1349,7 +1498,7 @@
                     </div>
                 
                     <div class="p-6">
-                        <!-- Formulaire de connexion -->
+                        <!-- Login Form -->
                         <form id="login-form" class="space-y-5">
                             <div class="input-group">
                                 <label for="login-email" class="input-label">Email</label>
@@ -1365,7 +1514,7 @@
                             </div>
                         </form>
                         
-                        <!-- Formulaire d'inscription -->
+                        <!-- Register Form -->
                         <form id="register-form" class="hidden space-y-4">
                             <div class="input-group">
                                 <label for="register-username" class="input-label">Nom d'utilisateur</label>
@@ -1394,35 +1543,38 @@
             </div>
         </div>
 
-        <!-- Interface principale de l'application -->
+        <!-- Main App Interface -->
         <div id="app-container" class="hidden flex-1 flex flex-col h-full">
-            <!-- Écran des conversations -->
+            <!-- Conversations Screen -->
             <div id="conversations-screen" class="flex-1 overflow-hidden flex flex-col screen-transition">
-                <div class="p-4 border-b border-surface flex justify-between items-center bg-surface">
-                    <h1 class="text-xl font-bold text-surface">Discussions</h1>
-                    <button id="refresh-conversations" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-surface" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="app-header fixed-header flex justify-between items-center">
+                    <h1 class="app-logo">BetXchange</h1>
+                    <button id="refresh-conversations" class="p-2 rounded-full hover:bg-white hover:bg-opacity-20 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                         </svg>
                     </button>
                 </div>
+                <div class="header-spacing"></div>
                 <div id="conversations-list" class="flex-1 overflow-y-auto hide-scrollbar p-3 bg-surface">
-                    <!-- Les conversations seront ajoutées ici -->
+                    <!-- Conversations will be added here -->
                 </div>
+                <div class="nav-spacing"></div>
             </div>
 
-            <!-- Écran des utilisateurs -->
+            <!-- Users Screen -->
             <div id="users-screen" class="hidden flex-1 overflow-hidden flex flex-col screen-transition">
-                <div class="p-4 border-b border-surface flex justify-between items-center bg-surface">
-                    <h1 class="text-xl font-bold text-surface">Utilisateurs</h1>
-                    <button id="refresh-users" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-surface" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="app-header fixed-header flex justify-between items-center">
+                    <h1 class="app-logo">Utilisateurs</h1>
+                    <button id="refresh-users" class="p-2 rounded-full hover:bg-white hover:bg-opacity-20 transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                         </svg>
                     </button>
                 </div>
+                <div class="header-spacing"></div>
                 
-                <!-- Barre de recherche -->
+                <!-- Search Bar -->
                 <div class="p-3 bg-surface">
                     <div class="search-container">
                         <span class="search-icon">
@@ -1435,26 +1587,27 @@
                 </div>
                 
                 <div id="users-list" class="flex-1 overflow-y-auto hide-scrollbar p-3 bg-surface">
-                    <!-- Les utilisateurs seront ajoutés ici -->
+                    <!-- Users will be added here -->
                 </div>
+                <div class="nav-spacing"></div>
             </div>
 
-            <!-- Écran de chat -->
+            <!-- Chat Screen -->
             <div id="chat-screen" class="hidden flex-1 flex flex-col screen-transition">
-                <div id="chat-header" class="flex items-center p-4 border-b border-surface bg-surface z-10">
-                    <button id="back-to-conversations" class="mr-3 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-surface" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div id="chat-header" class="fixed-header flex items-center p-4 bg-gradient z-10">
+                    <button id="back-to-conversations" class="mr-3 p-2 rounded-full hover:bg-white hover:bg-opacity-20 transition-all text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
                     <div class="flex items-center">
-                        <div id="chat-contact-avatar" class="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-white font-bold relative mr-3 shadow-md">
-                            <!-- Avatar du contact et statut en ligne -->
+                        <div id="chat-contact-avatar" class="h-12 w-12 rounded-full bg-gradient flex items-center justify-center text-white font-bold relative mr-3 shadow-md">
+                            <!-- Contact avatar and online status -->
                             <div id="online-status" class="online-indicator hidden"></div>
                         </div>
-                        <div>
-                            <div id="chat-contact" class="font-medium text-surface"></div>
-                            <div id="typing-status" class="text-sm text-secondary hidden">
+                        <div class="text-white">
+                            <div id="chat-contact" class="font-medium text-lg"></div>
+                            <div id="typing-status" class="text-sm hidden">
                                 <div class="typing-indicator">
                                     <div class="typing-dot"></div>
                                     <div class="typing-dot"></div>
@@ -1464,12 +1617,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="header-spacing"></div>
                 <div id="chat-messages" class="flex-1 overflow-y-auto hide-scrollbar p-4 bg-chat-area">
-                    <!-- Les messages seront ajoutés ici -->
+                    <!-- Messages will be added here -->
                 </div>
-                <div class="message-input-container p-3">
+                <div class="input-spacing"></div>
+                <div class="message-input-container message-input-fixed">
                     <div class="flex items-center">
-                        <button id="attach-file" class="w-12 h-12 flex items-center justify-center mr-3 text-secondary rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all">
+                        <button id="attach-file" class="action-button">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                             </svg>
@@ -1477,7 +1632,7 @@
                         <input type="file" id="file-upload" class="hidden" accept="image/*">
                         <div class="message-input-wrapper flex-1">
                             <input type="text" id="message-input" class="message-input text-base" placeholder="Écrire un message...">
-                            <button id="send-message" class="send-button">
+                            <button id="send-message" class="send-button" title="Envoyer">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                                 </svg>
@@ -1487,18 +1642,20 @@
                 </div>
             </div>
 
-            <!-- Écran de profil -->
+            <!-- Profile Screen -->
             <div id="profile-screen" class="hidden flex-1 overflow-y-auto p-4 screen-transition bg-surface">
                 <div class="max-w-md mx-auto">
-                    <h1 class="text-xl font-bold mb-6 text-surface">Mon Profil</h1>
+                    <div class="app-header mb-6 rounded-t-lg">
+                        <h1 class="app-logo">Mon Profil</h1>
+                    </div>
 
-                    <!-- Carte de profil -->
+                    <!-- Profile Card -->
                     <div class="card mb-6">
                         <div class="p-6">
                             <div class="flex items-center justify-center mb-6">
                                 <div class="profile-image-container">
-                                    <div id="profile-avatar" class="h-full w-full rounded-full bg-primary flex items-center justify-center text-white text-3xl font-bold overflow-hidden">
-                                        <!-- Photo de profil ou initiale sera ajoutée ici -->
+                                    <div id="profile-avatar" class="h-full w-full rounded-full bg-gradient flex items-center justify-center text-white text-3xl font-bold overflow-hidden">
+                                        <!-- Profile photo or initial will be added here -->
                                     </div>
                                     <div class="edit-overlay" id="change-avatar">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1527,12 +1684,12 @@
                         </div>
                     </div>
 
-                    <!-- Section des thèmes -->
+                    <!-- Theme Section -->
                     <div class="card mb-6">
                         <div class="p-6">
                             <h2 class="text-lg font-semibold mb-4 text-surface">Thème de l'application</h2>
                             
-                            <!-- Thème sombre/clair -->
+                            <!-- Dark/Light Theme -->
                             <div class="setting-option">
                                 <div class="flex items-center justify-between">
                                     <p class="text-surface">Mode sombre</p>
@@ -1543,11 +1700,11 @@
                                 </div>
                             </div>
                             
-                            <!-- Couleur de thème -->
+                            <!-- Theme Color -->
                             <div class="setting-option">
                                 <p class="text-surface mb-3">Couleur principale</p>
                                 <div class="color-palette">
-                                    <div class="color-option active" style="background-color: #5D5CDE;" data-color="default"></div>
+                                    <div class="color-option active" style="background-color: #0065FF;" data-color="default"></div>
                                     <div class="color-option" style="background-color: #2196F3;" data-color="blue"></div>
                                     <div class="color-option" style="background-color: #4CAF50;" data-color="green"></div>
                                     <div class="color-option" style="background-color: #9C27B0;" data-color="purple"></div>
@@ -1557,7 +1714,7 @@
                         </div>
                     </div>
 
-                    <!-- Options de statut -->
+                    <!-- Status Options -->
                     <div class="card mb-6">
                         <div class="p-6">
                             <h2 class="text-lg font-semibold mb-4 text-surface">Options de statut</h2>
@@ -1573,7 +1730,7 @@
                         </div>
                     </div>
 
-                    <!-- Boutons d'action -->
+                    <!-- Action Buttons -->
                     <div class="card">
                         <div class="p-6">
                             <div class="space-y-4">
@@ -1583,9 +1740,10 @@
                         </div>
                     </div>
                 </div>
+                <div class="nav-spacing"></div>
             </div>
 
-            <!-- Barre de navigation -->
+            <!-- Navigation Bar -->
             <div id="navigation-bar" class="nav-bar">
                 <div class="flex justify-around">
                     <button class="nav-btn active" data-screen="conversations-screen">
@@ -1610,10 +1768,41 @@
             </div>
         </div>
 
-        <!-- Zone de notification -->
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="hidden fixed inset-0 z-40 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-card p-6 rounded-lg shadow-lg flex flex-col items-center">
+                <div class="loader mb-4"></div>
+                <p id="loading-text" class="text-surface">Chargement en cours...</p>
+            </div>
+        </div>
+
+        <!-- Confirmation Modals -->
+        <div id="logout-confirmation" class="modal-overlay hidden">
+            <div class="modal-container">
+                <h2 class="modal-title">Confirmation de déconnexion</h2>
+                <p class="modal-content">Êtes-vous sûr de vouloir vous déconnecter de votre compte ?</p>
+                <div class="modal-actions">
+                    <button id="cancel-logout" class="btn btn-outline">Annuler</button>
+                    <button id="confirm-logout" class="btn btn-primary">Déconnexion</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="delete-confirmation" class="modal-overlay hidden">
+            <div class="modal-container">
+                <h2 class="modal-title">Supprimer le compte</h2>
+                <p class="modal-content">Attention ! Cette action est irréversible. Toutes vos données seront définitivement supprimées.</p>
+                <div class="modal-actions">
+                    <button id="cancel-delete" class="btn btn-outline">Annuler</button>
+                    <button id="confirm-delete" class="btn btn-danger">Supprimer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Area -->
         <div id="notification-area"></div>
 
-        <!-- Panel de debug et logs -->
+        <!-- Debug Panel and Logs -->
         <div id="debug-panel" class="debug-panel hidden">
             <div id="debug-logs"></div>
         </div>
@@ -1649,7 +1838,7 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        // Polyfill pour Array.from pour iOS 12
+        // Polyfill for Array.from for iOS 12
         if (!Array.from) {
             Array.from = function(iterable) {
                 if (iterable == null) {
@@ -1663,7 +1852,7 @@
             };
         }
 
-        // Variables globales pour les données de l'application
+        // Global variables for app data
         var appData = {
             currentUser: null,
             theme: {
@@ -1675,9 +1864,9 @@
             currentChatUser: null,
             currentFile: null,
             debugVisible: false,
-            loadingTimers: {}, // Pour suivre les minuteurs de chargement
-            allUsers: [], // Pour stocker tous les utilisateurs pour la recherche
-            filteredUsers: [], // Pour stocker les utilisateurs filtrés
+            loadingTimers: {}, // To track loading timers
+            allUsers: [], // To store all users for search
+            filteredUsers: [], // To store filtered users
             unsubscribers: {
                 messages: null,
                 typing: null,
@@ -1686,9 +1875,8 @@
             }
         };
 
-        // Elements DOM
+        // DOM Elements
         var elements = {
-            splashScreen: document.getElementById('splash-screen'),
             loadingOverlay: document.getElementById('loading-overlay'),
             loadingText: document.getElementById('loading-text'),
             authScreen: document.getElementById('auth-screen'),
@@ -1740,16 +1928,23 @@
             notificationArea: document.getElementById('notification-area'),
             debugPanel: document.getElementById('debug-panel'),
             debugLogs: document.getElementById('debug-logs'),
-            debugToggle: document.getElementById('debug-toggle')
+            debugToggle: document.getElementById('debug-toggle'),
+            // Confirmation modals
+            logoutConfirmation: document.getElementById('logout-confirmation'),
+            cancelLogout: document.getElementById('cancel-logout'),
+            confirmLogout: document.getElementById('confirm-logout'),
+            deleteConfirmation: document.getElementById('delete-confirmation'),
+            cancelDelete: document.getElementById('cancel-delete'),
+            confirmDelete: document.getElementById('confirm-delete')
         };
 
-        // Module de journalisation pour déboguer
+        // Logging Module for debugging
         var Logger = {
             log: function(message, type = 'info') {
-                // Loguer dans la console
+                // Log to console
                 console.log(`[${type.toUpperCase()}] ${message}`);
                 
-                // Ajouter au panneau de débogage
+                // Add to debug panel
                 const logEl = document.createElement('div');
                 logEl.className = `debug-log ${type}`;
                 
@@ -1760,16 +1955,16 @@
                 
                 if (elements.debugLogs) {
                     elements.debugLogs.appendChild(logEl);
-                    // Faire défiler vers le bas
+                    // Scroll to bottom
                     elements.debugLogs.scrollTop = elements.debugLogs.scrollHeight;
                     
-                    // Limiter le nombre de logs à 100 pour éviter que le DOM ne devienne trop lourd
+                    // Limit logs to 100 to prevent DOM from becoming too heavy
                     while (elements.debugLogs.children.length > 100) {
                         elements.debugLogs.removeChild(elements.debugLogs.firstChild);
                     }
                 }
                 
-                // Montrer le panel si c'est une erreur
+                // Show panel if it's an error
                 if (type === 'error' && !appData.debugVisible) {
                     this.toggleDebugPanel(true);
                 }
@@ -1814,26 +2009,26 @@
             }
         };
 
-        // Module de gestion d'authentification et de profil
+        // User Authentication and Profile Management Module
         var UserManager = {
-            // Créer un compte
+            // Create account
             register: async function(username, email, phone, password) {
                 try {
-                    Logger.info(`Tentative d'inscription pour ${email}`);
+                    Logger.info(`Attempting to register ${email}`);
                     
-                    // Vérifier si l'utilisateur existe déjà
+                    // Check if username exists
                     const usernameExists = await this.checkUsernameExists(username);
                     if (usernameExists) {
-                        Logger.warning(`Le nom d'utilisateur ${username} est déjà pris`);
+                        Logger.warning(`Username ${username} is already taken`);
                         return { success: false, message: "Ce nom d'utilisateur est déjà pris" };
                     }
 
-                    // Créer l'utilisateur dans Firebase Auth
+                    // Create user in Firebase Auth
                     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                     const user = userCredential.user;
-                    Logger.success(`Utilisateur créé dans Auth avec ID: ${user.uid}`);
+                    Logger.success(`User created in Auth with ID: ${user.uid}`);
 
-                    // Créer le profil dans Firestore
+                    // Create profile in Firestore
                     await setDoc(doc(db, "users", user.uid), {
                         username: username,
                         email: email,
@@ -1842,17 +2037,17 @@
                         online: true,
                         lastSeen: serverTimestamp(),
                         createdAt: serverTimestamp(),
-                        theme: appData.theme // Sauvegarder le thème actuel
+                        theme: appData.theme // Save current theme
                     });
-                    Logger.success(`Profil utilisateur créé dans Firestore`);
+                    Logger.success(`User profile created in Firestore`);
 
-                    // Mettre à jour le profil dans Auth
+                    // Update profile in Auth
                     await updateProfile(user, {
                         displayName: username
                     });
-                    Logger.info(`Profil Auth mis à jour avec le nom d'utilisateur: ${username}`);
+                    Logger.info(`Auth profile updated with username: ${username}`);
 
-                    // Stocker l'utilisateur courant
+                    // Store current user
                     appData.currentUser = {
                         uid: user.uid,
                         username: username,
@@ -1863,7 +2058,7 @@
 
                     return { success: true, user: appData.currentUser };
                 } catch (error) {
-                    Logger.error(`Erreur d'inscription: ${error.message}`);
+                    Logger.error(`Registration error: ${error.message}`);
                     let message = "Une erreur s'est produite lors de l'inscription.";
                     if (error.code === 'auth/email-already-in-use') {
                         message = "Cette adresse email est déjà utilisée.";
@@ -1872,44 +2067,44 @@
                 }
             },
 
-            // Vérifier si un nom d'utilisateur existe déjà
+            // Check if username exists
             checkUsernameExists: async function(username) {
                 try {
-                    Logger.info(`Vérification si le nom d'utilisateur ${username} existe`);
+                    Logger.info(`Checking if username ${username} exists`);
                     const q = query(collection(db, "users"), where("username", "==", username));
                     const querySnapshot = await getDocs(q);
                     return !querySnapshot.empty;
                 } catch (error) {
-                    Logger.error(`Erreur lors de la vérification du nom d'utilisateur: ${error.message}`);
+                    Logger.error(`Error checking username: ${error.message}`);
                     return false;
                 }
             },
 
-            // Connexion
+            // Login
             login: async function(email, password) {
                 try {
-                    Logger.info(`Tentative de connexion pour ${email}`);
+                    Logger.info(`Attempting login for ${email}`);
                     const userCredential = await signInWithEmailAndPassword(auth, email, password);
                     const user = userCredential.user;
-                    Logger.success(`Connexion réussie pour l'utilisateur avec ID: ${user.uid}`);
+                    Logger.success(`Login successful for user with ID: ${user.uid}`);
 
-                    // Récupérer les données du profil
+                    // Get profile data
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                     if (userDoc.exists()) {
                         const userData = userDoc.data();
-                        Logger.info(`Données utilisateur récupérées depuis Firestore`);
+                        Logger.info(`User data retrieved from Firestore`);
                         
-                        // Mettre à jour le statut en ligne
+                        // Update online status
                         await updateDoc(doc(db, "users", user.uid), {
                             online: true,
                             lastSeen: serverTimestamp()
                         });
-                        Logger.info(`Statut utilisateur mis à jour à "en ligne"`);
+                        Logger.info(`User status updated to "online"`);
                         
-                        // Récupérer le thème sauvegardé si existant
+                        // Retrieve saved theme if exists
                         if (userData.theme) {
                             appData.theme = userData.theme;
-                            Logger.info(`Thème récupéré: ${userData.theme.mode}, ${userData.theme.color}`);
+                            Logger.info(`Theme retrieved: ${userData.theme.mode}, ${userData.theme.color}`);
                             ThemeManager.applyTheme();
                         }
                         
@@ -1923,12 +2118,12 @@
                         
                         return { success: true, user: appData.currentUser };
                     } else {
-                        Logger.error(`Profil utilisateur introuvable dans Firestore`);
+                        Logger.error(`User profile not found in Firestore`);
                         await signOut(auth);
                         return { success: false, message: "Profil utilisateur introuvable." };
                     }
                 } catch (error) {
-                    Logger.error(`Erreur de connexion: ${error.message}`);
+                    Logger.error(`Login error: ${error.message}`);
                     let message = "Identifiants incorrects";
                     if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
                         message = "Email ou mot de passe incorrect";
@@ -1937,145 +2132,145 @@
                 }
             },
 
-            // Déconnexion
+            // Logout
             logout: async function() {
                 try {
                     if (auth.currentUser) {
-                        Logger.info(`Déconnexion de l'utilisateur ${auth.currentUser.uid}`);
-                        // Mettre à jour le statut hors ligne
+                        Logger.info(`Logging out user ${auth.currentUser.uid}`);
+                        // Update offline status
                         await updateDoc(doc(db, "users", auth.currentUser.uid), {
                             online: false,
                             lastSeen: serverTimestamp()
                         });
-                        Logger.info(`Statut utilisateur mis à jour à "hors ligne"`);
+                        Logger.info(`User status updated to "offline"`);
                     }
                     await signOut(auth);
-                    Logger.success(`Déconnexion réussie`);
+                    Logger.success(`Logout successful`);
                     appData.currentUser = null;
                     return { success: true };
                 } catch (error) {
-                    Logger.error(`Erreur de déconnexion: ${error.message}`);
+                    Logger.error(`Logout error: ${error.message}`);
                     return { success: false, message: "Erreur lors de la déconnexion" };
                 }
             },
 
-            // Changement de statut en ligne
+            // Change online status
             toggleOnlineStatus: async function() {
                 try {
                     if (!auth.currentUser) {
-                        Logger.warning(`Tentative de changement de statut sans être connecté`);
+                        Logger.warning(`Attempt to change status without being logged in`);
                         return { success: false, message: "Utilisateur non connecté" };
                     }
                     
                     appData.isOnline = !appData.isOnline;
-                    Logger.info(`Changement de statut à ${appData.isOnline ? "en ligne" : "hors ligne"}`);
+                    Logger.info(`Changing status to ${appData.isOnline ? "online" : "offline"}`);
                     
                     await updateDoc(doc(db, "users", auth.currentUser.uid), {
                         online: appData.isOnline,
                         lastSeen: serverTimestamp()
                     });
-                    Logger.success(`Statut utilisateur mis à jour avec succès`);
+                    Logger.success(`User status updated successfully`);
                     
                     UI.showNotification(appData.isOnline ? "Vous êtes en ligne" : "Vous êtes hors ligne");
                     elements.statusToggle.checked = appData.isOnline;
                     
                     return { success: true };
                 } catch (error) {
-                    Logger.error(`Erreur de changement de statut: ${error.message}`);
+                    Logger.error(`Status change error: ${error.message}`);
                     return { success: false, message: "Erreur lors du changement de statut" };
                 }
             },
 
-            // Supprimer le compte
+            // Delete account
             deleteAccount: async function() {
                 try {
                     if (!auth.currentUser) {
-                        Logger.warning(`Tentative de suppression de compte sans être connecté`);
+                        Logger.warning(`Attempt to delete account without being logged in`);
                         return { success: false, message: "Utilisateur non connecté" };
                     }
                     
                     const userId = auth.currentUser.uid;
-                    Logger.info(`Suppression du compte utilisateur ${userId}`);
+                    Logger.info(`Deleting user account ${userId}`);
                     
-                    // Supprimer les conversations
+                    // Delete conversations
                     await ConversationManager.deleteAllUserConversations(userId);
-                    Logger.info(`Conversations de l'utilisateur supprimées`);
+                    Logger.info(`User conversations deleted`);
                     
-                    // Supprimer le document utilisateur dans Firestore
+                    // Delete user document in Firestore
                     await deleteDoc(doc(db, "users", userId));
-                    Logger.info(`Document utilisateur supprimé de Firestore`);
+                    Logger.info(`User document deleted from Firestore`);
                     
-                    // Supprimer l'utilisateur dans Firebase Auth
+                    // Delete user in Firebase Auth
                     await deleteUser(auth.currentUser);
-                    Logger.success(`Compte utilisateur supprimé de Firebase Auth`);
+                    Logger.success(`User account deleted from Firebase Auth`);
                     
                     appData.currentUser = null;
                     
                     return { success: true };
                 } catch (error) {
-                    Logger.error(`Erreur de suppression de compte: ${error.message}`);
+                    Logger.error(`Account deletion error: ${error.message}`);
                     return { success: false, message: "Erreur lors de la suppression du compte" };
                 }
             },
 
-            // Mettre à jour l'avatar de l'utilisateur
+            // Update user avatar
             updateAvatar: async function(file) {
                 try {
                     if (!auth.currentUser) {
-                        Logger.warning(`Tentative de mise à jour d'avatar sans être connecté`);
+                        Logger.warning(`Attempt to update avatar without being logged in`);
                         return { success: false, message: "Utilisateur non connecté" };
                     }
                     
-                    Logger.info(`Début de mise à jour de l'avatar pour ${auth.currentUser.uid}`);
+                    Logger.info(`Starting avatar update for ${auth.currentUser.uid}`);
                     
-                    // Compresser l'image avant l'upload
+                    // Compress image before upload
                     const compressedFile = await this.compressImage(file);
-                    Logger.info(`Image compressée avec succès`);
+                    Logger.info(`Image compressed successfully`);
                     
-                    // Créer une référence dans le stockage
+                    // Create storage reference
                     const storageRef = ref(storage, `avatars/${auth.currentUser.uid}`);
                     
-                    // Uploader l'image
-                    Logger.info(`Téléchargement de l'image vers Firebase Storage...`);
+                    // Upload image
+                    Logger.info(`Uploading image to Firebase Storage...`);
                     const snapshot = await uploadBytes(storageRef, compressedFile);
                     
-                    // Récupérer l'URL de téléchargement
+                    // Get download URL
                     const downloadURL = await getDownloadURL(storageRef);
-                    Logger.success(`Image téléchargée avec succès, URL: ${downloadURL.substring(0, 50)}...`);
+                    Logger.success(`Image uploaded successfully, URL: ${downloadURL.substring(0, 50)}...`);
                     
-                    // Mettre à jour le document utilisateur dans Firestore
+                    // Update user document in Firestore
                     await updateDoc(doc(db, "users", auth.currentUser.uid), {
                         avatar: downloadURL
                     });
-                    Logger.info(`URL d'avatar mise à jour dans Firestore`);
+                    Logger.info(`Avatar URL updated in Firestore`);
                     
-                    // Mettre à jour le profil dans Auth
+                    // Update profile in Auth
                     await updateProfile(auth.currentUser, {
                         photoURL: downloadURL
                     });
-                    Logger.info(`URL d'avatar mise à jour dans Auth`);
+                    Logger.info(`Avatar URL updated in Auth`);
                     
-                    // Mettre à jour l'état local
+                    // Update local state
                     if (appData.currentUser) {
                         appData.currentUser.avatar = downloadURL;
                     }
                     
                     return { success: true, url: downloadURL };
                 } catch (error) {
-                    Logger.error(`Erreur de mise à jour de l'avatar: ${error.message}`);
+                    Logger.error(`Avatar update error: ${error.message}`);
                     return { success: false, message: "Erreur lors de la mise à jour de l'avatar" };
                 }
             },
 
-            // Obtenir tous les utilisateurs
+            // Get all users
             getAllUsers: async function() {
                 try {
-                    Logger.info(`Récupération de tous les utilisateurs`);
+                    Logger.info(`Getting all users`);
                     const usersSnapshot = await getDocs(collection(db, "users"));
                     const users = [];
                     
                     usersSnapshot.forEach((doc) => {
-                        // Ne pas inclure l'utilisateur actuel dans la liste
+                        // Don't include current user in the list
                         if (auth.currentUser && doc.id !== auth.currentUser.uid) {
                             const userData = doc.data();
                             users.push({
@@ -2090,20 +2285,20 @@
                         }
                     });
                     
-                    Logger.success(`${users.length} utilisateurs récupérés`);
-                    // Stocker tous les utilisateurs pour la recherche
+                    Logger.success(`${users.length} users retrieved`);
+                    // Store all users for search
                     appData.allUsers = users;
                     appData.filteredUsers = users;
                     return users;
                 } catch (error) {
-                    Logger.error(`Erreur de récupération des utilisateurs: ${error.message}`);
+                    Logger.error(`Error retrieving users: ${error.message}`);
                     throw error;
                 }
             },
 
-            // Filtrer les utilisateurs par nom ou téléphone (plus d'email)
+            // Filter users by name or phone
             filterUsers: function(searchTerm) {
-                Logger.info(`Filtrage des utilisateurs avec le terme: "${searchTerm}"`);
+                Logger.info(`Filtering users with term: "${searchTerm}"`);
                 if (!searchTerm || searchTerm.trim() === '') {
                     appData.filteredUsers = appData.allUsers;
                     return appData.allUsers;
@@ -2116,19 +2311,19 @@
                     return matchUsername || matchPhone;
                 });
                 
-                Logger.info(`${filtered.length} utilisateurs correspondent au terme de recherche`);
+                Logger.info(`${filtered.length} users match search term`);
                 appData.filteredUsers = filtered;
                 return filtered;
             },
 
-            // Obtenir un utilisateur par ID
+            // Get user by ID
             getUserById: async function(userId) {
                 try {
-                    Logger.info(`Récupération de l'utilisateur avec ID: ${userId}`);
+                    Logger.info(`Getting user with ID: ${userId}`);
                     const userDoc = await getDoc(doc(db, "users", userId));
                     if (userDoc.exists()) {
                         const userData = userDoc.data();
-                        Logger.success(`Utilisateur ${userId} récupéré avec succès`);
+                        Logger.success(`User ${userId} retrieved successfully`);
                         return {
                             uid: userId,
                             username: userData.username,
@@ -2139,21 +2334,21 @@
                             lastSeen: userData.lastSeen
                         };
                     }
-                    Logger.warning(`Utilisateur ${userId} non trouvé`);
+                    Logger.warning(`User ${userId} not found`);
                     return null;
                 } catch (error) {
-                    Logger.error(`Erreur de récupération de l'utilisateur: ${error.message}`);
+                    Logger.error(`Error retrieving user: ${error.message}`);
                     throw error;
                 }
             },
 
-            // Écouter les changements d'un utilisateur
+            // Listen to user changes
             listenToUserChanges: function(userId, callback) {
-                Logger.info(`Mise en place de l'écouteur de changements pour l'utilisateur ${userId}`);
+                Logger.info(`Setting up user changes listener for user ${userId}`);
                 return onSnapshot(doc(db, "users", userId), (doc) => {
                     if (doc.exists()) {
                         const userData = doc.data();
-                        Logger.info(`Changement détecté pour l'utilisateur ${userId}`);
+                        Logger.info(`Change detected for user ${userId}`);
                         callback({
                             uid: userId,
                             username: userData.username,
@@ -2165,21 +2360,21 @@
                         });
                     }
                 }, error => {
-                    Logger.error(`Erreur dans l'écouteur utilisateur: ${error.message}`);
+                    Logger.error(`Error in user listener: ${error.message}`);
                 });
             },
 
-            // Compresser une image
+            // Compress image
             compressImage: function(file) {
                 return new Promise((resolve, reject) => {
-                    Logger.info(`Compression de l'image ${file.name} (${Math.round(file.size / 1024)} KB)`);
+                    Logger.info(`Compressing image ${file.name} (${Math.round(file.size / 1024)} KB)`);
                     const reader = new FileReader();
                     reader.readAsDataURL(file);
                     reader.onload = function(event) {
                         const img = new Image();
                         img.src = event.target.result;
                         img.onload = function() {
-                            // Redimensionner si l'image est trop grande
+                            // Resize if image is too large
                             const MAX_WIDTH = 800;
                             const MAX_HEIGHT = 800;
                             let width = img.width;
@@ -2189,7 +2384,7 @@
                                 const ratio = Math.min(MAX_WIDTH / width, MAX_HEIGHT / height);
                                 width = Math.floor(width * ratio);
                                 height = Math.floor(height * ratio);
-                                Logger.info(`Image redimensionnée: ${width}x${height}`);
+                                Logger.info(`Image resized: ${width}x${height}`);
                             }
 
                             const canvas = document.createElement('canvas');
@@ -2198,84 +2393,84 @@
                             const ctx = canvas.getContext('2d');
                             ctx.drawImage(img, 0, 0, width, height);
 
-                            // Convertir en JPEG avec compression
+                            // Convert to JPEG with compression
                             canvas.toBlob((blob) => {
                                 if (blob) {
-                                    // Créer un nouveau fichier avec un nom significatif
+                                    // Create new file with meaningful name
                                     const compressedFile = new File([blob], file.name, {
                                         type: 'image/jpeg',
                                         lastModified: Date.now()
                                     });
-                                    Logger.success(`Image compressée: ${Math.round(blob.size / 1024)} KB`);
+                                    Logger.success(`Image compressed: ${Math.round(blob.size / 1024)} KB`);
                                     resolve(compressedFile);
                                 } else {
-                                    // Fallback - utiliser le fichier original
-                                    Logger.warning(`Échec de compression, utilisation du fichier original`);
+                                    // Fallback - use original file
+                                    Logger.warning(`Compression failed, using original file`);
                                     resolve(file);
                                 }
                             }, 'image/jpeg', 0.8);
                         };
                         img.onerror = function() {
-                            Logger.error(`Impossible de charger l'image`);
-                            reject(new Error("Impossible de charger l'image"));
+                            Logger.error(`Unable to load image`);
+                            reject(new Error("Unable to load image"));
                         };
                     };
                     reader.onerror = function() {
-                        Logger.error(`Impossible de lire le fichier`);
-                        reject(new Error("Impossible de lire le fichier"));
+                        Logger.error(`Unable to read file`);
+                        reject(new Error("Unable to read file"));
                     };
                 });
             }
         };
 
-        // Module de gestion des conversations
+        // Conversations Management Module
         var ConversationManager = {
-            // Créer ou récupérer une conversation entre deux utilisateurs
+            // Create or get conversation between two users
             getOrCreateConversation: async function(user1Id, user2Id) {
                 try {
-                    Logger.info(`Récupération/création de conversation entre ${user1Id} et ${user2Id}`);
+                    Logger.info(`Getting/creating conversation between ${user1Id} and ${user2Id}`);
                     
-                    // Trier les IDs pour avoir un ID de conversation consistant
+                    // Sort IDs for consistent conversation ID
                     const sortedIds = [user1Id, user2Id].sort();
                     const conversationId = sortedIds.join('_');
-                    Logger.info(`ID de conversation: ${conversationId}`);
+                    Logger.info(`Conversation ID: ${conversationId}`);
                     
-                    // Vérifier si la conversation existe
+                    // Check if conversation exists
                     const conversationDoc = await getDoc(doc(db, "conversations", conversationId));
                     
                     if (!conversationDoc.exists()) {
-                        Logger.info(`Conversation inexistante, création d'une nouvelle conversation`);
-                        // Créer une nouvelle conversation
+                        Logger.info(`Conversation doesn't exist, creating new conversation`);
+                        // Create new conversation
                         await setDoc(doc(db, "conversations", conversationId), {
                             participants: sortedIds,
                             lastMessage: null,
                             lastMessageTimestamp: serverTimestamp(),
                             createdAt: serverTimestamp()
                         });
-                        Logger.success(`Nouvelle conversation créée avec ID: ${conversationId}`);
+                        Logger.success(`New conversation created with ID: ${conversationId}`);
                     } else {
-                        Logger.info(`Conversation existante trouvée avec ID: ${conversationId}`);
+                        Logger.info(`Existing conversation found with ID: ${conversationId}`);
                     }
                     
                     return conversationId;
                 } catch (error) {
-                    Logger.error(`Erreur de création/récupération de conversation: ${error.message}`);
+                    Logger.error(`Error getting/creating conversation: ${error.message}`);
                     throw error;
                 }
             },
 
-            // Envoyer un message
+            // Send message
             sendMessage: async function(senderId, receiverId, text, fileURL = null) {
                 try {
-                    Logger.info(`Envoi de message de ${senderId} à ${receiverId}`);
-                    if (fileURL) Logger.info(`Message contient un fichier: ${fileURL.substring(0, 50)}...`);
+                    Logger.info(`Sending message from ${senderId} to ${receiverId}`);
+                    if (fileURL) Logger.info(`Message includes file: ${fileURL.substring(0, 50)}...`);
                     
-                    // Obtenir l'ID de conversation
+                    // Get conversation ID
                     const conversationId = await this.getOrCreateConversation(senderId, receiverId);
-                    Logger.info(`Conversation ID pour le message: ${conversationId}`);
+                    Logger.info(`Conversation ID for message: ${conversationId}`);
                     
-                    // Créer le message
-                    Logger.info(`Création du document message dans Firestore...`);
+                    // Create message
+                    Logger.info(`Creating message document in Firestore...`);
                     const messageRef = await addDoc(collection(db, "messages"), {
                         conversationId: conversationId,
                         senderId: senderId,
@@ -2285,30 +2480,30 @@
                         read: false
                     });
                     
-                    Logger.success(`Message créé avec ID: ${messageRef.id}`);
+                    Logger.success(`Message created with ID: ${messageRef.id}`);
                     
-                    // Mettre à jour la conversation avec le dernier message
-                    Logger.info(`Mise à jour de la conversation avec le dernier message`);
+                    // Update conversation with last message
+                    Logger.info(`Updating conversation with last message`);
                     await updateDoc(doc(db, "conversations", conversationId), {
                         lastMessage: text,
                         lastMessageTimestamp: serverTimestamp(),
                         lastMessageSenderId: senderId
                     });
                     
-                    Logger.success(`Conversation mise à jour avec succès`);
+                    Logger.success(`Conversation updated successfully`);
                     return { success: true, messageId: messageRef.id };
                 } catch (error) {
-                    Logger.error(`Erreur d'envoi de message: ${error.message}`);
+                    Logger.error(`Error sending message: ${error.message}`);
                     return { success: false, message: "Erreur lors de l'envoi du message" };
                 }
             },
 
-            // Marquer une conversation comme lue
+            // Mark conversation as read
             markConversationAsRead: async function(conversationId, userId) {
                 try {
-                    Logger.info(`Marquage des messages comme lus pour conversation ${conversationId} par utilisateur ${userId}`);
+                    Logger.info(`Marking messages as read for conversation ${conversationId} by user ${userId}`);
                     
-                    // Récupérer tous les messages non lus de cette conversation
+                    // Get all unread messages for this conversation
                     const q = query(
                         collection(db, "messages"),
                         where("conversationId", "==", conversationId),
@@ -2317,9 +2512,9 @@
                     );
                     
                     const querySnapshot = await getDocs(q);
-                    Logger.info(`${querySnapshot.size} messages non lus trouvés`);
+                    Logger.info(`${querySnapshot.size} unread messages found`);
                     
-                    // Mettre à jour chaque message
+                    // Update each message
                     const updatePromises = [];
                     querySnapshot.forEach((doc) => {
                         updatePromises.push(updateDoc(doc.ref, { read: true }));
@@ -2327,20 +2522,20 @@
                     
                     if (updatePromises.length > 0) {
                         await Promise.all(updatePromises);
-                        Logger.success(`${updatePromises.length} messages marqués comme lus`);
+                        Logger.success(`${updatePromises.length} messages marked as read`);
                     }
                     
                     return { success: true };
                 } catch (error) {
-                    Logger.error(`Erreur de marquage des messages comme lus: ${error.message}`);
+                    Logger.error(`Error marking messages as read: ${error.message}`);
                     return { success: false, message: "Erreur lors du marquage des messages comme lus" };
                 }
             },
 
-            // Récupérer les messages d'une conversation
+            // Get conversation messages
             getMessages: async function(conversationId) {
                 try {
-                    Logger.info(`Récupération des messages pour conversation ${conversationId}`);
+                    Logger.info(`Getting messages for conversation ${conversationId}`);
                     const q = query(
                         collection(db, "messages"),
                         where("conversationId", "==", conversationId),
@@ -2362,31 +2557,31 @@
                         });
                     });
                     
-                    Logger.success(`${messages.length} messages récupérés pour la conversation ${conversationId}`);
+                    Logger.success(`${messages.length} messages retrieved for conversation ${conversationId}`);
                     return messages;
                 } catch (error) {
-                    Logger.error(`Erreur de récupération des messages: ${error.message}`);
+                    Logger.error(`Error retrieving messages: ${error.message}`);
                     throw error;
                 }
             },
 
-            // Écouter les nouveaux messages d'une conversation
+            // Listen to new messages in conversation
             listenToMessages: function(conversationId, callback) {
-                Logger.info(`Mise en place de l'écouteur de messages pour conversation ${conversationId}`);
+                Logger.info(`Setting up message listener for conversation ${conversationId}`);
                 const q = query(
                     collection(db, "messages"),
                     where("conversationId", "==", conversationId),
                     orderBy("timestamp", "asc")
                 );
                 
-                // Désinscrire l'écouteur précédent si existant
+                // Unsubscribe previous listener if exists
                 if (appData.unsubscribers.messages && typeof appData.unsubscribers.messages === 'function') {
-                    Logger.info(`Désabonnement de l'écouteur de messages précédent`);
+                    Logger.info(`Unsubscribing from previous message listener`);
                     appData.unsubscribers.messages();
                     appData.unsubscribers.messages = null;
                 }
                 
-                // Nouvel écouteur
+                // New listener
                 appData.unsubscribers.messages = onSnapshot(q, (querySnapshot) => {
                     const messages = [];
                     querySnapshot.forEach((doc) => {
@@ -2400,37 +2595,37 @@
                             read: messageData.read
                         });
                     });
-                    Logger.info(`${messages.length} messages reçus de l'écouteur pour la conversation ${conversationId}`);
+                    Logger.info(`${messages.length} messages received from listener for conversation ${conversationId}`);
                     callback(messages);
                 }, error => {
-                    Logger.error(`Erreur dans l'écouteur de messages: ${error.message}`);
+                    Logger.error(`Error in messages listener: ${error.message}`);
                 });
                 
                 return appData.unsubscribers.messages;
             },
 
-            // Récupérer les conversations d'un utilisateur
+            // Get user conversations
             getUserConversations: async function(userId) {
                 try {
-                    Logger.info(`Récupération des conversations pour l'utilisateur ${userId}`);
-                    // Récupérer toutes les conversations où l'utilisateur est participant
+                    Logger.info(`Getting conversations for user ${userId}`);
+                    // Get all conversations where user is participant
                     const q = query(
                         collection(db, "conversations"),
                         where("participants", "array-contains", userId)
                     );
                     
                     const querySnapshot = await getDocs(q);
-                    Logger.info(`${querySnapshot.size} conversations trouvées`);
+                    Logger.info(`${querySnapshot.size} conversations found`);
                     const conversations = [];
                     
                     for (const doc of querySnapshot.docs) {
                         const conversationData = doc.data();
                         
-                        // Trouver l'autre participant
+                        // Find other participant
                         const otherUserId = conversationData.participants.find(id => id !== userId);
-                        Logger.info(`Récupération des informations pour l'autre participant: ${otherUserId}`);
+                        Logger.info(`Getting info for other participant: ${otherUserId}`);
                         
-                        // Récupérer les informations de l'autre utilisateur
+                        // Get other user info
                         const otherUser = await UserManager.getUserById(otherUserId);
                         
                         if (otherUser) {
@@ -2442,49 +2637,49 @@
                                 lastMessageSenderId: conversationData.lastMessageSenderId
                             });
                         } else {
-                            Logger.warning(`L'utilisateur ${otherUserId} n'a pas été trouvé`);
+                            Logger.warning(`User ${otherUserId} was not found`);
                         }
                     }
                     
-                    // Trier par dernier message
+                    // Sort by last message
                     conversations.sort((a, b) => b.lastMessageTimestamp - a.lastMessageTimestamp);
-                    Logger.success(`${conversations.length} conversations traitées et triées`);
+                    Logger.success(`${conversations.length} conversations processed and sorted`);
                     
                     return conversations;
                 } catch (error) {
-                    Logger.error(`Erreur de récupération des conversations: ${error.message}`);
+                    Logger.error(`Error retrieving conversations: ${error.message}`);
                     throw error;
                 }
             },
 
-            // Écouter les changements de conversations
+            // Listen to conversation changes
             listenToConversations: function(userId, callback) {
-                Logger.info(`Mise en place de l'écouteur de conversations pour l'utilisateur ${userId}`);
+                Logger.info(`Setting up conversation listener for user ${userId}`);
                 const q = query(
                     collection(db, "conversations"),
                     where("participants", "array-contains", userId)
                 );
                 
-                // Désinscrire l'écouteur précédent si existant
+                // Unsubscribe previous listener if exists
                 if (appData.unsubscribers.conversations && typeof appData.unsubscribers.conversations === 'function') {
-                    Logger.info(`Désabonnement de l'écouteur de conversations précédent`);
+                    Logger.info(`Unsubscribing from previous conversation listener`);
                     appData.unsubscribers.conversations();
                     appData.unsubscribers.conversations = null;
                 }
                 
-                // Nouvel écouteur
+                // New listener
                 appData.unsubscribers.conversations = onSnapshot(q, async (querySnapshot) => {
-                    Logger.info(`${querySnapshot.size} conversations détectées par l'écouteur`);
+                    Logger.info(`${querySnapshot.size} conversations detected by listener`);
                     const conversations = [];
                     
                     for (const doc of querySnapshot.docs) {
                         const conversationData = doc.data();
                         
-                        // Trouver l'autre participant
+                        // Find other participant
                         const otherUserId = conversationData.participants.find(id => id !== userId);
                         
                         try {
-                            // Récupérer les informations de l'autre utilisateur
+                            // Get other user info
                             const otherUser = await UserManager.getUserById(otherUserId);
                             
                             if (otherUser) {
@@ -2496,70 +2691,70 @@
                                     lastMessageSenderId: conversationData.lastMessageSenderId
                                 });
                             } else {
-                                Logger.warning(`L'utilisateur ${otherUserId} n'a pas été trouvé`);
+                                Logger.warning(`User ${otherUserId} was not found`);
                             }
                         } catch (error) {
-                            Logger.error(`Erreur lors de la récupération de l'utilisateur ${otherUserId}: ${error.message}`);
+                            Logger.error(`Error retrieving user ${otherUserId}: ${error.message}`);
                         }
                     }
                     
-                    // Trier par dernier message
+                    // Sort by last message
                     conversations.sort((a, b) => b.lastMessageTimestamp - a.lastMessageTimestamp);
-                    Logger.info(`${conversations.length} conversations traitées et triées dans l'écouteur`);
+                    Logger.info(`${conversations.length} conversations processed and sorted in listener`);
                     
                     callback(conversations);
                 }, error => {
-                    Logger.error(`Erreur dans l'écouteur de conversations: ${error.message}`);
+                    Logger.error(`Error in conversations listener: ${error.message}`);
                 });
                 
                 return appData.unsubscribers.conversations;
             },
 
-            // Supprimer toutes les conversations d'un utilisateur
+            // Delete all user conversations
             deleteAllUserConversations: async function(userId) {
                 try {
-                    Logger.info(`Suppression de toutes les conversations pour l'utilisateur ${userId}`);
-                    // Récupérer toutes les conversations où l'utilisateur est participant
+                    Logger.info(`Deleting all conversations for user ${userId}`);
+                    // Get all conversations where user is participant
                     const q = query(
                         collection(db, "conversations"),
                         where("participants", "array-contains", userId)
                     );
                     
                     const querySnapshot = await getDocs(q);
-                    Logger.info(`${querySnapshot.size} conversations à supprimer`);
+                    Logger.info(`${querySnapshot.size} conversations to delete`);
                     
-                    // Supprimer chaque conversation et ses messages
+                    // Delete each conversation and its messages
                     for (const doc of querySnapshot.docs) {
-                        // Supprimer les messages de la conversation
+                        // Delete messages for conversation
                         const messagesQuery = query(
                             collection(db, "messages"),
                             where("conversationId", "==", doc.id)
                         );
                         
                         const messagesSnapshot = await getDocs(messagesQuery);
-                        Logger.info(`${messagesSnapshot.size} messages à supprimer pour la conversation ${doc.id}`);
+                        Logger.info(`${messagesSnapshot.size} messages to delete for conversation ${doc.id}`);
                         
                         for (const messageDoc of messagesSnapshot.docs) {
                             await deleteDoc(messageDoc.ref);
                         }
-                        Logger.success(`Messages supprimés pour la conversation ${doc.id}`);
+                        Logger.success(`Messages deleted for conversation ${doc.id}`);
                         
-                        // Supprimer la conversation
+                        // Delete conversation
                         await deleteDoc(doc.ref);
-                        Logger.success(`Conversation ${doc.id} supprimée`);
+                        Logger.success(`Conversation ${doc.id} deleted`);
                     }
                     
                     return { success: true };
                 } catch (error) {
-                    Logger.error(`Erreur de suppression des conversations: ${error.message}`);
+                    Logger.error(`Error deleting conversations: ${error.message}`);
                     return { success: false, message: "Erreur lors de la suppression des conversations" };
                 }
             },
 
-            // Mettre à jour le statut de typing
+            // Update typing status
             updateTypingStatus: async function(userId, otherUserId, isTyping) {
                 try {
-                    Logger.info(`Mise à jour du statut typing pour ${userId}: ${isTyping ? "en train d'écrire" : "pas en train d'écrire"}`);
+                    Logger.info(`Updating typing status for ${userId}: ${isTyping ? "typing" : "not typing"}`);
                     const sortedIds = [userId, otherUserId].sort();
                     const conversationId = sortedIds.join('_');
                     
@@ -2570,106 +2765,106 @@
                     
                     return { success: true };
                 } catch (error) {
-                    Logger.error(`Erreur de mise à jour du statut de typing: ${error.message}`);
+                    Logger.error(`Error updating typing status: ${error.message}`);
                     return { success: false };
                 }
             },
 
-            // Écouter le statut de typing
+            // Listen to typing status
             listenToTypingStatus: function(conversationId, otherUserId, callback) {
-                Logger.info(`Mise en place de l'écouteur de typing pour conversation ${conversationId}, utilisateur ${otherUserId}`);
+                Logger.info(`Setting up typing listener for conversation ${conversationId}, user ${otherUserId}`);
                 
-                // Désinscrire l'écouteur précédent si existant
+                // Unsubscribe previous listener if exists
                 if (appData.unsubscribers.typing && typeof appData.unsubscribers.typing === 'function') {
-                    Logger.info(`Désabonnement de l'écouteur de typing précédent`);
+                    Logger.info(`Unsubscribing from previous typing listener`);
                     appData.unsubscribers.typing();
                     appData.unsubscribers.typing = null;
                 }
                 
-                // Nouvel écouteur
+                // New listener
                 appData.unsubscribers.typing = onSnapshot(doc(db, "conversations", conversationId), (doc) => {
                     if (doc.exists()) {
                         const data = doc.data();
                         const isTyping = data[`typing_${otherUserId}`] || false;
-                        Logger.info(`Statut typing de ${otherUserId}: ${isTyping ? "en train d'écrire" : "pas en train d'écrire"}`);
+                        Logger.info(`Typing status for ${otherUserId}: ${isTyping ? "typing" : "not typing"}`);
                         callback(isTyping);
                     }
                 }, error => {
-                    Logger.error(`Erreur dans l'écouteur de typing: ${error.message}`);
+                    Logger.error(`Error in typing listener: ${error.message}`);
                 });
                 
                 return appData.unsubscribers.typing;
             },
 
-            // Télécharger un fichier pour un message
+            // Upload file for message
             uploadFile: async function(file, senderId, conversationId) {
                 try {
-                    Logger.info(`Upload du fichier ${file.name} (${Math.round(file.size / 1024)} KB) pour la conversation ${conversationId}`);
+                    Logger.info(`Uploading file ${file.name} (${Math.round(file.size / 1024)} KB) for conversation ${conversationId}`);
                     
-                    // Compresser l'image si c'est une image
+                    // Compress image if it's an image
                     let fileToUpload = file;
                     if (file.type.startsWith('image/')) {
-                        Logger.info(`Le fichier est une image, compression...`);
+                        Logger.info(`File is an image, compressing...`);
                         fileToUpload = await UserManager.compressImage(file);
                     }
                     
-                    // Créer une référence dans le stockage
+                    // Create storage reference
                     const storageRef = ref(storage, `messages/${conversationId}/${senderId}_${Date.now()}_${file.name}`);
                     
-                    // Uploader le fichier
-                    Logger.info(`Téléchargement du fichier vers Firebase Storage...`);
+                    // Upload file
+                    Logger.info(`Uploading file to Firebase Storage...`);
                     const snapshot = await uploadBytes(storageRef, fileToUpload);
                     
-                    // Récupérer l'URL de téléchargement
+                    // Get download URL
                     const downloadURL = await getDownloadURL(storageRef);
-                    Logger.success(`Fichier téléchargé avec succès, URL: ${downloadURL.substring(0, 50)}...`);
+                    Logger.success(`File uploaded successfully, URL: ${downloadURL.substring(0, 50)}...`);
                     
                     return { success: true, url: downloadURL };
                 } catch (error) {
-                    Logger.error(`Erreur d'upload de fichier: ${error.message}`);
+                    Logger.error(`File upload error: ${error.message}`);
                     return { success: false, message: "Erreur lors de l'upload du fichier" };
                 }
             }
         };
 
-        // Module de gestion des thèmes
+        // Theme Management Module
         var ThemeManager = {
             init: function() {
-                // Vérifier les préférences système pour le mode sombre/clair
+                // Check system preferences for dark/light mode
                 this.detectSystemTheme();
                 
-                // Initialiser le thème suivant les préférences de l'utilisateur
+                // Initialize theme according to user preferences
                 this.updateUI();
                 
-                // Appliquer le thème actuel
+                // Apply current theme
                 this.applyTheme();
             },
             
-            // Méthode de détection du thème système
+            // System theme detection
             detectSystemTheme: function() {
                 try {
-                    // Tentative d'utilisation de matchMedia si disponible
+                    // Try to use matchMedia if available
                     if (window.matchMedia) {
                         const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                        if (!appData.currentUser) { // Ne pas écraser les préférences de l'utilisateur connecté
+                        if (!appData.currentUser) { // Don't override logged in user preferences
                             this.setDarkMode(isDarkMode);
                         }
                         
-                        // Essayer d'ajouter un listener pour les changements de préférence
+                        // Try to add listener for preference changes
                         try {
                             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-                                if (!appData.currentUser) { // Ne pas écraser les préférences de l'utilisateur connecté
+                                if (!appData.currentUser) { // Don't override logged in user preferences
                                     ThemeManager.setDarkMode(e.matches);
                                 }
                             });
                         } catch(err) {
                             // Fallback
-                            Logger.warning("Impossible de détecter les changements de thème système");
+                            Logger.warning("Unable to detect system theme changes");
                         }
                     }
                 } catch(e) {
-                    // Si matchMedia n'est pas disponible ou échoue, utiliser la valeur par défaut
-                    Logger.warning("Impossible de détecter le thème système");
+                    // If matchMedia is not available or fails, use default
+                    Logger.warning("Unable to detect system theme");
                 }
             },
             
@@ -2686,7 +2881,7 @@
             },
             
             updateUI: function() {
-                // Mettre à jour les éléments d'interface pour refléter le thème actuel
+                // Update UI elements to reflect current theme
                 if (elements.darkModeToggle) {
                     elements.darkModeToggle.checked = appData.theme.mode === 'dark';
                 }
@@ -2704,92 +2899,92 @@
             },
             
             applyTheme: function() {
-                // Appliquer le mode sombre/clair
+                // Apply dark/light mode
                 if (appData.theme.mode === 'dark') {
                     document.body.classList.add('dark');
                 } else {
                     document.body.classList.remove('dark');
                 }
                 
-                // Appliquer la couleur du thème
+                // Apply theme color
                 document.body.className = document.body.className.replace(/theme-\w+/g, '');
                 document.body.classList.add('theme-' + appData.theme.color);
                 
-                // Stocker les préférences dans Firestore si l'utilisateur est connecté
+                // Store preferences in Firestore if user is logged in
                 if (auth.currentUser) {
                     updateDoc(doc(db, "users", auth.currentUser.uid), {
                         theme: appData.theme
                     }).catch(error => {
-                        Logger.error(`Erreur lors de la sauvegarde des préférences de thème: ${error.message}`);
+                        Logger.error(`Error saving theme preferences: ${error.message}`);
                     });
                 }
             }
         };
 
-        // Fonctions utilitaires pour l'interface
+        // UI Utility Functions
         var UI = {
             showLoading: function(message, context = 'global') {
                 if (!message) message = "Chargement en cours...";
                 
-                // Créer un ID unique pour ce chargement
+                // Create unique ID for this loading state
                 const loadingId = context + '_' + Date.now();
                 
-                // Annuler tout minuteur d'auto-masquage existant pour ce contexte
+                // Cancel any existing auto-hide timer for this context
                 if (appData.loadingTimers[context]) {
                     clearTimeout(appData.loadingTimers[context]);
                     appData.loadingTimers[context] = null;
                 }
                 
-                // Définir un minuteur d'auto-masquage après 10 secondes
+                // Set auto-hide timer after 10 seconds
                 appData.loadingTimers[context] = setTimeout(() => {
                     this.hideLoading(context);
-                    Logger.warning(`Chargement automatiquement masqué après 10s: ${message} (contexte: ${context})`);
+                    Logger.warning(`Loading automatically hidden after 10s: ${message} (context: ${context})`);
                 }, 10000);
                 
                 elements.loadingText.textContent = message;
                 elements.loadingOverlay.classList.remove('hidden');
-                Logger.info(`Affichage de l'overlay de chargement: ${message} (contexte: ${context})`);
+                Logger.info(`Showing loading overlay: ${message} (context: ${context})`);
                 
                 return loadingId;
             },
 
             hideLoading: function(context = 'global') {
-                // Annuler tout minuteur d'auto-masquage pour ce contexte
+                // Cancel any auto-hide timer for this context
                 if (appData.loadingTimers[context]) {
                     clearTimeout(appData.loadingTimers[context]);
                     appData.loadingTimers[context] = null;
                 }
                 
                 elements.loadingOverlay.classList.add('hidden');
-                Logger.info(`Masquage de l'overlay de chargement (contexte: ${context})`);
+                Logger.info(`Hiding loading overlay (context: ${context})`);
             },
 
             updateProfileInfo: function() {
                 if (appData.currentUser) {
-                    Logger.info(`Mise à jour des informations de profil pour ${appData.currentUser.username}`);
+                    Logger.info(`Updating profile info for ${appData.currentUser.username}`);
                     elements.profileUsername.textContent = appData.currentUser.username;
                     elements.profileEmail.textContent = appData.currentUser.email || 'Non renseigné';
                     elements.profilePhone.textContent = appData.currentUser.phone || 'Non renseigné';
                     
                     if (appData.currentUser.avatar) {
-                        Logger.info(`Affichage de l'avatar de l'utilisateur`);
+                        Logger.info(`Displaying user avatar`);
                         elements.profileAvatar.innerHTML = '<img src="' + appData.currentUser.avatar + '" alt="Avatar" class="avatar-img">';
                     } else {
-                        Logger.info(`Affichage de l'initiale de l'utilisateur comme avatar`);
+                        Logger.info(`Displaying user initial as avatar`);
                         elements.profileAvatar.innerHTML = appData.currentUser.username.charAt(0).toUpperCase();
                     }
 
-                    // Mettre à jour le bouton de statut
+                    // Update status button
                     elements.statusToggle.checked = appData.isOnline;
                 }
             },
 
             renderConversations: function(conversations) {
-                Logger.info(`Rendu de ${conversations ? conversations.length : 0} conversations`);
+                Logger.info(`Rendering ${conversations ? conversations.length : 0} conversations`);
                 elements.conversationsList.innerHTML = '';
                 
                 if (!conversations || conversations.length === 0) {
-                    Logger.info(`Aucune conversation à afficher`);
+                    Logger.info(`No conversations to display`);
                     elements.conversationsList.innerHTML = `
                         <div class="flex flex-col items-center justify-center p-8 text-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -2807,13 +3002,13 @@
                     const lastMessageSenderId = conversation.lastMessageSenderId;
                     const isLastMessageMine = lastMessageSenderId === auth.currentUser.uid;
                     
-                    Logger.info(`Rendu de la conversation avec ${otherUser.username} (${otherUser.uid})`);
+                    Logger.info(`Rendering conversation with ${otherUser.username} (${otherUser.uid})`);
                     
                     const conversationEl = document.createElement('div');
                     conversationEl.className = 'conversation-item scale-in';
                     conversationEl.setAttribute('data-user-id', otherUser.uid);
                     
-                    // Créer l'avatar
+                    // Create avatar
                     let avatarContent = '';
                     if (otherUser.avatar) {
                         avatarContent = `
@@ -2831,13 +3026,13 @@
                         `;
                     }
                     
-                    // Formater la date du dernier message
+                    // Format last message time
                     let timeString = '';
                     if (conversation.lastMessageTimestamp) {
                         timeString = this.formatTimeOrDate(conversation.lastMessageTimestamp);
                     }
                     
-                    // Limiter la longueur du dernier message
+                    // Limit last message length
                     let lastMessageText = lastMessage || 'Aucun message';
                     if (lastMessageText.length > 30) {
                         lastMessageText = lastMessageText.substring(0, 30) + '...';
@@ -2857,22 +3052,22 @@
                     `;
                     
                     conversationEl.addEventListener('click', () => {
-                        Logger.info(`Conversation avec ${otherUser.username} (${otherUser.uid}) cliquée`);
+                        Logger.info(`Conversation with ${otherUser.username} (${otherUser.uid}) clicked`);
                         this.openChat(otherUser);
                     });
                     
                     elements.conversationsList.appendChild(conversationEl);
                 });
                 
-                Logger.success(`Rendu des conversations terminé`);
+                Logger.success(`Conversation rendering complete`);
             },
 
             renderUsers: function(users) {
-                Logger.info(`Rendu de ${users ? users.length : 0} utilisateurs`);
+                Logger.info(`Rendering ${users ? users.length : 0} users`);
                 elements.usersList.innerHTML = '';
                 
                 if (!users || users.length === 0) {
-                    Logger.info(`Aucun utilisateur à afficher`);
+                    Logger.info(`No users to display`);
                     elements.usersList.innerHTML = `
                         <div class="no-results">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -2884,12 +3079,12 @@
                 }
                 
                 users.forEach(user => {
-                    Logger.info(`Rendu de l'utilisateur ${user.username} (${user.uid})`);
+                    Logger.info(`Rendering user ${user.username} (${user.uid})`);
                     
                     const userEl = document.createElement('div');
                     userEl.className = 'conversation-item scale-in';
                     
-                    // Créer l'avatar
+                    // Create avatar
                     let avatarContent = '';
                     if (user.avatar) {
                         avatarContent = `
@@ -2907,13 +3102,13 @@
                         `;
                     }
                     
-                    // Formater le dernier vu
+                    // Format last seen status
                     let statusContent = '';
                     if (user.online) {
                         statusContent = `<div class="user-status online"><span class="status-indicator"></span>En ligne</div>`;
                     } else if (user.lastSeen) {
                         const lastSeen = user.lastSeen.toDate ? user.lastSeen.toDate() : new Date(user.lastSeen);
-                        statusContent = `<div class="user-status offline"><span class="status-indicator"></span>Vu ${this.formatTimeOrDate(lastSeen)}</div>`;
+                        statusContent = `<div class="user-status offline"><span class="status-indicator"></span>Dernière connexion ${this.formatTimeOrDate(lastSeen)}</div>`;
                     } else {
                         statusContent = `<div class="user-status offline"><span class="status-indicator"></span>Hors ligne</div>`;
                     }
@@ -2932,22 +3127,22 @@
                     elements.usersList.appendChild(userEl);
                 });
                 
-                // Ajouter des gestionnaires d'événements pour les boutons "Discuter"
+                // Add event handlers for "Chat" buttons
                 document.querySelectorAll('.start-chat-btn').forEach(btn => {
                     btn.addEventListener('click', async (e) => {
                         const userId = btn.getAttribute('data-user-id');
-                        Logger.info(`Bouton "Discuter" cliqué pour l'utilisateur ${userId}`);
+                        Logger.info(`"Chat" button clicked for user ${userId}`);
                         
                         try {
                             this.showLoading("Chargement de l'utilisateur...", "user_chat");
                             const user = await UserManager.getUserById(userId);
                             
                             if (user) {
-                                Logger.success(`Utilisateur ${user.username} chargé, ouverture du chat`);
+                                Logger.success(`User ${user.username} loaded, opening chat`);
                                 this.openChat(user);
                             }
                         } catch (error) {
-                            Logger.error(`Erreur lors de l'ouverture du chat: ${error.message}`);
+                            Logger.error(`Error opening chat: ${error.message}`);
                             this.showNotification("Erreur lors de l'ouverture du chat", "error");
                         } finally {
                             this.hideLoading("user_chat");
@@ -2955,93 +3150,93 @@
                     });
                 });
                 
-                Logger.success(`Rendu des utilisateurs terminé`);
+                Logger.success(`User rendering complete`);
             },
 
             openChat: async function(user) {
-                Logger.info(`Ouverture du chat avec ${user.username} (${user.uid})`);
+                Logger.info(`Opening chat with ${user.username} (${user.uid})`);
                 
                 try {
-                    // Stocker l'utilisateur en cours de discussion
+                    // Store current chat user
                     appData.currentChatUser = user;
                     
-                    // Mettre à jour l'en-tête de la conversation
+                    // Update chat header
                     elements.chatContact.textContent = user.username;
-                    Logger.info(`En-tête de chat mis à jour avec le nom d'utilisateur: ${user.username}`);
+                    Logger.info(`Chat header updated with username: ${user.username}`);
                     
-                    // Afficher l'avatar du contact
+                    // Display contact avatar
                     if (user.avatar) {
-                        Logger.info(`Affichage de l'avatar de l'utilisateur ${user.username}`);
+                        Logger.info(`Displaying user avatar for ${user.username}`);
                         elements.chatContactAvatar.innerHTML = `
                             <img src="${user.avatar}" alt="${user.username}" class="h-12 w-12 rounded-full shadow-md" style="object-fit: cover;">
                         `;
-                        // Créer l'indicateur de statut séparément
+                        // Create status indicator separately
                         const statusDiv = document.createElement('div');
                         statusDiv.id = 'online-status';
                         statusDiv.className = user.online ? 'online-indicator' : 'online-indicator hidden';
                         elements.chatContactAvatar.appendChild(statusDiv);
                     } else {
-                        Logger.info(`Affichage de l'initiale comme avatar pour ${user.username}`);
+                        Logger.info(`Displaying initial as avatar for ${user.username}`);
                         elements.chatContactAvatar.innerHTML = user.username.charAt(0).toUpperCase();
-                        // Créer l'indicateur de statut séparément
+                        // Create status indicator separately
                         const statusDiv = document.createElement('div');
                         statusDiv.id = 'online-status';
                         statusDiv.className = user.online ? 'online-indicator' : 'online-indicator hidden';
                         elements.chatContactAvatar.appendChild(statusDiv);
                     }
                     
-                    // Afficher l'écran de chat
-                    Logger.info(`Affichage de l'écran de chat`);
+                    // Show chat screen
+                    Logger.info(`Displaying chat screen`);
                     elements.conversationsScreen.classList.add('hidden');
                     elements.usersScreen.classList.add('hidden');
                     elements.profileScreen.classList.add('hidden');
                     elements.chatScreen.classList.remove('hidden');
                     
-                    // Masquer la barre de navigation
-                    Logger.info(`Masquage de la barre de navigation`);
+                    // Hide navigation bar
+                    Logger.info(`Hiding navigation bar`);
                     if (elements.navigationBar) {
                         elements.navigationBar.classList.add('hidden');
                     }
                     
-                    // Obtenir l'ID de conversation
+                    // Get conversation ID
                     const conversationId = await ConversationManager.getOrCreateConversation(
                         auth.currentUser.uid,
                         user.uid
                     );
-                    Logger.success(`ID de conversation obtenu: ${conversationId}`);
+                    Logger.success(`Conversation ID obtained: ${conversationId}`);
                     
-                    // Stocker l'ID de conversation dans l'élément
+                    // Store conversation ID in element
                     elements.chatScreen.setAttribute('data-conversation-id', conversationId);
                     elements.chatScreen.setAttribute('data-other-user-id', user.uid);
                     
-                    // Vider le champ de message
+                    // Clear message field
                     elements.messageInput.value = '';
                     
-                    // Vider le conteneur de messages
+                    // Clear messages container
                     elements.chatMessages.innerHTML = '';
                     
-                    // Afficher un indicateur de chargement des messages
+                    // Show messages loading indicator
                     elements.chatMessages.innerHTML = `
                         <div class="flex flex-col items-center justify-center p-6">
                             <div class="loader mb-4"></div>
                             <div class="text-secondary">Chargement des messages...</div>
                         </div>`;
                     
-                    // Nettoyer les écouteurs précédents
+                    // Clean up previous listeners
                     this.cleanupChatListeners();
                     
-                    // Écouter les messages de la conversation
-                    Logger.info(`Mise en place de l'écouteur de messages pour la conversation ${conversationId}`);
+                    // Listen for conversation messages
+                    Logger.info(`Setting up message listener for conversation ${conversationId}`);
                     
                     const unsubscribeMessages = ConversationManager.listenToMessages(
                         conversationId,
                         (messages) => {
-                            // Vider le conteneur de messages
+                            // Clear messages container
                             elements.chatMessages.innerHTML = '';
                             
-                            // Afficher les messages
+                            // Display messages
                             if (messages.length === 0) {
-                                Logger.info(`Aucun message dans la conversation ${conversationId}`);
+                                Logger.info(`No messages in conversation ${conversationId}`);
                                 elements.chatMessages.innerHTML = `
                                     <div class="flex flex-col items-center justify-center p-8 text-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -3051,34 +3246,34 @@
                                         <p class="text-secondary text-sm mt-2">Commencez la conversation en envoyant un message!</p>
                                     </div>`;
                             } else {
-                                Logger.success(`${messages.length} messages chargés pour la conversation ${conversationId}`);
+                                Logger.success(`${messages.length} messages loaded for conversation ${conversationId}`);
                                 
-                                // Grouper les messages par jour
+                                // Group messages by day
                                 const messagesByDay = this.groupMessagesByDay(messages);
                                 
-                                // Afficher chaque jour de messages
+                                // Display each day of messages
                                 for (const [day, dayMessages] of Object.entries(messagesByDay)) {
-                                    // Ajouter un séparateur de date
+                                    // Add date separator
                                     const dateHeader = document.createElement('div');
                                     dateHeader.className = 'chat-date-separator';
                                     dateHeader.innerHTML = `<span class="chat-date-text">${day}</span>`;
                                     elements.chatMessages.appendChild(dateHeader);
                                     
-                                    // Afficher les messages du jour
+                                    // Display day's messages
                                     dayMessages.forEach(message => {
                                         this.addMessageToUI(message);
                                     });
                                 }
                                 
-                                // Défiler vers le bas
+                                // Scroll to bottom
                                 this.scrollToBottom();
                             }
                             
-                            // Marquer les messages comme lus
+                            // Mark messages as read
                             ConversationManager.markConversationAsRead(conversationId, auth.currentUser.uid)
                                 .then(result => {
                                     if (result.success) {
-                                        Logger.info(`Messages marqués comme lus dans la conversation ${conversationId}`);
+                                        Logger.info(`Messages marked as read in conversation ${conversationId}`);
                                     }
                                 });
                             
@@ -3086,14 +3281,14 @@
                         }
                     );
                     
-                    // Écouter le statut de typing
-                    Logger.info(`Mise en place de l'écouteur de typing pour ${user.username}`);
+                    // Listen for typing status
+                    Logger.info(`Setting up typing listener for ${user.username}`);
                     const unsubscribeTyping = ConversationManager.listenToTypingStatus(
                         conversationId,
                         user.uid,
                         (isTyping) => {
                             if (isTyping && elements.typingStatus) {
-                                Logger.info(`${user.username} est en train d'écrire`);
+                                Logger.info(`${user.username} is typing`);
                                 elements.typingStatus.classList.remove('hidden');
                             } else if (elements.typingStatus) {
                                 elements.typingStatus.classList.add('hidden');
@@ -3101,37 +3296,37 @@
                         }
                     );
                     
-                    // Écouter les changements de l'utilisateur
-                    Logger.info(`Mise en place de l'écouteur de changements pour ${user.username}`);
+                    // Listen for user changes
+                    Logger.info(`Setting up user changes listener for ${user.username}`);
                     const unsubscribeUser = UserManager.listenToUserChanges(
                         user.uid,
                         (updatedUser) => {
-                            Logger.info(`Changements détectés pour ${updatedUser.username}`);
+                            Logger.info(`Changes detected for ${updatedUser.username}`);
                             
-                            // Mettre à jour le statut en ligne
+                            // Update online status
                             const onlineStatus = document.getElementById('online-status');
                             if (onlineStatus) {
                                 if (updatedUser.online) {
-                                    Logger.info(`${updatedUser.username} est maintenant en ligne`);
+                                    Logger.info(`${updatedUser.username} is now online`);
                                     onlineStatus.classList.remove('hidden');
                                 } else {
-                                    Logger.info(`${updatedUser.username} est maintenant hors ligne`);
+                                    Logger.info(`${updatedUser.username} is now offline`);
                                     onlineStatus.classList.add('hidden');
                                 }
                             }
                             
-                            // Mettre à jour l'avatar si changé
+                            // Update avatar if changed
                             if (updatedUser.avatar !== user.avatar) {
-                                Logger.info(`Avatar de ${updatedUser.username} mis à jour`);
+                                Logger.info(`Avatar for ${updatedUser.username} updated`);
                                 this.updateChatAvatar(updatedUser);
                             }
                             
-                            // Mettre à jour l'objet utilisateur
+                            // Update user object
                             appData.currentChatUser = updatedUser;
                         }
                     );
                     
-                    // Focus sur le champ de saisie de message
+                    // Focus message input field
                     setTimeout(() => {
                         if (elements.messageInput) {
                             elements.messageInput.focus();
@@ -3139,10 +3334,10 @@
                     }, 300);
                     
                 } catch (error) {
-                    Logger.error(`Erreur lors de l'ouverture de la conversation: ${error.message}`);
+                    Logger.error(`Error opening conversation: ${error.message}`);
                     this.showNotification("Erreur lors de l'ouverture de la conversation. Veuillez réessayer.", "error");
                     
-                    // Ajouter une visualisation de l'erreur dans l'interface de chat
+                    // Add error visualization in chat interface
                     if (elements.chatMessages) {
                         elements.chatMessages.innerHTML = `
                             <div class="flex flex-col items-center justify-center p-8 text-center">
@@ -3154,7 +3349,7 @@
                                 <button id="retry-chat-load" class="btn btn-primary mt-4">Réessayer</button>
                             </div>`;
                         
-                        // Ajouter un gestionnaire pour le bouton de réessai
+                        // Add handler for retry button
                         const retryButton = document.getElementById('retry-chat-load');
                         if (retryButton) {
                             retryButton.addEventListener('click', () => {
@@ -3167,7 +3362,7 @@
                 }
             },
             
-            // Groupe les messages par jour pour l'affichage
+            // Group messages by day for display
             groupMessagesByDay: function(messages) {
                 const messagesByDay = {};
                 
@@ -3185,23 +3380,23 @@
                 return messagesByDay;
             },
             
-            // Formater la date pour l'en-tête de groupe de messages
+            // Format date for message group header
             formatDateHeader: function(date) {
                 const now = new Date();
                 const yesterday = new Date(now);
                 yesterday.setDate(now.getDate() - 1);
                 
-                // Si c'est aujourd'hui
+                // If today
                 if (date.toDateString() === now.toDateString()) {
                     return "Aujourd'hui";
                 }
                 
-                // Si c'est hier
+                // If yesterday
                 if (date.toDateString() === yesterday.toDateString()) {
                     return "Hier";
                 }
                 
-                // Sinon, afficher la date complète
+                // Otherwise, show full date
                 const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
                 return date.toLocaleDateString('fr-FR', options);
             },
@@ -3209,11 +3404,11 @@
             updateChatAvatar: function(user) {
                 if (!elements.chatContactAvatar) return;
                 
-                // Sauvegarder l'élément de statut en ligne s'il existe
+                // Save online status element if it exists
                 const existingStatus = document.getElementById('online-status');
                 const isOnlineVisible = existingStatus && !existingStatus.classList.contains('hidden');
                 
-                // Mettre à jour l'avatar
+                // Update avatar
                 if (user.avatar) {
                     elements.chatContactAvatar.innerHTML = `
                         <img src="${user.avatar}" alt="${user.username}" class="h-12 w-12 rounded-full shadow-md" style="object-fit: cover;">
@@ -3222,7 +3417,7 @@
                     elements.chatContactAvatar.innerHTML = user.username.charAt(0).toUpperCase();
                 }
                 
-                // Recréer l'indicateur de statut
+                // Recreate status indicator
                 const newStatus = document.createElement('div');
                 newStatus.id = 'online-status';
                 newStatus.className = isOnlineVisible ? 'online-indicator' : 'online-indicator hidden';
@@ -3230,12 +3425,12 @@
             },
             
             cleanupChatListeners: function() {
-                // Désinscrire tous les écouteurs
-                Logger.info('Nettoyage des écouteurs de chat');
+                // Unsubscribe all listeners
+                Logger.info('Cleaning up chat listeners');
                 
                 Object.keys(appData.unsubscribers).forEach(key => {
                     if (appData.unsubscribers[key] && typeof appData.unsubscribers[key] === 'function') {
-                        Logger.info(`Désabonnement de l'écouteur ${key}`);
+                        Logger.info(`Unsubscribing from ${key} listener`);
                         appData.unsubscribers[key]();
                         appData.unsubscribers[key] = null;
                     }
@@ -3245,11 +3440,11 @@
             addMessageToUI: function(message, isSending = false) {
                 const isSent = message.senderId === auth.currentUser.uid;
                 
-                // Logger l'ajout de message
+                // Log message addition
                 if (isSending) {
-                    Logger.info(`Ajout d'un message en cours d'envoi`);
+                    Logger.info(`Adding sending message to UI`);
                 } else {
-                    Logger.info(`Ajout d'un message ${isSent ? 'envoyé' : 'reçu'} à l'interface (ID: ${message.id})`);
+                    Logger.info(`Adding ${isSent ? 'sent' : 'received'} message to UI (ID: ${message.id})`);
                 }
                 
                 const messageEl = document.createElement('div');
@@ -3262,20 +3457,20 @@
                 
                 let messageContent = '';
                 
-                // Si le message contient un fichier
+                // If message contains a file
                 if (message.fileURL) {
-                    Logger.info(`Le message contient un fichier: ${message.fileURL.substring(0, 50)}...`);
-                    // Vérifier si c'est une image
+                    Logger.info(`Message contains file: ${message.fileURL.substring(0, 50)}...`);
+                    // Check if it's an image
                     if (this.isImageURL(message.fileURL)) {
-                        Logger.info(`Le fichier est une image`);
+                        Logger.info(`File is an image`);
                         messageContent = `
                             <div class="mb-2">
                                 <img src="${message.fileURL}" alt="Image partagée" class="max-w-full rounded-lg" style="max-height: 200px; cursor: pointer;" onclick="window.open('${message.fileURL}', '_blank')">
                             </div>
                         `;
                     } else {
-                        // C'est un autre type de fichier
-                        Logger.info(`Le fichier n'est pas une image`);
+                        // It's another file type
+                        Logger.info(`File is not an image`);
                         messageContent = `
                             <div class="mb-2">
                                 <a href="${message.fileURL}" target="_blank" class="flex items-center text-primary">
@@ -3289,7 +3484,7 @@
                     }
                 }
                 
-                // Ajouter le texte du message s'il y en a
+                // Add message text if present
                 if (message.text) {
                     messageContent += `<div>${message.text}</div>`;
                 }
@@ -3310,10 +3505,10 @@
                 if (elements.chatMessages) {
                     elements.chatMessages.appendChild(messageEl);
                     
-                    // Défiler vers le bas
+                    // Scroll to bottom
                     this.scrollToBottom();
                     
-                    // Retirer la classe "new" après l'animation
+                    // Remove "new" class after animation
                     setTimeout(() => {
                         const bubble = messageEl.querySelector('.chat-bubble');
                         if (bubble) {
@@ -3321,7 +3516,7 @@
                         }
                     }, 300);
                     
-                    // Si le message était en cours d'envoi, marquer comme envoyé après un court délai
+                    // If message was sending, mark as sent after short delay
                     if (isSending) {
                         setTimeout(function() {
                             const bubble = messageEl.querySelector('.chat-bubble');
@@ -3329,12 +3524,12 @@
                                 bubble.classList.remove('sending');
                                 const indicator = bubble.querySelector('.sending-indicator');
                                 if (indicator) indicator.remove();
-                                Logger.info(`Message marqué comme envoyé dans l'interface`);
+                                Logger.info(`Message marked as sent in UI`);
                             }
                         }, 500);
                     }
                 } else {
-                    Logger.error("Impossible d'ajouter le message : l'élément chatMessages n'existe pas");
+                    Logger.error("Cannot add message: chatMessages element doesn't exist");
                 }
             },
 
@@ -3354,31 +3549,31 @@
                 const now = new Date();
                 const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
                 
-                // Si c'est aujourd'hui, afficher l'heure
+                // If today, show time
                 if (date.toDateString() === now.toDateString()) {
                     return this.formatTime(date);
                 }
                 
-                // Si c'est hier, afficher "Hier"
+                // If yesterday, show "Hier"
                 const yesterday = new Date(now);
                 yesterday.setDate(now.getDate() - 1);
                 if (date.toDateString() === yesterday.toDateString()) {
                     return 'Hier';
                 }
                 
-                // Si c'est cette semaine, afficher le jour
+                // If this week, show day
                 const days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
                 if (now.getTime() - date.getTime() < 7 * 24 * 60 * 60 * 1000) {
                     return days[date.getDay()];
                 }
                 
-                // Sinon, afficher la date
+                // Otherwise, show date
                 return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}`;
             },
 
             showScreen: function(screenId) {
-                // Masquer tous les écrans avec une transition
-                Logger.info(`Changement d'écran vers: ${screenId}`);
+                // Hide all screens with transition
+                Logger.info(`Changing screen to: ${screenId}`);
                 
                 const screens = [
                     elements.conversationsScreen,
@@ -3387,46 +3582,46 @@
                     elements.profileScreen
                 ];
                 
-                // Ajouter la classe 'hidden' à tous les écrans sauf celui demandé
+                // Add 'hidden' class to all screens except requested one
                 screens.forEach(screen => {
                     if (screen.id !== screenId) {
                         screen.classList.add('hidden');
                     }
                 });
                 
-                // Afficher l'écran demandé
+                // Show requested screen
                 const screenToShow = document.getElementById(screenId);
                 if (screenToShow) {
                     screenToShow.classList.remove('hidden');
                     
-                    // Ajouter une classe pour l'animation
+                    // Add class for animation
                     screenToShow.classList.add('screen-transition');
                     
-                    // Supprimer la classe après l'animation
+                    // Remove class after animation
                     setTimeout(() => {
                         screenToShow.classList.remove('screen-transition');
                     }, 300);
                 } else {
-                    Logger.error(`Écran ${screenId} introuvable`);
+                    Logger.error(`Screen ${screenId} not found`);
                     return;
                 }
                 
-                // Annuler tous les chargements en cours
+                // Cancel all pending loading states
                 Object.keys(appData.loadingTimers).forEach(context => {
                     this.hideLoading(context);
                 });
                 
-                // Afficher la barre de navigation si on n'est pas dans la vue chat
+                // Show navigation bar if not in chat view
                 if (screenId !== 'chat-screen') {
                     if (elements.navigationBar) {
                         elements.navigationBar.classList.remove('hidden');
                     }
                     
-                    // Désinscrire des écouteurs si on quitte la vue chat
+                    // Unsubscribe from listeners if leaving chat view
                     this.cleanupChatListeners();
                 }
                 
-                // Mettre à jour le bouton de navigation actif
+                // Update active navigation button
                 elements.navButtons.forEach(btn => {
                     const screen = btn.getAttribute('data-screen');
                     if (screen === screenId) {
@@ -3438,11 +3633,11 @@
             },
 
             showNotification: function(message, type = 'info') {
-                Logger.info(`Affichage d'une notification: ${message} (${type})`);
+                Logger.info(`Showing notification: ${message} (${type})`);
                 const notification = document.createElement('div');
                 notification.className = `notification ${type}`;
                 
-                // Ajouter une icône en fonction du type
+                // Add icon based on type
                 let icon = '';
                 switch (type) {
                     case 'success':
@@ -3471,7 +3666,7 @@
                 if (elements.notificationArea) {
                     elements.notificationArea.appendChild(notification);
                     
-                    // Supprimer la notification après 3 secondes
+                    // Remove notification after 3 seconds
                     setTimeout(() => {
                         notification.classList.add('hide');
                         setTimeout(() => {
@@ -3479,20 +3674,36 @@
                         }, 300);
                     }, 3000);
                 } else {
-                    Logger.error("Impossible d'afficher la notification : l'élément notificationArea n'existe pas");
+                    Logger.error("Cannot show notification: notificationArea element doesn't exist");
                     alert(message); // Fallback
                 }
             },
 
             isImageURL: function(url) {
-                // Vérifier par l'extension
+                // Check by extension
                 const extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
                 const lowerUrl = url.toLowerCase();
                 return extensions.some(ext => lowerUrl.endsWith(ext));
+            },
+            
+            // Show confirmation dialog
+            showConfirmation: function(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.remove('hidden');
+                }
+            },
+            
+            // Hide confirmation dialog
+            hideConfirmation: function(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
             }
         };
 
-        // Module de validation
+        // Validation Module
         var Validator = {
             validateEmail: function(email) {
                 const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -3500,7 +3711,7 @@
             },
             
             validatePhone: function(phone) {
-                // Format français: 10 chiffres avec ou sans espaces/tirets, peut commencer par +33 ou 0
+                // French format: 10 digits with or without spaces/hyphens, may start with +33 or 0
                 const regex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/;
                 return regex.test(phone);
             },
@@ -3518,41 +3729,44 @@
             }
         };
 
-        // Initialisation de l'application
+        // App Initialization
         document.addEventListener('DOMContentLoaded', function() {
-            Logger.info(`Application initialisée`);
+            Logger.info(`Application initialized`);
             
-            // Initialiser le thème
+            // Initialize theme
             ThemeManager.init();
             
-            // Initialiser la recherche d'utilisateurs
+            // Initialize user search
             initSearch();
             
-            // Écouter les changements d'authentification
+            // Apply safe area insets for iOS devices
+            applySafeAreaInsets();
+            
+            // Listen for authentication changes
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    // L'utilisateur est connecté
-                    Logger.success(`Utilisateur connecté: ${user.uid}`);
+                    // User is signed in
+                    Logger.success(`User signed in: ${user.uid}`);
                     try {
-                        // Récupérer les données utilisateur
-                        Logger.info(`Récupération des données utilisateur depuis Firestore`);
+                        // Get user data
+                        Logger.info(`Getting user data from Firestore`);
                         const userDoc = await getDoc(doc(db, "users", user.uid));
                         
                         if (userDoc.exists()) {
                             const userData = userDoc.data();
-                            Logger.success(`Profil utilisateur trouvé pour ${userData.username}`);
+                            Logger.success(`User profile found for ${userData.username}`);
                             
-                            // Mettre à jour le statut en ligne
+                            // Update online status
                             await updateDoc(doc(db, "users", user.uid), {
                                 online: true,
                                 lastSeen: serverTimestamp()
                             });
-                            Logger.info(`Statut utilisateur mis à jour à "en ligne"`);
+                            Logger.info(`User status updated to "online"`);
                             
-                            // Récupérer les préférences de thème
+                            // Get theme preferences
                             if (userData.theme) {
                                 appData.theme = userData.theme;
-                                Logger.info(`Préférences de thème récupérées: ${appData.theme.mode}, ${appData.theme.color}`);
+                                Logger.info(`Theme preferences retrieved: ${appData.theme.mode}, ${appData.theme.color}`);
                                 ThemeManager.applyTheme();
                                 ThemeManager.updateUI();
                             }
@@ -3565,127 +3779,118 @@
                                 avatar: userData.avatar
                             };
                             
-                            // Mettre à jour le statut en ligne
+                            // Update online status
                             appData.isOnline = userData.online !== undefined ? userData.online : true;
                             
-                            // Effet de transition pour le splash screen
-                            elements.splashScreen.classList.add('splash-fade-out');
+                            // Hide auth screen and show main app
+                            elements.authScreen.classList.add('hidden');
+                            elements.appContainer.classList.remove('hidden');
+                            elements.appContainer.classList.add('flex');
+                            Logger.info(`Main interface displayed`);
                             
-                            // Attendre la fin de la transition
-                            setTimeout(() => {
-                                // Masquer le splash screen
-                                elements.splashScreen.classList.add('hidden');
-                                
-                                // Afficher l'interface principale
-                                elements.authScreen.classList.add('hidden');
-                                elements.appContainer.classList.remove('hidden');
-                                elements.appContainer.classList.add('flex');
-                                Logger.info(`Interface principale affichée`);
-                                
-                                // Mettre à jour l'interface
-                                UI.updateProfileInfo();
-                                
-                                // Écouter les conversations
-                                Logger.info(`Mise en place de l'écouteur de conversations`);
-                                const unsubscribeConversations = ConversationManager.listenToConversations(
-                                    user.uid,
-                                    conversations => {
-                                        UI.renderConversations(conversations);
-                                    }
-                                );
-                                
-                                // Charger la liste des utilisateurs
-                                try {
-                                    Logger.info(`Chargement de la liste des utilisateurs`);
-                                    UserManager.getAllUsers().then(users => {
-                                        UI.renderUsers(users);
-                                    }).catch(error => {
-                                        Logger.error(`Erreur lors du chargement des utilisateurs: ${error.message}`);
-                                        UI.showNotification("Erreur lors du chargement des utilisateurs", "error");
-                                    });
-                                } catch (error) {
-                                    Logger.error(`Erreur lors du chargement des utilisateurs: ${error.message}`);
-                                    UI.showNotification("Erreur lors du chargement des utilisateurs", "error");
+                            // Update UI
+                            UI.updateProfileInfo();
+                            
+                            // Listen for conversations
+                            Logger.info(`Setting up conversation listener`);
+                            const unsubscribeConversations = ConversationManager.listenToConversations(
+                                user.uid,
+                                conversations => {
+                                    UI.renderConversations(conversations);
                                 }
-                            }, 500);
+                            );
+                            
+                            // Load user list
+                            try {
+                                Logger.info(`Loading user list`);
+                                UserManager.getAllUsers().then(users => {
+                                    UI.renderUsers(users);
+                                }).catch(error => {
+                                    Logger.error(`Error loading users: ${error.message}`);
+                                    UI.showNotification("Erreur lors du chargement des utilisateurs", "error");
+                                });
+                            } catch (error) {
+                                Logger.error(`Error loading users: ${error.message}`);
+                                UI.showNotification("Erreur lors du chargement des utilisateurs", "error");
+                            }
                             
                         } else {
-                            // Le document utilisateur n'existe pas, déconnecter l'utilisateur
-                            Logger.warning(`Profil utilisateur introuvable pour ${user.uid}, déconnexion`);
+                            // User document doesn't exist, sign out user
+                            Logger.warning(`User profile not found for ${user.uid}, signing out`);
                             await signOut(auth);
                             
-                            // Masquer le splash screen et afficher l'écran d'authentification
-                            elements.splashScreen.classList.add('hidden');
+                            // Show auth screen and hide main app
                             elements.authScreen.classList.remove('hidden');
                             elements.authScreen.classList.add('flex');
                             elements.appContainer.classList.add('hidden');
                             UI.showNotification("Profil utilisateur introuvable", "error");
                         }
                     } catch (error) {
-                        Logger.error(`Erreur lors de la récupération des données utilisateur: ${error.message}`);
+                        Logger.error(`Error retrieving user data: ${error.message}`);
                         
-                        // Masquer le splash screen et afficher l'écran d'authentification
-                        elements.splashScreen.classList.add('hidden');
+                        // Show auth screen and hide main app
                         elements.authScreen.classList.remove('hidden');
                         elements.authScreen.classList.add('flex');
                         elements.appContainer.classList.add('hidden');
                         UI.showNotification("Erreur lors de la récupération des données utilisateur", "error");
                     }
                 } else {
-                    // L'utilisateur n'est pas connecté
-                    Logger.info(`Aucun utilisateur connecté, affichage de l'écran d'authentification`);
+                    // User is signed out
+                    Logger.info(`No user signed in, displaying auth screen`);
                     
-                    // Effet de transition pour le splash screen
-                    elements.splashScreen.classList.add('splash-fade-out');
-                    
-                    // Attendre la fin de la transition
-                    setTimeout(() => {
-                        // Masquer le splash screen
-                        elements.splashScreen.classList.add('hidden');
-                        
-                        // Afficher l'écran d'authentification
-                        elements.authScreen.classList.remove('hidden');
-                        elements.authScreen.classList.add('flex');
-                        elements.appContainer.classList.add('hidden');
-                    }, 500);
+                    // Show auth screen
+                    elements.authScreen.classList.remove('hidden');
+                    elements.authScreen.classList.add('flex');
+                    elements.appContainer.classList.add('hidden');
                 }
             });
             
-            // Initialisations supplémentaires
+            // Additional initializations
             initEventListeners();
             
-            // Initialiser le Service Worker
+            // Initialize Service Worker
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('/sw.js')
                         .then(registration => {
-                            Logger.success('Service Worker enregistré avec succès: ', registration.scope);
+                            Logger.success('Service Worker registered successfully: ', registration.scope);
                         })
                         .catch(error => {
-                            Logger.error('Erreur d\'enregistrement du Service Worker: ', error);
+                            Logger.error('Service Worker registration error: ', error);
                         });
                 });
             }
         });
+        
+        // Apply safe area insets for devices with notches
+        function applySafeAreaInsets() {
+            // For iOS devices, apply safe area insets
+            if (CSS.supports('padding-bottom: env(safe-area-inset-bottom)')) {
+                Logger.info('Device supports safe area insets');
+                
+                // Set CSS variable for safe area inset
+                document.documentElement.style.setProperty('--safe-area-inset-bottom', 'env(safe-area-inset-bottom)');
+            }
+        }
 
-        // Initialiser la fonctionnalité de recherche d'utilisateurs
+        // Initialize user search functionality
         function initSearch() {
             if (elements.userSearch) {
                 elements.userSearch.addEventListener('input', function(e) {
                     const searchTerm = e.target.value.trim();
-                    Logger.info(`Recherche d'utilisateurs avec le terme: "${searchTerm}"`);
+                    Logger.info(`Searching users with term: "${searchTerm}"`);
                     
                     const filtered = UserManager.filterUsers(searchTerm);
                     UI.renderUsers(filtered);
                 });
                 
-                // Effacer la recherche lorsqu'on quitte l'écran utilisateurs
+                // Clear search when leaving users screen
                 elements.navButtons.forEach(btn => {
                     btn.addEventListener('click', function() {
                         const screenId = btn.getAttribute('data-screen');
                         if (screenId !== 'users-screen' && elements.userSearch.value) {
                             elements.userSearch.value = '';
-                            // Réinitialiser la liste des utilisateurs filtrés
+                            // Reset filtered users list
                             appData.filteredUsers = appData.allUsers;
                         }
                     });
@@ -3693,16 +3898,16 @@
             }
         }
 
-        // Initialiser tous les écouteurs d'événements
+        // Initialize all event listeners
         function initEventListeners() {
-            // Gestion des onglets de connexion/inscription
+            // Login/Register tab management
             elements.loginTab.addEventListener('click', function() {
                 elements.loginTab.classList.add('active');
                 elements.registerTab.classList.remove('active');
                 
                 elements.loginForm.classList.remove('hidden');
                 elements.registerForm.classList.add('hidden');
-                Logger.info(`Onglet de connexion activé`);
+                Logger.info(`Login tab activated`);
             });
 
             elements.registerTab.addEventListener('click', function() {
@@ -3711,10 +3916,10 @@
                 
                 elements.registerForm.classList.remove('hidden');
                 elements.loginForm.classList.add('hidden');
-                Logger.info(`Onglet d'inscription activé`);
+                Logger.info(`Register tab activated`);
             });
 
-            // Gestion formulaire de connexion
+            // Login form handler
             elements.loginForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
@@ -3723,32 +3928,32 @@
                 
                 if (!email || !password) {
                     UI.showNotification("Veuillez remplir tous les champs", "error");
-                    Logger.warning(`Tentative de connexion avec des champs vides`);
+                    Logger.warning(`Login attempt with empty fields`);
                     return;
                 }
                 
                 UI.showLoading("Connexion en cours...", "auth");
-                Logger.info(`Tentative de connexion pour ${email}`);
+                Logger.info(`Login attempt for ${email}`);
                 
                 try {
                     const result = await UserManager.login(email, password);
                     
                     if (result.success) {
-                        Logger.success(`Connexion réussie pour ${email}`);
-                        // La redirection sera gérée par onAuthStateChanged
+                        Logger.success(`Login successful for ${email}`);
+                        // Redirection handled by onAuthStateChanged
                     } else {
                         UI.hideLoading("auth");
-                        Logger.warning(`Échec de connexion: ${result.message}`);
+                        Logger.warning(`Login failed: ${result.message}`);
                         UI.showNotification(result.message, "error");
                     }
                 } catch (error) {
                     UI.hideLoading("auth");
-                    Logger.error(`Erreur d'authentification: ${error.message}`);
+                    Logger.error(`Authentication error: ${error.message}`);
                     UI.showNotification("Une erreur s'est produite. Veuillez réessayer.", "error");
                 }
             });
 
-            // Gestion formulaire d'inscription
+            // Register form handler
             elements.registerForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
@@ -3758,100 +3963,100 @@
                 const password = elements.registerPassword.value;
                 const confirmPassword = elements.registerConfirmPassword.value;
                 
-                // Validation des champs
+                // Field validation
                 if (!username || !email || !phone || !password || !confirmPassword) {
                     UI.showNotification("Veuillez remplir tous les champs", "error");
-                    Logger.warning(`Tentative d'inscription avec des champs vides`);
+                    Logger.warning(`Registration attempt with empty fields`);
                     return;
                 }
                 
                 if (!Validator.validateEmail(email)) {
                     UI.showNotification("Adresse email invalide", "error");
-                    Logger.warning(`Adresse email invalide: ${email}`);
+                    Logger.warning(`Invalid email address: ${email}`);
                     return;
                 }
                 
                 if (!Validator.validatePhone(phone)) {
                     UI.showNotification("Numéro de téléphone invalide", "error");
-                    Logger.warning(`Numéro de téléphone invalide: ${phone}`);
+                    Logger.warning(`Invalid phone number: ${phone}`);
                     return;
                 }
                 
                 const passwordValidation = Validator.validatePassword(password, confirmPassword);
                 if (!passwordValidation.valid) {
                     UI.showNotification(passwordValidation.message, "error");
-                    Logger.warning(`Validation du mot de passe échouée: ${passwordValidation.message}`);
+                    Logger.warning(`Password validation failed: ${passwordValidation.message}`);
                     return;
                 }
                 
                 UI.showLoading("Création du compte...", "auth");
-                Logger.info(`Tentative d'inscription pour ${email}`);
+                Logger.info(`Registration attempt for ${email}`);
                 
                 try {
                     const result = await UserManager.register(username, email, phone, password);
                     
                     if (result.success) {
-                        Logger.success(`Inscription réussie pour ${email}`);
-                        // La redirection sera gérée par onAuthStateChanged
+                        Logger.success(`Registration successful for ${email}`);
+                        // Redirection handled by onAuthStateChanged
                     } else {
                         UI.hideLoading("auth");
-                        Logger.warning(`Échec d'inscription: ${result.message}`);
+                        Logger.warning(`Registration failed: ${result.message}`);
                         UI.showNotification(result.message, "error");
                     }
                 } catch (error) {
                     UI.hideLoading("auth");
-                    Logger.error(`Erreur d'inscription: ${error.message}`);
+                    Logger.error(`Registration error: ${error.message}`);
                     UI.showNotification("Une erreur s'est produite. Veuillez réessayer.", "error");
                 }
             });
 
-            // Gestion de l'envoi de messages
+            // Message sending handler
             elements.sendMessage.addEventListener('click', sendMessageHandler);
             elements.messageInput.addEventListener('keydown', function(e) {
-                // Envoyer le message sur Entrée
+                // Send message on Enter
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     sendMessageHandler();
                 }
                 
-                // Mettre à jour le statut de typing
+                // Update typing status
                 const conversationId = elements.chatScreen.getAttribute('data-conversation-id');
                 const otherUserId = elements.chatScreen.getAttribute('data-other-user-id');
                 
                 if (conversationId && otherUserId) {
-                    // Effacer le timeout précédent
+                    // Clear previous timeout
                     if (appData.typingTimeout) {
                         clearTimeout(appData.typingTimeout);
                     }
                     
-                    // Mettre à jour le statut typing
+                    // Update typing status
                     ConversationManager.updateTypingStatus(auth.currentUser.uid, otherUserId, true)
                         .then(() => {
-                            Logger.info(`Statut typing mis à jour à "en train d'écrire"`);
+                            Logger.info(`Typing status updated to "typing"`);
                         });
                     
-                    // Définir un nouveau timeout pour arrêter le typing après 2 secondes
+                    // Set new timeout to stop typing after 2 seconds
                     appData.typingTimeout = setTimeout(() => {
                         ConversationManager.updateTypingStatus(auth.currentUser.uid, otherUserId, false)
                             .then(() => {
-                                Logger.info(`Statut typing mis à jour à "pas en train d'écrire"`);
+                                Logger.info(`Typing status updated to "not typing"`);
                             });
                     }, 2000);
                 }
             });
 
-            // Gestion de l'attachement de fichiers
+            // File attachment handler
             elements.attachFile.addEventListener('click', function() {
-                Logger.info(`Bouton d'attachement de fichier cliqué`);
+                Logger.info(`File attachment button clicked`);
                 elements.fileUpload.click();
             });
 
             elements.fileUpload.addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if (file) {
-                    Logger.info(`Fichier sélectionné: ${file.name} (${Math.round(file.size / 1024)} KB)`);
+                    Logger.info(`File selected: ${file.name} (${Math.round(file.size / 1024)} KB)`);
                     if (file.size > 5 * 1024 * 1024) { // 5MB max
-                        Logger.warning(`Fichier trop volumineux: ${Math.round(file.size / 1024)} KB`);
+                        Logger.warning(`File too large: ${Math.round(file.size / 1024)} KB`);
                         UI.showNotification("Le fichier ne doit pas dépasser 5MB", "error");
                         return;
                     }
@@ -3859,36 +4064,36 @@
                     appData.currentFile = file;
                     UI.showNotification(`Fichier joint: ${file.name}`, "success");
                     
-                    // Ajouter un log visuel dans l'interface de chat
+                    // Add visual log in chat interface
                     const logEl = document.createElement('div');
                     logEl.className = 'debug-log info text-center mb-2';
                     logEl.textContent = `Fichier joint: ${file.name} (${Math.round(file.size / 1024)} KB)`;
                     elements.chatMessages.appendChild(logEl);
                     UI.scrollToBottom();
                     
-                    // Focus sur le champ de message pour envoi immédiat
+                    // Focus message field for immediate sending
                     elements.messageInput.focus();
                 }
             });
 
-            // Gestion du bouton de retour dans la conversation
+            // Back button in conversation
             elements.backToConversations.addEventListener('click', function() {
-                Logger.info(`Retour à la liste des conversations`);
+                Logger.info(`Back to conversations list`);
                 UI.showScreen('conversations-screen');
             });
 
-            // Gestion de la modification de l'avatar
+            // Avatar change handler
             elements.changeAvatar.addEventListener('click', function() {
-                Logger.info(`Bouton de changement d'avatar cliqué`);
+                Logger.info(`Change avatar button clicked`);
                 elements.avatarUpload.click();
             });
 
             elements.avatarUpload.addEventListener('change', async function(e) {
                 const file = e.target.files[0];
                 if (file) {
-                    Logger.info(`Fichier d'avatar sélectionné: ${file.name} (${Math.round(file.size / 1024)} KB)`);
+                    Logger.info(`Avatar file selected: ${file.name} (${Math.round(file.size / 1024)} KB)`);
                     if (file.size > 5 * 1024 * 1024) { // 5MB max
-                        Logger.warning(`Fichier d'avatar trop volumineux: ${Math.round(file.size / 1024)} KB`);
+                        Logger.warning(`Avatar file too large: ${Math.round(file.size / 1024)} KB`);
                         UI.showNotification("L'image ne doit pas dépasser 5MB", "error");
                         return;
                     }
@@ -3899,15 +4104,15 @@
                         const result = await UserManager.updateAvatar(file);
                         
                         if (result.success) {
-                            Logger.success(`Avatar mis à jour avec succès`);
+                            Logger.success(`Avatar updated successfully`);
                             UI.updateProfileInfo();
                             UI.showNotification("Avatar mis à jour avec succès", "success");
                         } else {
-                            Logger.error(`Erreur lors de la mise à jour de l'avatar: ${result.message}`);
+                            Logger.error(`Error updating avatar: ${result.message}`);
                             throw new Error(result.message);
                         }
                     } catch (error) {
-                        Logger.error(`Erreur lors de la mise à jour de l'avatar: ${error.message}`);
+                        Logger.error(`Error updating avatar: ${error.message}`);
                         UI.showNotification("Erreur lors de la mise à jour de l'avatar", "error");
                     } finally {
                         UI.hideLoading("avatar");
@@ -3915,9 +4120,9 @@
                 }
             });
 
-            // Gestion des thèmes
+            // Theme handlers
             elements.darkModeToggle.addEventListener('change', function() {
-                Logger.info(`Mode sombre toggled: ${elements.darkModeToggle.checked}`);
+                Logger.info(`Dark mode toggled: ${elements.darkModeToggle.checked}`);
                 ThemeManager.setDarkMode(elements.darkModeToggle.checked);
             });
 
@@ -3925,14 +4130,14 @@
                 option.addEventListener('click', function() {
                     const color = option.getAttribute('data-color');
                     if (color) {
-                        Logger.info(`Couleur de thème changée à ${color}`);
+                        Logger.info(`Theme color changed to ${color}`);
                         
-                        // Désélectionner toutes les options
+                        // Deselect all options
                         elements.colorOptions.forEach(opt => {
                             opt.classList.remove('active');
                         });
                         
-                        // Sélectionner cette option
+                        // Select this option
                         option.classList.add('active');
                         
                         ThemeManager.setThemeColor(color);
@@ -3940,161 +4145,186 @@
                 });
             });
 
-            // Gestion de la déconnexion
-            elements.logoutButton.addEventListener('click', async function() {
-                Logger.info(`Bouton de déconnexion cliqué`);
-                UI.showLoading("Déconnexion en cours...", "auth");
+            // Confirmation dialog handlers
+            elements.logoutButton.addEventListener('click', function() {
+                Logger.info(`Logout button clicked, showing confirmation`);
+                UI.showConfirmation('logout-confirmation');
+            });
+            
+            elements.confirmLogout.addEventListener('click', async function() {
+                Logger.info(`Logout confirmed`);
+                UI.hideConfirmation('logout-confirmation');
                 
+                UI.showLoading("Déconnexion en cours...", "auth");
                 try {
                     const result = await UserManager.logout();
                     if (result.success) {
-                        Logger.success(`Déconnexion réussie`);
+                        Logger.success(`Logout successful`);
                         UI.showNotification("Déconnexion réussie", "success");
-                        // La redirection sera gérée par onAuthStateChanged
+                        // Redirection handled by onAuthStateChanged
                     } else {
                         throw new Error(result.message);
                     }
                 } catch (error) {
                     UI.hideLoading("auth");
-                    Logger.error(`Erreur de déconnexion: ${error.message}`);
+                    Logger.error(`Logout error: ${error.message}`);
                     UI.showNotification("Erreur lors de la déconnexion", "error");
                 }
             });
-
-            // Gestion de la suppression du compte
-            elements.deleteAccountButton.addEventListener('click', async function() {
-                Logger.info(`Bouton de suppression de compte cliqué`);
-                if (confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
-                    Logger.warning(`Confirmation de suppression de compte`);
-                    UI.showLoading("Suppression du compte en cours...", "auth");
-                    
-                    try {
-                        const result = await UserManager.deleteAccount();
-                        
-                        if (result.success) {
-                            Logger.success(`Compte supprimé avec succès`);
-                            UI.showNotification("Compte supprimé avec succès", "success");
-                            // La redirection sera gérée par onAuthStateChanged
-                        } else {
-                            throw new Error(result.message);
-                        }
-                    } catch (error) {
-                        UI.hideLoading("auth");
-                        Logger.error(`Erreur lors de la suppression du compte: ${error.message}`);
-                        UI.showNotification("Erreur lors de la suppression du compte", "error");
-                    }
-                } else {
-                    Logger.info(`Suppression de compte annulée`);
-                }
+            
+            elements.cancelLogout.addEventListener('click', function() {
+                Logger.info(`Logout canceled`);
+                UI.hideConfirmation('logout-confirmation');
             });
 
-            // Gestion du statut en ligne/hors ligne
-            elements.statusToggle.addEventListener('change', async function() {
-                Logger.info(`Bouton de changement de statut changé: ${elements.statusToggle.checked}`);
+            // Account deletion confirmation
+            elements.deleteAccountButton.addEventListener('click', function() {
+                Logger.info(`Delete account button clicked, showing confirmation`);
+                UI.showConfirmation('delete-confirmation');
+            });
+            
+            elements.confirmDelete.addEventListener('click', async function() {
+                Logger.warning(`Account deletion confirmed`);
+                UI.hideConfirmation('delete-confirmation');
                 
-                // Mettre à jour le statut si nécessaire
+                UI.showLoading("Suppression du compte en cours...", "auth");
+                try {
+                    const result = await UserManager.deleteAccount();
+                    
+                    if (result.success) {
+                        Logger.success(`Account deleted successfully`);
+                        UI.showNotification("Compte supprimé avec succès", "success");
+                        // Redirection handled by onAuthStateChanged
+                    } else {
+                        throw new Error(result.message);
+                    }
+                } catch (error) {
+                    UI.hideLoading("auth");
+                    Logger.error(`Account deletion error: ${error.message}`);
+                    UI.showNotification("Erreur lors de la suppression du compte", "error");
+                }
+            });
+            
+            elements.cancelDelete.addEventListener('click', function() {
+                Logger.info(`Account deletion canceled`);
+                UI.hideConfirmation('delete-confirmation');
+            });
+
+            // Online/offline status handler
+            elements.statusToggle.addEventListener('change', async function() {
+                Logger.info(`Status change button changed: ${elements.statusToggle.checked}`);
+                
+                // Update status if necessary
                 if (appData.isOnline !== elements.statusToggle.checked) {
                     try {
                         const result = await UserManager.toggleOnlineStatus();
                         if (result.success) {
-                            Logger.success(`Statut changé en "${appData.isOnline ? "en ligne" : "hors ligne"}"`);
+                            Logger.success(`Status changed to "${appData.isOnline ? "online" : "offline"}"`);
                         } else {
-                            Logger.warning(`Échec du changement de statut: ${result.message}`);
-                            // Rétablir l'état du toggle
+                            Logger.warning(`Status change failed: ${result.message}`);
+                            // Restore toggle state
                             elements.statusToggle.checked = appData.isOnline;
                         }
                     } catch (error) {
-                        Logger.error(`Erreur lors du changement de statut: ${error.message}`);
+                        Logger.error(`Error changing status: ${error.message}`);
                         UI.showNotification("Erreur lors du changement de statut", "error");
-                        // Rétablir l'état du toggle
+                        // Restore toggle state
                         elements.statusToggle.checked = appData.isOnline;
                     }
                 }
             });
 
-            // Gestion de la navigation
+            // Navigation handler
             elements.navButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const screenId = btn.getAttribute('data-screen');
-                    Logger.info(`Navigation vers l'écran: ${screenId}`);
+                    Logger.info(`Navigation to screen: ${screenId}`);
                     UI.showScreen(screenId);
                     
-                    // Actualiser les données si nécessaire
+                    // Refresh data if needed
                     if (screenId === 'profile-screen') {
                         UI.updateProfileInfo();
                     }
                 });
             });
 
-            // Gestion du rafraîchissement des conversations
+            // Conversations refresh handler
             elements.refreshConversations.addEventListener('click', async function() {
                 if (!auth.currentUser) {
-                    Logger.warning(`Tentative de rafraîchissement des conversations sans être connecté`);
+                    Logger.warning(`Attempt to refresh conversations without being logged in`);
                     return;
                 }
                 
-                Logger.info(`Rafraîchissement des conversations`);
+                Logger.info(`Refreshing conversations`);
                 try {
                     UI.showLoading("Actualisation des conversations...", "conversations");
                     const conversations = await ConversationManager.getUserConversations(auth.currentUser.uid);
                     UI.renderConversations(conversations);
-                    Logger.success(`Conversations rafraîchies avec succès`);
+                    Logger.success(`Conversations refreshed successfully`);
                     UI.showNotification("Conversations actualisées", "success");
                 } catch (error) {
-                    Logger.error(`Erreur lors de l'actualisation des conversations: ${error.message}`);
+                    Logger.error(`Error refreshing conversations: ${error.message}`);
                     UI.showNotification("Erreur lors de l'actualisation des conversations", "error");
                 } finally {
                     UI.hideLoading("conversations");
                 }
             });
 
-            // Gestion du rafraîchissement des utilisateurs
+            // Users refresh handler
             elements.refreshUsers.addEventListener('click', async function() {
-                Logger.info(`Rafraîchissement des utilisateurs`);
+                Logger.info(`Refreshing users`);
                 try {
                     UI.showLoading("Actualisation des utilisateurs...", "users");
                     const users = await UserManager.getAllUsers();
                     UI.renderUsers(users);
-                    Logger.success(`Utilisateurs rafraîchis avec succès`);
+                    Logger.success(`Users refreshed successfully`);
                     UI.showNotification("Utilisateurs actualisés", "success");
                 } catch (error) {
-                    Logger.error(`Erreur lors de l'actualisation des utilisateurs: ${error.message}`);
+                    Logger.error(`Error refreshing users: ${error.message}`);
                     UI.showNotification("Erreur lors de l'actualisation des utilisateurs", "error");
                 } finally {
                     UI.hideLoading("users");
                 }
             });
 
-            // Gestion du mot de passe oublié
+            // Forgot password handler
             elements.forgotPassword.addEventListener('click', function(e) {
                 e.preventDefault();
-                Logger.info(`Lien "Mot de passe oublié" cliqué`);
+                Logger.info(`"Forgot password" link clicked`);
                 UI.showNotification("Fonctionnalité en cours de développement", "info");
             });
 
-            // Gestion du panneau de débogage
+            // Debug panel handler
             elements.debugToggle.addEventListener('click', function() {
                 Logger.toggleDebugPanel();
             });
+            
+            // Close modals when clicking outside
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal-overlay')) {
+                    const modalId = e.target.id;
+                    UI.hideConfirmation(modalId);
+                }
+            });
         }
 
-        // Fonction d'envoi de message
+        // Message sending function
         async function sendMessageHandler() {
             const text = elements.messageInput.value.trim();
             const conversationId = elements.chatScreen.getAttribute('data-conversation-id');
             const otherUserId = elements.chatScreen.getAttribute('data-other-user-id');
             
             if ((!text && !appData.currentFile) || !otherUserId) {
-                Logger.warning(`Tentative d'envoi de message vide ou sans destinataire`);
+                Logger.warning(`Attempt to send empty message or without recipient`);
                 return;
             }
             
-            // Désactiver le bouton d'envoi pendant le traitement
+            // Disable send button during processing
             elements.sendMessage.disabled = true;
-            Logger.info(`Préparation d'envoi de message à ${otherUserId}`);
+            Logger.info(`Preparing to send message to ${otherUserId}`);
             
             try {
-                // Créer le message temporaire pour l'affichage
+                // Create temporary message for display
                 const tempMessage = {
                     id: Date.now().toString(),
                     senderId: auth.currentUser.uid,
@@ -4104,25 +4334,25 @@
                     read: false
                 };
                 
-                // Afficher immédiatement le message avec l'indicateur d'envoi
+                // Immediately display message with sending indicator
                 UI.addMessageToUI(tempMessage, true);
-                Logger.info(`Message temporaire affiché dans l'interface`);
+                Logger.info(`Temporary message displayed in UI`);
                 
-                // Vider le champ de saisie immédiatement
+                // Immediately clear input field
                 elements.messageInput.value = '';
                 
-                // Arrêter le statut de typing
+                // Stop typing status
                 ConversationManager.updateTypingStatus(auth.currentUser.uid, otherUserId, false)
                     .then(() => {
-                        Logger.info(`Statut typing réinitialisé`);
+                        Logger.info(`Typing status reset`);
                     });
                 
-                // Si un fichier est attaché, l'uploader d'abord
+                // If file is attached, upload it first
                 let fileURL = null;
                 if (appData.currentFile) {
-                    Logger.info(`Préparation de l'upload du fichier: ${appData.currentFile.name}`);
+                    Logger.info(`Preparing to upload file: ${appData.currentFile.name}`);
                     
-                    // Ajouter un log visuel dans l'interface
+                    // Add visual log in UI
                     const logEl = document.createElement('div');
                     logEl.className = 'debug-log info text-center mb-2';
                     logEl.textContent = `Téléchargement du fichier en cours...`;
@@ -4137,38 +4367,38 @@
                     
                     if (uploadResult.success) {
                         fileURL = uploadResult.url;
-                        Logger.success(`Fichier téléchargé avec succès: ${fileURL.substring(0, 50)}...`);
+                        Logger.success(`File uploaded successfully: ${fileURL.substring(0, 50)}...`);
                         
-                        // Mettre à jour le log visuel
+                        // Update visual log
                         logEl.className = 'debug-log success text-center mb-2';
                         logEl.textContent = `Fichier téléchargé avec succès`;
                         
-                        // Défilement après l'ajout/mise à jour du log
+                        // Scroll after log update
                         UI.scrollToBottom();
                         
-                        // Supprimer le log après 3 secondes
+                        // Remove log after 3 seconds
                         setTimeout(() => {
                             logEl.remove();
                         }, 3000);
                     } else {
-                        Logger.error(`Erreur lors de l'upload du fichier: ${uploadResult.message}`);
+                        Logger.error(`Error uploading file: ${uploadResult.message}`);
                         
-                        // Mettre à jour le log visuel
+                        // Update visual log
                         logEl.className = 'debug-log error text-center mb-2';
                         logEl.textContent = `Erreur lors du téléchargement du fichier`;
                         
-                        // Défilement après l'ajout/mise à jour du log
+                        // Scroll after log update
                         UI.scrollToBottom();
                         
-                        throw new Error("Erreur lors de l'upload du fichier");
+                        throw new Error("Error uploading file");
                     }
                     
-                    // Réinitialiser le fichier courant
+                    // Reset current file
                     appData.currentFile = null;
                 }
                 
-                // Envoyer le message
-                Logger.info(`Envoi du message à Firestore...`);
+                // Send message
+                Logger.info(`Sending message to Firestore...`);
                 const sendResult = await ConversationManager.sendMessage(
                     auth.currentUser.uid,
                     otherUserId,
@@ -4177,11 +4407,11 @@
                 );
                 
                 if (sendResult.success) {
-                    Logger.success(`Message envoyé avec succès, ID: ${sendResult.messageId}`);
+                    Logger.success(`Message sent successfully, ID: ${sendResult.messageId}`);
                 } else {
-                    Logger.error(`Erreur lors de l'envoi du message: ${sendResult.message}`);
+                    Logger.error(`Error sending message: ${sendResult.message}`);
                     
-                    // Ajouter un log visuel d'erreur
+                    // Add visual error log
                     const errorLog = document.createElement('div');
                     errorLog.className = 'debug-log error text-center mb-2';
                     errorLog.textContent = `Erreur lors de l'envoi du message: ${sendResult.message}`;
@@ -4189,17 +4419,17 @@
                     UI.scrollToBottom();
                 }
             } catch (error) {
-                Logger.error(`Erreur lors de l'envoi du message: ${error.message}`);
+                Logger.error(`Error sending message: ${error.message}`);
                 UI.showNotification("Erreur lors de l'envoi du message", "error");
                 
-                // Ajouter un log visuel d'erreur
+                // Add visual error log
                 const errorLog = document.createElement('div');
                 errorLog.className = 'debug-log error text-center mb-2';
                 errorLog.textContent = `Erreur lors de l'envoi du message: ${error.message}`;
                 elements.chatMessages.appendChild(errorLog);
                 UI.scrollToBottom();
             } finally {
-                // Réactiver le bouton d'envoi
+                // Re-enable send button
                 elements.sendMessage.disabled = false;
                 elements.messageInput.focus();
             }
@@ -4209,9 +4439,9 @@
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
             navigator.serviceWorker.register('/sw.js').then(function (registration) {
-                console.log('Service Worker enregistré avec succès:', registration.scope);
+                console.log('Service Worker registered successfully:', registration.scope);
             }, function (err) {
-                console.log('Échec de l’enregistrement du Service Worker:', err);
+                console.log('Service Worker registration failed:', err);
             });
         });
     }
