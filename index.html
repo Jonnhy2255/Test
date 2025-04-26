@@ -63,8 +63,6 @@
             --transition-enter: 0.25s cubic-bezier(0, 0, 0.2, 1);
             --transition-leave: 0.2s cubic-bezier(0.4, 0, 1, 1);
             --transition-sharp: 0.15s cubic-bezier(0.4, 0, 0.6, 1);
-            
-            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
         }
         
         /* Theme colors */
@@ -234,25 +232,6 @@
         }
         .font-medium {
             font-weight: 500;
-        }
-        
-        /* Fixed positioning for chat header */
-        .fixed-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 20;
-        }
-        
-        /* Message input container fixed positioning */
-        .message-input-fixed {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 20;
-            padding-bottom: calc(8px + var(--safe-area-inset-bottom));
         }
         
         /* Loading Animation */
@@ -454,7 +433,6 @@
             border-top: 1px solid var(--theme-dark-border);
         }
         
-        /* Redesigned message input */
         .message-input-wrapper {
             display: flex;
             background-color: var(--theme-light-bg);
@@ -497,38 +475,26 @@
             transform: translateY(-1px);
         }
         
-        /* New send button design */
         .send-button {
-            width: 48px;
+            background: linear-gradient(135deg, var(--theme-gradient-start), var(--theme-gradient-end));
+            color: white;
+            width: 60px;
             height: 48px;
-            background: none;
-            border: none;
-            color: var(--theme-primary);
             display: flex;
             align-items: center;
             justify-content: center;
+            border: none;
+            outline: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            border-radius: 0 24px 24px 0;
-            padding-right: 4px;
         }
         
-        .send-button:hover, 
+        .send-button:hover {
+            background: linear-gradient(135deg, var(--theme-primary-dark), var(--theme-primary));
+        }
+        
         .send-button:active {
-            background-color: rgba(0, 101, 255, 0.1);
-            color: var(--theme-primary-dark);
-        }
-        
-        .send-button svg {
-            transition: transform 0.2s ease;
-        }
-        
-        .send-button:active svg {
-            transform: scale(0.9) translateX(2px);
-        }
-        
-        .message-input:not(:placeholder-shown) + .send-button {
-            color: var(--theme-primary);
+            transform: scale(0.95);
         }
         
         /* Search input style */
@@ -580,14 +546,9 @@
         .nav-bar {
             background-color: var(--theme-light-surface);
             border-top: 1px solid var(--theme-light-border);
-            padding: 8px 0 calc(8px + var(--safe-area-inset-bottom));
+            padding: 8px 0;
             transition: all 0.3s ease;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 30;
         }
         .dark .nav-bar {
             background-color: var(--theme-dark-surface);
@@ -1057,7 +1018,7 @@
         
         /* Debug panel */
         .debug-panel {
-            position: fixed;
+            position: absolute;
             bottom: 60px;
             left: 0;
             right: 0;
@@ -1078,7 +1039,7 @@
         }
         
         .debug-toggle {
-            position: fixed;
+            position: absolute;
             bottom: 75px;
             right: 20px;
             width: 48px;
@@ -1409,75 +1370,6 @@
             font-weight: bold;
             letter-spacing: 0.5px;
         }
-        
-        /* Modal dialog */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .modal-container {
-            background-color: var(--theme-light-surface);
-            border-radius: 16px;
-            padding: 24px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-            animation: scaleIn 0.3s ease;
-        }
-        
-        .dark .modal-container {
-            background-color: var(--theme-dark-surface);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        }
-        
-        .modal-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--theme-light-text);
-        }
-        
-        .dark .modal-title {
-            color: var(--theme-dark-text);
-        }
-        
-        .modal-content {
-            margin-bottom: 24px;
-            color: var(--theme-light-text-secondary);
-        }
-        
-        .dark .modal-content {
-            color: var(--theme-dark-text-secondary);
-        }
-        
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-        }
-        
-        /* Content spacing for fixed elements */
-        .header-spacing {
-            height: 72px; /* Match header height */
-        }
-        
-        .input-spacing {
-            height: 90px; /* Match input container height + padding */
-        }
-        
-        .nav-spacing {
-            height: 70px; /* Match navbar height + padding */
-        }
     </style>
 </head>
 
@@ -1547,7 +1439,7 @@
         <div id="app-container" class="hidden flex-1 flex flex-col h-full">
             <!-- Conversations Screen -->
             <div id="conversations-screen" class="flex-1 overflow-hidden flex flex-col screen-transition">
-                <div class="app-header fixed-header flex justify-between items-center">
+                <div class="app-header flex justify-between items-center">
                     <h1 class="app-logo">BetXchange</h1>
                     <button id="refresh-conversations" class="p-2 rounded-full hover:bg-white hover:bg-opacity-20 transition-all">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1555,16 +1447,14 @@
                         </svg>
                     </button>
                 </div>
-                <div class="header-spacing"></div>
                 <div id="conversations-list" class="flex-1 overflow-y-auto hide-scrollbar p-3 bg-surface">
                     <!-- Conversations will be added here -->
                 </div>
-                <div class="nav-spacing"></div>
             </div>
 
             <!-- Users Screen -->
             <div id="users-screen" class="hidden flex-1 overflow-hidden flex flex-col screen-transition">
-                <div class="app-header fixed-header flex justify-between items-center">
+                <div class="app-header flex justify-between items-center">
                     <h1 class="app-logo">Utilisateurs</h1>
                     <button id="refresh-users" class="p-2 rounded-full hover:bg-white hover:bg-opacity-20 transition-all">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1572,7 +1462,6 @@
                         </svg>
                     </button>
                 </div>
-                <div class="header-spacing"></div>
                 
                 <!-- Search Bar -->
                 <div class="p-3 bg-surface">
@@ -1589,12 +1478,11 @@
                 <div id="users-list" class="flex-1 overflow-y-auto hide-scrollbar p-3 bg-surface">
                     <!-- Users will be added here -->
                 </div>
-                <div class="nav-spacing"></div>
             </div>
 
             <!-- Chat Screen -->
             <div id="chat-screen" class="hidden flex-1 flex flex-col screen-transition">
-                <div id="chat-header" class="fixed-header flex items-center p-4 bg-gradient z-10">
+                <div id="chat-header" class="flex items-center p-4 bg-gradient z-10">
                     <button id="back-to-conversations" class="mr-3 p-2 rounded-full hover:bg-white hover:bg-opacity-20 transition-all text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -1617,12 +1505,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="header-spacing"></div>
                 <div id="chat-messages" class="flex-1 overflow-y-auto hide-scrollbar p-4 bg-chat-area">
                     <!-- Messages will be added here -->
                 </div>
-                <div class="input-spacing"></div>
-                <div class="message-input-container message-input-fixed">
+                <div class="message-input-container">
                     <div class="flex items-center">
                         <button id="attach-file" class="action-button">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1632,7 +1518,7 @@
                         <input type="file" id="file-upload" class="hidden" accept="image/*">
                         <div class="message-input-wrapper flex-1">
                             <input type="text" id="message-input" class="message-input text-base" placeholder="Écrire un message...">
-                            <button id="send-message" class="send-button" title="Envoyer">
+                            <button id="send-message" class="send-button">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                                 </svg>
@@ -1740,7 +1626,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="nav-spacing"></div>
             </div>
 
             <!-- Navigation Bar -->
@@ -1773,29 +1658,6 @@
             <div class="bg-card p-6 rounded-lg shadow-lg flex flex-col items-center">
                 <div class="loader mb-4"></div>
                 <p id="loading-text" class="text-surface">Chargement en cours...</p>
-            </div>
-        </div>
-
-        <!-- Confirmation Modals -->
-        <div id="logout-confirmation" class="modal-overlay hidden">
-            <div class="modal-container">
-                <h2 class="modal-title">Confirmation de déconnexion</h2>
-                <p class="modal-content">Êtes-vous sûr de vouloir vous déconnecter de votre compte ?</p>
-                <div class="modal-actions">
-                    <button id="cancel-logout" class="btn btn-outline">Annuler</button>
-                    <button id="confirm-logout" class="btn btn-primary">Déconnexion</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="delete-confirmation" class="modal-overlay hidden">
-            <div class="modal-container">
-                <h2 class="modal-title">Supprimer le compte</h2>
-                <p class="modal-content">Attention ! Cette action est irréversible. Toutes vos données seront définitivement supprimées.</p>
-                <div class="modal-actions">
-                    <button id="cancel-delete" class="btn btn-outline">Annuler</button>
-                    <button id="confirm-delete" class="btn btn-danger">Supprimer</button>
-                </div>
             </div>
         </div>
 
@@ -1928,14 +1790,7 @@
             notificationArea: document.getElementById('notification-area'),
             debugPanel: document.getElementById('debug-panel'),
             debugLogs: document.getElementById('debug-logs'),
-            debugToggle: document.getElementById('debug-toggle'),
-            // Confirmation modals
-            logoutConfirmation: document.getElementById('logout-confirmation'),
-            cancelLogout: document.getElementById('cancel-logout'),
-            confirmLogout: document.getElementById('confirm-logout'),
-            deleteConfirmation: document.getElementById('delete-confirmation'),
-            cancelDelete: document.getElementById('cancel-delete'),
-            confirmDelete: document.getElementById('confirm-delete')
+            debugToggle: document.getElementById('debug-toggle')
         };
 
         // Logging Module for debugging
@@ -3684,22 +3539,6 @@
                 const extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
                 const lowerUrl = url.toLowerCase();
                 return extensions.some(ext => lowerUrl.endsWith(ext));
-            },
-            
-            // Show confirmation dialog
-            showConfirmation: function(modalId) {
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    modal.classList.remove('hidden');
-                }
-            },
-            
-            // Hide confirmation dialog
-            hideConfirmation: function(modalId) {
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    modal.classList.add('hidden');
-                }
             }
         };
 
@@ -3738,9 +3577,6 @@
             
             // Initialize user search
             initSearch();
-            
-            // Apply safe area insets for iOS devices
-            applySafeAreaInsets();
             
             // Listen for authentication changes
             onAuthStateChanged(auth, async (user) => {
@@ -3861,17 +3697,6 @@
                 });
             }
         });
-        
-        // Apply safe area insets for devices with notches
-        function applySafeAreaInsets() {
-            // For iOS devices, apply safe area insets
-            if (CSS.supports('padding-bottom: env(safe-area-inset-bottom)')) {
-                Logger.info('Device supports safe area insets');
-                
-                // Set CSS variable for safe area inset
-                document.documentElement.style.setProperty('--safe-area-inset-bottom', 'env(safe-area-inset-bottom)');
-            }
-        }
 
         // Initialize user search functionality
         function initSearch() {
@@ -4145,17 +3970,11 @@
                 });
             });
 
-            // Confirmation dialog handlers
-            elements.logoutButton.addEventListener('click', function() {
-                Logger.info(`Logout button clicked, showing confirmation`);
-                UI.showConfirmation('logout-confirmation');
-            });
-            
-            elements.confirmLogout.addEventListener('click', async function() {
-                Logger.info(`Logout confirmed`);
-                UI.hideConfirmation('logout-confirmation');
-                
+            // Logout handler
+            elements.logoutButton.addEventListener('click', async function() {
+                Logger.info(`Logout button clicked`);
                 UI.showLoading("Déconnexion en cours...", "auth");
+                
                 try {
                     const result = await UserManager.logout();
                     if (result.success) {
@@ -4171,43 +3990,32 @@
                     UI.showNotification("Erreur lors de la déconnexion", "error");
                 }
             });
-            
-            elements.cancelLogout.addEventListener('click', function() {
-                Logger.info(`Logout canceled`);
-                UI.hideConfirmation('logout-confirmation');
-            });
 
-            // Account deletion confirmation
-            elements.deleteAccountButton.addEventListener('click', function() {
-                Logger.info(`Delete account button clicked, showing confirmation`);
-                UI.showConfirmation('delete-confirmation');
-            });
-            
-            elements.confirmDelete.addEventListener('click', async function() {
-                Logger.warning(`Account deletion confirmed`);
-                UI.hideConfirmation('delete-confirmation');
-                
-                UI.showLoading("Suppression du compte en cours...", "auth");
-                try {
-                    const result = await UserManager.deleteAccount();
+            // Account deletion handler
+            elements.deleteAccountButton.addEventListener('click', async function() {
+                Logger.info(`Delete account button clicked`);
+                if (confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
+                    Logger.warning(`Account deletion confirmed`);
+                    UI.showLoading("Suppression du compte en cours...", "auth");
                     
-                    if (result.success) {
-                        Logger.success(`Account deleted successfully`);
-                        UI.showNotification("Compte supprimé avec succès", "success");
-                        // Redirection handled by onAuthStateChanged
-                    } else {
-                        throw new Error(result.message);
+                    try {
+                        const result = await UserManager.deleteAccount();
+                        
+                        if (result.success) {
+                            Logger.success(`Account deleted successfully`);
+                            UI.showNotification("Compte supprimé avec succès", "success");
+                            // Redirection handled by onAuthStateChanged
+                        } else {
+                            throw new Error(result.message);
+                        }
+                    } catch (error) {
+                        UI.hideLoading("auth");
+                        Logger.error(`Account deletion error: ${error.message}`);
+                        UI.showNotification("Erreur lors de la suppression du compte", "error");
                     }
-                } catch (error) {
-                    UI.hideLoading("auth");
-                    Logger.error(`Account deletion error: ${error.message}`);
-                    UI.showNotification("Erreur lors de la suppression du compte", "error");
+                } else {
+                    Logger.info(`Account deletion canceled`);
                 }
-            });
-            
-            elements.cancelDelete.addEventListener('click', function() {
-                Logger.info(`Account deletion canceled`);
-                UI.hideConfirmation('delete-confirmation');
             });
 
             // Online/offline status handler
@@ -4297,14 +4105,6 @@
             // Debug panel handler
             elements.debugToggle.addEventListener('click', function() {
                 Logger.toggleDebugPanel();
-            });
-            
-            // Close modals when clicking outside
-            document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('modal-overlay')) {
-                    const modalId = e.target.id;
-                    UI.hideConfirmation(modalId);
-                }
             });
         }
 
