@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ChatXchange</title>
-    <link rel="manifest" href="manifest.json">
     
     <!-- Styles -->
     <style>
@@ -189,7 +188,7 @@
             background-color: var(--card-bg);
             box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
             z-index: 100;
-            position: absolute;
+            position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
@@ -581,7 +580,6 @@
         
         /* Chat screen */
         .chat-container {
-            position: relative;
             display: flex;
             flex-direction: column;
             height: 100%;
@@ -589,7 +587,6 @@
         }
         
         .dark .chat-container {
-            position: relative;
             background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235d5cde' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
         
@@ -922,7 +919,7 @@
         }
         
         .chat-input-container {
-            position: absolute;
+            position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
@@ -988,38 +985,19 @@
         .emoji-picker {
             position: absolute;
             bottom: 70px;
-            left: 0;
-            right: 0;
+            left: 16px;
             background-color: var(--card-bg);
-            border-radius: 16px 16px 0 0;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
-            padding: 16px;
-            z-index: 100;
-            animation: slide-up 0.3s ease-out;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
-        @keyframes slide-up {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-        
-        .emoji-category {
-            margin-bottom: 16px;
-        }
-        
-        .emoji-category-title {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--secondary-text);
-        }
-        
-        .emoji-grid {
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 8px;
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 8px;
+            z-index: 100;
+            animation: scale-in 0.2s ease-out;
+            max-width: calc(100% - 32px);
+            max-height: 200px;
+            overflow-y: auto;
         }
         
         .emoji-item {
@@ -2238,6 +2216,267 @@
             font-style: italic;
             opacity: 0.9;
         }
+
+        /* Football Match Prediction Styles */
+        .football-section {
+            padding: 16px;
+        }
+
+        .football-header {
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .football-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .football-refresh {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .football-refresh:active {
+            opacity: 0.9;
+        }
+
+        .football-match-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .football-match-header {
+            padding: 12px 16px;
+            background: var(--accent-gradient);
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .football-league-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .football-league-logo {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: white;
+        }
+
+        .football-match-date {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .football-match-teams {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            justify-content: space-between;
+        }
+
+        .football-team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 40%;
+        }
+
+        .football-team-logo {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .football-team-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-color);
+            margin-bottom: 4px;
+        }
+
+        .football-team-position {
+            font-size: 12px;
+            color: var(--secondary-text);
+            margin-bottom: 8px;
+        }
+
+        .football-vs {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 20%;
+        }
+
+        .football-vs-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 8px;
+        }
+
+        .football-match-time {
+            background-color: var(--secondary-bg);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .football-team-form {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .form-indicator {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: white;
+            border-radius: 50%;
+        }
+
+        .form-win {
+            background-color: var(--success-color);
+        }
+
+        .form-draw {
+            background-color: var(--warning-color);
+        }
+
+        .form-loss {
+            background-color: var(--error-color);
+        }
+
+        .football-prediction {
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .prediction-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 12px;
+        }
+
+        .prediction-result {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .prediction-team {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .prediction-winner {
+            color: var(--accent-color);
+        }
+
+        .prediction-confidence {
+            width: 50%;
+            height: 8px;
+            background-color: var(--secondary-bg);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .prediction-confidence-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 4px;
+        }
+
+        .prediction-percentage {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .prediction-score {
+            margin-top: 8px;
+            padding: 8px;
+            background-color: var(--secondary-bg);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .football-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .football-loading-text {
+            margin-top: 16px;
+            color: var(--secondary-text);
+            font-size: 14px;
+        }
+
+        .football-error {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--error-color);
+            background-color: rgba(239, 68, 68, 0.1);
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .football-error-btn {
+            margin-top: 16px;
+            padding: 8px 16px;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -2265,19 +2504,6 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
         const storage = firebase.storage();
-        
-        // Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(registration => {
-                        console.log('Service Worker registered with scope:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.error('Service Worker registration failed:', error);
-                    });
-            });
-        }
         
         // Check for dark mode
         function checkDarkMode() {
@@ -2345,14 +2571,20 @@
             emojiPickerVisible: false, // Track emoji picker visibility
             selectedEmojis: {}, // Track selected emojis for messages
             customImagePreview: null,
-            availableEmojis: ['👍', '❤️', '😂', '😮', '😢', '👏'],
-            recentEmojis: [], // Track recently used emojis
+            availableEmojis: ['👍', '❤️', '😂', '😮', '😢', '👏', '🔥', '🎉', '🤔', '💯'],
             reactionPickerVisible: false,
             reactionPickerTargetId: null,
             totalUserCount: 0, // Track total user count
             maxUserLimit: 55, // Maximum number of users allowed
             sendingMessages: new Set(), // Track sending messages for UI feedback
             onlineStatusInterval: null, // Interval for updating online status
+            
+            // Football prediction variables
+            footballApiKey: '8dfca692f894c608eebb9703aa8a1c53',
+            isLoadingFootball: false,
+            footballError: null,
+            upcomingMatches: [],
+            footballPredictions: {},
             
             // Initialize app
             init() {
@@ -2538,6 +2770,11 @@
                                 
                                 // Start online status interval
                                 this.startOnlineStatusInterval();
+                                
+                                // Load football predictions if on AI tab
+                                if (this.currentTab === 'ai') {
+                                    this.loadFootballPredictions();
+                                }
                                 
                             } else {
                                 // User document not found, sign out
@@ -2854,6 +3091,12 @@
                 this.currentTab = tab;
                 this.searchQuery = '';
                 this.exitSelectionMode();
+                
+                // If switching to AI tab, load football predictions
+                if (tab === 'ai' && this.currentUser) {
+                    this.loadFootballPredictions();
+                }
+                
                 this.render();
             },
             
@@ -3819,31 +4062,12 @@
                     // Update message with new reactions
                     await messageRef.update({ reactions });
                     
-                    // Add to recently used emojis list if not already there
-                    if (!existingReaction) {
-                        this.addToRecentEmojis(emoji);
-                    }
-                    
                     // Close reaction picker
                     this.closeReactionPicker();
                     
                 } catch (error) {
                     console.error("Error adding reaction:", error);
                     this.showNotification("Erreur lors de l'ajout de la réaction", "error");
-                }
-            },
-            
-            // Add to recent emojis list
-            addToRecentEmojis(emoji) {
-                // Remove the emoji if it's already in the list
-                this.recentEmojis = this.recentEmojis.filter(e => e !== emoji);
-                
-                // Add emoji to the beginning of the list
-                this.recentEmojis.unshift(emoji);
-                
-                // Keep only the most recent 8 emojis
-                if (this.recentEmojis.length > 8) {
-                    this.recentEmojis = this.recentEmojis.slice(0, 8);
                 }
             },
             
@@ -3914,47 +4138,19 @@
                 const pickerContainer = document.createElement('div');
                 pickerContainer.className = 'emoji-picker';
                 
-                let html = '';
+                // Add more emojis for the picker
+                const emojis = [
+                    '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', 
+                    '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', 
+                    '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩',
+                    '👍', '👎', '👌', '✌️', '🤞', '👊', '✊', '🤛', '🤜', '👏',
+                    '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '💔', '❣️', '💕',
+                    '🔥', '⭐', '🌟', '✨', '💯', '💢', '💫', '💦', '💤', '🎉'
+                ];
                 
-                // Add recently used emojis if available
-                if (this.recentEmojis.length > 0) {
-                    html += `
-                        <div class="emoji-category">
-                            <div class="emoji-category-title">Récents</div>
-                            <div class="emoji-grid">
-                                ${this.recentEmojis.map(emoji => 
-                                    `<div class="emoji-item" data-emoji="${emoji}">${emoji}</div>`
-                                ).join('')}
-                            </div>
-                        </div>
-                    `;
-                }
-                
-                // Add emoji categories
-                const emojiCategories = {
-                    "Smileys & Émotions": ['😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩'],
-                    "Gestes & Personnes": ['👍', '👎', '👌', '✌️', '🤞', '👊', '✊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '💪', '🦾', '🦿', '🦵', '🦶'],
-                    "Animaux & Nature": ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵', '🙈', '🙉', '🙊'],
-                    "Nourriture & Boisson": ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝'],
-                    "Activités": ['⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱', '🏓', '🏸', '🏒', '🏑', '🥍'],
-                    "Objets": ['⌚', '📱', '💻', '⌨️', '🖥️', '🖨️', '🖱️', '🖲️', '📀', '💿', '💾', '💽', '📼', '📷', '📸'],
-                    "Symboles": ['❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝']
-                };
-                
-                for (const [category, emojis] of Object.entries(emojiCategories)) {
-                    html += `
-                        <div class="emoji-category">
-                            <div class="emoji-category-title">${category}</div>
-                            <div class="emoji-grid">
-                                ${emojis.map(emoji => 
-                                    `<div class="emoji-item" data-emoji="${emoji}">${emoji}</div>`
-                                ).join('')}
-                            </div>
-                        </div>
-                    `;
-                }
-                
-                pickerContainer.innerHTML = html;
+                pickerContainer.innerHTML = emojis.map(emoji => 
+                    `<div class="emoji-item" data-emoji="${emoji}">${emoji}</div>`
+                ).join('');
                 
                 document.body.appendChild(pickerContainer);
                 
@@ -3971,9 +4167,6 @@
                             messageInput.focus();
                             messageInput.selectionStart = cursorPos + emoji.length;
                             messageInput.selectionEnd = cursorPos + emoji.length;
-                            
-                            // Add to recently used emojis
-                            this.addToRecentEmojis(emoji);
                         }
                         this.closeEmojiPicker();
                     });
@@ -4232,6 +4425,23 @@
                 
                 // Format as date
                 return date.toLocaleDateString();
+            },
+            
+            // Format football match date
+            formatMatchDate(dateString) {
+                const date = new Date(dateString);
+                const options = { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    year: 'numeric'
+                };
+                return date.toLocaleDateString('fr-FR', options);
+            },
+            
+            // Format football match time
+            formatMatchTime(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
             },
             
             // Show a notification toast
@@ -4880,6 +5090,304 @@
                 this.updateProfileField(this.editingField, value);
             },
             
+            // Fetch data from Football API
+            async fetchFromFootballApi(endpoint, params = {}) {
+                try {
+                    // Create URL with parameters
+                    const url = new URL(`https://v3.football.api-sports.io/${endpoint}`);
+                    Object.keys(params).forEach(key => {
+                        url.searchParams.append(key, params[key]);
+                    });
+                    
+                    // Make request
+                    const response = await fetch(url.toString(), {
+                        method: 'GET',
+                        headers: {
+                            'x-apisports-key': this.footballApiKey
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`API request failed with status ${response.status}`);
+                    }
+                    
+                    return await response.json();
+                } catch (error) {
+                    console.error('Error fetching data from football API:', error);
+                    throw error;
+                }
+            },
+            
+            // Convert image to base64
+            async imageToBase64(imageUrl) {
+                try {
+                    const response = await fetch(imageUrl);
+                    const blob = await response.blob();
+                    return new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.onerror = reject;
+                        reader.readAsDataURL(blob);
+                    });
+                } catch (error) {
+                    console.error('Error converting image to base64:', error);
+                    throw error;
+                }
+            },
+            
+            // Calculate prediction score
+            calculatePrediction(homeTeam, awayTeam) {
+                // Use position and recent form to predict winner
+                const homePosScore = Math.max(20 - homeTeam.position, 0);
+                const awayPosScore = Math.max(20 - awayTeam.position, 0);
+                
+                // Calculate form score (W=3, D=1, L=0)
+                const calculateFormScore = (form) => {
+                    let score = 0;
+                    for (let i = 0; i < form.length; i++) {
+                        if (form[i] === 'W') score += 3;
+                        else if (form[i] === 'D') score += 1;
+                    }
+                    return score;
+                };
+                
+                const homeFormScore = calculateFormScore(homeTeam.form);
+                const awayFormScore = calculateFormScore(awayTeam.form);
+                
+                // Add home advantage
+                const homeAdvantage = 2;
+                
+                // Calculate total scores
+                const homeTotalScore = homePosScore + homeFormScore + homeAdvantage;
+                const awayTotalScore = awayPosScore + awayFormScore;
+                
+                // Calculate win probabilities
+                const totalPoints = homeTotalScore + awayTotalScore;
+                const homeWinProb = Math.round((homeTotalScore / totalPoints) * 100);
+                const awayWinProb = Math.round((awayTotalScore / totalPoints) * 100);
+                
+                // Predict winner
+                let winner, winnerName, confidence;
+                if (homeWinProb > awayWinProb) {
+                    winner = 'home';
+                    winnerName = homeTeam.name;
+                    confidence = homeWinProb;
+                } else if (awayWinProb > homeWinProb) {
+                    winner = 'away';
+                    winnerName = awayTeam.name;
+                    confidence = awayWinProb;
+                } else {
+                    winner = 'draw';
+                    winnerName = 'Match nul';
+                    confidence = 50;
+                }
+                
+                // Generate predicted score
+                let homeGoals, awayGoals;
+                if (winner === 'home') {
+                    homeGoals = Math.floor(Math.random() * 3) + 1; // 1-3 goals
+                    awayGoals = Math.floor(Math.random() * homeGoals); // 0 to homeGoals-1
+                } else if (winner === 'away') {
+                    awayGoals = Math.floor(Math.random() * 3) + 1; // 1-3 goals
+                    homeGoals = Math.floor(Math.random() * awayGoals); // 0 to awayGoals-1
+                } else {
+                    // Draw
+                    const drawScore = Math.floor(Math.random() * 3); // 0-2 goals each
+                    homeGoals = drawScore;
+                    awayGoals = drawScore;
+                }
+                
+                return {
+                    winner,
+                    winnerName,
+                    confidence,
+                    homeWinProb,
+                    awayWinProb,
+                    predictedScore: {
+                        home: homeGoals,
+                        away: awayGoals
+                    }
+                };
+            },
+            
+            // Load football predictions
+            async loadFootballPredictions() {
+                try {
+                    this.isLoadingFootball = true;
+                    this.footballError = null;
+                    this.render();
+                    
+                    // First check if we have cached predictions
+                    const predictionsDoc = await db.collection('footballPredictions').doc('predictions').get();
+                    
+                    // Check if we have recent predictions in Firestore (less than 6 hours old)
+                    const now = new Date();
+                    if (predictionsDoc.exists) {
+                        const data = predictionsDoc.data();
+                        const lastUpdated = data.lastUpdated ? data.lastUpdated.toDate() : null;
+                        
+                        if (lastUpdated && (now - lastUpdated) < 6 * 60 * 60 * 1000) {
+                            // Use cached predictions
+                            this.upcomingMatches = data.matches || [];
+                            this.footballPredictions = data.predictions || {};
+                            this.isLoadingFootball = false;
+                            this.render();
+                            return;
+                        }
+                    }
+                    
+                    // Get Premier League info
+                    const leagueResponse = await this.fetchFromFootballApi('leagues', { 
+                        name: 'Premier League',
+                        country: 'England',
+                        current: true
+                    });
+                    
+                    const premierLeague = leagueResponse.response[0];
+                    const leagueId = premierLeague.league.id;
+                    const season = premierLeague.seasons.find(s => s.current).year;
+                    
+                    // Store league logo as base64
+                    const leagueLogoBase64 = await this.imageToBase64(premierLeague.league.logo);
+                    
+                    // Get league standings
+                    const standingsResponse = await this.fetchFromFootballApi('standings', {
+                        league: leagueId,
+                        season: season
+                    });
+                    
+                    const standings = standingsResponse.response[0].league.standings[0];
+                    
+                    // Get upcoming fixtures
+                    const fixturesResponse = await this.fetchFromFootballApi('fixtures', {
+                        league: leagueId,
+                        season: season,
+                        next: 3
+                    });
+                    
+                    const fixtures = fixturesResponse.response;
+                    
+                    // For each team in upcoming fixtures, get last 5 matches
+                    const teamIds = new Set();
+                    fixtures.forEach(fixture => {
+                        teamIds.add(fixture.teams.home.id);
+                        teamIds.add(fixture.teams.away.id);
+                    });
+                    
+                    const teamForms = {};
+                    const teamLogos = {};
+                    
+                    for (const teamId of teamIds) {
+                        // Get last 5 matches
+                        const teamFixturesResponse = await this.fetchFromFootballApi('fixtures', {
+                            team: teamId,
+                            league: leagueId,
+                            season: season,
+                            last: 5
+                        });
+                        
+                        // Calculate form (W/D/L)
+                        const form = [];
+                        teamFixturesResponse.response.forEach(match => {
+                            const isHome = match.teams.home.id === teamId;
+                            const homeGoals = match.goals.home;
+                            const awayGoals = match.goals.away;
+                            
+                            if (homeGoals > awayGoals) {
+                                form.push(isHome ? 'W' : 'L');
+                            } else if (awayGoals > homeGoals) {
+                                form.push(isHome ? 'L' : 'W');
+                            } else {
+                                form.push('D');
+                            }
+                        });
+                        
+                        teamForms[teamId] = form.reverse(); // Newest matches first
+                        
+                        // Store team logo as base64
+                        const teamLogo = isHome => {
+                            return teamFixturesResponse.response[0].teams[isHome ? 'home' : 'away'].id === teamId
+                                ? teamFixturesResponse.response[0].teams[isHome ? 'home' : 'away'].logo
+                                : teamFixturesResponse.response[0].teams[isHome ? 'away' : 'home'].logo;
+                        };
+                        
+                        teamLogos[teamId] = await this.imageToBase64(teamLogo(true));
+                    }
+                    
+                    // Prepare upcoming matches with all required data
+                    const upcomingMatches = [];
+                    const predictions = {};
+                    
+                    for (const fixture of fixtures) {
+                        const homeTeamId = fixture.teams.home.id;
+                        const awayTeamId = fixture.teams.away.id;
+                        
+                        // Get team positions
+                        const homeTeamStanding = standings.find(team => team.team.id === homeTeamId);
+                        const awayTeamStanding = standings.find(team => team.team.id === awayTeamId);
+                        
+                        const homeTeam = {
+                            id: homeTeamId,
+                            name: fixture.teams.home.name,
+                            logo: teamLogos[homeTeamId],
+                            position: homeTeamStanding?.rank || 0,
+                            form: teamForms[homeTeamId] || []
+                        };
+                        
+                        const awayTeam = {
+                            id: awayTeamId,
+                            name: fixture.teams.away.name,
+                            logo: teamLogos[awayTeamId],
+                            position: awayTeamStanding?.rank || 0,
+                            form: teamForms[awayTeamId] || []
+                        };
+                        
+                        const fixtureData = {
+                            id: fixture.fixture.id,
+                            date: fixture.fixture.date,
+                            league: {
+                                id: leagueId,
+                                name: premierLeague.league.name,
+                                logo: leagueLogoBase64,
+                                country: premierLeague.country.name
+                            },
+                            homeTeam,
+                            awayTeam
+                        };
+                        
+                        upcomingMatches.push(fixtureData);
+                        
+                        // Generate prediction
+                        predictions[fixture.fixture.id] = this.calculatePrediction(homeTeam, awayTeam);
+                    }
+                    
+                    // Store in state
+                    this.upcomingMatches = upcomingMatches;
+                    this.footballPredictions = predictions;
+                    
+                    // Save to Firestore for caching
+                    await db.collection('footballPredictions').doc('predictions').set({
+                        matches: upcomingMatches,
+                        predictions: predictions,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    this.isLoadingFootball = false;
+                    this.render();
+                    
+                } catch (error) {
+                    console.error('Error loading football predictions:', error);
+                    this.footballError = error.message || 'Impossible de charger les prédictions';
+                    this.isLoadingFootball = false;
+                    this.render();
+                }
+            },
+            
+            // Refresh football predictions
+            refreshFootballPredictions() {
+                this.loadFootballPredictions();
+            },
+            
             // Render auth screen
             renderAuthScreen() {
                 return `
@@ -5037,64 +5545,139 @@
                     </div>
                     
                     <div class="main">
-                        <div class="ai-feature-card">
-                            <div class="ai-feature-bg"></div>
-                            <div class="ai-feature-icon">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"></path>
-                                    <circle cx="7.5" cy="14.5" r="1.5"></circle>
-                                    <circle cx="16.5" cy="14.5" r="1.5"></circle>
-                                </svg>
+                        <div class="football-section">
+                            <div class="football-header">
+                                <div class="football-title">Prédictions Premier League</div>
+                                <button class="football-refresh" onclick="app.refreshFootballPredictions()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                                    </svg>
+                                    Actualiser
+                                </button>
                             </div>
-                            <h2 class="ai-feature-title">IA Prédictions Sportives</h2>
-                            <p class="ai-feature-description">Notre IA analysera les données sportives pour vous fournir des prédictions précises sur les résultats des matchs et compétitions.</p>
-                            <div class="ai-feature-coming-soon">Bientôt disponible</div>
-                        </div>
-                        
-                        <div style="padding: 20px;">
-                            <h3 style="font-size: 18px; margin-bottom: 16px; color: var(--text-color);">Fonctionnalités à venir</h3>
-                            <div style="display: flex; flex-direction: column; gap: 12px;">
-                                <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background-color: var(--card-bg); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                                    <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--purple-gradient); display: flex; align-items: center; justify-content: center; color: white;">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
-                                            <line x1="4" y1="22" x2="4" y2="15"></line>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div style="font-weight: 600; color: var(--text-color);">Analyse de matchs</div>
-                                        <div style="font-size: 14px; color: var(--secondary-text);">Statistiques détaillées et recommandations personnalisées</div>
-                                    </div>
-                                </div>
-                                
-                                <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background-color: var(--card-bg); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                                    <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--blue-gradient); display: flex; align-items: center; justify-content: center; color: white;">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div style="font-weight: 600; color: var(--text-color);">Tendances et performances</div>
-                                        <div style="font-size: 14px; color: var(--secondary-text);">Suivi des équipes et joueurs en temps réel</div>
-                                    </div>
-                                </div>
-                                
-                                <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background-color: var(--card-bg); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-                                    <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--green-gradient); display: flex; align-items: center; justify-content: center; color: white;">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <polyline points="9 11 12 14 22 4"></polyline>
-                                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <div style="font-weight: 600; color: var(--text-color);">Conseils stratégiques</div>
-                                        <div style="font-size: 14px; color: var(--secondary-text);">Recommandations basées sur l'analyse des données</div>
-                                    </div>
-                                </div>
-                            </div>
+                            
+                            ${this.isLoadingFootball ? this.renderFootballLoading() : ''}
+                            ${this.footballError ? this.renderFootballError() : ''}
+                            ${!this.isLoadingFootball && !this.footballError ? this.renderFootballMatches() : ''}
                         </div>
                     </div>
                 `;
+            },
+            
+            renderFootballLoading() {
+                return `
+                    <div class="football-loading">
+                        <div class="spinner"></div>
+                        <div class="football-loading-text">Chargement des prédictions...</div>
+                    </div>
+                `;
+            },
+            
+            renderFootballError() {
+                return `
+                    <div class="football-error">
+                        <div style="font-weight: 600; margin-bottom: 8px;">Erreur</div>
+                        <div>${this.footballError}</div>
+                        <button class="football-error-btn" onclick="app.refreshFootballPredictions()">Réessayer</button>
+                    </div>
+                `;
+            },
+            
+            renderFootballMatches() {
+                if (!this.upcomingMatches || this.upcomingMatches.length === 0) {
+                    return `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                                    <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                    <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                                </svg>
+                            </div>
+                            <h3 class="empty-state-title">Aucun match à venir</h3>
+                            <p class="empty-state-text">Aucun match n'est prévu prochainement ou les données ne sont pas disponibles.</p>
+                        </div>
+                    `;
+                }
+                
+                return this.upcomingMatches.map(match => {
+                    const prediction = this.footballPredictions[match.id] || {};
+                    
+                    // Render form indicators
+                    const renderForm = (form) => {
+                        if (!form || form.length === 0) return '';
+                        
+                        return form.map(result => {
+                            let formClass = '';
+                            if (result === 'W') formClass = 'form-win';
+                            else if (result === 'D') formClass = 'form-draw';
+                            else if (result === 'L') formClass = 'form-loss';
+                            
+                            return `<div class="form-indicator ${formClass}">${result}</div>`;
+                        }).join('');
+                    };
+                    
+                    return `
+                        <div class="football-match-card">
+                            <div class="football-match-header">
+                                <div class="football-league-info">
+                                    <img class="football-league-logo" src="${match.league.logo}" alt="${match.league.name}">
+                                    <span>${match.league.name}</span>
+                                </div>
+                                <div class="football-match-date">${this.formatMatchDate(match.date)}</div>
+                            </div>
+                            
+                            <div class="football-match-teams">
+                                <div class="football-team">
+                                    <img class="football-team-logo" src="${match.homeTeam.logo}" alt="${match.homeTeam.name}">
+                                    <div class="football-team-name">${match.homeTeam.name}</div>
+                                    <div class="football-team-position">${match.homeTeam.position}e au classement</div>
+                                    <div class="football-team-form">
+                                        ${renderForm(match.homeTeam.form)}
+                                    </div>
+                                </div>
+                                
+                                <div class="football-vs">
+                                    <div class="football-vs-text">VS</div>
+                                    <div class="football-match-time">${this.formatMatchTime(match.date)}</div>
+                                </div>
+                                
+                                <div class="football-team">
+                                    <img class="football-team-logo" src="${match.awayTeam.logo}" alt="${match.awayTeam.name}">
+                                    <div class="football-team-name">${match.awayTeam.name}</div>
+                                    <div class="football-team-position">${match.awayTeam.position}e au classement</div>
+                                    <div class="football-team-form">
+                                        ${renderForm(match.awayTeam.form)}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="football-prediction">
+                                <div class="prediction-title">Prédiction IA</div>
+                                
+                                <div class="prediction-result">
+                                    <div class="prediction-team prediction-winner">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                        </svg>
+                                        ${prediction.winnerName || 'Indéterminé'}
+                                    </div>
+                                    
+                                    <div class="prediction-confidence">
+                                        <div class="prediction-confidence-bar" style="width: ${prediction.confidence || 50}%"></div>
+                                    </div>
+                                    
+                                    <div class="prediction-percentage">${prediction.confidence || 50}%</div>
+                                </div>
+                                
+                                <div class="prediction-score">
+                                    Score probable: ${match.homeTeam.name} ${prediction.predictedScore?.home || 0} - ${prediction.predictedScore?.away || 0} ${match.awayTeam.name}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
             },
             
             // Render batch actions bar
@@ -5575,7 +6158,7 @@
                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                                         <line x1="10" y1="11" x2="10" y2="17"></line>
                                         <line x1="14" y1="11" x2="14" y2="17"></line>
-                                    </svg>
+                                                                        </svg>
                                     Supprimer mon compte
                                 </button>
                             </div>
@@ -5928,3 +6511,4 @@
     </script>
 </body>
 </html>
+
