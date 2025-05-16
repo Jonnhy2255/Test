@@ -1,31 +1,94 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Inscription avec rôle admin</title>
+  <meta charset="UTF-8" />
+  <title>Inscription avec rôle + logs</title>
   <style>
-    body { font-family: Arial; background: #f7f7f7; padding: 40px; }
-    .box { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    input, button { width: 100%; padding: 10px; margin-top: 10px; }
-    #log { margin-top: 15px; padding: 10px; border-radius: 5px; display: none; }
+    body {
+      background: #f0f2f5;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 50px;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #log {
+      padding: 10px;
+      margin-top: 15px;
+      border-radius: 6px;
+      display: none;
+      font-weight: bold;
+    }
     #log.success { background: #d4edda; color: #155724; }
-    #log.error { background: #f8d7da; color: #721c24; }
-    #log.info { background: #cce5ff; color: #004085; }
+    #log.error   { background: #f8d7da; color: #721c24; }
+    #log.info    { background: #cce5ff; color: #004085; }
+
+    #usersList {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    .user-item {
+      padding: 6px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .user-item span {
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
-  <div class="box">
+
+  <div class="container">
     <h2>Créer un compte</h2>
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Mot de passe">
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Mot de passe" />
     <button onclick="register()">S'inscrire</button>
+    <button onclick="showUsers()">Voir tous les utilisateurs</button>
     <div id="log"></div>
+    <div id="usersList"></div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+    import {
+      getFirestore,
+      collection,
+      doc,
+      setDoc,
+      getDoc,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDTPLxUiA8lj82kqc6CyCPLQDITc0CtLUE",
@@ -43,6 +106,8 @@
     const db = getFirestore(app);
 
     const logDiv = document.getElementById("log");
+    const usersDiv = document.getElementById("usersList");
+
     function showLog(message, type = "info") {
       logDiv.textContent = message;
       logDiv.className = type;
@@ -53,6 +118,7 @@
     async function register() {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
+      usersDiv.innerHTML = "";
 
       if (!email || !password) {
         showLog("Veuillez remplir tous les champs.", "error");
@@ -60,7 +126,7 @@
       }
 
       try {
-        showLog("Création du compte en cours...", "info");
+        showLog("Création du compte...", "info");
 
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
@@ -71,14 +137,13 @@
         let statut = "simple";
 
         if (!adminSnap.exists()) {
-          // Premier utilisateur => admin
           statut = "admin";
           await setDoc(adminRef, {
             uid: user.uid,
             email: user.email,
             createdAt: new Date().toISOString()
           });
-          showLog("Premier compte : rôle administrateur défini.", "info");
+          showLog("Premier utilisateur : rôle administrateur défini.", "info");
         }
 
         await setDoc(doc(db, "Users", user.uid), {
@@ -91,6 +156,27 @@
         showLog(`Compte créé avec succès. Rôle attribué : ${statut}`, "success");
       } catch (error) {
         showLog("Erreur : " + error.message, "error");
+      }
+    }
+
+    async function showUsers() {
+      usersDiv.innerHTML = "";
+      try {
+        const usersSnap = await getDocs(collection(db, "Users"));
+        if (usersSnap.empty) {
+          usersDiv.innerHTML = "<p>Aucun utilisateur enregistré.</p>";
+          return;
+        }
+
+        let html = "<h3>Utilisateurs :</h3>";
+        usersSnap.forEach(doc => {
+          const data = doc.data();
+          html += `<div class="user-item"><span>${data.email}</span> - Rôle : ${data.statut}</div>`;
+        });
+
+        usersDiv.innerHTML = html;
+      } catch (error) {
+        showLog("Erreur lors du chargement des utilisateurs : " + error.message, "error");
       }
     }
   </script>
