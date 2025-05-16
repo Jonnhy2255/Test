@@ -2,82 +2,29 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Connexion / Inscription Firebase</title>
+  <title>Inscription avec rôle</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 40px;
-      background: #f2f2f2;
-    }
-    .container {
-      width: 320px;
-      margin: auto;
-      background: #fff;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    input {
-      width: 100%;
-      margin: 10px 0;
-      padding: 10px;
-      box-sizing: border-box;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      background: #007BFF;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    #log {
-      margin-top: 20px;
-      padding: 10px;
-      border-radius: 6px;
-      display: none;
-      animation: fadeIn 0.5s ease-in-out;
-    }
-    #log.success {
-      background-color: #d4edda;
-      color: #155724;
-      border: 1px solid #c3e6cb;
-    }
-    #log.error {
-      background-color: #f8d7da;
-      color: #721c24;
-      border: 1px solid #f5c6cb;
-    }
-    #log.loading {
-      background-color: #fff3cd;
-      color: #856404;
-      border: 1px solid #ffeeba;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
+    body { font-family: Arial; padding: 30px; background: #f7f7f7; }
+    .box { max-width: 400px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    input, button { width: 100%; padding: 10px; margin-top: 10px; }
+    #log { margin-top: 15px; padding: 10px; border-radius: 5px; display: none; }
+    #log.success { background: #d4edda; color: #155724; }
+    #log.error { background: #f8d7da; color: #721c24; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Connexion / Inscription</h2>
-    <input type="email" id="email" placeholder="Email" required>
-    <input type="password" id="password" placeholder="Mot de passe" required>
-    <button onclick="signUp()">S'inscrire</button>
-    <button onclick="signIn()">Se connecter</button>
+  <div class="box">
+    <h2>Créer un compte</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Mot de passe">
+    <button onclick="register()">S'inscrire</button>
     <div id="log"></div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-analytics.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDTPLxUiA8lj82kqc6CyCPLQDITc0CtLUE",
@@ -91,44 +38,42 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    const logDiv = document.getElementById('log');
-
-    function showLog(message, type = "loading") {
+    const logDiv = document.getElementById("log");
+    function showLog(message, type = "success") {
       logDiv.textContent = message;
-      logDiv.className = "";
-      logDiv.classList.add(type);
-      logDiv.id = "log"; // reset ID
+      logDiv.className = type;
+      logDiv.id = "log";
       logDiv.style.display = "block";
     }
 
-    window.signUp = async function () {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      showLog("Création du compte en cours...", "loading");
+    async function register() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
       try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        showLog("Inscription réussie.", "success");
-      } catch (error) {
-        showLog("Erreur lors de l'inscription : " + error.message, "error");
-      }
-    };
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
 
-    window.signIn = async function () {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      showLog("Connexion en cours...", "loading");
+        // Vérifier combien d'utilisateurs sont déjà enregistrés dans Firestore
+        const usersSnap = await getDocs(collection(db, "Users"));
+        const isFirstUser = usersSnap.empty;
 
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        showLog("Connexion réussie.", "success");
+        // Ajouter à Firestore avec statut
+        await setDoc(doc(db, "Users", user.uid), {
+          uid: user.uid,
+          email: user.email,
+          statut: isFirstUser ? "admin" : "simple",
+          createdAt: new Date().toISOString()
+        });
+
+        showLog(`Compte créé avec succès. Statut : ${isFirstUser ? "admin" : "simple"}`, "success");
       } catch (error) {
-        showLog("Échec de la connexion : " + error.message, "error");
+        showLog("Erreur : " + error.message, "error");
       }
-    };
+    }
   </script>
 </body>
 </html>
