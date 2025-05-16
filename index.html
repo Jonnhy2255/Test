@@ -2026,179 +2026,6 @@
         .form-link:hover {
             text-decoration: underline;
         }
-        
-        /* Pin Lock */
-        .pin-lock-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--bg-color);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .pin-lock-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            text-align: center;
-            color: var(--primary-color);
-        }
-        
-        .pin-subtitle {
-            font-size: 16px;
-            margin-bottom: 40px;
-            text-align: center;
-            color: var(--text-color);
-            opacity: 0.8;
-        }
-        
-        .pin-dots {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 40px;
-        }
-        
-        .pin-dot {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            border: 2px solid var(--primary-color);
-            margin: 0 8px;
-            transition: background-color 0.3s;
-        }
-        
-        .pin-dot.filled {
-            background-color: var(--primary-color);
-        }
-        
-        .pin-keypad {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            width: 100%;
-            max-width: 300px;
-            margin: 0 auto;
-        }
-        
-        .pin-key {
-            aspect-ratio: 1/1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            background-color: var(--secondary-color);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: background-color 0.15s, transform 0.15s;
-        }
-        
-        .pin-key:active {
-            background-color: var(--selection-color);
-            transform: scale(0.95);
-        }
-        
-        .pin-actions {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 300px;
-            margin-top: 20px;
-        }
-        
-        .pin-action {
-            font-size: 16px;
-            color: var(--link-color);
-            text-align: center;
-            padding: 15px;
-            cursor: pointer;
-        }
-        
-        /* Pin Setup */
-        .pin-setup-screen {
-            display: none;
-        }
-        
-        .pin-setup-screen.active {
-            display: flex;
-        }
-        
-        .pin-error {
-            color: var(--danger-color);
-            font-size: 14px;
-            text-align: center;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .pin-error.visible {
-            opacity: 1;
-        }
-        
-        /* Popup de succès */
-        .success-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.8);
-            background-color: var(--bg-color);
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-            padding: 30px;
-            width: 90%;
-            max-width: 320px;
-            z-index: 1001;
-            text-align: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .success-popup.active {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .success-icon {
-            font-size: 60px;
-            color: var(--success-color);
-            margin-bottom: 20px;
-        }
-        
-        .success-title {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-        
-        .success-message {
-            font-size: 16px;
-            line-height: 1.5;
-            margin-bottom: 25px;
-            color: var(--text-color);
-            opacity: 0.9;
-        }
-        
-        /* Animation d'erreur pour les entrées */
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        
-        .shake {
-            animation: shake 0.6s ease;
-        }
 
         /* Message log */
         .log-message {
@@ -2364,6 +2191,115 @@
             font-size: 14px;
             margin-bottom: 10px;
         }
+        
+        /* Popup de succès */
+        .success-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background-color: var(--bg-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            padding: 30px;
+            width: 90%;
+            max-width: 320px;
+            z-index: 1001;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .success-popup.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .success-icon {
+            font-size: 60px;
+            color: var(--success-color);
+            margin-bottom: 20px;
+        }
+        
+        .success-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .success-message {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            color: var(--text-color);
+            opacity: 0.9;
+        }
+        
+        /* Animation d'erreur pour les entrées */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .shake {
+            animation: shake 0.6s ease;
+        }
+
+        /* Nouveau style pour la barre d'action en sélection */
+        .selection-action-bar {
+            position: fixed;
+            top: 50px;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background-color: var(--primary-color);
+            color: black;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            z-index: 30;
+            animation: slideInDown 0.3s ease;
+        }
+
+        .selection-action-bar.active {
+            display: flex;
+        }
+
+        .selection-count {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .selection-actions {
+            display: flex;
+            gap: 20px;
+        }
+
+        .selection-action {
+            padding: 5px 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .selection-action.delete {
+            color: var(--danger-color);
+        }
+
+        /* Style pour longpress visual feedback */
+        @keyframes pulse-selection {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.98); }
+            100% { transform: scale(1); }
+        }
+
+        .chat-item.longpressing {
+            animation: pulse-selection 0.6s ease infinite;
+            background-color: var(--selection-color);
+        }
     </style>
 </head>
 <body>
@@ -2443,89 +2379,6 @@
         </div>
     </div>
 
-    <!-- Écran de verrouillage par PIN -->
-    <div id="pin-lock-screen" class="pin-lock-screen" style="display: none;">
-        <h2 class="pin-lock-title">Verrouillage de sécurité</h2>
-        <p class="pin-subtitle" id="pin-instruction">Veuillez entrer votre code PIN pour accéder à iChat</p>
-        
-        <div class="pin-dots" id="pin-dots">
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-        </div>
-        
-        <div class="pin-error" id="pin-error">Code PIN incorrect. Veuillez réessayer.</div>
-        
-        <div class="pin-keypad">
-            <div class="pin-key" data-value="1">1</div>
-            <div class="pin-key" data-value="2">2</div>
-            <div class="pin-key" data-value="3">3</div>
-            <div class="pin-key" data-value="4">4</div>
-            <div class="pin-key" data-value="5">5</div>
-            <div class="pin-key" data-value="6">6</div>
-            <div class="pin-key" data-value="7">7</div>
-            <div class="pin-key" data-value="8">8</div>
-            <div class="pin-key" data-value="9">9</div>
-            <div class="pin-key" data-action="cancel">
-                <i class="fas fa-times"></i>
-            </div>
-            <div class="pin-key" data-value="0">0</div>
-            <div class="pin-key" data-action="delete">
-                <i class="fas fa-backspace"></i>
-            </div>
-        </div>
-        
-        <div class="pin-actions">
-            <div class="pin-action" id="forgot-pin">Mot de passe oublié ?</div>
-            <div class="pin-action" id="logout-pin">Se déconnecter</div>
-        </div>
-    </div>
-
-    <!-- Écran de configuration du PIN -->
-    <div id="pin-setup-screen" class="pin-lock-screen pin-setup-screen">
-        <h2 class="pin-lock-title">Configuration du code PIN</h2>
-        <p class="pin-subtitle" id="pin-setup-instruction">Créez un code PIN à 4 chiffres pour sécuriser votre application</p>
-        
-        <div class="pin-dots" id="pin-setup-dots">
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-            <div class="pin-dot"></div>
-        </div>
-        
-        <div class="pin-error" id="pin-setup-error"></div>
-        
-        <div class="pin-keypad">
-            <div class="pin-key setup-key" data-value="1">1</div>
-            <div class="pin-key setup-key" data-value="2">2</div>
-            <div class="pin-key setup-key" data-value="3">3</div>
-            <div class="pin-key setup-key" data-value="4">4</div>
-            <div class="pin-key setup-key" data-value="5">5</div>
-            <div class="pin-key setup-key" data-value="6">6</div>
-            <div class="pin-key setup-key" data-value="7">7</div>
-            <div class="pin-key setup-key" data-value="8">8</div>
-            <div class="pin-key setup-key" data-value="9">9</div>
-            <div class="pin-key setup-key" data-action="cancel">
-                <i class="fas fa-times"></i>
-            </div>
-            <div class="pin-key setup-key" data-value="0">0</div>
-            <div class="pin-key setup-key" data-action="delete">
-                <i class="fas fa-backspace"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- Popup de succès -->
-    <div id="success-popup" class="success-popup">
-        <div class="success-icon">
-            <i class="fas fa-check-circle"></i>
-        </div>
-        <h3 class="success-title" id="success-title">Succès !</h3>
-        <p class="success-message" id="success-message">Opération réussie avec succès !</p>
-        <button class="button" id="success-button">Continuer</button>
-    </div>
-
     <!-- Écran de chargement -->
     <div id="loading" class="loading">
         <i class="fas fa-futbol football-spinner"></i>
@@ -2548,6 +2401,15 @@
         </div>
     </div>
 
+    <!-- Barre d'action en mode sélection -->
+    <div id="selection-action-bar" class="selection-action-bar">
+        <div class="selection-count" id="selection-action-count">1 sélectionné</div>
+        <div class="selection-actions">
+            <div class="selection-action delete" id="selection-delete">Supprimer</div>
+            <div class="selection-action" id="selection-cancel">Annuler</div>
+        </div>
+    </div>
+
     <!-- Overlay pour le menu d'options -->
     <div id="overlay" class="overlay"></div>
 
@@ -2565,10 +2427,6 @@
     
     <!-- Menu d'options pour la section messages -->
     <div id="messages-options-menu" class="options-menu">
-        <div class="option-item" id="select-conversations-option">
-            <div class="option-icon"><i class="fas fa-check-square"></i></div>
-            <div class="option-label">Sélectionner des discussions</div>
-        </div>
         <div class="option-item" id="change-theme-messages-option">
             <div class="option-icon"><i class="fas fa-palette"></i></div>
             <div class="option-label">Changer de thème</div>
@@ -2600,27 +2458,6 @@
         <div class="option-item" id="show-install-guide-chat-option">
             <div class="option-icon"><i class="fas fa-download"></i></div>
             <div class="option-label">Installer l'application</div>
-        </div>
-    </div>
-
-    <!-- Bouton de suppression flottant pour le mode sélection -->
-    <div id="conversation-delete-btn" class="conversation-delete-btn">
-        <i class="fas fa-trash-alt" style="font-size: 20px;"></i>
-    </div>
-
-    <!-- Indicateur mode sélection -->
-    <div id="selection-indicator" class="selection-mode-indicator">
-        Sélection en cours (0)
-    </div>
-
-    <!-- Nouvel indicateur de mode sélection -->
-    <div id="new-selection-indicator" class="new-selection-mode-indicator">
-        <div class="new-selection-header">
-            <div class="new-selection-title">0 sélectionné</div>
-            <div class="new-selection-actions">
-                <div class="new-selection-action" id="selection-all">Tout</div>
-                <div class="new-selection-action new-selection-cancel" id="cancel-selection">Annuler</div>
-            </div>
         </div>
     </div>
 
@@ -2710,20 +2547,6 @@
                     </label>
                 </div>
                 
-                <!-- Paramètre de verrouillage par code PIN -->
-                <div class="setting-item" id="pin-setting">
-                    <div class="setting-row">
-                        <div class="setting-icon">
-                            <i class="fas fa-lock" style="color: var(--primary-color);"></i>
-                        </div>
-                        <div class="setting-label">Verrouillage par code PIN</div>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="pin-toggle">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                
                 <!-- Section "À propos" -->
                 <div style="padding: 0; margin: 20px 0 15px 0; font-weight: bold; font-size: 18px;">À propos</div>
                 
@@ -2740,11 +2563,10 @@
                             <li>Partage de photos</li>
                             <li>Groupes de discussion</li>
                             <li>Mode sombre</li>
-                            <li>Verrouillage par code PIN</li>
                         </ul>
                     </div>
                     
-                    <div class="about-version">Version 2.3.0</div>
+                    <div class="about-version">Version 2.4.0</div>
                 </div>
                 
                 <button id="logout-btn" class="button">Se déconnecter</button>
@@ -2868,32 +2690,6 @@
         <div class="reaction-emoji" data-emoji="🎉">🎉</div>
     </div>
 
-    <!-- Menu d'actions pour les conversations sélectionnées -->
-    <div id="conversations-actions" class="conversations-actions">
-        <div class="message-actions-header">
-            <div class="selected-count" id="conversations-selected-count">1 sélectionné</div>
-            <div class="close-actions" id="close-conversations-actions">Annuler</div>
-        </div>
-        <div class="action-buttons">
-            <div class="action-button" id="delete-conversations-btn">
-                <div class="action-icon"><i class="fas fa-trash-alt"></i></div>
-                <div class="action-label">Supprimer</div>
-            </div>
-            <div class="action-button" id="block-users-btn">
-                <div class="action-icon"><i class="fas fa-ban"></i></div>
-                <div class="action-label">Bloquer</div>
-            </div>
-            <div class="action-button" id="mark-read-btn">
-                <div class="action-icon"><i class="fas fa-check-double"></i></div>
-                <div class="action-label">Marquer comme lu</div>
-            </div>
-            <div class="action-button" id="archive-conversations-btn">
-                <div class="action-icon"><i class="fas fa-archive"></i></div>
-                <div class="action-label">Archiver</div>
-            </div>
-        </div>
-    </div>
-
     <!-- Interface de transfert de messages -->
     <div id="forward-dialog" class="forward-dialog">
         <div class="forward-header">
@@ -3004,6 +2800,16 @@
         </div>
     </div>
 
+    <!-- Popup de succès -->
+    <div id="success-popup" class="success-popup">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h3 class="success-title" id="success-title">Succès !</h3>
+        <p class="success-message" id="success-message">Opération réussie avec succès !</p>
+        <button class="button" id="success-button">Continuer</button>
+    </div>
+
     <!-- Barre d'onglets -->
     <div class="tabbar" id="tabbar">
         <a href="#" class="tab active" data-section="messages">
@@ -3028,7 +2834,7 @@
         // Import Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, addDoc, onSnapshot, where, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, addDoc, onSnapshot, where, deleteDoc, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
 
         // Firebase config
         const firebaseConfig = {
@@ -3052,11 +2858,6 @@
         let currentUser = null;
         let currentUserData = null;
         let isAdmin = false;
-        let userPin = null;
-        let isPinEnabled = false;
-        let isPinSetupMode = false;
-        let tempPin = '';
-        let confirmPin = '';
         
         // Variables pour l'interface de chat
         let currentContact = '';
@@ -3077,6 +2878,8 @@
         let currentSection = 'messages';
         let selectedDeleteOption = 'for-me';
         let pendingMessages = [];
+        let longPressTimer = null;
+        let longPressDuration = 500; // Durée en ms pour considérer un appui long
         
         // ================ FONCTIONS POUR LES ÉVÉNEMENTS D'INTERFACE ================
         
@@ -3121,19 +2924,17 @@
             document.getElementById('show-install-guide-option').addEventListener('click', showInstallGuide);
             document.getElementById('show-install-guide-messages-option').addEventListener('click', showInstallGuide);
             document.getElementById('show-install-guide-chat-option').addEventListener('click', showInstallGuide);
-            document.getElementById('select-conversations-option').addEventListener('click', startConversationsSelectionMode);
             document.getElementById('select-messages-option').addEventListener('click', startMessagesSelectionMode);
             document.getElementById('block-option').addEventListener('click', blockUnblockUser);
             document.getElementById('search-conversation-option').addEventListener('click', searchInConversation);
             document.getElementById('clear-conversation-option').addEventListener('click', clearConversation);
             
+            // Actions en mode sélection
+            document.getElementById('selection-delete').addEventListener('click', deleteSelectedItems);
+            document.getElementById('selection-cancel').addEventListener('click', exitSelectionMode);
+            
             // Fermer guides
             document.getElementById('close-install-guide').addEventListener('click', closeInstallGuide);
-            
-            // Sélection de conversations
-            document.getElementById('selection-all').addEventListener('click', selectAllItems);
-            document.getElementById('cancel-selection').addEventListener('click', exitSelectionMode);
-            document.getElementById('conversation-delete-btn').addEventListener('click', deleteSelectedConversations);
             
             // Actions de messages
             document.getElementById('delete-messages-btn').addEventListener('click', showDeleteMessageOptions);
@@ -3147,13 +2948,6 @@
             document.getElementById('delete-for-all').addEventListener('click', () => selectDeleteOption('for-all'));
             document.getElementById('delete-messages-cancel').addEventListener('click', closeDeleteMessageDialog);
             document.getElementById('delete-messages-confirm').addEventListener('click', confirmDeleteMessages);
-            
-            // Actions de conversations
-            document.getElementById('delete-conversations-btn').addEventListener('click', deleteSelectedConversations);
-            document.getElementById('block-users-btn').addEventListener('click', blockSelectedUsers);
-            document.getElementById('mark-read-btn').addEventListener('click', markSelectedAsRead);
-            document.getElementById('archive-conversations-btn').addEventListener('click', archiveSelectedConversations);
-            document.getElementById('close-conversations-actions').addEventListener('click', () => exitSelectionMode('conversations'));
             
             // Interface de transfert
             document.getElementById('forward-cancel').addEventListener('click', closeForwardDialog);
@@ -3213,8 +3007,6 @@
                 // Sauvegarder la préférence
                 localStorage.setItem('ichatDarkMode', this.checked ? 'true' : 'false');
             });
-            
-            document.getElementById('pin-toggle').addEventListener('change', setupPinCode);
             
             // Événements du profil
             document.getElementById('logout-btn').addEventListener('click', logoutUser);
@@ -3291,46 +3083,6 @@
                     registerUser();
                 }
             });
-        }
-        
-        // ================ CONFIGURATION DES ÉVÉNEMENTS DU PIN ================
-        
-        function setupPinEvents() {
-            // PIN de déverrouillage
-            document.querySelectorAll('.pin-key:not(.setup-key)').forEach(key => {
-                key.addEventListener('click', function() {
-                    const value = this.getAttribute('data-value');
-                    const action = this.getAttribute('data-action');
-                    
-                    if (value) {
-                        enterPinDigit(value);
-                    } else if (action === 'delete') {
-                        deleteLastPinDigit();
-                    } else if (action === 'cancel') {
-                        cancelPin();
-                    }
-                });
-            });
-            
-            // PIN de configuration
-            document.querySelectorAll('.setup-key').forEach(key => {
-                key.addEventListener('click', function() {
-                    const value = this.getAttribute('data-value');
-                    const action = this.getAttribute('data-action');
-                    
-                    if (value) {
-                        enterSetupPinDigit(value);
-                    } else if (action === 'delete') {
-                        deleteLastSetupPinDigit();
-                    } else if (action === 'cancel') {
-                        cancelPinSetup();
-                    }
-                });
-            });
-            
-            // Actions supplémentaires du PIN
-            document.getElementById('forgot-pin').addEventListener('click', forgotPin);
-            document.getElementById('logout-pin').addEventListener('click', logoutFromPinScreen);
         }
         
         // ================ FONCTIONS DE NAVIGATION ================
@@ -3766,9 +3518,8 @@
                 // Stocker les informations dans les variables globales
                 currentUser = userCredential.user;
                 
-                // Afficher l'écran de configuration du PIN immédiatement après l'inscription
                 setTimeout(() => {
-                    showPinSetupScreen();
+                    completeLogin();
                 }, 1000);
             } catch (error) {
                 let errorMessage = "Erreur d'inscription";
@@ -3836,7 +3587,8 @@
                 await setDoc(userRef, {
                     email: email,
                     statut: statut,
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    displayName: email.split('@')[0] // Utilisez la partie avant @ comme nom d'affichage
                 });
                 
                 return statut;
@@ -3854,10 +3606,6 @@
             try {
                 await signOut(auth);
                 
-                // Conserver le PIN si l'utilisateur l'a configuré
-                const savedPin = localStorage.getItem('ichatUserPin');
-                const pinEnabled = localStorage.getItem('ichatPinEnabled');
-                
                 // Réinitialiser les variables globales
                 isLoggedIn = false;
                 currentUser = null;
@@ -3871,11 +3619,6 @@
                 // Masquer l'écran de chargement
                 hideLoading();
             }
-        }
-        
-        // Déconnexion depuis l'écran PIN
-        function logoutFromPinScreen() {
-            logoutUser();
         }
         
         // Suppression du compte utilisateur
@@ -3940,518 +3683,6 @@
             }
         }
         
-        // ================ FONCTIONS POUR LE CODE PIN ================
-        
-        // Configurer le code PIN
-        function setupPinCode() {
-            const toggle = document.getElementById('pin-toggle');
-            
-            if (toggle.checked) {
-                // Activer le PIN
-                showPinSetupScreen();
-            } else {
-                // Désactiver le PIN
-                isPinEnabled = false;
-                localStorage.setItem('ichatPinEnabled', 'false');
-                
-                // Confirmation de désactivation
-                showSuccessPopup(
-                    'PIN désactivé',
-                    'Le verrouillage par code PIN a été désactivé avec succès.',
-                    () => {
-                        document.getElementById('success-popup').classList.remove('active');
-                    }
-                );
-            }
-        }
-        
-        // Saisir un chiffre dans le PIN
-        function enterPinDigit(digit) {
-            if (tempPin.length < 4) {
-                tempPin += digit;
-                
-                // Mettre à jour l'affichage des points
-                const dots = document.querySelectorAll('#pin-dots .pin-dot');
-                dots[tempPin.length - 1].classList.add('filled');
-                
-                // Effet de vibration pour feedback
-                if (navigator.vibrate) {
-                    navigator.vibrate(20);
-                }
-                
-                // Si le PIN est complet, vérifier
-                if (tempPin.length === 4) {
-                    setTimeout(() => verifyPin(), 300);
-                }
-            }
-        }
-        
-        // Vérifier le PIN saisi
-        function verifyPin() {
-            if (tempPin === userPin) {
-                // PIN correct - cacher l'erreur
-                document.getElementById('pin-error').classList.remove('visible');
-                
-                // Animation de succès
-                document.querySelectorAll('#pin-dots .pin-dot').forEach(dot => {
-                    dot.style.backgroundColor = 'var(--success-color)';
-                    dot.style.borderColor = 'var(--success-color)';
-                });
-                
-                // Si vibration disponible, faire un pattern de succès
-                if (navigator.vibrate) {
-                    navigator.vibrate([30, 50, 30]);
-                }
-                
-                // Transition vers l'application
-                setTimeout(() => {
-                    tempPin = '';
-                    completeLogin();
-                }, 800);
-                
-            } else {
-                // PIN incorrect - montrer l'erreur
-                document.getElementById('pin-error').classList.add('visible');
-                
-                // Animation d'échec
-                document.querySelectorAll('#pin-dots .pin-dot').forEach(dot => {
-                    dot.style.backgroundColor = 'var(--danger-color)';
-                    dot.style.borderColor = 'var(--danger-color)';
-                    dot.classList.add('shake');
-                });
-                
-                // Vibration d'erreur
-                if (navigator.vibrate) {
-                    navigator.vibrate([100, 50, 100]);
-                }
-                
-                // Réinitialiser après l'animation
-                setTimeout(() => {
-                    document.querySelectorAll('#pin-dots .pin-dot').forEach(dot => {
-                        dot.classList.remove('filled');
-                        dot.classList.remove('shake');
-                        dot.style.backgroundColor = '';
-                        dot.style.borderColor = '';
-                    });
-                    tempPin = '';
-                }, 800);
-            }
-        }
-        
-        // Supprimer le dernier chiffre du PIN
-        function deleteLastPinDigit() {
-            if (tempPin.length > 0) {
-                tempPin = tempPin.slice(0, -1);
-                
-                // Mettre à jour l'affichage des points
-                const dots = document.querySelectorAll('#pin-dots .pin-dot');
-                dots[tempPin.length].classList.remove('filled');
-                
-                // Effet de vibration pour feedback
-                if (navigator.vibrate) {
-                    navigator.vibrate(15);
-                }
-            }
-        }
-        
-        // Annuler la saisie du PIN
-        function cancelPin() {
-            tempPin = '';
-            
-            // Réinitialiser l'affichage des points
-            document.querySelectorAll('#pin-dots .pin-dot').forEach(dot => {
-                dot.classList.remove('filled');
-            });
-            
-            document.getElementById('pin-error').classList.remove('visible');
-            
-            // Effet de vibration pour feedback
-            if (navigator.vibrate) {
-                navigator.vibrate(15);
-            }
-        }
-        
-        // Mot de passe PIN oublié
-        function forgotPin() {
-            // En situation réelle, on enverrait un email ou SMS de récupération
-            // Pour la démo, on désactive simplement le PIN
-            localStorage.setItem('ichatPinEnabled', 'false');
-            isPinEnabled = false;
-            
-            showSuccessPopup(
-                'PIN réinitialisé',
-                'Votre code PIN a été réinitialisé. Vous pouvez en configurer un nouveau dans les paramètres.',
-                () => {
-                    document.getElementById('success-popup').classList.remove('active');
-                    completeLogin();
-                }
-            );
-        }
-        
-        // Fonctions pour la configuration du PIN
-        function enterSetupPinDigit(digit) {
-            // Si nous sommes en mode configuration initiale
-            if (!confirmPin) {
-                if (tempPin.length < 4) {
-                    tempPin += digit;
-                    
-                    // Mettre à jour l'affichage des points
-                    document.querySelectorAll('#pin-setup-dots .pin-dot')[tempPin.length - 1].classList.add('filled');
-                    
-                    // Vibration pour feedback
-                    if (navigator.vibrate) {
-                        navigator.vibrate(20);
-                    }
-                    
-                    // Si le PIN est complet, passer à la confirmation
-                    if (tempPin.length === 4) {
-                        setTimeout(() => {
-                            // Animation de transition
-                            document.getElementById('pin-setup-instruction').style.animation = 'fadeIn 0.5s ease';
-                            document.getElementById('pin-setup-instruction').textContent = 'Confirmez votre code PIN';
-                            
-                            // Réinitialiser les points avec animation
-                            document.querySelectorAll('#pin-setup-dots .pin-dot').forEach(dot => {
-                                dot.classList.add('shake');
-                                setTimeout(() => {
-                                    dot.classList.remove('filled');
-                                    dot.classList.remove('shake');
-                                }, 300);
-                            });
-                            
-                            confirmPin = '';
-                        }, 500);
-                    }
-                }
-            } 
-            // Si nous sommes en mode confirmation
-            else {
-                if (confirmPin.length < 4) {
-                    confirmPin += digit;
-                    
-                    // Mettre à jour l'affichage des points
-                    document.querySelectorAll('#pin-setup-dots .pin-dot')[confirmPin.length - 1].classList.add('filled');
-                    
-                    // Vibration pour feedback
-                    if (navigator.vibrate) {
-                        navigator.vibrate(20);
-                    }
-                    
-                    // Si la confirmation est complète, vérifier
-                    if (confirmPin.length === 4) {
-                        setTimeout(() => verifySetupPin(), 300);
-                    }
-                }
-            }
-        }
-        
-        // Vérifier le PIN de configuration
-        function verifySetupPin() {
-            if (tempPin === confirmPin) {
-                // PINs correspondent
-                userPin = tempPin;
-                localStorage.setItem('ichatUserPin', userPin);
-                localStorage.setItem('ichatPinEnabled', 'true');
-                isPinEnabled = true;
-                
-                // Mettre à jour le toggle dans les paramètres
-                document.getElementById('pin-toggle').checked = true;
-                
-                // Animation de succès
-                document.querySelectorAll('#pin-setup-dots .pin-dot').forEach(dot => {
-                    dot.style.backgroundColor = 'var(--success-color)';
-                    dot.style.borderColor = 'var(--success-color)';
-                });
-                
-                // Vibration pattern pour succès
-                if (navigator.vibrate) {
-                    navigator.vibrate([30, 50, 30, 50, 30]);
-                }
-                
-                // Fermer l'écran de configuration avec transition
-                setTimeout(() => {
-                    document.getElementById('pin-setup-screen').classList.remove('active');
-                    
-                    // Réinitialiser les styles
-                    document.querySelectorAll('#pin-setup-dots .pin-dot').forEach(dot => {
-                        dot.style.backgroundColor = '';
-                        dot.style.borderColor = '';
-                        dot.classList.remove('filled');
-                    });
-                    
-                    // Si on vient de s'inscrire, passer à l'application
-                    if (!isLoggedIn) {
-                        completeLogin();
-                    } else {
-                        // Sinon montrer une confirmation
-                        showSuccessPopup(
-                            'PIN configuré',
-                            'Votre code PIN a été configuré avec succès. L\'application sera désormais protégée par ce code.',
-                            () => {
-                                document.getElementById('success-popup').classList.remove('active');
-                            }
-                        );
-                    }
-                }, 800);
-            } else {
-                // PINs ne correspondent pas
-                document.getElementById('pin-setup-error').textContent = 'Les codes PIN ne correspondent pas. Veuillez réessayer.';
-                document.getElementById('pin-setup-error').classList.add('visible');
-                
-                // Animation d'erreur
-                document.querySelectorAll('#pin-setup-dots .pin-dot').forEach(dot => {
-                    dot.style.backgroundColor = 'var(--danger-color)';
-                    dot.style.borderColor = 'var(--danger-color)';
-                    dot.classList.add('shake');
-                });
-                
-                // Vibration d'erreur
-                if (navigator.vibrate) {
-                    navigator.vibrate([100, 50, 100]);
-                }
-                
-                // Réinitialiser pour une nouvelle tentative
-                setTimeout(() => {
-                    document.querySelectorAll('#pin-setup-dots .pin-dot').forEach(dot => {
-                        dot.classList.remove('filled');
-                        dot.classList.remove('shake');
-                        dot.style.backgroundColor = '';
-                        dot.style.borderColor = '';
-                    });
-                    
-                    // Retour à la saisie initiale avec animation
-                    document.getElementById('pin-setup-instruction').style.animation = 'fadeIn 0.5s ease';
-                    document.getElementById('pin-setup-instruction').textContent = 'Créez un code PIN à 4 chiffres pour sécuriser votre application';
-                    document.getElementById('pin-setup-error').classList.remove('visible');
-                    
-                    tempPin = '';
-                    confirmPin = '';
-                }, 800);
-            }
-        }
-        
-        // Supprimer le dernier chiffre du PIN de configuration
-        function deleteLastSetupPinDigit() {
-            if (!confirmPin && tempPin.length > 0) {
-                tempPin = tempPin.slice(0, -1);
-                document.querySelectorAll('#pin-setup-dots .pin-dot')[tempPin.length].classList.remove('filled');
-            } else if (confirmPin && confirmPin.length > 0) {
-                confirmPin = confirmPin.slice(0, -1);
-                document.querySelectorAll('#pin-setup-dots .pin-dot')[confirmPin.length].classList.remove('filled');
-            }
-            
-            // Effet de vibration pour feedback
-            if (navigator.vibrate) {
-                navigator.vibrate(15);
-            }
-        }
-        
-        // Annuler la configuration du PIN
-        function cancelPinSetup() {
-            // Animation de fermeture
-            document.getElementById('pin-setup-screen').classList.add('fadeOut');
-            
-            setTimeout(() => {
-                document.getElementById('pin-setup-screen').classList.remove('active');
-                document.getElementById('pin-setup-screen').classList.remove('fadeOut');
-                
-                // Réinitialiser l'état
-                document.querySelectorAll('#pin-setup-dots .pin-dot').forEach(dot => {
-                    dot.classList.remove('filled');
-                });
-                
-                // Réinitialiser le toggle dans les paramètres
-                document.getElementById('pin-toggle').checked = isPinEnabled;
-                
-                tempPin = '';
-                confirmPin = '';
-                
-                // Si on vient de s'inscrire, passer directement à l'application
-                if (!isLoggedIn) {
-                    completeLogin();
-                }
-            }, 300);
-        }
-        
-        // ================ FONCTIONS POUR L'AFFICHAGE ================
-        
-        // Masquer l'écran de chargement
-        function hideLoading() {
-            const loadingScreen = document.getElementById('loading');
-            loadingScreen.style.opacity = '0';
-            loadingScreen.style.transition = 'opacity 0.5s ease';
-            
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-            }, 500);
-        }
-        
-        // Afficher l'écran de connexion
-        function showLoginScreen() {
-            hideLoading();
-            
-            // Animation d'apparition
-            document.getElementById('auth-screen').style.opacity = '0';
-            document.getElementById('auth-screen').style.display = 'flex';
-            
-            setTimeout(() => {
-                document.getElementById('auth-screen').style.opacity = '1';
-                document.getElementById('auth-screen').style.transition = 'opacity 0.5s ease';
-            }, 10);
-            
-            document.getElementById('pin-lock-screen').style.display = 'none';
-            document.getElementById('pin-setup-screen').style.display = 'none';
-            
-            // Pour permettre le défilement lors de l'inscription/connexion
-            document.body.style.overflow = 'auto';
-        }
-        
-        // Afficher l'écran de verrouillage par PIN
-        function showPinLockScreen() {
-            hideLoading();
-            
-            // Animation d'apparition
-            document.getElementById('pin-lock-screen').style.opacity = '0';
-            document.getElementById('pin-lock-screen').style.display = 'flex';
-            
-            setTimeout(() => {
-                document.getElementById('pin-lock-screen').style.opacity = '1';
-                document.getElementById('pin-lock-screen').style.transition = 'opacity 0.5s ease';
-            }, 10);
-            
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('pin-setup-screen').style.display = 'none';
-            
-            // Réinitialiser les points de PIN
-            document.querySelectorAll('#pin-dots .pin-dot').forEach(dot => {
-                dot.classList.remove('filled');
-            });
-            
-            document.getElementById('pin-error').classList.remove('visible');
-            document.body.style.overflow = 'hidden';
-        }
-        
-        // Afficher l'écran de configuration de PIN
-        function showPinSetupScreen() {
-            isPinSetupMode = true;
-            tempPin = '';
-            confirmPin = '';
-            
-            document.getElementById('pin-setup-screen').classList.add('active');
-            document.getElementById('pin-setup-instruction').textContent = 'Créez un code PIN à 4 chiffres pour sécuriser votre application';
-            
-            // Réinitialiser les points de PIN
-            document.querySelectorAll('#pin-setup-dots .pin-dot').forEach(dot => {
-                dot.classList.remove('filled');
-            });
-            
-            document.getElementById('pin-setup-error').classList.remove('visible');
-            document.getElementById('pin-setup-error').textContent = '';
-        }
-        
-        // Compléter le processus de connexion
-        function completeLogin() {
-            hideLoading();
-            
-            // Animer la transition
-            const elements = [
-                document.getElementById('auth-screen'),
-                document.getElementById('pin-lock-screen'),
-                document.getElementById('pin-setup-screen')
-            ];
-            
-            elements.forEach(el => {
-                if (el.style.display !== 'none') {
-                    el.style.opacity = '0';
-                    el.style.transition = 'opacity 0.5s ease';
-                    
-                    setTimeout(() => {
-                        el.style.display = 'none';
-                    }, 500);
-                }
-            });
-            
-            // Animation d'apparition pour l'application principale
-            setTimeout(() => {
-                document.getElementById('tabbar').style.opacity = '0';
-                document.getElementById('tabbar').style.display = 'flex';
-                
-                document.querySelector('.header').style.opacity = '0';
-                document.querySelector('.header').style.display = 'flex';
-                
-                document.querySelector('.content').style.opacity = '0';
-                document.querySelector('.content').style.display = 'block';
-                
-                setTimeout(() => {
-                    document.getElementById('tabbar').style.opacity = '1';
-                    document.getElementById('tabbar').style.transition = 'opacity 0.5s ease';
-                    
-                    document.querySelector('.header').style.opacity = '1';
-                    document.querySelector('.header').style.transition = 'opacity 0.5s ease';
-                    
-                    document.querySelector('.content').style.opacity = '1';
-                    document.querySelector('.content').style.transition = 'opacity 0.5s ease';
-                    
-                    // Chargement des données initiales
-                    loadInitialData();
-                }, 10);
-            }, 500);
-            
-            // Mettre à jour les informations du profil
-            updateProfileInfo();
-            
-            // Mettre à jour le toggle de PIN
-            document.getElementById('pin-toggle').checked = isPinEnabled;
-            
-            // Mettre à jour l'interface
-            document.body.style.overflow = 'hidden';
-            
-            // L'utilisateur est maintenant connecté
-            isLoggedIn = true;
-        }
-        
-        // Charger les données initiales de l'application
-        async function loadInitialData() {
-            try {
-                // Charger les conversations
-                await loadConversations();
-                
-                // Charger les utilisateurs
-                await loadUsers();
-            } catch (error) {
-                console.error("Erreur lors du chargement des données initiales:", error);
-            }
-        }
-        
-        // Mettre à jour les informations du profil
-        function updateProfileInfo() {
-            if (currentUserData) {
-                // Mettre à jour le nom et l'email
-                document.getElementById('profile-name-text').textContent = currentUserData.email.split('@')[0];
-                document.getElementById('profile-email').textContent = currentUserData.email;
-                
-                // Afficher le badge admin si nécessaire
-                if (currentUserData.statut === 'admin') {
-                    document.getElementById('admin-badge').style.display = 'inline-block';
-                } else {
-                    document.getElementById('admin-badge').style.display = 'none';
-                }
-            }
-        }
-        
-        // Afficher une popup de succès
-        function showSuccessPopup(title, message, callback) {
-            document.getElementById('success-title').textContent = title;
-            document.getElementById('success-message').textContent = message;
-            document.getElementById('success-button').onclick = callback || (() => {
-                document.getElementById('success-popup').classList.remove('active');
-            });
-            
-            // Animation d'apparition
-            document.getElementById('success-popup').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-        }
-        
         // ================ FONCTIONS POUR LES MESSAGES ================
         
         // Données pour simuler les conversations
@@ -4470,18 +3701,65 @@
             ]
         };
         
-        // Charger les conversations dans la liste
+        // Charger les conversations dans la liste depuis Firestore
         async function loadConversations() {
             const chatList = document.getElementById('chat-list');
             chatList.innerHTML = '';
             
-            // Simuler le chargement depuis Firebase
             try {
                 // Si pas d'utilisateur authentifié, ne rien faire
                 if (!currentUser) return;
                 
+                // Récupérer les discussions de l'utilisateur actuel
+                const discussionsRef = collection(db, "discussions");
+                const q = query(
+                    discussionsRef,
+                    where("participants", "array-contains", currentUser.uid),
+                    orderBy("lastMessageTime", "desc")
+                );
+                
+                const querySnapshot = await getDocs(q);
+                let conversations = [];
+                
+                // Ajouter les conversations fixes (groupes)
+                conversations.push({
+                    id: 'Betforce',
+                    name: 'Betforce',
+                    isGroup: true,
+                    lastMessage: 'Est-ce que quelqu\'un a des pronostics pour les matchs de ce weekend ?',
+                    lastSender: 'user',
+                    time: '14:35'
+                });
+                
+                conversations.push({
+                    id: 'BetNews',
+                    name: 'BetNews',
+                    isNews: true,
+                    lastMessage: 'N\'oubliez pas de consulter l\'onglet Pronostics pour les cotes et analyses détaillées.',
+                    lastSender: 'admin',
+                    time: '12:35'
+                });
+                
+                // Ajouter les discussions personnelles
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const otherParticipantId = data.participants.find(id => id !== currentUser.uid);
+                    
+                    if (otherParticipantId) {
+                        conversations.push({
+                            id: doc.id,
+                            name: data.name || "Utilisateur",
+                            isGroup: false,
+                            lastMessage: data.lastMessage || "Aucun message",
+                            lastSender: data.lastSender,
+                            time: formatTimestamp(data.lastMessageTime),
+                            otherUserId: otherParticipantId
+                        });
+                    }
+                });
+                
                 // Si aucune conversation
-                if (Object.keys(chatMessages).length === 0) {
+                if (conversations.length === 0) {
                     chatList.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-comments"></i>
@@ -4493,29 +3771,13 @@
                 }
                 
                 // Créer les éléments pour chaque conversation
-                const conversations = [
-                    {
-                        name: 'Betforce',
-                        isGroup: true,
-                        lastMessage: 'Est-ce que quelqu\'un a des pronostics pour les matchs de ce weekend ?',
-                        lastSender: 'user',
-                        time: '14:35'
-                    },
-                    {
-                        name: 'BetNews',
-                        isNews: true,
-                        lastMessage: 'N\'oubliez pas de consulter l\'onglet Pronostics pour les cotes et analyses détaillées.',
-                        lastSender: 'admin',
-                        time: '12:35'
-                    }
-                ];
-                
                 conversations.forEach(conv => {
                     const isBlocked = blockedUsers.has(conv.name);
                     
                     const chatItem = document.createElement('div');
                     chatItem.className = `chat-item selectable-item ${isBlocked ? 'blocked' : ''}`;
                     chatItem.setAttribute('data-contact', conv.name);
+                    chatItem.setAttribute('data-id', conv.id);
                     
                     if (conv.isGroup) {
                         chatItem.setAttribute('data-is-group', 'true');
@@ -4523,6 +3785,10 @@
                     
                     if (conv.isNews) {
                         chatItem.setAttribute('data-is-news', 'true');
+                    }
+                    
+                    if (conv.otherUserId) {
+                        chatItem.setAttribute('data-user-id', conv.otherUserId);
                     }
                     
                     // Choisir la classe d'icône appropriée
@@ -4538,10 +3804,6 @@
                     }
                     
                     chatItem.innerHTML = `
-                        <div class="select-indicator">
-                            <div class="select-indicator-inner"></div>
-                        </div>
-                        <div class="item-select-checkbox"></div>
                         <div class="${iconClass}">
                             ${iconContent}
                         </div>
@@ -4557,29 +3819,21 @@
                                     conv.lastMessage)}
                             </div>
                         </div>
-                        <div class="select-btn" data-contact="${conv.name}">
-                            <i class="fas fa-times"></i>
-                        </div>
                         <i class="fas fa-check-circle check-circle"></i>
                     `;
                     
-                    // Ajouter les événements
-                    chatItem.addEventListener('click', function(event) {
-                        handleChatItemClick(event, this, conv.name);
-                    });
+                    // Configuration des événements pour la sélection longue
+                    setupLongPressSelection(chatItem);
                     
-                    // Gérer le clic sur le bouton X
-                    const selectBtn = chatItem.querySelector('.select-btn');
-                    selectBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();
+                    // Gestionnaire de clic normal (ouverture de la conversation)
+                    chatItem.addEventListener('click', function(e) {
                         if (!isSelectionMode) {
-                            startConversationsSelectionMode();
+                            openChat(conv.name);
+                        } else {
+                            // Si en mode sélection, sélectionner/désélectionner cet élément
+                            toggleItemSelection(this, conv.name);
                         }
-                        toggleItemSelection(chatItem, this.getAttribute('data-contact'), true);
                     });
-                    
-                    // Gestion du glissement horizontal pour la sélection
-                    setupSwipeSelection(chatItem);
                     
                     chatList.appendChild(chatItem);
                 });
@@ -4594,125 +3848,92 @@
                 `;
             }
         }
+
+        // Formater un timestamp Firestore
+        function formatTimestamp(timestamp) {
+            if (!timestamp) return "";
+            
+            // Si c'est un timestamp Firestore
+            if (timestamp.toDate) {
+                const date = timestamp.toDate();
+                return `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+            }
+            
+            // Si c'est une date standard
+            if (timestamp instanceof Date) {
+                return `${timestamp.getHours()}:${timestamp.getMinutes().toString().padStart(2, '0')}`;
+            }
+            
+            // Si c'est déjà une chaîne formatée
+            return timestamp;
+        }
         
-        // Configurer le glissement pour la sélection des conversations
-        function setupSwipeSelection(item) {
-            let startX, moveX;
-            let selecting = false;
+        // Configurer la sélection par appui long
+        function setupLongPressSelection(element) {
+            let startX, startY;
             
-            item.addEventListener('touchstart', function(e) {
+            // Gestionnaires pour appareils tactiles
+            element.addEventListener('touchstart', function(e) {
                 if (isSelectionMode) return;
+                
                 startX = e.touches[0].clientX;
-            });
-            
-            item.addEventListener('touchmove', function(e) {
-                if (isSelectionMode) return;
-                moveX = e.touches[0].clientX;
-                let deltaX = moveX - startX;
+                startY = e.touches[0].clientY;
                 
-                // Si l'utilisateur glisse vers la droite de manière significative
-                if (deltaX > 30 && !selecting) {
-                    item.classList.add('swipe-selecting');
-                    selecting = true;
-                    
-                    // Vibration pour feedback tactile
-                    if (navigator.vibrate) {
-                        navigator.vibrate(30);
-                    }
-                } 
-                // Si l'utilisateur glisse vers la gauche de manière significative et est déjà sélectionné
-                else if (deltaX < -30 && item.classList.contains('selected') && isSelectionMode) {
-                    // Désélectionner l'item avec un swipe léger vers la gauche
-                    const contactName = item.getAttribute('data-contact');
-                    toggleItemSelection(item, contactName, false);
-                    
-                    // Vibration pour feedback tactile
-                    if (navigator.vibrate) {
-                        navigator.vibrate(30);
-                    }
-                }
-                else if (deltaX < 10 && selecting) {
-                    item.classList.remove('swipe-selecting');
-                    selecting = false;
-                }
-            });
-            
-            item.addEventListener('touchend', function(e) {
-                if (isSelectionMode && !item.classList.contains('selected')) return;
-                
-                // Si l'élément est en mode "swipe selecting"
-                if (selecting) {
-                    // Démarrer le mode de sélection si ce n'est pas déjà fait
-                    if (!isSelectionMode) {
-                        startConversationsSelectionMode();
-                    }
-                    
-                    // Sélectionner cet élément
-                    const contactName = this.getAttribute('data-contact');
-                    toggleItemSelection(this, contactName, true);
-                    
-                    this.classList.remove('swipe-selecting');
-                    selecting = false;
-                }
-            });
-            
-            // Pour le maintien long (longpress)
-            let longPressTimer;
-            
-            item.addEventListener('touchstart', function(e) {
-                if (isSelectionMode) return;
-                
-                const contactName = this.getAttribute('data-contact');
-                
+                // Démarrer le timer d'appui long
                 longPressTimer = setTimeout(() => {
-                    startConversationsSelectionMode();
-                    toggleItemSelection(this, contactName, true);
-                    
-                    // Vibration pour feedback tactile
+                    // Effet de vibration pour feedback tactile
                     if (navigator.vibrate) {
                         navigator.vibrate(50);
                     }
-                }, 500); // longPressDuration
-            });
+                    
+                    // Démarrer le mode sélection
+                    startSelectionMode();
+                    
+                    // Sélectionner cet élément
+                    const contactName = this.getAttribute('data-contact');
+                    toggleItemSelection(this, contactName);
+                    
+                    // Ajouter une classe pour le feedback visuel
+                    this.classList.add('longpressing');
+                    
+                    // Nettoyer après l'animation
+                    setTimeout(() => {
+                        this.classList.remove('longpressing');
+                    }, 300);
+                    
+                }, longPressDuration);
+            }, { passive: true });
             
-            item.addEventListener('touchmove', function() {
-                clearTimeout(longPressTimer);
-            });
-            
-            item.addEventListener('touchend', function() {
-                clearTimeout(longPressTimer);
-            });
-        }
-        
-        // Gestion des clics sur les éléments sélectionnables
-        function handleChatItemClick(event, item, contactName) {
-            // Si en mode sélection, cette fonction gère les sélections
-            if (isSelectionMode) {
-                event.preventDefault();
-                event.stopPropagation();
+            element.addEventListener('touchmove', function(e) {
+                if (!longPressTimer) return;
                 
-                // Si c'est déjà sélectionné, on désélectionne
-                if (selectedItems.has(contactName)) {
-                    toggleItemSelection(item, contactName, false);
-                } else {
-                    // Sinon on sélectionne
-                    toggleItemSelection(item, contactName, true);
+                // Calculer la distance de déplacement
+                const moveX = e.touches[0].clientX;
+                const moveY = e.touches[0].clientY;
+                const distance = Math.sqrt(
+                    Math.pow(moveX - startX, 2) + 
+                    Math.pow(moveY - startY, 2)
+                );
+                
+                // Si le doigt a bougé significativement, annuler l'appui long
+                if (distance > 10) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
                 }
-                return;
-            }
+            }, { passive: true });
             
-            // Vérifier si l'élément est sélectionné avant d'ouvrir le chat
-            const isSelected = item.classList.contains('selected');
-            if (isSelected) {
-                // Si sélectionné, on ne fait rien - l'utilisateur doit d'abord désélectionner
-                return;
-            }
+            element.addEventListener('touchend', function() {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }, { passive: true });
             
-            // Si ce n'est pas en mode sélection et pas sélectionné, ouvrir la conversation
-            openChat(contactName);
+            element.addEventListener('touchcancel', function() {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }, { passive: true });
         }
         
-        // Charger la liste des utilisateurs
+        // Charger la liste des utilisateurs depuis Firestore
         async function loadUsers() {
             const usersList = document.getElementById('users-list');
             usersList.innerHTML = '';
@@ -4730,13 +3951,52 @@
                     return;
                 }
                 
-                usersList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-users"></i>
-                        <div class="empty-state-title">Aucun utilisateur</div>
-                        <div class="empty-state-text">Les utilisateurs apparaîtront ici quand ils seront connectés</div>
-                    </div>
-                `;
+                // Récupérer tous les utilisateurs
+                const usersRef = collection(db, "Users");
+                const querySnapshot = await getDocs(usersRef);
+                
+                if (querySnapshot.empty) {
+                    usersList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <div class="empty-state-title">Aucun utilisateur</div>
+                            <div class="empty-state-text">Les utilisateurs apparaîtront ici quand ils seront connectés</div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Ajouter chaque utilisateur à la liste, sauf l'utilisateur actuel
+                querySnapshot.forEach((doc) => {
+                    const userData = doc.data();
+                    if (doc.id !== currentUser.uid) {
+                        const userItem = document.createElement('div');
+                        userItem.className = 'user-item';
+                        userItem.setAttribute('data-user-id', doc.id);
+                        userItem.setAttribute('data-user-email', userData.email);
+                        
+                        const displayName = userData.displayName || userData.email.split('@')[0];
+                        
+                        userItem.innerHTML = `
+                            <div class="profile-pic">
+                                <i class="fas fa-user" style="color: var(--primary-color);"></i>
+                            </div>
+                            <div class="item-content">
+                                <div class="item-title">
+                                    ${displayName}
+                                    ${userData.statut === 'admin' ? '<span class="admin-badge">Admin</span>' : ''}
+                                </div>
+                                <div class="item-subtitle">${userData.email}</div>
+                            </div>
+                        `;
+                        
+                        userItem.addEventListener('click', function() {
+                            startOrOpenConversation(doc.id, displayName);
+                        });
+                        
+                        usersList.appendChild(userItem);
+                    }
+                });
             } catch (error) {
                 console.error("Erreur lors du chargement des utilisateurs:", error);
                 usersList.innerHTML = `
@@ -4746,6 +4006,62 @@
                         <div class="empty-state-text">Impossible de charger les utilisateurs. Veuillez réessayer.</div>
                     </div>
                 `;
+            }
+        }
+        
+        // Démarrer ou ouvrir une conversation avec un utilisateur
+        async function startOrOpenConversation(userId, displayName) {
+            if (!currentUser) return;
+            
+            try {
+                // Vérifier si une discussion existe déjà entre ces utilisateurs
+                const discussionsRef = collection(db, "discussions");
+                const q = query(
+                    discussionsRef,
+                    where("participants", "array-contains", currentUser.uid)
+                );
+                
+                const querySnapshot = await getDocs(q);
+                let existingDiscussion = null;
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (data.participants.includes(userId)) {
+                        existingDiscussion = { id: doc.id, ...data };
+                    }
+                });
+                
+                if (existingDiscussion) {
+                    // Si la discussion existe, l'ouvrir
+                    openChat(existingDiscussion.name || displayName);
+                } else {
+                    // Sinon, créer une nouvelle discussion
+                    const newDiscussion = {
+                        participants: [currentUser.uid, userId],
+                        createdAt: serverTimestamp(),
+                        lastMessageTime: serverTimestamp(),
+                        lastMessage: "Aucun message",
+                        name: displayName
+                    };
+                    
+                    const docRef = await addDoc(collection(db, "discussions"), newDiscussion);
+                    
+                    // Ouvrir la nouvelle discussion
+                    openChat(displayName);
+                }
+                
+                // Changer l'onglet à "Messages"
+                changeTab('messages');
+                
+            } catch (error) {
+                console.error("Erreur lors de la création/ouverture de la discussion:", error);
+                showSuccessPopup(
+                    'Erreur',
+                    'Impossible de démarrer la conversation. Veuillez réessayer.',
+                    () => {
+                        document.getElementById('success-popup').classList.remove('active');
+                    }
+                );
             }
         }
         
@@ -5368,41 +4684,43 @@
         
         // ================ FONCTIONS POUR LA SÉLECTION ================
         
-        // Fonction pour basculer la sélection d'un élément
-        function toggleItemSelection(item, itemId, select) {
-            var checkbox = item.querySelector('.item-select-checkbox');
-            var selectIndicator = item.querySelector('.select-indicator-inner');
+        // Démarrer le mode sélection
+        function startSelectionMode() {
+            if (isSelectionMode) return;
             
-            if (select === undefined) {
-                // Si select n'est pas fourni, basculer selon l'état actuel
-                select = !selectedItems.has(itemId);
+            isSelectionMode = true;
+            selectionModeType = 'conversations';
+            selectedItems.clear();
+            
+            // Afficher la barre d'action
+            const selectionBar = document.getElementById('selection-action-bar');
+            selectionBar.classList.add('active');
+            document.getElementById('selection-action-count').textContent = '0 sélectionné';
+            
+            // Mettre à jour la barre d'actions pour les discussions
+            document.getElementById('selection-delete').textContent = 'Supprimer';
+            
+            updateSelectionCount();
+        }
+        
+        // Fonction pour basculer la sélection d'un élément
+        function toggleItemSelection(item, itemId) {
+            if (!isSelectionMode) return;
+            
+            // Obtenir l'ID de l'élément s'il n'est pas fourni
+            if (!itemId) {
+                itemId = item.getAttribute('data-contact');
             }
             
-            if (select) {
-                selectedItems.add(itemId);
-                checkbox?.classList.add('checked');
-                item.classList.add('selected');
-                if (selectIndicator) { // Pour le nouveau mode de sélection
-                    item.classList.add('selected');
-                }
-            } else {
+            if (selectedItems.has(itemId)) {
                 selectedItems.delete(itemId);
-                checkbox?.classList.remove('checked');
                 item.classList.remove('selected');
-                if (selectIndicator) { // Pour le nouveau mode de sélection
-                    item.classList.remove('selected');
-                }
+            } else {
+                selectedItems.add(itemId);
+                item.classList.add('selected');
             }
             
             updateSelectionCount();
-            
-            // Afficher/masquer le bouton de suppression
-            const deleteBtn = document.getElementById('conversation-delete-btn');
-            if (selectedItems.size > 0) {
-                deleteBtn.classList.add('active');
-            } else {
-                deleteBtn.classList.remove('active');
-            }
         }
         
         // Fonction pour sélectionner/désélectionner un message
@@ -5420,103 +4738,32 @@
             updateSelectionCount();
         }
         
-        // Fonction pour sélectionner tous les éléments
-        function selectAllItems() {
-            if (selectionModeType === 'messages') {
-                selectAllMessages();
-            } else {
-                // Ne pas sélectionner les groupes dans le mode de sélection
-                var items = document.querySelectorAll('.chat-item:not([data-is-group="true"]):not([data-is-news="true"])');
-                
-                for (var i = 0; i < items.length; i++) {
-                    var itemId = items[i].getAttribute('data-contact');
-                    var checkbox = items[i].querySelector('.item-select-checkbox');
-                    
-                    selectedItems.add(itemId);
-                    checkbox?.classList.add('checked');
-                    items[i].classList.add('selected');
-                }
-                
-                updateSelectionCount();
-                
-                // Afficher le bouton de suppression
-                if (selectedItems.size > 0) {
-                    document.getElementById('conversation-delete-btn').classList.add('active');
-                }
-            }
-        }
-        
-        // Fonction pour sélectionner tous les messages
-        function selectAllMessages() {
-            var messages = document.querySelectorAll('.message');
-            
-            for (var i = 0; i < messages.length; i++) {
-                var messageId = messages[i].getAttribute('data-id');
-                selectedMessages.add(messageId);
-                messages[i].classList.add('selected');
-            }
-            
-            updateSelectionCount();
-        }
-        
         // Fonction pour mettre à jour le compteur de sélection
         function updateSelectionCount() {
             var count = selectionModeType === 'messages' ? selectedMessages.size : selectedItems.size;
             
-            // Mettre à jour l'ancien indicateur de sélection
-            document.getElementById('selection-indicator').innerText = `Sélection de ${selectionModeType} (${count})`;
-            
-            // Mettre à jour le nouvel indicateur de sélection
-            document.getElementById('new-selection-indicator').querySelector('.new-selection-title').innerText = 
-                count + (count === 1 ? ' sélectionné' : ' sélectionnés');
-            
-            // Mettre à jour le compteur du menu d'actions approprié
-            if (selectionModeType === 'messages') {
-                document.getElementById('selected-count').innerText = count + (count === 1 ? ' sélectionné' : ' sélectionnés');
-            } else if (selectionModeType === 'conversations' || selectionModeType === 'contacts') {
-                document.getElementById('conversations-selected-count').innerText = count + (count === 1 ? ' sélectionné' : ' sélectionnés');
+            // Mise à jour du compteur dans la barre d'action
+            if (selectionModeType === 'conversations') {
+                document.getElementById('selection-action-count').textContent = 
+                    count === 0 ? 'Aucune sélection' : 
+                    count === 1 ? '1 sélectionné' : 
+                    count + ' sélectionnés';
+            } else {
+                document.getElementById('selected-count').textContent = 
+                    count === 0 ? 'Aucune sélection' : 
+                    count === 1 ? '1 sélectionné' : 
+                    count + ' sélectionnés';
             }
             
-            // Sortir du mode sélection si aucun élément n'est sélectionné
+            // Sortir du mode sélection si aucun élément n'est sélectionné et après un délai
             if (count === 0 && isSelectionMode) {
-                exitSelectionMode();
+                setTimeout(() => {
+                    if ((selectionModeType === 'messages' && selectedMessages.size === 0) ||
+                        (selectionModeType === 'conversations' && selectedItems.size === 0)) {
+                        exitSelectionMode();
+                    }
+                }, 200);
             }
-        }
-        
-        // Fonction pour démarrer le mode de sélection des conversations
-        function startConversationsSelectionMode() {
-            closeOptionsMenu();
-            
-            if (isSelectionMode) return;
-            
-            isSelectionMode = true;
-            selectionModeType = 'conversations';
-            selectedItems.clear();
-            
-            // Afficher le nouvel indicateur de sélection
-            document.getElementById('new-selection-indicator').style.display = 'block';
-            document.getElementById('new-selection-indicator').querySelector('.new-selection-title').innerText = '0 sélectionné';
-            
-            // Mettre à jour l'en-tête
-            document.getElementById('header-title').innerText = 'Sélection';
-            document.getElementById('header-left').innerHTML = '<div class="back-button" id="header-button"><i class="fas fa-times"></i></div>';
-            document.getElementById('header-action').innerHTML = '';
-            
-            // Ajouter l'événement sur le bouton retour
-            document.getElementById('header-button').addEventListener('click', exitSelectionMode);
-            
-            // Activer le bouton de suppression flottant
-            document.getElementById('conversation-delete-btn').classList.remove('active');
-            
-            // Ajouter la classe pour activer la visualisation du mode sélection
-            document.querySelector('.section.active').classList.add('selection-mode');
-            
-            // Faire apparaître les cases à cocher
-            document.querySelectorAll('.chat-item:not([data-is-group="true"]):not([data-is-news="true"]) .item-select-checkbox').forEach(checkbox => {
-                checkbox.classList.add('visible');
-            });
-            
-            updateSelectionCount();
         }
         
         // Fonction pour démarrer le mode de sélection des messages
@@ -5528,10 +4775,6 @@
             isSelectionMode = true;
             selectionModeType = 'messages';
             selectedMessages.clear();
-            
-            // Afficher l'indicateur de sélection
-            document.getElementById('selection-indicator').style.display = 'block';
-            document.getElementById('selection-indicator').innerText = 'Sélection de messages (0)';
             
             // Mettre à jour l'en-tête
             document.getElementById('header-action').innerHTML = '<div class="select-all-btn" style="color: var(--primary-color);">Tout</div>';
@@ -5547,62 +4790,76 @@
         
         // Fonction pour quitter le mode de sélection
         function exitSelectionMode(type) {
+            if (!isSelectionMode) return;
+            
             if (!type) type = selectionModeType;
             
             isSelectionMode = false;
-            selectionModeType = '';
-            selectedItems.clear();
-            selectedMessages.clear();
             
-            // Masquer les indicateurs de sélection
-            document.getElementById('selection-indicator').style.display = 'none';
-            document.getElementById('new-selection-indicator').style.display = 'none';
+            // Masquer la barre d'action
+            document.getElementById('selection-action-bar').classList.remove('active');
             
-            // Masquer le bouton de suppression flottant
-            document.getElementById('conversation-delete-btn').classList.remove('active');
-            
-            if (currentContact) {
-                // Si nous sommes dans un chat, restaurer l'en-tête de chat
-                document.getElementById('header-title').innerText = currentContact;
-                document.getElementById('header-left').innerHTML = '<div class="back-button" id="header-button"><i class="fas fa-chevron-left"></i></div>';
-                document.getElementById('header-action').innerHTML = '<span class="notification-icon" id="options-button"><i class="fas fa-ellipsis-v"></i></span>';
-                
-                // Réattacher les événements
-                document.getElementById('header-button').addEventListener('click', closeChat);
-                document.getElementById('options-button').addEventListener('click', toggleOptionsMenu);
-            } else {
-                // Sinon, restaurer l'en-tête normal
-                document.getElementById('header-title').innerText = currentSection.charAt(0).toUpperCase() + currentSection.slice(1);
-                document.getElementById('header-left').innerHTML = '';
-                document.getElementById('header-action').innerHTML = '<span class="notification-icon" id="options-button"><i class="fas fa-ellipsis-v"></i></span>';
-                
-                // Réattacher les événements
-                document.getElementById('options-button').addEventListener('click', toggleOptionsMenu);
-            }
-            
-            // Désactiver tous les menus d'actions
-            document.getElementById('conversations-actions').classList.remove('active');
-            document.getElementById('message-actions').classList.remove('active');
-            
-            // Réactiver la saisie de message si on était en mode sélection de messages
             if (type === 'messages') {
+                // Réinitialiser les sélections de messages
+                selectedMessages.clear();
+                document.querySelectorAll('.message.selected').forEach(msg => {
+                    msg.classList.remove('selected');
+                });
+                
+                // Fermer le menu des actions de messages
+                document.getElementById('message-actions').classList.remove('active');
+                
+                // Réactiver la saisie
                 document.getElementById('chat-input').disabled = false;
                 document.getElementById('send-button').disabled = false;
+                
+                // Restaurer l'en-tête de chat
+                document.getElementById('header-title').innerText = currentContact;
+                document.getElementById('header-action').innerHTML = '<span class="notification-icon" id="options-button"><i class="fas fa-ellipsis-v"></i></span>';
+                
+                // Réattacher l'événement d'options
+                document.getElementById('options-button').addEventListener('click', toggleOptionsMenu);
+            } else {
+                // Réinitialiser les sélections de conversations
+                selectedItems.clear();
+                document.querySelectorAll('.chat-item.selected, .user-item.selected').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                
+                // Restaurer l'en-tête
+                document.getElementById('header-title').innerText = currentSection.charAt(0).toUpperCase() + currentSection.slice(1);
+                document.getElementById('header-action').innerHTML = '<span class="notification-icon" id="options-button"><i class="fas fa-ellipsis-v"></i></span>';
+                
+                // Réattacher l'événement d'options
+                document.getElementById('options-button').addEventListener('click', toggleOptionsMenu);
             }
             
-            // Retirer la classe mode sélection
-            document.querySelector('.selection-mode')?.classList.remove('selection-mode');
+            selectionModeType = '';
+        }
+        
+        // Fonction pour sélectionner tous les messages
+        function selectAllMessages() {
+            var messages = document.querySelectorAll('.message');
             
-            // Masquer les cases à cocher et réinitialiser leur état
-            document.querySelectorAll('.item-select-checkbox').forEach(checkbox => {
-                checkbox.classList.remove('visible');
-                checkbox.classList.remove('checked');
-            });
+            // Si tous les messages sont déjà sélectionnés, désélectionner tous
+            const allSelected = selectedMessages.size === messages.length;
             
-            // Retirer la classe selected de tous les messages et items
-            document.querySelectorAll('.message.selected, .chat-item.selected, .user-item.selected').forEach(element => {
-                element.classList.remove('selected');
-            });
+            if (allSelected) {
+                // Désélectionner tous les messages
+                selectedMessages.clear();
+                messages.forEach(msg => {
+                    msg.classList.remove('selected');
+                });
+            } else {
+                // Sélectionner tous les messages
+                messages.forEach(msg => {
+                    const messageId = msg.getAttribute('data-id');
+                    selectedMessages.add(messageId);
+                    msg.classList.add('selected');
+                });
+            }
+            
+            updateSelectionCount();
         }
         
         // ================ FONCTIONS POUR LES ACTIONS ================
@@ -5693,28 +4950,6 @@
             }
         }
         
-        // Bloquer les utilisateurs sélectionnés
-        function blockSelectedUsers() {
-            if (selectedItems.size === 0) return;
-            
-            selectedItems.forEach(contact => {
-                blockedUsers.add(contact);
-                
-                // Mettre à jour l'interface
-                var chatItems = document.querySelectorAll('.chat-item');
-                for (var i = 0; i < chatItems.length; i++) {
-                    if (chatItems[i].getAttribute('data-contact') === contact) {
-                        chatItems[i].classList.add('blocked');
-                        chatItems[i].querySelector('.item-subtitle').textContent = "Utilisateur bloqué";
-                        break;
-                    }
-                }
-            });
-            
-            // Quitter le mode sélection
-            exitSelectionMode();
-        }
-        
         // Effacer une conversation
         function clearConversation() {
             if (!currentContact) return;
@@ -5730,6 +4965,15 @@
             
             // Fermer le menu
             closeOptionsMenu();
+        }
+        
+        // Supprimer les éléments sélectionnés (discussions ou messages)
+        function deleteSelectedItems() {
+            if (selectionModeType === 'conversations') {
+                deleteSelectedConversations();
+            } else if (selectionModeType === 'messages') {
+                showDeleteMessageOptions();
+            }
         }
         
         // Supprimer les conversations sélectionnées avec animation
@@ -5766,20 +5010,6 @@
                     }, { once: true });
                 }
             }
-        }
-        
-        // Marquer les conversations sélectionnées comme lues
-        function markSelectedAsRead() {
-            if (selectedItems.size === 0) return;
-            
-            exitSelectionMode();
-        }
-        
-        // Archiver les conversations sélectionnées
-        function archiveSelectedConversations() {
-            if (selectedItems.size === 0) return;
-            
-            exitSelectionMode();
         }
         
         // Afficher le dialogue de suppression des messages avec options
@@ -6349,6 +5579,126 @@
             }
         }
         
+        // ================ FONCTIONS POUR L'AFFICHAGE ================
+        
+        // Masquer l'écran de chargement
+        function hideLoading() {
+            const loadingScreen = document.getElementById('loading');
+            loadingScreen.style.opacity = '0';
+            loadingScreen.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 500);
+        }
+        
+        // Afficher l'écran de connexion
+        function showLoginScreen() {
+            hideLoading();
+            
+            // Animation d'apparition
+            document.getElementById('auth-screen').style.opacity = '0';
+            document.getElementById('auth-screen').style.display = 'flex';
+            
+            setTimeout(() => {
+                document.getElementById('auth-screen').style.opacity = '1';
+                document.getElementById('auth-screen').style.transition = 'opacity 0.5s ease';
+            }, 10);
+            
+            // Pour permettre le défilement lors de l'inscription/connexion
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Compléter le processus de connexion
+        function completeLogin() {
+            hideLoading();
+            
+            // Animer la transition
+            document.getElementById('auth-screen').style.opacity = '0';
+            document.getElementById('auth-screen').style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                document.getElementById('auth-screen').style.display = 'none';
+            }, 500);
+            
+            // Animation d'apparition pour l'application principale
+            setTimeout(() => {
+                document.getElementById('tabbar').style.opacity = '0';
+                document.getElementById('tabbar').style.display = 'flex';
+                
+                document.querySelector('.header').style.opacity = '0';
+                document.querySelector('.header').style.display = 'flex';
+                
+                document.querySelector('.content').style.opacity = '0';
+                document.querySelector('.content').style.display = 'block';
+                
+                setTimeout(() => {
+                    document.getElementById('tabbar').style.opacity = '1';
+                    document.getElementById('tabbar').style.transition = 'opacity 0.5s ease';
+                    
+                    document.querySelector('.header').style.opacity = '1';
+                    document.querySelector('.header').style.transition = 'opacity 0.5s ease';
+                    
+                    document.querySelector('.content').style.opacity = '1';
+                    document.querySelector('.content').style.transition = 'opacity 0.5s ease';
+                    
+                    // Chargement des données initiales
+                    loadInitialData();
+                }, 10);
+            }, 500);
+            
+            // Mettre à jour les informations du profil
+            updateProfileInfo();
+            
+            // Mettre à jour l'interface
+            document.body.style.overflow = 'hidden';
+            
+            // L'utilisateur est maintenant connecté
+            isLoggedIn = true;
+        }
+        
+        // Charger les données initiales de l'application
+        async function loadInitialData() {
+            try {
+                // Charger les conversations
+                await loadConversations();
+                
+                // Charger les utilisateurs
+                await loadUsers();
+            } catch (error) {
+                console.error("Erreur lors du chargement des données initiales:", error);
+            }
+        }
+        
+        // Mettre à jour les informations du profil
+        function updateProfileInfo() {
+            if (currentUserData) {
+                // Mettre à jour le nom et l'email
+                document.getElementById('profile-name-text').textContent = currentUserData.displayName || currentUserData.email.split('@')[0];
+                document.getElementById('profile-email').textContent = currentUserData.email;
+                
+                // Afficher le badge admin si nécessaire
+                if (currentUserData.statut === 'admin') {
+                    document.getElementById('admin-badge').style.display = 'inline-block';
+                } else {
+                    document.getElementById('admin-badge').style.display = 'none';
+                }
+            }
+        }
+        
+        // Afficher une popup de succès
+        function showSuccessPopup(title, message, callback) {
+            document.getElementById('success-title').textContent = title;
+            document.getElementById('success-message').textContent = message;
+            document.getElementById('success-button').onclick = callback || (() => {
+                document.getElementById('success-popup').classList.remove('active');
+            });
+            
+            // Animation d'apparition
+            document.getElementById('success-popup').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+        
         // ================ INITIALISATION DE L'APPLICATION ================
         
         // Observer les changements d'authentification
@@ -6365,16 +5715,8 @@
                     isAdmin = true;
                 }
                 
-                // Vérifier si le PIN est activé
-                isPinEnabled = localStorage.getItem('ichatPinEnabled') === 'true';
-                userPin = localStorage.getItem('ichatUserPin');
-                
-                // Si le PIN est activé, montrer l'écran de verrouillage
-                if (isPinEnabled && userPin) {
-                    showPinLockScreen();
-                } else {
-                    completeLogin();
-                }
+                // Compléter la connexion
+                completeLogin();
             } else {
                 // Utilisateur déconnecté - afficher l'écran de chargement
                 document.getElementById('loading').style.display = 'flex';
@@ -6399,9 +5741,6 @@
             
             // Configurer les événements d'authentification
             setupAuthEvents();
-            
-            // Configurer les événements du PIN
-            setupPinEvents();
             
             // Configurer le mode sombre
             setupDarkMode();
@@ -6439,7 +5778,3 @@
     </script>
 </body>
 </html>
-    
-
-
-
