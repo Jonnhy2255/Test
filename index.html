@@ -2,94 +2,83 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Inscription avec rôle + logs</title>
+  <title>Inscription avec Firestore (pas Auth)</title>
   <style>
     body {
-      background: #f0f2f5;
       font-family: Arial, sans-serif;
+      background: #fafafa;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      padding: 50px;
+      padding: 40px 0;
     }
     .container {
       background: white;
-      padding: 30px;
+      padding: 30px 25px;
       border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 350px;
     }
     h2 {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       text-align: center;
     }
     input, button {
       width: 100%;
       padding: 12px;
-      margin: 10px 0;
+      margin-top: 12px;
       font-size: 16px;
-      border: 1px solid #ccc;
       border-radius: 6px;
+      border: 1px solid #ccc;
     }
     button {
-      background: #007bff;
+      background: #28a745;
       color: white;
       border: none;
       cursor: pointer;
       transition: background 0.3s;
     }
     button:hover {
-      background: #0056b3;
+      background: #218838;
     }
     #log {
-      padding: 10px;
-      margin-top: 15px;
-      border-radius: 6px;
-      display: none;
-      font-weight: bold;
-    }
-    #log.success { background: #d4edda; color: #155724; }
-    #log.error   { background: #f8d7da; color: #721c24; }
-    #log.info    { background: #cce5ff; color: #004085; }
-
-    #usersList {
       margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: 600;
+      display: none;
+      white-space: pre-line;
       font-size: 14px;
     }
-    .user-item {
-      padding: 6px 0;
-      border-bottom: 1px solid #ddd;
+    #log.info {
+      background-color: #d1ecf1;
+      color: #0c5460;
     }
-    .user-item span {
-      font-weight: bold;
+    #log.success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    #log.error {
+      background-color: #f8d7da;
+      color: #721c24;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h2>Créer un compte</h2>
-    <input type="email" id="email" placeholder="Email" />
-    <input type="password" id="password" placeholder="Mot de passe" />
-    <button onclick="register()">S'inscrire</button>
-    <button onclick="showUsers()">Voir tous les utilisateurs</button>
+    <h2>Inscription (Firestore seulement)</h2>
+    <input id="email" type="email" placeholder="Email" autocomplete="off" />
+    <input id="password" type="password" placeholder="Mot de passe" autocomplete="off" />
+    <button onclick="register()">Créer un compte</button>
+
     <div id="log"></div>
-    <div id="usersList"></div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
-    import {
-      getFirestore,
-      collection,
-      doc,
-      setDoc,
-      getDoc,
-      getDocs
-    } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+    import { getFirestore, collection, doc, getDoc, setDoc, query, getDocs } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
 
+    // Configuration Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDTPLxUiA8lj82kqc6CyCPLQDITc0CtLUE",
       authDomain: "ichat-betai.firebaseapp.com",
@@ -102,81 +91,114 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
     const db = getFirestore(app);
 
     const logDiv = document.getElementById("log");
-    const usersDiv = document.getElementById("usersList");
 
-    function showLog(message, type = "info") {
-      logDiv.textContent = message;
+    function showLog(text, type = "info") {
+      logDiv.textContent = text;
       logDiv.className = type;
-      logDiv.id = "log";
       logDiv.style.display = "block";
     }
 
-    async function register() {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      usersDiv.innerHTML = "";
+    function validateEmail(email) {
+      // simple regex email validation
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
 
-      if (!email || !password) {
-        showLog("Veuillez remplir tous les champs.", "error");
+    async function register() {
+      showLog("", "info"); // reset
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      let logText = "";
+
+      if (!email) {
+        showLog("Erreur : L'email est obligatoire.", "error");
+        return;
+      }
+      if (!validateEmail(email)) {
+        showLog("Erreur : L'email n'est pas valide.", "error");
+        return;
+      }
+      if (!password) {
+        showLog("Erreur : Le mot de passe est obligatoire.", "error");
+        return;
+      }
+      if (password.length < 6) {
+        showLog("Erreur : Le mot de passe doit contenir au moins 6 caractères.", "error");
         return;
       }
 
       try {
-        showLog("Création du compte...", "info");
+        logText += "✅ Validation des données : OK\n";
 
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+        // Vérifier si cet email existe déjà
+        const usersCol = collection(db, "Users");
+        const q = query(usersCol);
+        const usersSnapshot = await getDocs(q);
+        let emailExists = false;
+        usersSnapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          if (data.email.toLowerCase() === email.toLowerCase()) {
+            emailExists = true;
+          }
+        });
 
-        const adminRef = doc(db, "Config", "admin");
-        const adminSnap = await getDoc(adminRef);
+        if (emailExists) {
+          showLog("Erreur : Ce compte email existe déjà.", "error");
+          return;
+        }
+        logText += "✅ Email unique confirmé.\n";
+
+        // Vérifier si admin existe (premier utilisateur)
+        const adminDocRef = doc(db, "Config", "admin");
+        const adminDocSnap = await getDoc(adminDocRef);
 
         let statut = "simple";
-
-        if (!adminSnap.exists()) {
+        if (!adminDocSnap.exists()) {
           statut = "admin";
-          await setDoc(adminRef, {
-            uid: user.uid,
-            email: user.email,
-            createdAt: new Date().toISOString()
-          });
-          showLog("Premier utilisateur : rôle administrateur défini.", "info");
+          logText += "⚡ Aucun admin détecté. Ce compte deviendra admin.\n";
+        } else {
+          logText += "ℹ️ Admin déjà existant. Ce compte sera simple utilisateur.\n";
         }
 
-        await setDoc(doc(db, "Users", user.uid), {
-          uid: user.uid,
-          email: user.email,
+        // Générer un nouvel ID auto Firestore (tu peux aussi utiliser email en doc id, ici on laisse auto)
+        // Mais pour garder la logique avec uid en doc id, on peut faire ça :
+        // const newUserRef = doc(usersCol); // auto ID
+        // ou utiliser email comme ID sécurisé
+        // Ici on prend l’email comme ID simple, mais en minuscule + remplacement des caractères invalides
+        const sanitizedEmailId = email.toLowerCase().replace(/[^a-z0-9]/g, "_");
+        const userDocRef = doc(db, "Users", sanitizedEmailId);
+
+        // Stockage du compte dans Firestore (mot de passe en clair ici)
+        await setDoc(userDocRef, {
+          email: email,
+          password: password,
           statut: statut,
           createdAt: new Date().toISOString()
         });
+        logText += "✅ Données utilisateur stockées dans Firestore.\n";
 
-        showLog(`Compte créé avec succès. Rôle attribué : ${statut}`, "success");
-      } catch (error) {
-        showLog("Erreur : " + error.message, "error");
-      }
-    }
-
-    async function showUsers() {
-      usersDiv.innerHTML = "";
-      try {
-        const usersSnap = await getDocs(collection(db, "Users"));
-        if (usersSnap.empty) {
-          usersDiv.innerHTML = "<p>Aucun utilisateur enregistré.</p>";
-          return;
+        // Si admin, on sauvegarde son ID dans Config/admin
+        if (statut === "admin") {
+          await setDoc(adminDocRef, {
+            email: email,
+            userDocId: sanitizedEmailId,
+            createdAt: new Date().toISOString()
+          });
+          logText += "✅ Document admin créé dans Config/admin.\n";
         }
 
-        let html = "<h3>Utilisateurs :</h3>";
-        usersSnap.forEach(doc => {
-          const data = doc.data();
-          html += `<div class="user-item"><span>${data.email}</span> - Rôle : ${data.statut}</div>`;
-        });
+        showLog(logText + "\n🎉 Inscription réussie !", "success");
 
-        usersDiv.innerHTML = html;
-      } catch (error) {
-        showLog("Erreur lors du chargement des utilisateurs : " + error.message, "error");
+        // Réinitialiser formulaire
+        document.getElementById("email").value = "";
+        document.getElementById("password").value = "";
+
+      } catch (err) {
+        showLog("❌ Erreur lors de l'inscription :\n" + err.message, "error");
       }
     }
   </script>
