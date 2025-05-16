@@ -1,206 +1,259 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Inscription avec Firestore (pas Auth)</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #fafafa;
-      display: flex;
-      justify-content: center;
-      padding: 40px 0;
-    }
-    .container {
-      background: white;
-      padding: 30px 25px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      width: 350px;
-    }
-    h2 {
-      margin-bottom: 25px;
-      text-align: center;
-    }
-    input, button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 12px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    button {
-      background: #28a745;
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background: #218838;
-    }
-    #log {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 8px;
-      font-weight: 600;
-      display: none;
-      white-space: pre-line;
-      font-size: 14px;
-    }
-    #log.info {
-      background-color: #d1ecf1;
-      color: #0c5460;
-    }
-    #log.success {
-      background-color: #d4edda;
-      color: #155724;
-    }
-    #log.error {
-      background-color: #f8d7da;
-      color: #721c24;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>App Messagerie Firebase</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 450px;
+    margin: 30px auto;
+    padding: 0 15px;
+  }
+  h2 {
+    text-align: center;
+  }
+  input, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  button {
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #0056b3;
+  }
+  #log {
+    margin-top: 15px;
+    padding: 12px;
+    font-weight: bold;
+    border-radius: 6px;
+    white-space: pre-line;
+  }
+  #log.info {
+    background: #d1ecf1;
+    color: #0c5460;
+  }
+  #log.success {
+    background: #d4edda;
+    color: #155724;
+  }
+  #log.error {
+    background: #f8d7da;
+    color: #721c24;
+  }
+  #messages {
+    margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 6px;
+  }
+  .message {
+    padding: 6px;
+    border-bottom: 1px solid #eee;
+  }
+  .message:last-child {
+    border-bottom: none;
+  }
+  .message .user {
+    font-weight: bold;
+  }
+</style>
 </head>
 <body>
 
-  <div class="container">
-    <h2>Inscription (Firestore seulement)</h2>
-    <input id="email" type="email" placeholder="Email" autocomplete="off" />
-    <input id="password" type="password" placeholder="Mot de passe" autocomplete="off" />
-    <button onclick="register()">Créer un compte</button>
+  <h2>Inscription / Connexion</h2>
 
-    <div id="log"></div>
+  <input id="email" type="email" placeholder="Email" autocomplete="off" />
+  <input id="password" type="password" placeholder="Mot de passe" autocomplete="off" />
+  <button id="registerBtn">S'inscrire</button>
+  <button id="loginBtn">Se connecter</button>
+
+  <div id="log" class="info" style="display:none;"></div>
+
+  <div id="app" style="display:none;">
+    <h2>Envoyer un message</h2>
+    <textarea id="messageInput" rows="3" placeholder="Écris ton message ici..."></textarea>
+    <button id="sendMessageBtn">Envoyer</button>
+
+    <h3>Messages</h3>
+    <div id="messages"></div>
+
+    <button id="logoutBtn" style="margin-top: 20px; background: #dc3545;">Se déconnecter</button>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
-    import { getFirestore, collection, doc, getDoc, setDoc, query, getDocs } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
+  import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
 
-    // Configuration Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyDTPLxUiA8lj82kqc6CyCPLQDITc0CtLUE",
-      authDomain: "ichat-betai.firebaseapp.com",
-      databaseURL: "https://ichat-betai-default-rtdb.firebaseio.com",
-      projectId: "ichat-betai",
-      storageBucket: "ichat-betai.appspot.com",
-      messagingSenderId: "168337722600",
-      appId: "1:168337722600:web:beb331f83cc4778c5b4d5d",
-      measurementId: "G-STXPSZN7X8"
-    };
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDTPLxUiA8lj82kqc6CyCPLQDITc0CtLUE",
+    authDomain: "ichat-betai.firebaseapp.com",
+    databaseURL: "https://ichat-betai-default-rtdb.firebaseio.com",
+    projectId: "ichat-betai",
+    storageBucket: "ichat-betai.appspot.com",
+    messagingSenderId: "168337722600",
+    appId: "1:168337722600:web:beb331f83cc4778c5b4d5d",
+    measurementId: "G-STXPSZN7X8"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    const logDiv = document.getElementById("log");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const registerBtn = document.getElementById("registerBtn");
+  const loginBtn = document.getElementById("loginBtn");
+  const logDiv = document.getElementById("log");
+  const appDiv = document.getElementById("app");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const messageInput = document.getElementById("messageInput");
+  const sendMessageBtn = document.getElementById("sendMessageBtn");
+  const messagesDiv = document.getElementById("messages");
 
-    function showLog(text, type = "info") {
-      logDiv.textContent = text;
-      logDiv.className = type;
-      logDiv.style.display = "block";
+  function showLog(text, type="info") {
+    logDiv.textContent = text;
+    logDiv.className = type;
+    logDiv.style.display = "block";
+  }
+
+  async function createUserProfile(uid, email) {
+    // Vérifie si admin déjà défini
+    const adminRef = doc(db, "Config", "admin");
+    const adminSnap = await getDoc(adminRef);
+
+    let statut = "simple";
+    if (!adminSnap.exists()) {
+      statut = "admin";
+      // Crée l'admin dans Config
+      await setDoc(adminRef, {
+        uid: uid,
+        email: email,
+        createdAt: new Date().toISOString()
+      });
     }
 
-    function validateEmail(email) {
-      // simple regex email validation
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    // Crée le profil utilisateur dans Users
+    const userRef = doc(db, "Users", uid);
+    await setDoc(userRef, {
+      email: email,
+      statut: statut,
+      createdAt: new Date().toISOString()
+    });
+    return statut;
+  }
+
+  registerBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    if (!email || !password) {
+      showLog("Merci de remplir email et mot de passe.", "error");
+      return;
     }
-
-    async function register() {
-      showLog("", "info"); // reset
-
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-
-      let logText = "";
-
-      if (!email) {
-        showLog("Erreur : L'email est obligatoire.", "error");
-        return;
-      }
-      if (!validateEmail(email)) {
-        showLog("Erreur : L'email n'est pas valide.", "error");
-        return;
-      }
-      if (!password) {
-        showLog("Erreur : Le mot de passe est obligatoire.", "error");
-        return;
-      }
-      if (password.length < 6) {
-        showLog("Erreur : Le mot de passe doit contenir au moins 6 caractères.", "error");
-        return;
-      }
-
-      try {
-        logText += "✅ Validation des données : OK\n";
-
-        // Vérifier si cet email existe déjà
-        const usersCol = collection(db, "Users");
-        const q = query(usersCol);
-        const usersSnapshot = await getDocs(q);
-        let emailExists = false;
-        usersSnapshot.forEach(docSnap => {
-          const data = docSnap.data();
-          if (data.email.toLowerCase() === email.toLowerCase()) {
-            emailExists = true;
-          }
-        });
-
-        if (emailExists) {
-          showLog("Erreur : Ce compte email existe déjà.", "error");
-          return;
-        }
-        logText += "✅ Email unique confirmé.\n";
-
-        // Vérifier si admin existe (premier utilisateur)
-        const adminDocRef = doc(db, "Config", "admin");
-        const adminDocSnap = await getDoc(adminDocRef);
-
-        let statut = "simple";
-        if (!adminDocSnap.exists()) {
-          statut = "admin";
-          logText += "⚡ Aucun admin détecté. Ce compte deviendra admin.\n";
-        } else {
-          logText += "ℹ️ Admin déjà existant. Ce compte sera simple utilisateur.\n";
-        }
-
-        // Générer un nouvel ID auto Firestore (tu peux aussi utiliser email en doc id, ici on laisse auto)
-        // Mais pour garder la logique avec uid en doc id, on peut faire ça :
-        // const newUserRef = doc(usersCol); // auto ID
-        // ou utiliser email comme ID sécurisé
-        // Ici on prend l’email comme ID simple, mais en minuscule + remplacement des caractères invalides
-        const sanitizedEmailId = email.toLowerCase().replace(/[^a-z0-9]/g, "_");
-        const userDocRef = doc(db, "Users", sanitizedEmailId);
-
-        // Stockage du compte dans Firestore (mot de passe en clair ici)
-        await setDoc(userDocRef, {
-          email: email,
-          password: password,
-          statut: statut,
-          createdAt: new Date().toISOString()
-        });
-        logText += "✅ Données utilisateur stockées dans Firestore.\n";
-
-        // Si admin, on sauvegarde son ID dans Config/admin
-        if (statut === "admin") {
-          await setDoc(adminDocRef, {
-            email: email,
-            userDocId: sanitizedEmailId,
-            createdAt: new Date().toISOString()
-          });
-          logText += "✅ Document admin créé dans Config/admin.\n";
-        }
-
-        showLog(logText + "\n🎉 Inscription réussie !", "success");
-
-        // Réinitialiser formulaire
-        document.getElementById("email").value = "";
-        document.getElementById("password").value = "";
-
-      } catch (err) {
-        showLog("❌ Erreur lors de l'inscription :\n" + err.message, "error");
-      }
+    showLog("Inscription en cours...", "info");
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const uid = userCredential.user.uid;
+      const statut = await createUserProfile(uid, email);
+      showLog(`Inscription réussie. Statut : ${statut}`, "success");
+      appDiv.style.display = "block";
+    } catch (error) {
+      showLog("Erreur inscription : " + error.message, "error");
     }
-  </script>
+  });
+
+  loginBtn.addEventListener("click", async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    if (!email || !password) {
+      showLog("Merci de remplir email et mot de passe.", "error");
+      return;
+    }
+    showLog("Connexion en cours...", "info");
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      showLog("Connexion réussie !", "success");
+      appDiv.style.display = "block";
+    } catch (error) {
+      showLog("Erreur connexion : " + error.message, "error");
+    }
+  });
+
+  logoutBtn.addEventListener("click", async () => {
+    await signOut(auth);
+    appDiv.style.display = "none";
+    showLog("Déconnecté.", "info");
+  });
+
+  // Afficher les messages en temps réel
+  function listenMessages() {
+    const messagesRef = collection(db, "Messages");
+    const q = query(messagesRef, orderBy("createdAt", "asc"));
+    onSnapshot(q, (querySnapshot) => {
+      messagesDiv.innerHTML = "";
+      querySnapshot.forEach(docSnap => {
+        const msg = docSnap.data();
+        const div = document.createElement("div");
+        div.classList.add("message");
+        div.innerHTML = `<span class="user">${msg.email}:</span> ${msg.text}`;
+        messagesDiv.appendChild(div);
+      });
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+  }
+
+  sendMessageBtn.addEventListener("click", async () => {
+    const text = messageInput.value.trim();
+    if (!text) {
+      showLog("Le message est vide.", "error");
+      return;
+    }
+    const user = auth.currentUser;
+    if (!user) {
+      showLog("Utilisateur non connecté.", "error");
+      return;
+    }
+    showLog("Envoi du message...", "info");
+    try {
+      const messagesRef = collection(db, "Messages");
+      await addDoc(messagesRef, {
+        uid: user.uid,
+        email: user.email,
+        text: text,
+        createdAt: new Date()
+      });
+      messageInput.value = "";
+      showLog("Message envoyé.", "success");
+    } catch (e) {
+      showLog("Erreur envoi message : " + e.message, "error");
+    }
+  });
+
+  // Sur changement d'état de connexion
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      showLog(`Connecté : ${user.email}`, "success");
+      appDiv.style.display = "block";
+      listenMessages();
+    } else {
+      appDiv.style.display = "none";
+      showLog("Connectez-vous ou inscrivez-vous.", "info");
+    }
+  });
+
+</script>
+
 </body>
 </html>
