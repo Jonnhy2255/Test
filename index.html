@@ -34,6 +34,12 @@
             --admin-badge-bg: #5D5CDE;
             --admin-badge-text: white;
             --news-group-bg: #f5a623;
+            --log-bg: rgba(0, 0, 0, 0.8);
+            --log-text: #ffffff;
+            --log-info: #2196F3;
+            --log-warning: #FFC107;
+            --log-error: #FF5252;
+            --log-success: #4CAF50;
         }
         
         /* Mode sombre par défaut */
@@ -60,6 +66,11 @@
             --admin-badge-bg: #7571F9;
             --admin-badge-text: white;
             --news-group-bg: #d48a1c;
+            --log-bg: rgba(20, 20, 20, 0.9);
+            --log-info: #64B5F6;
+            --log-warning: #FFD54F;
+            --log-error: #FF8A80;
+            --log-success: #81C784;
         }
         
         /* Reset de base */
@@ -2300,6 +2311,137 @@
             animation: pulse-selection 0.6s ease infinite;
             background-color: var(--selection-color);
         }
+
+        /* ============= FENÊTRE DE LOGS =============== */
+        .logs-window {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            max-height: 50%;
+            background-color: var(--log-bg);
+            color: var(--log-text);
+            z-index: 100;
+            border-top: 2px solid var(--primary-color);
+            display: none;
+            flex-direction: column;
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .logs-window.active {
+            display: flex;
+            transform: translateY(0);
+        }
+
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .logs-title {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .logs-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .logs-action {
+            padding: 4px 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--primary-color);
+        }
+
+        .logs-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 12px;
+        }
+
+        .log-entry {
+            margin-bottom: 4px;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            word-break: break-all;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-entry.info {
+            color: var(--log-info);
+        }
+
+        .log-entry.warning {
+            color: var(--log-warning);
+        }
+
+        .log-entry.error {
+            color: var(--log-error);
+        }
+
+        .log-entry.success {
+            color: var(--log-success);
+        }
+
+        .log-time {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-right: 6px;
+        }
+
+        .logs-toggle {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--log-bg);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 99;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .logs-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* Style pour les informations de groupe */
+        .group-info-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(93, 92, 222, 0.2);
+            color: var(--primary-color);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+
+        .group-info-badge i {
+            margin-right: 4px;
+            font-size: 10px;
+        }
     </style>
 </head>
 <body>
@@ -2423,6 +2565,10 @@
             <div class="option-icon"><i class="fas fa-download"></i></div>
             <div class="option-label">Installer l'application</div>
         </div>
+        <div class="option-item" id="show-logs-option">
+            <div class="option-icon"><i class="fas fa-bug"></i></div>
+            <div class="option-label">Afficher les logs</div>
+        </div>
     </div>
     
     <!-- Menu d'options pour la section messages -->
@@ -2434,6 +2580,10 @@
         <div class="option-item" id="show-install-guide-messages-option">
             <div class="option-icon"><i class="fas fa-download"></i></div>
             <div class="option-label">Installer l'application</div>
+        </div>
+        <div class="option-item" id="show-logs-messages-option">
+            <div class="option-icon"><i class="fas fa-bug"></i></div>
+            <div class="option-label">Afficher les logs</div>
         </div>
     </div>
 
@@ -2458,6 +2608,10 @@
         <div class="option-item" id="show-install-guide-chat-option">
             <div class="option-icon"><i class="fas fa-download"></i></div>
             <div class="option-label">Installer l'application</div>
+        </div>
+        <div class="option-item" id="show-logs-chat-option">
+            <div class="option-icon"><i class="fas fa-bug"></i></div>
+            <div class="option-label">Afficher les logs</div>
         </div>
     </div>
 
@@ -2547,6 +2701,19 @@
                     </label>
                 </div>
                 
+                <div class="setting-item" id="debug-setting">
+                    <div class="setting-row">
+                        <div class="setting-icon">
+                            <i class="fas fa-bug" style="color: var(--primary-color);"></i>
+                        </div>
+                        <div class="setting-label">Mode débogage</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="debug-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
                 <!-- Section "À propos" -->
                 <div style="padding: 0; margin: 20px 0 15px 0; font-weight: bold; font-size: 18px;">À propos</div>
                 
@@ -2566,7 +2733,7 @@
                         </ul>
                     </div>
                     
-                    <div class="about-version">Version 2.4.0</div>
+                    <div class="about-version">Version 2.5.0</div>
                 </div>
                 
                 <button id="logout-btn" class="button">Se déconnecter</button>
@@ -2810,6 +2977,25 @@
         <button class="button" id="success-button">Continuer</button>
     </div>
 
+    <!-- Fenêtre de logs détaillés -->
+    <div id="logs-window" class="logs-window">
+        <div class="logs-header">
+            <div class="logs-title">Logs détaillés</div>
+            <div class="logs-actions">
+                <div class="logs-action" id="logs-clear">Effacer</div>
+                <div class="logs-action" id="logs-close">Fermer</div>
+            </div>
+        </div>
+        <div class="logs-content" id="logs-content">
+            <!-- Les logs seront ajoutés ici dynamiquement -->
+        </div>
+    </div>
+
+    <!-- Bouton pour afficher les logs -->
+    <div class="logs-toggle" id="logs-toggle">
+        <i class="fas fa-bug"></i>
+    </div>
+
     <!-- Barre d'onglets -->
     <div class="tabbar" id="tabbar">
         <a href="#" class="tab active" data-section="messages">
@@ -2834,7 +3020,7 @@
         // Import Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, addDoc, onSnapshot, where, deleteDoc, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, addDoc, onSnapshot, where, deleteDoc, serverTimestamp, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
 
         // Firebase config
         const firebaseConfig = {
@@ -2858,6 +3044,7 @@
         let currentUser = null;
         let currentUserData = null;
         let isAdmin = false;
+        let isDebugMode = false;
         
         // Variables pour l'interface de chat
         let currentContact = '';
@@ -2880,6 +3067,118 @@
         let pendingMessages = [];
         let longPressTimer = null;
         let longPressDuration = 500; // Durée en ms pour considérer un appui long
+        
+        // ================ FONCTIONS POUR LE SYSTÈME DE LOGS ================
+        
+        // Système de logs
+        const logSystem = {
+            logs: [],
+            maxLogs: 500,
+            
+            // Ajouter un log
+            log: function(message, type = 'info') {
+                const time = new Date().toISOString().substring(11, 23);
+                const logEntry = {
+                    time: time,
+                    message: message,
+                    type: type
+                };
+                
+                this.logs.push(logEntry);
+                
+                // Garder un nombre limité de logs
+                if (this.logs.length > this.maxLogs) {
+                    this.logs.shift();
+                }
+                
+                // Afficher le log dans la console
+                switch(type) {
+                    case 'error':
+                        console.error(`[${time}] ${message}`);
+                        break;
+                    case 'warning':
+                        console.warn(`[${time}] ${message}`);
+                        break;
+                    case 'success':
+                        console.log(`%c[${time}] ${message}`, 'color: green; font-weight: bold');
+                        break;
+                    default:
+                        console.log(`[${time}] ${message}`);
+                }
+                
+                // Mettre à jour l'interface des logs si elle est visible
+                if (document.getElementById('logs-window').classList.contains('active')) {
+                    this.updateLogsDisplay();
+                }
+                
+                // Si on est en mode debug, montrer le bouton de logs
+                if (isDebugMode) {
+                    document.getElementById('logs-toggle').style.display = 'flex';
+                }
+                
+                return logEntry;
+            },
+            
+            // Log d'info
+            info: function(message) {
+                return this.log(message, 'info');
+            },
+            
+            // Log d'erreur
+            error: function(message) {
+                return this.log(message, 'error');
+            },
+            
+            // Log d'avertissement
+            warning: function(message) {
+                return this.log(message, 'warning');
+            },
+            
+            // Log de succès
+            success: function(message) {
+                return this.log(message, 'success');
+            },
+            
+            // Mettre à jour l'affichage des logs
+            updateLogsDisplay: function() {
+                const logsContent = document.getElementById('logs-content');
+                logsContent.innerHTML = '';
+                
+                this.logs.forEach(logEntry => {
+                    const logElement = document.createElement('div');
+                    logElement.className = `log-entry ${logEntry.type}`;
+                    
+                    const timeSpan = document.createElement('span');
+                    timeSpan.className = 'log-time';
+                    timeSpan.textContent = logEntry.time;
+                    
+                    logElement.appendChild(timeSpan);
+                    logElement.appendChild(document.createTextNode(logEntry.message));
+                    
+                    logsContent.appendChild(logElement);
+                });
+                
+                // Défiler vers le bas pour voir les logs les plus récents
+                logsContent.scrollTop = logsContent.scrollHeight;
+            },
+            
+            // Effacer tous les logs
+            clear: function() {
+                this.logs = [];
+                this.updateLogsDisplay();
+            },
+            
+            // Afficher la fenêtre de logs
+            showLogs: function() {
+                document.getElementById('logs-window').classList.add('active');
+                this.updateLogsDisplay();
+            },
+            
+            // Masquer la fenêtre de logs
+            hideLogs: function() {
+                document.getElementById('logs-window').classList.remove('active');
+            }
+        };
         
         // ================ FONCTIONS POUR LES ÉVÉNEMENTS D'INTERFACE ================
         
@@ -2928,6 +3227,43 @@
             document.getElementById('block-option').addEventListener('click', blockUnblockUser);
             document.getElementById('search-conversation-option').addEventListener('click', searchInConversation);
             document.getElementById('clear-conversation-option').addEventListener('click', clearConversation);
+            
+            // Options de logs
+            document.getElementById('show-logs-option').addEventListener('click', () => {
+                closeOptionsMenu();
+                logSystem.showLogs();
+            });
+            document.getElementById('show-logs-messages-option').addEventListener('click', () => {
+                closeOptionsMenu();
+                logSystem.showLogs();
+            });
+            document.getElementById('show-logs-chat-option').addEventListener('click', () => {
+                closeOptionsMenu();
+                logSystem.showLogs();
+            });
+            
+            // Interface de logs
+            document.getElementById('logs-close').addEventListener('click', () => {
+                logSystem.hideLogs();
+            });
+            document.getElementById('logs-clear').addEventListener('click', () => {
+                logSystem.clear();
+            });
+            document.getElementById('logs-toggle').addEventListener('click', () => {
+                logSystem.showLogs();
+            });
+            
+            // Activer/désactiver le mode débogage
+            document.getElementById('debug-toggle').addEventListener('change', function() {
+                isDebugMode = this.checked;
+                document.getElementById('logs-toggle').style.display = isDebugMode ? 'flex' : 'none';
+                
+                if (isDebugMode) {
+                    logSystem.info("Mode débogage activé");
+                } else {
+                    logSystem.info("Mode débogage désactivé");
+                }
+            });
             
             // Actions en mode sélection
             document.getElementById('selection-delete').addEventListener('click', deleteSelectedItems);
@@ -3151,8 +3487,10 @@
         }
         
         // Fonction pour ouvrir une conversation
-        function openChat(contact) {
+        function openChat(contact, isDirectMessage = false) {
             if (!contact) return;
+            
+            logSystem.info(`Tentative d'ouverture de la conversation: ${contact}`);
             
             // Si le menu d'options est ouvert, le fermer
             if (isOptionsMenuOpen) {
@@ -3215,7 +3553,7 @@
             }
             
             // Charger les messages
-            loadChatMessages(contact);
+            loadChatMessages(contact, isDirectMessage);
         }
         
         // Fonction pour fermer une conversation
@@ -3450,12 +3788,14 @@
             
             try {
                 showLog("login-log", "Connexion en cours...", "info");
+                logSystem.info(`Tentative de connexion pour: ${email}`);
                 
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 
                 // Stocker les informations dans les variables globales
                 currentUser = userCredential.user;
                 
+                logSystem.success(`Connexion réussie pour: ${email}`);
                 showLog("login-log", "Connexion réussie ! Redirection...", "success");
                 
                 // Rediriger vers l'application après un court délai
@@ -3464,6 +3804,8 @@
                 }, 1000);
             } catch (error) {
                 let errorMessage = "Erreur de connexion";
+                
+                logSystem.error(`Échec de connexion pour ${email}: ${error.code} - ${error.message}`);
                 
                 switch (error.code) {
                     case 'auth/user-not-found':
@@ -3508,21 +3850,28 @@
             
             try {
                 showLog("register-log", "Inscription en cours...", "info");
+                logSystem.info(`Tentative d'inscription pour: ${email}`);
                 
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const uid = userCredential.user.uid;
                 const statut = await createUserProfile(uid, email);
                 
                 showLog("register-log", `Inscription réussie ! Compte créé avec succès.`, "success");
+                logSystem.success(`Inscription réussie pour: ${email}, statut: ${statut}`);
                 
                 // Stocker les informations dans les variables globales
                 currentUser = userCredential.user;
+                
+                // Une fois inscrit, ajouter l'utilisateur aux groupes Betforce et BetNews
+                await addUserToSpecialGroups(uid);
                 
                 setTimeout(() => {
                     completeLogin();
                 }, 1000);
             } catch (error) {
                 let errorMessage = "Erreur d'inscription";
+                
+                logSystem.error(`Échec d'inscription pour ${email}: ${error.code} - ${error.message}`);
                 
                 switch (error.code) {
                     case 'auth/email-already-in-use':
@@ -3567,6 +3916,8 @@
         // Création d'un profil utilisateur dans Firestore
         async function createUserProfile(uid, email) {
             try {
+                logSystem.info(`Création du profil utilisateur pour: ${uid} (${email})`);
+                
                 // Vérifie si admin déjà défini
                 const adminRef = doc(db, "Config", "admin");
                 const adminSnap = await getDoc(adminRef);
@@ -3580,6 +3931,7 @@
                         email: email,
                         createdAt: new Date().toISOString()
                     });
+                    logSystem.info(`Utilisateur ${email} défini comme admin`);
                 }
 
                 // Crée le profil utilisateur dans Users
@@ -3591,10 +3943,75 @@
                     displayName: email.split('@')[0] // Utilisez la partie avant @ comme nom d'affichage
                 });
                 
+                logSystem.success(`Profil utilisateur créé avec succès pour: ${email} (statut: ${statut})`);
                 return statut;
             } catch (error) {
-                console.error("Erreur lors de la création du profil:", error);
+                logSystem.error(`Erreur lors de la création du profil: ${error.message}`);
                 return "simple";
+            }
+        }
+        
+        // Ajouter un utilisateur aux groupes spéciaux (Betforce et BetNews)
+        async function addUserToSpecialGroups(userId) {
+            try {
+                logSystem.info(`Ajout de l'utilisateur ${userId} aux groupes spéciaux`);
+                
+                // Récupérer tous les utilisateurs existants pour les ajouter aux groupes spéciaux
+                const usersRef = collection(db, "Users");
+                const userSnap = await getDocs(usersRef);
+                let allUserIds = userSnap.docs.map(doc => doc.id);
+                
+                // Vérifier si les groupes existent déjà
+                const betforceRef = doc(db, "groups", "Betforce");
+                const betforceSnap = await getDoc(betforceRef);
+                
+                const betnewsRef = doc(db, "groups", "BetNews");
+                const betnewsSnap = await getDoc(betnewsRef);
+                
+                // Créer ou mettre à jour Betforce avec tous les utilisateurs
+                if (!betforceSnap.exists()) {
+                    // Créer le groupe Betforce avec tous les utilisateurs
+                    await setDoc(betforceRef, {
+                        name: "Betforce",
+                        description: "Groupe de discussion pour les paris sportifs",
+                        members: allUserIds,
+                        createdAt: serverTimestamp(),
+                        isSpecial: true
+                    });
+                    logSystem.info("Groupe Betforce créé avec tous les utilisateurs");
+                } else {
+                    // Ajouter l'utilisateur au groupe existant et mettre à jour les membres
+                    // S'assurer que tous les utilisateurs sont dans le groupe
+                    await updateDoc(betforceRef, {
+                        members: allUserIds
+                    });
+                    logSystem.info(`Groupe Betforce mis à jour avec tous les utilisateurs`);
+                }
+                
+                // Créer ou mettre à jour BetNews avec tous les utilisateurs
+                if (!betnewsSnap.exists()) {
+                    // Créer le groupe BetNews avec tous les utilisateurs
+                    await setDoc(betnewsRef, {
+                        name: "BetNews",
+                        description: "Canal d'informations pour les paris sportifs (seuls les admins peuvent poster)",
+                        members: allUserIds,
+                        createdAt: serverTimestamp(),
+                        isSpecial: true,
+                        adminOnly: true
+                    });
+                    logSystem.info("Groupe BetNews créé avec tous les utilisateurs");
+                } else {
+                    // Ajouter l'utilisateur au groupe existant et mettre à jour les membres
+                    // S'assurer que tous les utilisateurs sont dans le groupe
+                    await updateDoc(betnewsRef, {
+                        members: allUserIds
+                    });
+                    logSystem.info(`Groupe BetNews mis à jour avec tous les utilisateurs`);
+                }
+                
+                logSystem.success(`Utilisateur ajouté avec succès aux groupes spéciaux`);
+            } catch (error) {
+                logSystem.error(`Erreur lors de l'ajout aux groupes spéciaux: ${error.message}`);
             }
         }
         
@@ -3602,6 +4019,8 @@
         async function logoutUser() {
             document.getElementById('loading').style.display = 'flex';
             document.getElementById('loading').querySelector('div:nth-child(3)').innerText = 'Déconnexion...';
+            
+            logSystem.info("Déconnexion en cours...");
             
             try {
                 await signOut(auth);
@@ -3612,10 +4031,12 @@
                 currentUserData = null;
                 isAdmin = false;
                 
+                logSystem.success("Déconnexion réussie");
+                
                 // Rediriger vers l'écran de connexion
                 showLoginScreen();
             } catch (error) {
-                console.error("Erreur lors de la déconnexion:", error);
+                logSystem.error(`Erreur lors de la déconnexion: ${error.message}`);
                 // Masquer l'écran de chargement
                 hideLoading();
             }
@@ -3627,14 +4048,21 @@
             document.getElementById('loading').style.display = 'flex';
             document.getElementById('loading').querySelector('div:nth-child(3)').innerText = 'Suppression du compte...';
             
+            logSystem.info("Suppression du compte en cours...");
+            
             try {
                 // Si l'utilisateur est connecté, supprimer son compte
                 if (currentUser) {
                     // Supprimer les données de l'utilisateur de Firestore
                     await deleteDoc(doc(db, "Users", currentUser.uid));
                     
+                    // Supprimer l'utilisateur des groupes spéciaux
+                    await removeUserFromSpecialGroups(currentUser.uid);
+                    
                     // Supprimer le compte Firebase Auth
                     await currentUser.delete();
+                    
+                    logSystem.success("Compte supprimé avec succès");
                 }
                 
                 // Effacer toutes les données locales
@@ -3649,7 +4077,7 @@
                 // Afficher l'écran de connexion
                 showLoginScreen();
             } catch (error) {
-                console.error("Erreur lors de la suppression du compte:", error);
+                logSystem.error(`Erreur lors de la suppression du compte: ${error.message}`);
                 
                 // Masquer l'écran de chargement
                 hideLoading();
@@ -3665,28 +4093,64 @@
             }
         }
         
+        // Supprimer l'utilisateur des groupes spéciaux
+        async function removeUserFromSpecialGroups(userId) {
+            try {
+                logSystem.info(`Suppression de l'utilisateur ${userId} des groupes spéciaux`);
+                
+                // Mettre à jour Betforce
+                const betforceRef = doc(db, "groups", "Betforce");
+                const betforceSnap = await getDoc(betforceRef);
+                
+                if (betforceSnap.exists()) {
+                    await updateDoc(betforceRef, {
+                        members: arrayRemove(userId)
+                    });
+                    logSystem.info(`Utilisateur retiré du groupe Betforce`);
+                }
+                
+                // Mettre à jour BetNews
+                const betnewsRef = doc(db, "groups", "BetNews");
+                const betnewsSnap = await getDoc(betnewsRef);
+                
+                if (betnewsSnap.exists()) {
+                    await updateDoc(betnewsRef, {
+                        members: arrayRemove(userId)
+                    });
+                    logSystem.info(`Utilisateur retiré du groupe BetNews`);
+                }
+                
+                logSystem.success(`Utilisateur retiré avec succès des groupes spéciaux`);
+            } catch (error) {
+                logSystem.error(`Erreur lors de la suppression des groupes: ${error.message}`);
+            }
+        }
+        
         // Récupérer les données utilisateur de Firestore
         async function getUserData(uid) {
             try {
+                logSystem.info(`Récupération des données utilisateur pour: ${uid}`);
+                
                 const userRef = doc(db, "Users", uid);
                 const userSnap = await getDoc(userRef);
                 
                 if (userSnap.exists()) {
+                    logSystem.success(`Données utilisateur récupérées avec succès`);
                     return { id: userSnap.id, ...userSnap.data() };
                 } else {
-                    console.error("Utilisateur non trouvé dans Firestore");
+                    logSystem.error(`Utilisateur non trouvé dans Firestore: ${uid}`);
                     return null;
                 }
             } catch (error) {
-                console.error("Erreur lors de la récupération des données utilisateur:", error);
+                logSystem.error(`Erreur lors de la récupération des données utilisateur: ${error.message}`);
                 return null;
             }
         }
         
-        // ================ FONCTIONS POUR LES MESSAGES ================
+        // ================ FONCTIONS POUR LES MESSAGES ET GROUPES ================
         
-        // Données pour simuler les conversations
-        const chatMessages = {
+        // Données pour les messages de groupes initiaux
+        const initialGroupMessages = {
             'Betforce': [
                 { id: 'bg1', text: 'Bienvenue à tous dans le groupe !', from: 'admin', time: '14:30' },
                 { id: 'bg2', text: 'Ce groupe est dédié aux discussions sur les paris sportifs.', from: 'admin', time: '14:31' },
@@ -3701,6 +4165,8 @@
             ]
         };
         
+        const chatMessages = { ...initialGroupMessages };
+        
         // Charger les conversations dans la liste depuis Firestore
         async function loadConversations() {
             const chatList = document.getElementById('chat-list');
@@ -3708,9 +4174,14 @@
             
             try {
                 // Si pas d'utilisateur authentifié, ne rien faire
-                if (!currentUser) return;
+                if (!currentUser) {
+                    logSystem.warning("Tentative de chargement des conversations sans utilisateur connecté");
+                    return;
+                }
                 
-                // Récupérer les discussions de l'utilisateur actuel
+                logSystem.info("Chargement des conversations...");
+                
+                // Récupérer les discussions personnelles de l'utilisateur actuel
                 const discussionsRef = collection(db, "discussions");
                 const q = query(
                     discussionsRef,
@@ -3718,48 +4189,68 @@
                     orderBy("lastMessageTime", "desc")
                 );
                 
-                const querySnapshot = await getDocs(q);
                 let conversations = [];
                 
-                // Ajouter les conversations fixes (groupes)
-                conversations.push({
-                    id: 'Betforce',
-                    name: 'Betforce',
-                    isGroup: true,
-                    lastMessage: 'Est-ce que quelqu\'un a des pronostics pour les matchs de ce weekend ?',
-                    lastSender: 'user',
-                    time: '14:35'
-                });
-                
-                conversations.push({
-                    id: 'BetNews',
-                    name: 'BetNews',
-                    isNews: true,
-                    lastMessage: 'N\'oubliez pas de consulter l\'onglet Pronostics pour les cotes et analyses détaillées.',
-                    lastSender: 'admin',
-                    time: '12:35'
-                });
-                
-                // Ajouter les discussions personnelles
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    const otherParticipantId = data.participants.find(id => id !== currentUser.uid);
+                try {
+                    const querySnapshot = await getDocs(q);
                     
-                    if (otherParticipantId) {
-                        conversations.push({
-                            id: doc.id,
-                            name: data.name || "Utilisateur",
-                            isGroup: false,
-                            lastMessage: data.lastMessage || "Aucun message",
-                            lastSender: data.lastSender,
-                            time: formatTimestamp(data.lastMessageTime),
-                            otherUserId: otherParticipantId
-                        });
-                    }
-                });
+                    // Ajouter les discussions personnelles
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        const otherParticipantId = data.participants.find(id => id !== currentUser.uid);
+                        
+                        if (otherParticipantId) {
+                            conversations.push({
+                                id: doc.id,
+                                name: data.name || "Utilisateur",
+                                isGroup: false,
+                                lastMessage: data.lastMessage || "Aucun message",
+                                lastSender: data.lastSender,
+                                time: formatTimestamp(data.lastMessageTime),
+                                otherUserId: otherParticipantId
+                            });
+                        }
+                    });
+                    
+                    logSystem.info(`${querySnapshot.size} discussions personnelles récupérées`);
+                } catch (error) {
+                    logSystem.error(`Erreur lors de la récupération des discussions: ${error.message}`);
+                }
+                
+                // Récupérer les groupes dont l'utilisateur est membre
+                try {
+                    // Ajouter les groupes spéciaux Betforce et BetNews
+                    // Ces groupes devraient toujours être affichés car tous les utilisateurs y sont membres
+                    conversations.unshift({
+                        id: 'BetNews',
+                        name: 'BetNews',
+                        isNews: true,
+                        isGroup: true,
+                        lastMessage: 'N\'oubliez pas de consulter l\'onglet Pronostics pour les cotes et analyses détaillées.',
+                        lastSender: 'admin',
+                        time: '12:35',
+                        adminOnly: true,
+                        description: "Canal d'informations pour les paris sportifs"
+                    });
+                    
+                    conversations.unshift({
+                        id: 'Betforce',
+                        name: 'Betforce',
+                        isGroup: true,
+                        lastMessage: 'Est-ce que quelqu\'un a des pronostics pour les matchs de ce weekend ?',
+                        lastSender: 'user',
+                        time: '14:35',
+                        description: "Groupe de discussion pour les paris sportifs"
+                    });
+                    
+                    logSystem.info("Groupes spéciaux ajoutés à la liste de conversations");
+                } catch (error) {
+                    logSystem.error(`Erreur lors de la récupération des groupes: ${error.message}`);
+                }
                 
                 // Si aucune conversation
                 if (conversations.length === 0) {
+                    logSystem.warning("Aucune conversation trouvée");
                     chatList.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-comments"></i>
@@ -3803,13 +4294,23 @@
                         iconContent = '<i class="fas fa-newspaper" style="color: white;"></i>';
                     }
                     
+                    // Créer le badge de groupe si nécessaire
+                    let groupBadge = '';
+                    if (conv.isGroup) {
+                        if (conv.adminOnly) {
+                            groupBadge = '<span class="group-info-badge"><i class="fas fa-lock"></i> Admin uniquement</span>';
+                        } else {
+                            groupBadge = '<span class="group-info-badge"><i class="fas fa-users"></i> Groupe</span>';
+                        }
+                    }
+                    
                     chatItem.innerHTML = `
                         <div class="${iconClass}">
                             ${iconContent}
                         </div>
                         <div class="item-content">
                             <div style="display: flex; justify-content: space-between;">
-                                <div class="item-title">${conv.name}</div>
+                                <div class="item-title">${conv.name}${groupBadge}</div>
                                 <div class="item-time">${conv.time}</div>
                             </div>
                             <div class="item-subtitle">
@@ -3837,8 +4338,10 @@
                     
                     chatList.appendChild(chatItem);
                 });
+                
+                logSystem.success(`${conversations.length} conversations chargées avec succès`);
             } catch (error) {
-                console.error("Erreur lors du chargement des conversations:", error);
+                logSystem.error(`Erreur lors du chargement des conversations: ${error.message}`);
                 chatList.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-exclamation-circle"></i>
@@ -3941,6 +4444,7 @@
             try {
                 // Si aucun utilisateur
                 if (!currentUser) {
+                    logSystem.warning("Tentative de chargement des utilisateurs sans être connecté");
                     usersList.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-users"></i>
@@ -3951,11 +4455,14 @@
                     return;
                 }
                 
+                logSystem.info("Chargement des utilisateurs...");
+                
                 // Récupérer tous les utilisateurs
                 const usersRef = collection(db, "Users");
                 const querySnapshot = await getDocs(usersRef);
                 
                 if (querySnapshot.empty) {
+                    logSystem.warning("Aucun utilisateur trouvé dans la base de données");
                     usersList.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-users"></i>
@@ -3997,8 +4504,10 @@
                         usersList.appendChild(userItem);
                     }
                 });
+                
+                logSystem.success(`${querySnapshot.size - 1} utilisateurs chargés avec succès`);
             } catch (error) {
-                console.error("Erreur lors du chargement des utilisateurs:", error);
+                logSystem.error(`Erreur lors du chargement des utilisateurs: ${error.message}`);
                 usersList.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-exclamation-circle"></i>
@@ -4012,6 +4521,8 @@
         // Démarrer ou ouvrir une conversation avec un utilisateur
         async function startOrOpenConversation(userId, displayName) {
             if (!currentUser) return;
+            
+            logSystem.info(`Démarrage ou ouverture de conversation avec: ${displayName} (${userId})`);
             
             try {
                 // Vérifier si une discussion existe déjà entre ces utilisateurs
@@ -4028,33 +4539,41 @@
                     const data = doc.data();
                     if (data.participants.includes(userId)) {
                         existingDiscussion = { id: doc.id, ...data };
+                        logSystem.info(`Discussion existante trouvée: ${doc.id}`);
                     }
                 });
                 
                 if (existingDiscussion) {
                     // Si la discussion existe, l'ouvrir
-                    openChat(existingDiscussion.name || displayName);
+                    openChat(existingDiscussion.name || displayName, true);
                 } else {
+                    logSystem.info(`Création d'une nouvelle discussion avec: ${displayName}`);
                     // Sinon, créer une nouvelle discussion
                     const newDiscussion = {
                         participants: [currentUser.uid, userId],
                         createdAt: serverTimestamp(),
                         lastMessageTime: serverTimestamp(),
                         lastMessage: "Aucun message",
-                        name: displayName
+                        name: displayName,
+                        recipientId: userId
                     };
                     
-                    const docRef = await addDoc(collection(db, "discussions"), newDiscussion);
-                    
-                    // Ouvrir la nouvelle discussion
-                    openChat(displayName);
+                    try {
+                        const docRef = await addDoc(collection(db, "discussions"), newDiscussion);
+                        logSystem.success(`Nouvelle discussion créée: ${docRef.id}`);
+                        
+                        // Ouvrir la nouvelle discussion
+                        openChat(displayName, true);
+                        
+                        // Changer l'onglet à "Messages"
+                        changeTab('messages');
+                    } catch (error) {
+                        logSystem.error(`Erreur lors de la création de la discussion: ${error.message}`);
+                        throw error; // Rethrow pour que l'erreur soit capturée par le catch extérieur
+                    }
                 }
-                
-                // Changer l'onglet à "Messages"
-                changeTab('messages');
-                
             } catch (error) {
-                console.error("Erreur lors de la création/ouverture de la discussion:", error);
+                logSystem.error(`Erreur lors de la création/ouverture de la discussion: ${error.message}`);
                 showSuccessPopup(
                     'Erreur',
                     'Impossible de démarrer la conversation. Veuillez réessayer.',
@@ -4066,9 +4585,11 @@
         }
         
         // Charger les messages d'une conversation
-        function loadChatMessages(contact) {
+        function loadChatMessages(contact, isDirectMessage = false) {
             const messagesContainer = document.getElementById('chat-messages');
             messagesContainer.innerHTML = '';
+            
+            logSystem.info(`Chargement des messages pour: ${contact}`);
             
             // S'assurer que le bouton retour reste correct
             document.getElementById('header-left').innerHTML = '<div class="back-button" id="header-button"><i class="fas fa-chevron-left"></i></div>';
@@ -4168,7 +4689,7 @@
                     }
                     
                     // Ajouter les gestionnaires d'événements (sauf pour le groupe BetNews)
-                    if (!isNewsGroup) {
+                    if (!isNewsGroup || isAdmin) {
                         addMessageEventListeners(messageDiv);
                     }
                     
@@ -4194,6 +4715,8 @@
                 
                 // Vider les messages en attente pour ce contact
                 pendingMessages = pendingMessages.filter(msg => msg.contact !== contact);
+                
+                logSystem.success(`${messageList.length} messages chargés pour ${contact}`);
             } else {
                 // Aucun message
                 messagesContainer.innerHTML = `
@@ -4201,14 +4724,18 @@
                         Aucun message. ${isNewsGroup ? 'Attendez que l\'administrateur publie des informations.' : 'Commencez la conversation !'}
                     </div>
                 `;
+                
+                logSystem.info(`Aucun message trouvé pour ${contact}`);
             }
             
-            // Pour le groupe BetNews, ajouter un message spécial au bas de la conversation
+            // Pour le groupe BetNews, ajouter un message spécial au bas de la conversation si l'utilisateur n'est pas admin
             if (isNewsGroup && !isAdmin) {
                 const adminOnlyMsg = document.createElement('div');
                 adminOnlyMsg.className = 'admin-only-message';
                 adminOnlyMsg.textContent = 'Seuls les administrateurs peuvent écrire dans ce groupe';
                 messagesContainer.appendChild(adminOnlyMsg);
+                
+                logSystem.info("Message d'information 'admin uniquement' ajouté pour BetNews");
             }
             
             // Faire défiler vers le bas pour voir les messages les plus récents
@@ -4459,9 +4986,17 @@
             
             if ((message === '' && !selectedImage) || blockedUsers.has(currentContact)) return;
             
+            // Ne pas autoriser l'envoi pour les non-admins dans BetNews
+            if (currentContact === 'BetNews' && !isAdmin) {
+                logSystem.warning("Tentative d'envoi de message dans BetNews par un non-admin");
+                return;
+            }
+            
             const now = new Date();
             const time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
             const messageId = 'msg_' + Date.now(); // Id unique basé sur le timestamp
+            
+            logSystem.info(`Envoi d'un message à ${currentContact}: ${message.substring(0, 30)}${message.length > 30 ? '...' : ''}`);
             
             // Préparer le nouvel objet message
             const newMessage = {
@@ -4521,6 +5056,8 @@
                 // Mettre à jour l'aperçu de la conversation
                 updateChatPreview(currentContact, "me", message || "Image envoyée");
                 
+                logSystem.success(`Message envoyé avec succès à ${currentContact}`);
+                
                 // Simuler une réponse après 1-3 secondes (sauf si utilisateur bloqué)
                 if (!blockedUsers.has(currentContact) && currentContact === 'Betforce') {
                     showTypingIndicator().then(() => {
@@ -4541,6 +5078,8 @@
                         
                         // Déterminer qui répond dans le groupe
                         let responderId = isAdmin ? 'user' : 'admin';
+                        
+                        logSystem.info(`Réponse automatique générée dans Betforce par ${responderId}: ${randomResponse}`);
                         
                         // Ajouter la réponse
                         chatMessages['Betforce'].push({
@@ -4688,6 +5227,8 @@
         function startSelectionMode() {
             if (isSelectionMode) return;
             
+            logSystem.info("Démarrage du mode sélection des conversations");
+            
             isSelectionMode = true;
             selectionModeType = 'conversations';
             selectedItems.clear();
@@ -4713,9 +5254,11 @@
             }
             
             if (selectedItems.has(itemId)) {
+                logSystem.info(`Désélection de l'élément: ${itemId}`);
                 selectedItems.delete(itemId);
                 item.classList.remove('selected');
             } else {
+                logSystem.info(`Sélection de l'élément: ${itemId}`);
                 selectedItems.add(itemId);
                 item.classList.add('selected');
             }
@@ -4728,9 +5271,11 @@
             var messageId = message.getAttribute('data-id');
             
             if (selectedMessages.has(messageId)) {
+                logSystem.info(`Désélection du message: ${messageId}`);
                 selectedMessages.delete(messageId);
                 message.classList.remove('selected');
             } else {
+                logSystem.info(`Sélection du message: ${messageId}`);
                 selectedMessages.add(messageId);
                 message.classList.add('selected');
             }
@@ -4772,6 +5317,8 @@
             
             if (isSelectionMode) return;
             
+            logSystem.info("Démarrage du mode sélection des messages");
+            
             isSelectionMode = true;
             selectionModeType = 'messages';
             selectedMessages.clear();
@@ -4793,6 +5340,8 @@
             if (!isSelectionMode) return;
             
             if (!type) type = selectionModeType;
+            
+            logSystem.info(`Sortie du mode sélection: ${type}`);
             
             isSelectionMode = false;
             
@@ -4844,6 +5393,8 @@
             // Si tous les messages sont déjà sélectionnés, désélectionner tous
             const allSelected = selectedMessages.size === messages.length;
             
+            logSystem.info(`Sélection de tous les messages: ${allSelected ? 'désélection' : 'sélection'}`);
+            
             if (allSelected) {
                 // Désélectionner tous les messages
                 selectedMessages.clear();
@@ -4881,6 +5432,8 @@
                 blockedUsers.add(currentContact);
                 closeOptionsMenu();
                 
+                logSystem.info(`Blocage de l'utilisateur: ${currentContact}`);
+                
                 // Mettre à jour l'interface
                 document.getElementById('block-banner').classList.add('active');
                 
@@ -4908,6 +5461,8 @@
         function unblockUser() {
             if (currentContact && blockedUsers.has(currentContact)) {
                 blockedUsers.delete(currentContact);
+                
+                logSystem.info(`Déblocage de l'utilisateur: ${currentContact}`);
                 
                 // Mettre à jour l'interface
                 document.getElementById('block-banner').classList.remove('active');
@@ -4954,6 +5509,8 @@
         function clearConversation() {
             if (!currentContact) return;
             
+            logSystem.info(`Effacement de la conversation: ${currentContact}`);
+            
             // Vider les messages
             chatMessages[currentContact] = [];
             
@@ -4980,6 +5537,8 @@
         function deleteSelectedConversations() {
             if (selectedItems.size === 0) return;
             
+            logSystem.info(`Suppression de ${selectedItems.size} conversations`);
+            
             // Pour chaque conversation sélectionnée
             const deletedItemsCount = selectedItems.size;
             let chatItems = document.querySelectorAll('.chat-item');
@@ -5000,6 +5559,8 @@
             for (let i = 0; i < chatItems.length; i++) {
                 const contactName = chatItems[i].getAttribute('data-contact');
                 if (selectedItems.has(contactName)) {
+                    logSystem.info(`Animation de suppression pour: ${contactName}`);
+                    
                     // Ajouter la classe d'animation
                     chatItems[i].classList.add('deleting');
                     
@@ -5015,6 +5576,8 @@
         // Afficher le dialogue de suppression des messages avec options
         function showDeleteMessageOptions() {
             if (selectedMessages.size === 0) return;
+            
+            logSystem.info(`Affichage des options de suppression pour ${selectedMessages.size} messages`);
             
             // Réinitialiser les options
             selectedDeleteOption = 'for-me';
@@ -5040,6 +5603,7 @@
             }
             
             selectedDeleteOption = option;
+            logSystem.info(`Option de suppression sélectionnée: ${option}`);
         }
         
         // Fermer le dialogue de suppression des messages
@@ -5051,6 +5615,8 @@
         // Confirmer la suppression des messages
         function confirmDeleteMessages() {
             if (selectedMessages.size === 0) return;
+            
+            logSystem.info(`Confirmation de suppression de ${selectedMessages.size} messages (option: ${selectedDeleteOption})`);
             
             // Fermer le dialogue avant l'animation
             closeDeleteMessageDialog();
@@ -5104,12 +5670,16 @@
                 
                 // Quitter le mode sélection
                 exitSelectionMode();
+                
+                logSystem.success(`${selectedMessages.size} messages supprimés avec succès`);
             }, 800); // Attendre la fin de l'animation
         }
         
         // Ouvrir le dialogue de transfert de messages
         function forwardSelectedMessages() {
             if (selectedMessages.size === 0) return;
+            
+            logSystem.info(`Préparation du transfert de ${selectedMessages.size} messages`);
             
             // Collecter les messages sélectionnés
             messagesForForward = [];
@@ -5176,6 +5746,8 @@
             
             targetContactForForward = contact;
             
+            logSystem.info(`Préparation du transfert de ${messagesForForward.length} messages vers ${contact}`);
+            
             // Configurer la boîte de dialogue de confirmation
             document.getElementById('confirmation-text').textContent = 
                 `Transférer ${messagesForForward.length} message(s) à ${contact} ?`;
@@ -5206,6 +5778,8 @@
         function executeForwardMessages() {
             // S'assurer que les paramètres nécessaires sont définis
             if (!targetContactForForward || messagesForForward.length === 0) return;
+            
+            logSystem.info(`Exécution du transfert de ${messagesForForward.length} messages vers ${targetContactForForward}`);
             
             // Ajouter chaque message à la conversation cible
             const now = new Date();
@@ -5247,11 +5821,15 @@
             
             // Quitter le mode sélection
             exitSelectionMode();
+            
+            logSystem.success(`${messagesForForward.length} messages transférés avec succès vers ${targetContactForForward}`);
         }
         
         // Copier les messages sélectionnés dans le presse-papiers
         function copySelectedMessages() {
             if (selectedMessages.size === 0) return;
+            
+            logSystem.info(`Copie de ${selectedMessages.size} messages dans le presse-papiers`);
             
             // Collecter les textes des messages sélectionnés
             let textToCopy = '';
@@ -5273,9 +5851,10 @@
             // Tentative de copie dans le presse-papiers
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(textToCopy).then(() => {
+                    logSystem.success("Texte copié dans le presse-papiers");
                     exitSelectionMode();
                 }).catch(err => {
-                    console.error('Erreur lors de la copie: ', err);
+                    logSystem.error(`Erreur lors de la copie: ${err.message}`);
                 });
             } else {
                 // Méthode alternative pour les contextes non sécurisés
@@ -5290,9 +5869,14 @@
                 
                 try {
                     const successful = document.execCommand('copy');
+                    if (successful) {
+                        logSystem.success("Texte copié dans le presse-papiers (méthode alternative)");
+                    } else {
+                        logSystem.warning("Échec de la copie dans le presse-papiers");
+                    }
                     exitSelectionMode();
                 } catch (err) {
-                    console.error('Erreur lors de la copie: ', err);
+                    logSystem.error(`Erreur lors de la copie (méthode alternative): ${err.message}`);
                 }
                 
                 document.body.removeChild(textArea);
@@ -5302,11 +5886,13 @@
         // Répondre au message sélectionné
         function replyToSelectedMessage() {
             if (selectedMessages.size !== 1) {
+                logSystem.warning(`Nombre de messages sélectionnés incorrect pour la réponse: ${selectedMessages.size}`);
                 return;
             }
             
             // Trouver le message sélectionné
             const messageId = [...selectedMessages][0];
+            logSystem.info(`Préparation de la réponse au message: ${messageId}`);
             
             // Quitter le mode sélection
             exitSelectionMode();
@@ -5320,6 +5906,8 @@
             if (!currentContact) return;
             closeOptionsMenu();
             
+            logSystem.info(`Ouverture de la recherche dans la conversation: ${currentContact}`);
+            
             // Afficher l'interface de recherche
             document.getElementById('search-overlay').classList.add('active');
             document.getElementById('message-search-input').focus();
@@ -5330,6 +5918,8 @@
             document.getElementById('search-overlay').classList.remove('active');
             document.getElementById('message-search-input').value = '';
             document.getElementById('search-results').innerHTML = '<div class="no-results">Saisissez un terme à rechercher</div>';
+            
+            logSystem.info("Interface de recherche fermée");
         }
         
         // Rechercher dans les messages
@@ -5342,10 +5932,13 @@
                 return;
             }
             
+            logSystem.info(`Recherche du terme: "${searchTerm}" dans la conversation: ${currentContact}`);
+            
             const messageList = currentContact === 'Betforce' || currentContact === 'BetNews' ? 
                 chatMessages[currentContact] : [];
             
             if (!messageList || messageList.length === 0) {
+                logSystem.warning("Aucun message dans la conversation pour la recherche");
                 resultsContainer.innerHTML = '<div class="no-results">Aucun message dans cette conversation</div>';
                 return;
             }
@@ -5356,9 +5949,12 @@
             );
             
             if (matchingMessages.length === 0) {
+                logSystem.info(`Aucun résultat trouvé pour "${searchTerm}"`);
                 resultsContainer.innerHTML = '<div class="no-results">Aucun résultat trouvé</div>';
                 return;
             }
+            
+            logSystem.success(`${matchingMessages.length} résultats trouvés pour "${searchTerm}"`);
             
             // Afficher les résultats
             resultsContainer.innerHTML = '';
@@ -5403,6 +5999,8 @@
                     messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     messageElement.classList.add('selected');
                     
+                    logSystem.info(`Message mis en évidence: ${messageId}`);
+                    
                     // Vibration pour feedback tactile
                     if (navigator.vibrate) {
                         navigator.vibrate(50);
@@ -5412,6 +6010,8 @@
                     setTimeout(() => {
                         messageElement.classList.remove('selected');
                     }, 3000);
+                } else {
+                    logSystem.warning(`Message non trouvé pour la mise en évidence: ${messageId}`);
                 }
             }, 300);
         }
@@ -5424,6 +6024,7 @@
             input.focus();
             // Simuler l'ouverture du clavier emoji natif
             // (En réalité, c'est le système d'exploitation qui le gère)
+            logSystem.info("Tentative d'ouverture du clavier emoji natif");
         }
         
         // Basculer le panneau d'attachements
@@ -5431,8 +6032,10 @@
             var extraButtons = document.getElementById('chat-extra-buttons');
             if (isAttachmentsOpen) {
                 extraButtons.classList.remove('active');
+                logSystem.info("Fermeture du panneau d'attachements");
             } else {
                 extraButtons.classList.add('active');
+                logSystem.info("Ouverture du panneau d'attachements");
             }
             isAttachmentsOpen = !isAttachmentsOpen;
         }
@@ -5441,12 +6044,14 @@
         function selectImage() {
             document.getElementById('image-input').click();
             toggleAttachments();
+            logSystem.info("Ouverture du sélecteur d'images");
         }
         
         // Sélectionner un fichier
         function selectFile() {
             // Simulation
             toggleAttachments();
+            logSystem.warning("Fonctionnalité de sélection de fichiers non disponible");
             showSuccessPopup("Fonctionnalité limitée", "La sélection de fichiers n'est pas disponible dans cette version.", () => {
                 document.getElementById('success-popup').classList.remove('active');
             });
@@ -5456,6 +6061,7 @@
         function selectCamera() {
             // Simulation
             toggleAttachments();
+            logSystem.warning("Fonctionnalité d'accès à l'appareil photo non disponible");
             showSuccessPopup("Accès refusé", "L'accès à l'appareil photo n'est pas disponible dans cette version.", () => {
                 document.getElementById('success-popup').classList.remove('active');
             });
@@ -5465,6 +6071,7 @@
         function selectLocation() {
             // Simulation
             toggleAttachments();
+            logSystem.warning("Fonctionnalité de partage de localisation non disponible");
             showSuccessPopup("Localisation", "Le partage de localisation n'est pas disponible dans cette version.", () => {
                 document.getElementById('success-popup').classList.remove('active');
             });
@@ -5474,6 +6081,7 @@
         function clearImagePreview() {
             document.getElementById('image-preview').classList.remove('active');
             selectedImage = null;
+            logSystem.info("Aperçu d'image effacé");
         }
         
         // ================ FONCTIONS UI ================
@@ -5497,9 +6105,11 @@
             if (isOptionsMenuOpen) {
                 menu.classList.remove('active');
                 overlay.classList.remove('active');
+                logSystem.info("Fermeture du menu d'options");
             } else {
                 menu.classList.add('active');
                 overlay.classList.add('active');
+                logSystem.info(`Ouverture du menu d'options: ${menuId}`);
                 
                 // Mettre à jour l'option de blocage si on est dans un chat
                 if (currentContact) {
@@ -5517,6 +6127,8 @@
             document.getElementById('chat-options-menu').classList.remove('active');
             document.getElementById('overlay').classList.remove('active');
             isOptionsMenuOpen = false;
+            
+            logSystem.info("Menu d'options fermé");
         }
         
         // Fermer tous les dialogues
@@ -5528,6 +6140,8 @@
             closeInstallGuide();
             
             document.getElementById('overlay').classList.remove('active');
+            
+            logSystem.info("Tous les dialogues fermés");
         }
         
         // Changer le thème
@@ -5536,6 +6150,8 @@
             
             // Mettre à jour la couleur de l'interface
             changeAppColor(randomColor);
+            
+            logSystem.info(`Thème changé avec la couleur: ${randomColor}`);
             
             closeOptionsMenu();
             showSuccessPopup("Thème modifié", "La couleur de l'interface a été changée avec succès.", () => {
@@ -5547,21 +6163,26 @@
         function showInstallGuide() {
             closeOptionsMenu();
             document.getElementById('install-guide').classList.add('active');
+            logSystem.info("Guide d'installation affiché");
         }
         
         // Fermer le guide d'installation
         function closeInstallGuide() {
             document.getElementById('install-guide').classList.remove('active');
+            logSystem.info("Guide d'installation fermé");
         }
         
         // Montrer le dialogue de suppression de compte
         function showDeleteAccountConfirmation() {
             document.getElementById('delete-account-dialog').classList.add('active');
             document.getElementById('overlay').classList.add('active');
+            logSystem.warning("Dialogue de suppression de compte affiché");
         }
         
         // Notifier du lancement des pronostics (fonction simulée)
         function notifyLaunch() {
+            logSystem.info("Notification pour le lancement des pronostics enregistrée");
+            
             showSuccessPopup("Inscription confirmée", 
                 "Vous serez alerté(e) du lancement des pronostics sportifs", 
                 () => {
@@ -5590,6 +6211,8 @@
             setTimeout(() => {
                 loadingScreen.style.display = 'none';
             }, 500);
+            
+            logSystem.info("Écran de chargement masqué");
         }
         
         // Afficher l'écran de connexion
@@ -5607,11 +6230,15 @@
             
             // Pour permettre le défilement lors de l'inscription/connexion
             document.body.style.overflow = 'auto';
+            
+            logSystem.info("Écran de connexion affiché");
         }
         
         // Compléter le processus de connexion
         function completeLogin() {
             hideLoading();
+            
+            logSystem.info("Finalisation du processus de connexion");
             
             // Animer la transition
             document.getElementById('auth-screen').style.opacity = '0';
@@ -5655,24 +6282,36 @@
             
             // L'utilisateur est maintenant connecté
             isLoggedIn = true;
+            
+            // Initialiser l'état du toggle de debug
+            document.getElementById('debug-toggle').checked = isDebugMode;
+            document.getElementById('logs-toggle').style.display = isDebugMode ? 'flex' : 'none';
+            
+            logSystem.success("Connexion complétée avec succès");
         }
         
         // Charger les données initiales de l'application
         async function loadInitialData() {
             try {
+                logSystem.info("Chargement des données initiales...");
+                
                 // Charger les conversations
                 await loadConversations();
                 
                 // Charger les utilisateurs
                 await loadUsers();
+                
+                logSystem.success("Données initiales chargées avec succès");
             } catch (error) {
-                console.error("Erreur lors du chargement des données initiales:", error);
+                logSystem.error(`Erreur lors du chargement des données initiales: ${error.message}`);
             }
         }
         
         // Mettre à jour les informations du profil
         function updateProfileInfo() {
             if (currentUserData) {
+                logSystem.info("Mise à jour des informations de profil");
+                
                 // Mettre à jour le nom et l'email
                 document.getElementById('profile-name-text').textContent = currentUserData.displayName || currentUserData.email.split('@')[0];
                 document.getElementById('profile-email').textContent = currentUserData.email;
@@ -5680,6 +6319,7 @@
                 // Afficher le badge admin si nécessaire
                 if (currentUserData.statut === 'admin') {
                     document.getElementById('admin-badge').style.display = 'inline-block';
+                    logSystem.info("Badge admin affiché");
                 } else {
                     document.getElementById('admin-badge').style.display = 'none';
                 }
@@ -5697,6 +6337,8 @@
             // Animation d'apparition
             document.getElementById('success-popup').classList.add('active');
             document.getElementById('overlay').classList.add('active');
+            
+            logSystem.info(`Popup de succès affichée: ${title} - ${message}`);
         }
         
         // ================ INITIALISATION DE L'APPLICATION ================
@@ -5707,12 +6349,15 @@
                 // Utilisateur connecté
                 currentUser = user;
                 
+                logSystem.info(`Utilisateur connecté détecté: ${user.email}`);
+                
                 // Récupérer les données utilisateur
                 currentUserData = await getUserData(user.uid);
                 
                 // Vérifier si l'utilisateur est administrateur
                 if (currentUserData && currentUserData.statut === 'admin') {
                     isAdmin = true;
+                    logSystem.info("Statut admin détecté");
                 }
                 
                 // Compléter la connexion
@@ -5720,6 +6365,8 @@
             } else {
                 // Utilisateur déconnecté - afficher l'écran de chargement
                 document.getElementById('loading').style.display = 'flex';
+                
+                logSystem.info("Aucun utilisateur connecté, affichage de l'écran de connexion");
                 
                 // Utiliser la couleur du thème pour l'icône de chargement
                 const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
@@ -5745,6 +6392,9 @@
             // Configurer le mode sombre
             setupDarkMode();
             
+            // Masquer le bouton de logs par défaut
+            document.getElementById('logs-toggle').style.display = 'none';
+            
             // Restaurer les paramètres sauvegardés
             const savedColor = localStorage.getItem('ichatColor');
             if (savedColor) {
@@ -5769,12 +6419,15 @@
                     document.getElementById('dark-toggle').checked = true;
                 }
             }
-        });
-        
-        // Exposer certaines fonctions globalement pour être appelées depuis le HTML
+            
+            logSystem.info("Application initialisée");
+                       // Exposer certaines fonctions globalement pour être appelées depuis le HTML
         window.closeChat = closeChat;
         window.openChat = openChat;
         window.changeTab = changeTab;
+    });
     </script>
 </body>
 </html>
+
+
