@@ -33,8 +33,7 @@
             --link-color: #007aff;
             --admin-badge-bg: #5D5CDE;
             --admin-badge-text: white;
-            --notification-chain-bg: #f0f2f5;
-            --notification-chain-border: #dddfe2;
+            --news-group-bg: #f5a623;
         }
         
         /* Mode sombre par défaut */
@@ -60,8 +59,7 @@
             --link-color: #2196F3;
             --admin-badge-bg: #7571F9;
             --admin-badge-text: white;
-            --notification-chain-bg: #2c2c2c;
-            --notification-chain-border: #3e4042;
+            --news-group-bg: #d48a1c;
         }
         
         /* Reset de base */
@@ -199,6 +197,17 @@
             align-items: center;
             justify-content: center;
             margin-right: 12px;
+        }
+
+        .news-group-pic {
+            width: 50px;
+            height: 50px;
+            background-color: var(--news-group-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px; 
         }
         
         .chat-item, .user-item {
@@ -725,68 +734,6 @@
             margin: 0 auto 30px auto;
         }
         
-        /* Chaîne de notifications */
-        .notification-chain {
-            background-color: var(--notification-chain-bg);
-            border: 1px solid var(--notification-chain-border);
-            border-radius: 10px;
-            margin: 10px;
-            padding: 15px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
-        .notification-item {
-            padding: 15px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: flex-start;
-        }
-        
-        .notification-item:last-child {
-            border-bottom: none;
-        }
-        
-        .notification-icon-container {
-            width: 36px;
-            height: 36px;
-            background-color: var(--secondary-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-        
-        .notification-content {
-            flex: 1;
-        }
-        
-        .notification-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .notification-text {
-            font-size: 14px;
-            color: #6b7280;
-            margin-bottom: 5px;
-        }
-        
-        .notification-time {
-            font-size: 12px;
-            color: #6b7280;
-        }
-        
-        .no-notifications {
-            padding: 30px 15px;
-            text-align: center;
-            color: #6b7280;
-        }
-
         /* Menu options */
         .options-menu {
             position: fixed;
@@ -1677,7 +1624,7 @@
             color: black;
             font-weight: bold;
         }
-        
+
         /* Installation guide dialog */
         .install-guide {
             position: fixed;
@@ -2378,6 +2325,45 @@
             margin-left: -10px;
             visibility: visible;
         }
+
+        /* Bouton X pour la sélection (nouveau) */
+        .select-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 5;
+            opacity: 0.7;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
+        }
+
+        .chat-item:hover .select-btn {
+            opacity: 1;
+        }
+
+        .select-btn:hover {
+            background-color: var(--primary-color);
+            color: black;
+        }
+
+        /* Style pour groupe "BetNews" où seul l'admin peut écrire */
+        .admin-only-message {
+            text-align: center;
+            color: var(--inactive-text);
+            padding: 10px;
+            font-style: italic;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -2645,46 +2631,6 @@
             <div class="search-container">
                 <input type="text" class="search-input" id="messages-search" placeholder="Rechercher">
             </div>
-
-            <!-- Chaîne de notifications -->
-            <div class="notification-chain" id="notification-chain">
-                <div class="notification-item">
-                    <div class="notification-icon-container">
-                        <i class="fas fa-bullhorn" style="color: var(--primary-color);"></i>
-                    </div>
-                    <div class="notification-content">
-                        <div class="notification-title">
-                            Administrateur <span class="admin-badge">Admin</span>
-                        </div>
-                        <div class="notification-text">Bienvenue sur iChat ! Notre nouvelle application de messagerie sécurisée.</div>
-                        <div class="notification-time">Il y a 3 jours</div>
-                    </div>
-                </div>
-                <div class="notification-item">
-                    <div class="notification-icon-container">
-                        <i class="fas fa-bullhorn" style="color: var(--primary-color);"></i>
-                    </div>
-                    <div class="notification-content">
-                        <div class="notification-title">
-                            Administrateur <span class="admin-badge">Admin</span>
-                        </div>
-                        <div class="notification-text">Tous vos messages sont désormais chiffrés et sécurisés. Profitez d'une expérience de messagerie privée !</div>
-                        <div class="notification-time">Il y a 2 jours</div>
-                    </div>
-                </div>
-                <div class="notification-item">
-                    <div class="notification-icon-container">
-                        <i class="fas fa-bullhorn" style="color: var(--primary-color);"></i>
-                    </div>
-                    <div class="notification-content">
-                        <div class="notification-title">
-                            Administrateur <span class="admin-badge">Admin</span>
-                        </div>
-                        <div class="notification-text">Une mise à jour importante sera déployée demain. Restez connectés !</div>
-                        <div class="notification-time">Hier</div>
-                    </div>
-                </div>
-            </div>
             
             <div class="chat-list" id="chat-list">
                 <div class="empty-state">
@@ -2793,13 +2739,12 @@
                             <li>Messagerie instantanée</li>
                             <li>Partage de photos</li>
                             <li>Groupes de discussion</li>
-                            <li>Notifications administrateur</li>
                             <li>Mode sombre</li>
                             <li>Verrouillage par code PIN</li>
                         </ul>
                     </div>
                     
-                    <div class="about-version">Version 2.2.0</div>
+                    <div class="about-version">Version 2.3.0</div>
                 </div>
                 
                 <button id="logout-btn" class="button">Se déconnecter</button>
@@ -2837,7 +2782,7 @@
                 </div>
             </div>
         </div>
-        <div class="chat-input-container">
+        <div class="chat-input-container" id="chat-input-container">
             <div class="input-icon" id="emoji-button">
                 <i class="far fa-smile"></i>
             </div>
@@ -3251,18 +3196,7 @@
             
             // Événements pour les paramètres
             document.getElementById('color-picker').addEventListener('input', function(e) {
-                document.documentElement.style.setProperty('--primary-color', e.target.value);
-                
-                // Mettre à jour l'icône de loading
-                const footballSpinner = document.querySelector('.football-spinner');
-                if (footballSpinner) {
-                    footballSpinner.style.color = e.target.value;
-                }
-                
-                // En mode sombre, mettre à jour la couleur des messages envoyés
-                if (document.documentElement.classList.contains('dark')) {
-                    document.documentElement.style.setProperty('--chat-sent-bg', e.target.value);
-                }
+                changeAppColor(e.target.value);
             });
             
             document.getElementById('dark-toggle').addEventListener('change', function() {
@@ -3275,6 +3209,9 @@
                     // En mode clair, la couleur du message est violette
                     document.documentElement.style.setProperty('--chat-sent-bg', '#5D5CDE');
                 }
+                
+                // Sauvegarder la préférence
+                localStorage.setItem('ichatDarkMode', this.checked ? 'true' : 'false');
             });
             
             document.getElementById('pin-toggle').addEventListener('change', setupPinCode);
@@ -3290,6 +3227,25 @@
             
             // Pronostics
             document.getElementById('notify-launch-button').addEventListener('click', notifyLaunch);
+        }
+        
+        // Changer la couleur de l'application et la sauvegarder
+        function changeAppColor(color) {
+            document.documentElement.style.setProperty('--primary-color', color);
+            
+            // Mettre à jour l'icône de loading
+            const footballSpinner = document.querySelector('.football-spinner');
+            if (footballSpinner) {
+                footballSpinner.style.color = color;
+            }
+            
+            // En mode sombre, mettre à jour la couleur des messages envoyés
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.style.setProperty('--chat-sent-bg', color);
+            }
+            
+            // Sauvegarder la préférence
+            localStorage.setItem('ichatColor', color);
         }
         
         // ================ CONFIGURATION DES ÉVÉNEMENTS D'AUTHENTIFICATION ================
@@ -3483,6 +3439,27 @@
                 document.getElementById('block-banner').classList.add('active');
             } else {
                 document.getElementById('block-banner').classList.remove('active');
+            }
+            
+            // Vérifier si c'est le groupe BetNews (seul l'admin peut écrire)
+            if (contact === 'BetNews') {
+                if (isAdmin) {
+                    // Montrer la barre de saisie pour l'admin
+                    document.getElementById('chat-input-container').style.display = 'flex';
+                } else {
+                    // Cacher la barre de saisie pour les utilisateurs non-admin
+                    document.getElementById('chat-input-container').style.display = 'none';
+                    
+                    // Ajouter un message spécial au bas de la conversation
+                    const messagesContainer = document.getElementById('chat-messages');
+                    const adminOnlyMsg = document.createElement('div');
+                    adminOnlyMsg.className = 'admin-only-message';
+                    adminOnlyMsg.textContent = 'Seuls les administrateurs peuvent écrire dans ce groupe';
+                    messagesContainer.appendChild(adminOnlyMsg);
+                }
+            } else {
+                // Pour les autres conversations, toujours montrer la barre de saisie
+                document.getElementById('chat-input-container').style.display = 'flex';
             }
             
             // Charger les messages
@@ -3789,10 +3766,10 @@
                 // Stocker les informations dans les variables globales
                 currentUser = userCredential.user;
                 
-                // Rediriger vers l'application après un court délai
+                // Afficher l'écran de configuration du PIN immédiatement après l'inscription
                 setTimeout(() => {
-                    completeLogin();
-                }, 1500);
+                    showPinSetupScreen();
+                }, 1000);
             } catch (error) {
                 let errorMessage = "Erreur d'inscription";
                 
@@ -4202,14 +4179,19 @@
                         dot.classList.remove('filled');
                     });
                     
-                    // Montrer une confirmation
-                    showSuccessPopup(
-                        'PIN configuré',
-                        'Votre code PIN a été configuré avec succès. L\'application sera désormais protégée par ce code.',
-                        () => {
-                            document.getElementById('success-popup').classList.remove('active');
-                        }
-                    );
+                    // Si on vient de s'inscrire, passer à l'application
+                    if (!isLoggedIn) {
+                        completeLogin();
+                    } else {
+                        // Sinon montrer une confirmation
+                        showSuccessPopup(
+                            'PIN configuré',
+                            'Votre code PIN a été configuré avec succès. L\'application sera désormais protégée par ce code.',
+                            () => {
+                                document.getElementById('success-popup').classList.remove('active');
+                            }
+                        );
+                    }
                 }, 800);
             } else {
                 // PINs ne correspondent pas
@@ -4283,6 +4265,11 @@
                 
                 tempPin = '';
                 confirmPin = '';
+                
+                // Si on vient de s'inscrire, passer directement à l'application
+                if (!isLoggedIn) {
+                    completeLogin();
+                }
             }, 300);
         }
         
@@ -4418,6 +4405,9 @@
             
             // Mettre à jour l'interface
             document.body.style.overflow = 'hidden';
+            
+            // L'utilisateur est maintenant connecté
+            isLoggedIn = true;
         }
         
         // Charger les données initiales de l'application
@@ -4428,11 +4418,6 @@
                 
                 // Charger les utilisateurs
                 await loadUsers();
-                
-                // Charger les notifications admin si l'utilisateur est admin
-                if (isAdmin) {
-                    loadAdminNotifications();
-                }
             } catch (error) {
                 console.error("Erreur lors du chargement des données initiales:", error);
             }
@@ -4471,38 +4456,17 @@
         
         // Données pour simuler les conversations
         const chatMessages = {
-            'Marie Dupont': [
-                { id: 'md1', text: 'Bonjour, comment vas-tu aujourd\'hui?', from: 'them', time: '14:00' },
-                { id: 'md2', text: 'Je vais bien, merci ! Et toi ?', from: 'me', time: '14:05' },
-                { id: 'md3', text: 'Très bien ! Tu fais quoi ce weekend ?', from: 'them', time: '14:10' },
-                { id: 'md4', text: 'Rien de spécial, pourquoi ?', from: 'me', time: '14:15' },
-                { id: 'md5', text: 'On pourrait aller au cinéma ?', from: 'them', time: '14:23' }
-            ],
-            'Pierre Martin': [
-                { id: 'pm1', text: 'Salut, tu as reçu mon email ?', from: 'them', time: '13:30' },
-                { id: 'pm2', text: 'Oui, je l\'ai lu ce matin', from: 'me', time: '13:45' },
-                { id: 'pm3', text: 'Super ! Alors on se voit demain pour le déjeuner?', from: 'them', time: '14:00' }
-            ],
-            'Sophie Leroy': [
-                { id: 'sl1', text: 'J\'ai besoin de ton aide pour un projet', from: 'them', time: 'Lun 10:15' },
-                { id: 'sl2', text: 'Bien sûr, comment je peux t\'aider ?', from: 'me', time: 'Lun 10:30' },
-                { id: 'sl3', text: 'Je t\'envoie les détails par email', from: 'them', time: 'Lun 11:00' },
-                { id: 'sl4', text: 'Pas de problème, je vais regarder ça', from: 'me', time: 'Lun 11:15' },
-                { id: 'sl5', text: 'Merci pour ton aide!', from: 'them', time: 'Lun 15:45' }
-            ],
-            'Thomas Bernard': [
-                { id: 'tb1', text: 'As-tu reçu les documents que je t\'ai envoyés ?', from: 'them', time: 'Dim 09:20' },
-                { id: 'tb2', text: 'Non, pas encore. Tu les as envoyés quand ?', from: 'me', time: 'Dim 10:45' },
-                { id: 'tb3', text: 'Ce matin. Je te les renvoie', from: 'them', time: 'Dim 11:30' },
-                { id: 'tb4', text: 'D\'accord, merci', from: 'me', time: 'Dim 11:45' },
-                { id: 'tb5', text: 'J\'ai envoyé les documents par email.', from: 'them', time: 'Dim 14:00' }
-            ],
             'Betforce': [
-                { id: 'bg1', text: 'Bienvenue à tous dans le groupe !', from: 'pierre', time: '14:30' },
-                { id: 'bg2', text: 'Merci Pierre pour la création du groupe !', from: 'sophie', time: '14:31' },
+                { id: 'bg1', text: 'Bienvenue à tous dans le groupe !', from: 'admin', time: '14:30' },
+                { id: 'bg2', text: 'Ce groupe est dédié aux discussions sur les paris sportifs.', from: 'admin', time: '14:31' },
                 { id: 'bg3', text: 'Bonjour tout le monde, content de vous retrouver ici', from: 'me', time: '14:32' },
-                { id: 'bg4', text: 'Super initiative ! On va pouvoir échanger facilement', from: 'marie', time: '14:33' },
-                { id: 'bg5', text: 'Est-ce que tout le monde est disponible ce week-end ?', from: 'thomas', time: '14:35' }
+                { id: 'bg4', text: 'Est-ce que quelqu\'un a des pronostics pour les matchs de ce weekend ?', from: 'user', time: '14:35' }
+            ],
+            'BetNews': [
+                { id: 'bn1', text: 'Bienvenue dans le canal d\'informations BetNews !', from: 'admin', time: '10:00' },
+                { id: 'bn2', text: 'Seuls les administrateurs peuvent publier dans ce groupe. Consultez régulièrement pour les dernières actualités et pronostics.', from: 'admin', time: '10:02' },
+                { id: 'bn3', text: 'Match PSG vs. Marseille ce dimanche à 21h00. Nos analystes prédisent une victoire du PSG 2-0.', from: 'admin', time: '12:30' },
+                { id: 'bn4', text: 'N\'oubliez pas de consulter l\'onglet Pronostics pour les cotes et analyses détaillées.', from: 'admin', time: '12:35' },
             ]
         };
         
@@ -4515,9 +4479,6 @@
             try {
                 // Si pas d'utilisateur authentifié, ne rien faire
                 if (!currentUser) return;
-                
-                // Récupérer les conversations de l'utilisateur
-                // Pour la démo, on utilise les données déjà définies
                 
                 // Si aucune conversation
                 if (Object.keys(chatMessages).length === 0) {
@@ -4536,29 +4497,16 @@
                     {
                         name: 'Betforce',
                         isGroup: true,
-                        lastMessage: 'Est-ce que tout le monde est disponible ce week-end ?',
-                        lastSender: 'thomas',
+                        lastMessage: 'Est-ce que quelqu\'un a des pronostics pour les matchs de ce weekend ?',
+                        lastSender: 'user',
                         time: '14:35'
                     },
                     {
-                        name: 'Marie Dupont',
-                        lastMessage: 'On pourrait aller au cinéma ?',
-                        time: '14:23'
-                    },
-                    {
-                        name: 'Pierre Martin',
-                        lastMessage: 'Super ! Alors on se voit demain pour le déjeuner?',
-                        time: '14:00'
-                    },
-                    {
-                        name: 'Sophie Leroy',
-                        lastMessage: 'Merci pour ton aide!',
-                        time: 'Lun'
-                    },
-                    {
-                        name: 'Thomas Bernard',
-                        lastMessage: 'J\'ai envoyé les documents par email.',
-                        time: 'Dim'
+                        name: 'BetNews',
+                        isNews: true,
+                        lastMessage: 'N\'oubliez pas de consulter l\'onglet Pronostics pour les cotes et analyses détaillées.',
+                        lastSender: 'admin',
+                        time: '12:35'
                     }
                 ];
                 
@@ -4568,8 +4516,25 @@
                     const chatItem = document.createElement('div');
                     chatItem.className = `chat-item selectable-item ${isBlocked ? 'blocked' : ''}`;
                     chatItem.setAttribute('data-contact', conv.name);
+                    
                     if (conv.isGroup) {
                         chatItem.setAttribute('data-is-group', 'true');
+                    }
+                    
+                    if (conv.isNews) {
+                        chatItem.setAttribute('data-is-news', 'true');
+                    }
+                    
+                    // Choisir la classe d'icône appropriée
+                    let iconClass = 'profile-pic';
+                    let iconContent = '<i class="fas fa-user" style="color: var(--primary-color);"></i>';
+                    
+                    if (conv.isGroup) {
+                        iconClass = 'group-pic';
+                        iconContent = '<i class="fas fa-users" style="color: white;"></i>';
+                    } else if (conv.isNews) {
+                        iconClass = 'news-group-pic';
+                        iconContent = '<i class="fas fa-newspaper" style="color: white;"></i>';
                     }
                     
                     chatItem.innerHTML = `
@@ -4577,8 +4542,8 @@
                             <div class="select-indicator-inner"></div>
                         </div>
                         <div class="item-select-checkbox"></div>
-                        <div class="${conv.isGroup ? 'group-pic' : 'profile-pic'}">
-                            <i class="fas fa-${conv.isGroup ? 'users' : 'user'}" style="color: ${conv.isGroup ? 'white' : 'var(--primary-color)'};"></i>
+                        <div class="${iconClass}">
+                            ${iconContent}
                         </div>
                         <div class="item-content">
                             <div style="display: flex; justify-content: space-between;">
@@ -4587,10 +4552,13 @@
                             </div>
                             <div class="item-subtitle">
                                 ${isBlocked ? 'Utilisateur bloqué' : 
-                                  (conv.isGroup && conv.lastSender !== 'me' ? 
+                                  ((conv.isGroup || conv.isNews) && conv.lastSender !== 'me' ? 
                                     `<strong>${getDisplayName(conv.lastSender)}:</strong> ${conv.lastMessage}` : 
                                     conv.lastMessage)}
                             </div>
+                        </div>
+                        <div class="select-btn" data-contact="${conv.name}">
+                            <i class="fas fa-times"></i>
                         </div>
                         <i class="fas fa-check-circle check-circle"></i>
                     `;
@@ -4598,6 +4566,16 @@
                     // Ajouter les événements
                     chatItem.addEventListener('click', function(event) {
                         handleChatItemClick(event, this, conv.name);
+                    });
+                    
+                    // Gérer le clic sur le bouton X
+                    const selectBtn = chatItem.querySelector('.select-btn');
+                    selectBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        if (!isSelectionMode) {
+                            startConversationsSelectionMode();
+                        }
+                        toggleItemSelection(chatItem, this.getAttribute('data-contact'), true);
                     });
                     
                     // Gestion du glissement horizontal pour la sélection
@@ -4632,11 +4610,6 @@
                 moveX = e.touches[0].clientX;
                 let deltaX = moveX - startX;
                 
-                // Ignorer les groupes dans la sélection par swipe
-                if (this.getAttribute('data-is-group') === 'true') {
-                    return;
-                }
-                
                 // Si l'utilisateur glisse vers la droite de manière significative
                 if (deltaX > 30 && !selecting) {
                     item.classList.add('swipe-selecting');
@@ -4646,21 +4619,26 @@
                     if (navigator.vibrate) {
                         navigator.vibrate(30);
                     }
-                } else if (deltaX < 10 && selecting) {
+                } 
+                // Si l'utilisateur glisse vers la gauche de manière significative et est déjà sélectionné
+                else if (deltaX < -30 && item.classList.contains('selected') && isSelectionMode) {
+                    // Désélectionner l'item avec un swipe léger vers la gauche
+                    const contactName = item.getAttribute('data-contact');
+                    toggleItemSelection(item, contactName, false);
+                    
+                    // Vibration pour feedback tactile
+                    if (navigator.vibrate) {
+                        navigator.vibrate(30);
+                    }
+                }
+                else if (deltaX < 10 && selecting) {
                     item.classList.remove('swipe-selecting');
                     selecting = false;
                 }
             });
             
             item.addEventListener('touchend', function(e) {
-                if (isSelectionMode) return;
-                
-                // Ignorer les groupes dans la sélection par swipe
-                if (this.getAttribute('data-is-group') === 'true') {
-                    this.classList.remove('swipe-selecting');
-                    selecting = false;
-                    return;
-                }
+                if (isSelectionMode && !item.classList.contains('selected')) return;
                 
                 // Si l'élément est en mode "swipe selecting"
                 if (selecting) {
@@ -4683,11 +4661,6 @@
             
             item.addEventListener('touchstart', function(e) {
                 if (isSelectionMode) return;
-                
-                // Ignorer les groupes dans la sélection par longpress
-                if (this.getAttribute('data-is-group') === 'true') {
-                    return;
-                }
                 
                 const contactName = this.getAttribute('data-contact');
                 
@@ -4718,11 +4691,6 @@
                 event.preventDefault();
                 event.stopPropagation();
                 
-                // Ignorer les groupes dans la sélection
-                if (item.getAttribute('data-is-group') === 'true') {
-                    return;
-                }
-                
                 // Si c'est déjà sélectionné, on désélectionne
                 if (selectedItems.has(contactName)) {
                     toggleItemSelection(item, contactName, false);
@@ -4750,9 +4718,6 @@
             usersList.innerHTML = '';
             
             try {
-                // Simuler le chargement depuis Firebase
-                // Pour la démo, on utilise une liste fixe d'utilisateurs
-                
                 // Si aucun utilisateur
                 if (!currentUser) {
                     usersList.innerHTML = `
@@ -4765,47 +4730,13 @@
                     return;
                 }
                 
-                // Liste des utilisateurs connectés
-                const users = [
-                    { name: 'Marie Dupont', status: 'En ligne' },
-                    { name: 'Pierre Martin', status: 'Dernière connexion à 13:42' },
-                    { name: 'Sophie Leroy', status: 'En ligne' },
-                    { name: 'Thomas Bernard', status: 'Hors ligne' }
-                ];
-                
-                // Si aucun utilisateur trouvé
-                if (users.length === 0) {
-                    usersList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-users"></i>
-                            <div class="empty-state-title">Aucun utilisateur</div>
-                            <div class="empty-state-text">Les utilisateurs apparaîtront ici</div>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Créer les éléments pour chaque utilisateur
-                users.forEach(user => {
-                    const userItem = document.createElement('div');
-                    userItem.className = 'user-item selectable-item';
-                    
-                    userItem.innerHTML = `
-                        <div class="item-select-checkbox"></div>
-                        <div class="profile-pic">
-                            <i class="fas fa-user" style="color: var(--primary-color);"></i>
-                        </div>
-                        <div class="item-content">
-                            <div class="item-title">${user.name}</div>
-                            <div class="item-subtitle">${user.status}</div>
-                        </div>
-                    `;
-                    
-                    // Ajouter les événements
-                    userItem.addEventListener('click', () => openChat(user.name));
-                    
-                    usersList.appendChild(userItem);
-                });
+                usersList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <div class="empty-state-title">Aucun utilisateur</div>
+                        <div class="empty-state-text">Les utilisateurs apparaîtront ici quand ils seront connectés</div>
+                    </div>
+                `;
             } catch (error) {
                 console.error("Erreur lors du chargement des utilisateurs:", error);
                 usersList.innerHTML = `
@@ -4828,8 +4759,9 @@
             document.getElementById('header-button').addEventListener('click', closeChat);
             
             // Déterminer si c'est une conversation de groupe ou individuelle
-            const isGroup = (contact === 'Betforce');
-            const messageList = isGroup ? chatMessages['Betforce'] : chatMessages[contact];
+            const isGroup = (contact === 'Betforce' || contact === 'BetNews');
+            const isNewsGroup = (contact === 'BetNews');
+            const messageList = isGroup ? chatMessages[contact] : [];
             
             if (messageList && messageList.length > 0) {
                 // Créer un fragment pour améliorer les performances
@@ -4919,8 +4851,10 @@
                         messageDiv.appendChild(reactionsContainer);
                     }
                     
-                    // Ajouter les gestionnaires d'événements
-                    addMessageEventListeners(messageDiv);
+                    // Ajouter les gestionnaires d'événements (sauf pour le groupe BetNews)
+                    if (!isNewsGroup) {
+                        addMessageEventListeners(messageDiv);
+                    }
                     
                     fragment.appendChild(messageDiv);
                 });
@@ -4948,9 +4882,17 @@
                 // Aucun message
                 messagesContainer.innerHTML = `
                     <div style="text-align: center; padding: 20px; color: #6b7280;">
-                        Aucun message. Commencez la conversation !
+                        Aucun message. ${isNewsGroup ? 'Attendez que l\'administrateur publie des informations.' : 'Commencez la conversation !'}
                     </div>
                 `;
+            }
+            
+            // Pour le groupe BetNews, ajouter un message spécial au bas de la conversation
+            if (isNewsGroup && !isAdmin) {
+                const adminOnlyMsg = document.createElement('div');
+                adminOnlyMsg.className = 'admin-only-message';
+                adminOnlyMsg.textContent = 'Seuls les administrateurs peuvent écrire dans ce groupe';
+                messagesContainer.appendChild(adminOnlyMsg);
             }
             
             // Faire défiler vers le bas pour voir les messages les plus récents
@@ -5085,8 +5027,8 @@
         function replyToMessageAction(messageId) {
             // Trouver le message
             let message = null;
-            const messageList = currentContact === 'Betforce' ? 
-                chatMessages['Betforce'] : chatMessages[currentContact];
+            const messageList = currentContact === 'Betforce' || currentContact === 'BetNews' ? 
+                chatMessages[currentContact] : [];
             
             for (let i = 0; i < messageList.length; i++) {
                 if (messageList[i].id === messageId) {
@@ -5239,13 +5181,13 @@
             // Pour la démonstration, on ajoute un délai pour simuler le temps réseau
             setTimeout(() => {
                 // Ajouter le message à la liste des messages appropriée
-                if (currentContact === 'Betforce') {
-                    if (!chatMessages['Betforce']) {
-                        chatMessages['Betforce'] = [];
+                if (currentContact === 'Betforce' || currentContact === 'BetNews') {
+                    if (!chatMessages[currentContact]) {
+                        chatMessages[currentContact] = [];
                     }
                     // Enlever le statut "pending"
                     delete newMessage.pending;
-                    chatMessages['Betforce'].push(newMessage);
+                    chatMessages[currentContact].push(newMessage);
                 } else {
                     if (!chatMessages[currentContact]) {
                         chatMessages[currentContact] = [];
@@ -5264,7 +5206,7 @@
                 updateChatPreview(currentContact, "me", message || "Image envoyée");
                 
                 // Simuler une réponse après 1-3 secondes (sauf si utilisateur bloqué)
-                if (!blockedUsers.has(currentContact)) {
+                if (!blockedUsers.has(currentContact) && currentContact === 'Betforce') {
                     showTypingIndicator().then(() => {
                         // Générer la réponse
                         const responses = [
@@ -5282,29 +5224,15 @@
                         const responseId = 'msg_' + (Date.now() + 1);
                         
                         // Déterminer qui répond dans le groupe
-                        let responderId = 'them';
-                        if (currentContact === 'Betforce') {
-                            // Choisir un membre aléatoire du groupe pour répondre
-                            const members = ['marie', 'pierre', 'sophie', 'thomas'];
-                            responderId = members[Math.floor(Math.random() * members.length)];
-                        }
+                        let responderId = isAdmin ? 'user' : 'admin';
                         
                         // Ajouter la réponse
-                        if (currentContact === 'Betforce') {
-                            chatMessages['Betforce'].push({
-                                id: responseId,
-                                text: randomResponse,
-                                from: responderId,
-                                time: responseTime
-                            });
-                        } else {
-                            chatMessages[currentContact].push({
-                                id: responseId,
-                                text: randomResponse,
-                                from: 'them',
-                                time: responseTime
-                            });
-                        }
+                        chatMessages['Betforce'].push({
+                            id: responseId,
+                            text: randomResponse,
+                            from: responderId,
+                            time: responseTime
+                        });
                         
                         // Si on est toujours dans cette conversation, recharger
                         if (currentContact === newMessage.contact) {
@@ -5337,7 +5265,7 @@
                 const quotedSender = document.createElement('div');
                 quotedSender.className = 'quoted-sender ' + fromClass;
                 
-                if (currentContact === 'Betforce') {
+                if (currentContact === 'Betforce' || currentContact === 'BetNews') {
                     quotedSender.textContent = getDisplayName(newMessage.replyTo.from);
                     quotedSender.className += ' sender-' + newMessage.replyTo.from;
                 } else {
@@ -5385,7 +5313,7 @@
         // Simuler le statut "en train d'écrire"
         function showTypingIndicator() {
             const typingIndicator = document.getElementById('typing-indicator');
-            document.getElementById('typing-name').textContent = currentContact;
+            document.getElementById('typing-name').textContent = getDisplayName(isAdmin ? 'user' : 'admin');
             typingIndicator.classList.add('active');
             
             // Faire défiler vers le bas pour voir l'indicateur
@@ -5412,7 +5340,7 @@
                     
                     if (sender === "Système") {
                         subtitle.innerHTML = '<i class="fas fa-info-circle" style="margin-right: 5px; color: var(--primary-color);"></i> ' + text;
-                    } else if (contact === "Betforce" && sender !== "me") {
+                    } else if ((contact === "Betforce" || contact === "BetNews") && sender !== "me") {
                         // Pour le groupe, afficher le nom de l'expéditeur
                         subtitle.innerHTML = '<strong>' + getDisplayName(sender) + ':</strong> ' + text;
                     } else {
@@ -5431,79 +5359,11 @@
         // Obtenir le nom d'affichage à partir de l'identifiant utilisateur
         function getDisplayName(userId) {
             switch(userId) {
-                case 'marie': return 'Marie';
-                case 'pierre': return 'Pierre';
-                case 'sophie': return 'Sophie';
-                case 'thomas': return 'Thomas';
-                case 'me': return 'Jean';
+                case 'user': return 'Utilisateur';
+                case 'admin': return 'Admin';
+                case 'me': return 'Vous';
                 default: return userId;
             }
-        }
-        
-        // Charger les notifications admin
-        function loadAdminNotifications() {
-            const notificationChain = document.getElementById('notification-chain');
-            
-            // Si l'utilisateur est admin, ajouter un bouton pour créer une nouvelle notification
-            if (isAdmin) {
-                const addButton = document.createElement('div');
-                addButton.className = 'notification-item';
-                addButton.style.cursor = 'pointer';
-                addButton.style.backgroundColor = 'var(--primary-color)';
-                addButton.style.color = 'black';
-                addButton.style.textAlign = 'center';
-                addButton.style.fontWeight = 'bold';
-                addButton.innerHTML = '<i class="fas fa-plus"></i> Ajouter une notification';
-                
-                addButton.addEventListener('click', function() {
-                    const notificationText = prompt('Entrez le texte de la notification:');
-                    if (notificationText && notificationText.trim() !== '') {
-                        addAdminNotification(notificationText);
-                    }
-                });
-                
-                notificationChain.appendChild(addButton);
-            }
-        }
-        
-        // Ajouter une notification admin
-        function addAdminNotification(text) {
-            const notificationChain = document.getElementById('notification-chain');
-            const now = new Date();
-            const time = `${now.getHours()}:${now.getMinutes() < 10 ? '0' : ''}${now.getMinutes()}`;
-            
-            const notificationItem = document.createElement('div');
-            notificationItem.className = 'notification-item';
-            
-            notificationItem.innerHTML = `
-                <div class="notification-icon-container">
-                    <i class="fas fa-bullhorn" style="color: var(--primary-color);"></i>
-                </div>
-                <div class="notification-content">
-                    <div class="notification-title">
-                        Administrateur <span class="admin-badge">Admin</span>
-                    </div>
-                    <div class="notification-text">${text}</div>
-                    <div class="notification-time">À l'instant</div>
-                </div>
-            `;
-            
-            // Insérer la nouvelle notification en haut de la liste (après le bouton d'ajout si présent)
-            const firstChild = notificationChain.firstChild;
-            if (firstChild && firstChild.style && firstChild.style.backgroundColor === 'var(--primary-color)') {
-                notificationChain.insertBefore(notificationItem, firstChild.nextSibling);
-            } else {
-                notificationChain.insertBefore(notificationItem, firstChild);
-            }
-            
-            // Animation d'apparition
-            notificationItem.style.opacity = '0';
-            notificationItem.style.transform = 'translateY(-20px)';
-            setTimeout(() => {
-                notificationItem.style.opacity = '1';
-                notificationItem.style.transform = 'translateY(0)';
-                notificationItem.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            }, 10);
         }
         
         // ================ FONCTIONS POUR LA SÉLECTION ================
@@ -5565,8 +5425,8 @@
             if (selectionModeType === 'messages') {
                 selectAllMessages();
             } else {
-                // Ne pas sélectionner les groupes
-                var items = document.querySelectorAll('.chat-item:not([data-is-group="true"])');
+                // Ne pas sélectionner les groupes dans le mode de sélection
+                var items = document.querySelectorAll('.chat-item:not([data-is-group="true"]):not([data-is-news="true"])');
                 
                 for (var i = 0; i < items.length; i++) {
                     var itemId = items[i].getAttribute('data-contact');
@@ -5652,7 +5512,7 @@
             document.querySelector('.section.active').classList.add('selection-mode');
             
             // Faire apparaître les cases à cocher
-            document.querySelectorAll('.chat-item:not([data-is-group="true"]) .item-select-checkbox').forEach(checkbox => {
+            document.querySelectorAll('.chat-item:not([data-is-group="true"]):not([data-is-news="true"]) .item-select-checkbox').forEach(checkbox => {
                 checkbox.classList.add('visible');
             });
             
@@ -5982,8 +5842,8 @@
             setTimeout(() => {
                 // Créer une copie des messages à conserver
                 var messagesForContact = [];
-                var messageList = currentContact === 'Betforce' ? 
-                    chatMessages['Betforce'] : chatMessages[currentContact];
+                var messageList = currentContact === 'Betforce' || currentContact === 'BetNews' ? 
+                    chatMessages[currentContact] : [];
                 
                 for (var i = 0; i < messageList.length; i++) {
                     var msg = messageList[i];
@@ -5993,13 +5853,9 @@
                 }
                 
                 // Mettre à jour les messages selon l'option sélectionnée
-                if (selectedDeleteOption === 'for-me' || currentContact === 'Betforce') {
+                if (selectedDeleteOption === 'for-me' || currentContact === 'Betforce' || currentContact === 'BetNews') {
                     // En mode "pour moi seulement" ou pour les groupes
-                    if (currentContact === 'Betforce') {
-                        chatMessages['Betforce'] = messagesForContact;
-                    } else {
-                        chatMessages[currentContact] = messagesForContact;
-                    }
+                    chatMessages[currentContact] = messagesForContact;
                 } else {
                     // En mode "pour tout le monde", on peut simplement faire la même chose
                     // car c'est une simulation, mais en réalité cela enverrait une requête au serveur
@@ -6027,8 +5883,8 @@
             
             // Collecter les messages sélectionnés
             messagesForForward = [];
-            const messageList = currentContact === 'Betforce' ? 
-                chatMessages['Betforce'] : chatMessages[currentContact];
+            const messageList = currentContact === 'Betforce' || currentContact === 'BetNews' ? 
+                chatMessages[currentContact] : [];
             
             for (let i = 0; i < messageList.length; i++) {
                 const msg = messageList[i];
@@ -6044,21 +5900,25 @@
             const contactsList = document.getElementById('forward-contacts-list');
             contactsList.innerHTML = '';
             
-            const contacts = ['Marie Dupont', 'Pierre Martin', 'Sophie Leroy', 'Thomas Bernard', 'Betforce'];
+            const contacts = ['Betforce', 'BetNews'];
             contacts.forEach(contact => {
                 if (contact !== currentContact) {
                     const contactItem = document.createElement('div');
                     contactItem.className = 'chat-item';
                     contactItem.onclick = function() { forwardMessagesTo(contact); };
                     
-                    const profilePic = document.createElement('div');
-                    if (contact === 'Betforce') {
-                        profilePic.className = 'group-pic';
-                        profilePic.innerHTML = '<i class="fas fa-users" style="color: white;"></i>';
-                    } else {
-                        profilePic.className = 'profile-pic';
-                        profilePic.innerHTML = '<i class="fas fa-user" style="color: var(--primary-color);"></i>';
+                    // Déterminer le type de groupe
+                    let iconType = 'group-pic';
+                    let iconContent = '<i class="fas fa-users" style="color: white;"></i>';
+                    
+                    if (contact === 'BetNews') {
+                        iconType = 'news-group-pic';
+                        iconContent = '<i class="fas fa-newspaper" style="color: white;"></i>';
                     }
+                    
+                    const profilePic = document.createElement('div');
+                    profilePic.className = iconType;
+                    profilePic.innerHTML = iconContent;
                     
                     const content = document.createElement('div');
                     content.className = 'item-content';
@@ -6165,14 +6025,14 @@
             
             // Collecter les textes des messages sélectionnés
             let textToCopy = '';
-            const messageList = currentContact === 'Betforce' ? 
-                chatMessages['Betforce'] : chatMessages[currentContact];
+            const messageList = currentContact === 'Betforce' || currentContact === 'BetNews' ? 
+                chatMessages[currentContact] : [];
             
             for (let i = 0; i < messageList.length; i++) {
                 const msg = messageList[i];
                 if (selectedMessages.has(msg.id)) {
                     // Formater différemment selon qu'il s'agit d'un groupe ou non
-                    if (currentContact === 'Betforce') {
+                    if (currentContact === 'Betforce' || currentContact === 'BetNews') {
                         textToCopy += `[${getDisplayName(msg.from)}]: ${msg.text}\n`;
                     } else {
                         textToCopy += `[${msg.from === 'me' ? 'Moi' : currentContact}]: ${msg.text}\n`;
@@ -6252,8 +6112,8 @@
                 return;
             }
             
-            const messageList = currentContact === 'Betforce' ? 
-                chatMessages['Betforce'] : chatMessages[currentContact];
+            const messageList = currentContact === 'Betforce' || currentContact === 'BetNews' ? 
+                chatMessages[currentContact] : [];
             
             if (!messageList || messageList.length === 0) {
                 resultsContainer.innerHTML = '<div class="no-results">Aucun message dans cette conversation</div>';
@@ -6283,7 +6143,7 @@
                 );
                 
                 const sender = msg.from === 'me' ? 'Vous' : 
-                    (currentContact === 'Betforce' ? getDisplayName(msg.from) : currentContact);
+                    (currentContact === 'Betforce' || currentContact === 'BetNews' ? getDisplayName(msg.from) : currentContact);
                 
                 resultItem.innerHTML = `
                     <div class="search-result-text">${highlightedText}</div>
@@ -6442,21 +6302,10 @@
         
         // Changer le thème
         function changeTheme() {
-            var colorPicker = document.getElementById('color-picker');
             var randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
-            colorPicker.value = randomColor;
             
-            document.documentElement.style.setProperty('--primary-color', randomColor);
-            
-            // Mettre à jour l'icône de loading
-            const footballSpinner = document.querySelector('.football-spinner');
-            if (footballSpinner) {
-                footballSpinner.style.color = randomColor;
-            }
-            
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.style.setProperty('--chat-sent-bg', randomColor);
-            }
+            // Mettre à jour la couleur de l'interface
+            changeAppColor(randomColor);
             
             closeOptionsMenu();
             showSuccessPopup("Thème modifié", "La couleur de l'interface a été changée avec succès.", () => {
@@ -6507,7 +6356,6 @@
             if (user) {
                 // Utilisateur connecté
                 currentUser = user;
-                isLoggedIn = true;
                 
                 // Récupérer les données utilisateur
                 currentUserData = await getUserData(user.uid);
@@ -6558,18 +6406,30 @@
             // Configurer le mode sombre
             setupDarkMode();
             
-            // Gérer les préférences de thème
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.classList.add('dark');
+            // Restaurer les paramètres sauvegardés
+            const savedColor = localStorage.getItem('ichatColor');
+            if (savedColor) {
+                changeAppColor(savedColor);
+                document.getElementById('color-picker').value = savedColor;
             }
             
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-                if (event.matches) {
+            // Restaurer le mode sombre si sauvegardé
+            const savedDarkMode = localStorage.getItem('ichatDarkMode');
+            if (savedDarkMode !== null) {
+                const isDarkMode = savedDarkMode === 'true';
+                document.getElementById('dark-toggle').checked = isDarkMode;
+                if (isDarkMode) {
                     document.documentElement.classList.add('dark');
                 } else {
                     document.documentElement.classList.remove('dark');
                 }
-            });
+            } else {
+                // Sinon, par défaut, détecter les préférences du système
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.classList.add('dark');
+                    document.getElementById('dark-toggle').checked = true;
+                }
+            }
         });
         
         // Exposer certaines fonctions globalement pour être appelées depuis le HTML
@@ -6579,3 +6439,7 @@
     </script>
 </body>
 </html>
+    
+
+
+
