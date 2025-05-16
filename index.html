@@ -2,14 +2,15 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Inscription avec rôle</title>
+  <title>Inscription avec rôle admin</title>
   <style>
-    body { font-family: Arial; padding: 30px; background: #f7f7f7; }
-    .box { max-width: 400px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    body { font-family: Arial; background: #f7f7f7; padding: 40px; }
+    .box { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
     input, button { width: 100%; padding: 10px; margin-top: 10px; }
     #log { margin-top: 15px; padding: 10px; border-radius: 5px; display: none; }
     #log.success { background: #d4edda; color: #155724; }
     #log.error { background: #f8d7da; color: #721c24; }
+    #log.info { background: #cce5ff; color: #004085; }
   </style>
 </head>
 <body>
@@ -24,7 +25,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
-    import { getFirestore, collection, addDoc, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+    import { getFirestore, collection, doc, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDTPLxUiA8lj82kqc6CyCPLQDITc0CtLUE",
@@ -42,7 +43,7 @@
     const db = getFirestore(app);
 
     const logDiv = document.getElementById("log");
-    function showLog(message, type = "success") {
+    function showLog(message, type = "info") {
       logDiv.textContent = message;
       logDiv.className = type;
       logDiv.id = "log";
@@ -50,26 +51,44 @@
     }
 
     async function register() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!email || !password) {
+        showLog("Veuillez remplir tous les champs.", "error");
+        return;
+      }
 
       try {
+        showLog("Création du compte en cours...", "info");
+
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Vérifier combien d'utilisateurs sont déjà enregistrés dans Firestore
-        const usersSnap = await getDocs(collection(db, "Users"));
-        const isFirstUser = usersSnap.empty;
+        const adminRef = doc(db, "Config", "admin");
+        const adminSnap = await getDoc(adminRef);
 
-        // Ajouter à Firestore avec statut
+        let statut = "simple";
+
+        if (!adminSnap.exists()) {
+          // Premier utilisateur => admin
+          statut = "admin";
+          await setDoc(adminRef, {
+            uid: user.uid,
+            email: user.email,
+            createdAt: new Date().toISOString()
+          });
+          showLog("Premier compte : rôle administrateur défini.", "info");
+        }
+
         await setDoc(doc(db, "Users", user.uid), {
           uid: user.uid,
           email: user.email,
-          statut: isFirstUser ? "admin" : "simple",
+          statut: statut,
           createdAt: new Date().toISOString()
         });
 
-        showLog(`Compte créé avec succès. Statut : ${isFirstUser ? "admin" : "simple"}`, "success");
+        showLog(`Compte créé avec succès. Rôle attribué : ${statut}`, "success");
       } catch (error) {
         showLog("Erreur : " + error.message, "error");
       }
