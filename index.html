@@ -33,6 +33,8 @@
             --link-color: #007aff;
             --admin-badge-bg: #5D5CDE;
             --admin-badge-text: white;
+            --notification-chain-bg: #f0f2f5;
+            --notification-chain-border: #dddfe2;
         }
         
         /* Mode sombre par défaut */
@@ -58,6 +60,8 @@
             --link-color: #2196F3;
             --admin-badge-bg: #7571F9;
             --admin-badge-text: white;
+            --notification-chain-bg: #2c2c2c;
+            --notification-chain-border: #3e4042;
         }
         
         /* Reset de base */
@@ -451,29 +455,6 @@
             transform: translateX(24px);
         }
         
-        /* Notification dot */
-        .badge {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .dot {
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            width: 8px;
-            height: 8px;
-            background-color: #f03d25;
-            border-radius: 50%;
-        }
-
-        /* Notification icône */
-        .notification-icon {
-            color: var(--primary-color);
-            font-size: 18px;
-            cursor: pointer;
-        }
-        
         /* Interface de chat */
         .chat-section {
             display: none;
@@ -744,45 +725,15 @@
             margin: 0 auto 30px auto;
         }
         
-        /* Panneau de notifications */
-        .notifications-panel {
-            position: fixed;
-            top: 50px;
-            right: 0;
-            width: 100%;
-            max-width: 400px;
-            background-color: var(--bg-color);
-            border-left: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 30;
-            box-shadow: -2px 2px 10px rgba(0, 0, 0, 0.1);
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            max-height: 80%;
-            overflow-y: auto;
-            border-bottom-left-radius: 10px;
-        }
-        
-        .notifications-panel.active {
-            transform: translateX(0);
-        }
-        
-        .notifications-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* Chaîne de notifications */
+        .notification-chain {
+            background-color: var(--notification-chain-bg);
+            border: 1px solid var(--notification-chain-border);
+            border-radius: 10px;
+            margin: 10px;
             padding: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .notifications-title {
-            font-weight: bold;
-            font-size: 16px;
-        }
-        
-        .close-notifications {
-            color: var(--primary-color);
-            cursor: pointer;
+            max-height: 300px;
+            overflow-y: auto;
         }
         
         .notification-item {
@@ -792,8 +743,8 @@
             align-items: flex-start;
         }
         
-        .notification-item.unread {
-            background-color: rgba(93, 92, 222, 0.1);
+        .notification-item:last-child {
+            border-bottom: none;
         }
         
         .notification-icon-container {
@@ -815,6 +766,8 @@
         .notification-title {
             font-weight: bold;
             margin-bottom: 5px;
+            display: flex;
+            align-items: center;
         }
         
         .notification-text {
@@ -2597,9 +2550,8 @@
     <!-- En-tête -->
     <div class="header">
         <div id="header-left">
-            <span class="notification-icon badge" id="notification-bell">
-                <i class="fas fa-bell"></i>
-                <span class="dot"></span>
+            <span id="header-button" style="display:none;">
+                <i class="fas fa-chevron-left"></i>
             </span>
         </div>
         <div id="header-title" class="header-title">Messages</div>
@@ -2665,48 +2617,6 @@
         </div>
     </div>
 
-    <!-- Panneau de notifications -->
-    <div id="notifications-panel" class="notifications-panel">
-        <div class="notifications-header">
-            <div class="notifications-title">Notifications</div>
-            <div class="close-notifications" id="close-notifications">
-                <i class="fas fa-times"></i>
-            </div>
-        </div>
-        <div id="notifications-container">
-            <div class="notification-item unread">
-                <div class="notification-icon-container">
-                    <i class="fas fa-user" style="color: var(--primary-color);"></i>
-                </div>
-                <div class="notification-content">
-                    <div class="notification-title">Nouvelle mise à jour</div>
-                    <div class="notification-text">Une nouvelle version de l'application est disponible avec des fonctionnalités améliorées.</div>
-                    <div class="notification-time">Il y a 10 minutes</div>
-                </div>
-            </div>
-            <div class="notification-item">
-                <div class="notification-icon-container">
-                    <i class="fas fa-envelope" style="color: var(--primary-color);"></i>
-                </div>
-                <div class="notification-content">
-                    <div class="notification-title">Marie Dupont</div>
-                    <div class="notification-text">Vous a envoyé un nouveau message.</div>
-                    <div class="notification-time">Il y a 2 heures</div>
-                </div>
-            </div>
-            <div class="notification-item">
-                <div class="notification-icon-container">
-                    <i class="fas fa-birthday-cake" style="color: var(--primary-color);"></i>
-                </div>
-                <div class="notification-content">
-                    <div class="notification-title">Anniversaire</div>
-                    <div class="notification-text">C'est l'anniversaire de Pierre Martin aujourd'hui!</div>
-                    <div class="notification-time">Il y a 5 heures</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Bouton de suppression flottant pour le mode sélection -->
     <div id="conversation-delete-btn" class="conversation-delete-btn">
         <i class="fas fa-trash-alt" style="font-size: 20px;"></i>
@@ -2728,14 +2638,52 @@
         </div>
     </div>
 
-    <!-- Le reste du contenu de l'application reste inchangé -->
-    
     <!-- Contenu principal de l'application -->
     <div class="content">
         <!-- Section Messages -->
         <div id="messages-section" class="section active">
             <div class="search-container">
                 <input type="text" class="search-input" id="messages-search" placeholder="Rechercher">
+            </div>
+
+            <!-- Chaîne de notifications -->
+            <div class="notification-chain" id="notification-chain">
+                <div class="notification-item">
+                    <div class="notification-icon-container">
+                        <i class="fas fa-bullhorn" style="color: var(--primary-color);"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">
+                            Administrateur <span class="admin-badge">Admin</span>
+                        </div>
+                        <div class="notification-text">Bienvenue sur iChat ! Notre nouvelle application de messagerie sécurisée.</div>
+                        <div class="notification-time">Il y a 3 jours</div>
+                    </div>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-icon-container">
+                        <i class="fas fa-bullhorn" style="color: var(--primary-color);"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">
+                            Administrateur <span class="admin-badge">Admin</span>
+                        </div>
+                        <div class="notification-text">Tous vos messages sont désormais chiffrés et sécurisés. Profitez d'une expérience de messagerie privée !</div>
+                        <div class="notification-time">Il y a 2 jours</div>
+                    </div>
+                </div>
+                <div class="notification-item">
+                    <div class="notification-icon-container">
+                        <i class="fas fa-bullhorn" style="color: var(--primary-color);"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">
+                            Administrateur <span class="admin-badge">Admin</span>
+                        </div>
+                        <div class="notification-text">Une mise à jour importante sera déployée demain. Restez connectés !</div>
+                        <div class="notification-time">Hier</div>
+                    </div>
+                </div>
             </div>
             
             <div class="chat-list" id="chat-list">
@@ -2754,11 +2702,10 @@
             </div>
             
             <div id="users-list">
-                <!-- Les utilisateurs seront chargés dynamiquement -->
                 <div class="empty-state">
                     <i class="fas fa-users"></i>
-                    <div class="empty-state-title">Aucun utilisateur</div>
-                    <div class="empty-state-text">Les utilisateurs apparaîtront ici</div>
+                    <div class="empty-state-title">Connexion en cours</div>
+                    <div class="empty-state-text">La liste des utilisateurs apparaîtra ici une fois connecté</div>
                 </div>
             </div>
         </div>
@@ -2846,13 +2793,13 @@
                             <li>Messagerie instantanée</li>
                             <li>Partage de photos</li>
                             <li>Groupes de discussion</li>
-                            <li>Notifications en temps réel</li>
+                            <li>Notifications administrateur</li>
                             <li>Mode sombre</li>
                             <li>Verrouillage par code PIN</li>
                         </ul>
                     </div>
                     
-                    <div class="about-version">Version 2.1.0</div>
+                    <div class="about-version">Version 2.2.0</div>
                 </div>
                 
                 <button id="logout-btn" class="button">Se déconnecter</button>
@@ -3115,10 +3062,7 @@
     <!-- Barre d'onglets -->
     <div class="tabbar" id="tabbar">
         <a href="#" class="tab active" data-section="messages">
-            <div class="badge">
-                <i class="tab-icon fas fa-comments"></i>
-                <span class="dot"></span>
-            </div>
+            <i class="tab-icon fas fa-comments"></i>
             <span>Messages</span>
         </a>
         <a href="#" class="tab" data-section="users">
@@ -3139,7 +3083,7 @@
         // Import Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, addDoc, onSnapshot, where, deleteDoc } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, addDoc, onSnapshot, where, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
 
         // Firebase config
         const firebaseConfig = {
@@ -3182,12 +3126,12 @@
         let replyToMessage = null;
         let selectedImage = null;
         let isAttachmentsOpen = false;
-        let isNotificationsOpen = false;
         let isOptionsMenuOpen = false;
         let lastTap = 0;
         let currentTappedMessage = null;
         let currentSection = 'messages';
         let selectedDeleteOption = 'for-me';
+        let pendingMessages = [];
         
         // ================ FONCTIONS POUR LES ÉVÉNEMENTS D'INTERFACE ================
         
@@ -3221,10 +3165,6 @@
                     changeTab(sectionName);
                 });
             });
-            
-            // Bouton de notification
-            document.getElementById('notification-bell').addEventListener('click', toggleNotifications);
-            document.getElementById('close-notifications').addEventListener('click', toggleNotifications);
             
             // Boutons d'options
             document.getElementById('options-button').addEventListener('click', toggleOptionsMenu);
@@ -3312,6 +3252,12 @@
             // Événements pour les paramètres
             document.getElementById('color-picker').addEventListener('input', function(e) {
                 document.documentElement.style.setProperty('--primary-color', e.target.value);
+                
+                // Mettre à jour l'icône de loading
+                const footballSpinner = document.querySelector('.football-spinner');
+                if (footballSpinner) {
+                    footballSpinner.style.color = e.target.value;
+                }
                 
                 // En mode sombre, mettre à jour la couleur des messages envoyés
                 if (document.documentElement.classList.contains('dark')) {
@@ -3435,11 +3381,6 @@
         
         // Fonction pour changer d'onglet
         function changeTab(tabName) {
-            // Si le panneau de notifications est ouvert, le fermer
-            if (isNotificationsOpen) {
-                toggleNotifications();
-            }
-            
             // Si le menu d'options est ouvert, le fermer
             if (isOptionsMenuOpen) {
                 closeOptionsMenu();
@@ -3479,11 +3420,10 @@
             document.getElementById('header-title').textContent = tabName.charAt(0).toUpperCase() + tabName.slice(1);
             
             // Réinitialiser l'en-tête
-            document.getElementById('header-left').innerHTML = '<span class="notification-icon badge" id="notification-bell"><i class="fas fa-bell"></i><span class="dot"></span></span>';
+            document.getElementById('header-left').innerHTML = '';
             document.getElementById('header-action').innerHTML = '<span class="notification-icon" id="options-button"><i class="fas fa-ellipsis-v"></i></span>';
             
             // Réattacher les événements
-            document.getElementById('notification-bell').addEventListener('click', toggleNotifications);
             document.getElementById('options-button').addEventListener('click', toggleOptionsMenu);
             
             // Masquer toutes les sections
@@ -3505,11 +3445,6 @@
         // Fonction pour ouvrir une conversation
         function openChat(contact) {
             if (!contact) return;
-            
-            // Si le panneau de notifications est ouvert, le fermer
-            if (isNotificationsOpen) {
-                toggleNotifications();
-            }
             
             // Si le menu d'options est ouvert, le fermer
             if (isOptionsMenuOpen) {
@@ -3534,11 +3469,11 @@
             // Mettre à jour l'en-tête
             document.getElementById('header-title').innerText = contact;
             document.getElementById('header-action').innerHTML = '<span class="notification-icon" id="options-button"><i class="fas fa-ellipsis-v"></i></span>';
-            document.getElementById('header-left').innerHTML = '<div class="back-button" onclick="closeChat()"><i class="fas fa-chevron-left"></i></div>';
+            document.getElementById('header-left').innerHTML = '<div class="back-button" id="header-button"><i class="fas fa-chevron-left"></i></div>';
             
             // Réattacher l'événement d'options
             document.getElementById('options-button').addEventListener('click', toggleOptionsMenu);
-            document.getElementById('header-left').querySelector('.back-button').addEventListener('click', closeChat);
+            document.getElementById('header-button').addEventListener('click', closeChat);
             
             // Afficher l'interface de chat
             document.getElementById('chat-interface').style.display = 'block';
@@ -3587,10 +3522,9 @@
             // Réinitialiser l'en-tête pour revenir à la liste des messages
             document.getElementById('header-title').innerText = 'Messages';
             document.getElementById('header-action').innerHTML = '<span class="notification-icon" id="options-button"><i class="fas fa-ellipsis-v"></i></span>';
-            document.getElementById('header-left').innerHTML = '<span class="notification-icon badge" id="notification-bell"><i class="fas fa-bell"></i><span class="dot"></span></span>';
+            document.getElementById('header-left').innerHTML = '';
             
             // Réattacher les événements
-            document.getElementById('notification-bell').addEventListener('click', toggleNotifications);
             document.getElementById('options-button').addEventListener('click', toggleOptionsMenu);
             
             // Afficher la section messages
@@ -4488,11 +4422,20 @@
         
         // Charger les données initiales de l'application
         async function loadInitialData() {
-            // Charger les conversations
-            loadConversations();
-            
-            // Charger les utilisateurs
-            loadUsers();
+            try {
+                // Charger les conversations
+                await loadConversations();
+                
+                // Charger les utilisateurs
+                await loadUsers();
+                
+                // Charger les notifications admin si l'utilisateur est admin
+                if (isAdmin) {
+                    loadAdminNotifications();
+                }
+            } catch (error) {
+                console.error("Erreur lors du chargement des données initiales:", error);
+            }
         }
         
         // Mettre à jour les informations du profil
@@ -4564,96 +4507,114 @@
         };
         
         // Charger les conversations dans la liste
-        function loadConversations() {
+        async function loadConversations() {
             const chatList = document.getElementById('chat-list');
             chatList.innerHTML = '';
             
-            // Si aucune conversation
-            if (Object.keys(chatMessages).length === 0) {
+            // Simuler le chargement depuis Firebase
+            try {
+                // Si pas d'utilisateur authentifié, ne rien faire
+                if (!currentUser) return;
+                
+                // Récupérer les conversations de l'utilisateur
+                // Pour la démo, on utilise les données déjà définies
+                
+                // Si aucune conversation
+                if (Object.keys(chatMessages).length === 0) {
+                    chatList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-comments"></i>
+                            <div class="empty-state-title">Aucune conversation</div>
+                            <div class="empty-state-text">Vos conversations apparaîtront ici</div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Créer les éléments pour chaque conversation
+                const conversations = [
+                    {
+                        name: 'Betforce',
+                        isGroup: true,
+                        lastMessage: 'Est-ce que tout le monde est disponible ce week-end ?',
+                        lastSender: 'thomas',
+                        time: '14:35'
+                    },
+                    {
+                        name: 'Marie Dupont',
+                        lastMessage: 'On pourrait aller au cinéma ?',
+                        time: '14:23'
+                    },
+                    {
+                        name: 'Pierre Martin',
+                        lastMessage: 'Super ! Alors on se voit demain pour le déjeuner?',
+                        time: '14:00'
+                    },
+                    {
+                        name: 'Sophie Leroy',
+                        lastMessage: 'Merci pour ton aide!',
+                        time: 'Lun'
+                    },
+                    {
+                        name: 'Thomas Bernard',
+                        lastMessage: 'J\'ai envoyé les documents par email.',
+                        time: 'Dim'
+                    }
+                ];
+                
+                conversations.forEach(conv => {
+                    const isBlocked = blockedUsers.has(conv.name);
+                    
+                    const chatItem = document.createElement('div');
+                    chatItem.className = `chat-item selectable-item ${isBlocked ? 'blocked' : ''}`;
+                    chatItem.setAttribute('data-contact', conv.name);
+                    if (conv.isGroup) {
+                        chatItem.setAttribute('data-is-group', 'true');
+                    }
+                    
+                    chatItem.innerHTML = `
+                        <div class="select-indicator">
+                            <div class="select-indicator-inner"></div>
+                        </div>
+                        <div class="item-select-checkbox"></div>
+                        <div class="${conv.isGroup ? 'group-pic' : 'profile-pic'}">
+                            <i class="fas fa-${conv.isGroup ? 'users' : 'user'}" style="color: ${conv.isGroup ? 'white' : 'var(--primary-color)'};"></i>
+                        </div>
+                        <div class="item-content">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div class="item-title">${conv.name}</div>
+                                <div class="item-time">${conv.time}</div>
+                            </div>
+                            <div class="item-subtitle">
+                                ${isBlocked ? 'Utilisateur bloqué' : 
+                                  (conv.isGroup && conv.lastSender !== 'me' ? 
+                                    `<strong>${getDisplayName(conv.lastSender)}:</strong> ${conv.lastMessage}` : 
+                                    conv.lastMessage)}
+                            </div>
+                        </div>
+                        <i class="fas fa-check-circle check-circle"></i>
+                    `;
+                    
+                    // Ajouter les événements
+                    chatItem.addEventListener('click', function(event) {
+                        handleChatItemClick(event, this, conv.name);
+                    });
+                    
+                    // Gestion du glissement horizontal pour la sélection
+                    setupSwipeSelection(chatItem);
+                    
+                    chatList.appendChild(chatItem);
+                });
+            } catch (error) {
+                console.error("Erreur lors du chargement des conversations:", error);
                 chatList.innerHTML = `
                     <div class="empty-state">
-                        <i class="fas fa-comments"></i>
-                        <div class="empty-state-title">Aucune conversation</div>
-                        <div class="empty-state-text">Vos conversations apparaîtront ici</div>
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div class="empty-state-title">Erreur de chargement</div>
+                        <div class="empty-state-text">Impossible de charger les conversations. Veuillez réessayer.</div>
                     </div>
                 `;
-                return;
             }
-            
-            // Créer les éléments pour chaque conversation
-            const conversations = [
-                {
-                    name: 'Betforce',
-                    isGroup: true,
-                    lastMessage: 'Est-ce que tout le monde est disponible ce week-end ?',
-                    lastSender: 'thomas',
-                    time: '14:35'
-                },
-                {
-                    name: 'Marie Dupont',
-                    lastMessage: 'On pourrait aller au cinéma ?',
-                    time: '14:23'
-                },
-                {
-                    name: 'Pierre Martin',
-                    lastMessage: 'Super ! Alors on se voit demain pour le déjeuner?',
-                    time: '14:00'
-                },
-                {
-                    name: 'Sophie Leroy',
-                    lastMessage: 'Merci pour ton aide!',
-                    time: 'Lun'
-                },
-                {
-                    name: 'Thomas Bernard',
-                    lastMessage: 'J\'ai envoyé les documents par email.',
-                    time: 'Dim'
-                }
-            ];
-            
-            conversations.forEach(conv => {
-                const isBlocked = blockedUsers.has(conv.name);
-                
-                const chatItem = document.createElement('div');
-                chatItem.className = `chat-item selectable-item ${isBlocked ? 'blocked' : ''}`;
-                chatItem.setAttribute('data-contact', conv.name);
-                if (conv.isGroup) {
-                    chatItem.setAttribute('data-is-group', 'true');
-                }
-                
-                chatItem.innerHTML = `
-                    <div class="select-indicator">
-                        <div class="select-indicator-inner"></div>
-                    </div>
-                    <div class="item-select-checkbox"></div>
-                    <div class="${conv.isGroup ? 'group-pic' : 'profile-pic'}">
-                        <i class="fas fa-${conv.isGroup ? 'users' : 'user'}" style="color: ${conv.isGroup ? 'white' : 'var(--primary-color)'};"></i>
-                    </div>
-                    <div class="item-content">
-                        <div style="display: flex; justify-content: space-between;">
-                            <div class="item-title">${conv.name}</div>
-                            <div class="item-time">${conv.time}</div>
-                        </div>
-                        <div class="item-subtitle">
-                            ${isBlocked ? 'Utilisateur bloqué' : 
-                              (conv.isGroup && conv.lastSender !== 'me' ? 
-                                `<strong>${getDisplayName(conv.lastSender)}:</strong> ${conv.lastMessage}` : 
-                                conv.lastMessage)}
-                        </div>
-                    </div>
-                    <i class="fas fa-check-circle check-circle"></i>
-                `;
-                
-                // Ajouter les événements
-                chatItem.addEventListener('click', function(event) {
-                    handleChatItemClick(event, this, conv.name);
-                });
-                
-                // Gestion du glissement horizontal pour la sélection
-                setupSwipeSelection(chatItem);
-                
-                chatList.appendChild(chatItem);
-            });
         }
         
         // Configurer le glissement pour la sélection des conversations
@@ -4784,51 +4745,77 @@
         }
         
         // Charger la liste des utilisateurs
-        function loadUsers() {
+        async function loadUsers() {
             const usersList = document.getElementById('users-list');
             usersList.innerHTML = '';
             
-            // Liste des utilisateurs simulée
-            const users = [
-                { name: 'Marie Dupont', status: 'En ligne' },
-                { name: 'Pierre Martin', status: 'Dernière connexion à 13:42' },
-                { name: 'Sophie Leroy', status: 'En ligne' },
-                { name: 'Thomas Bernard', status: 'Hors ligne' }
-            ];
-            
-            // Si aucun utilisateur
-            if (users.length === 0) {
+            try {
+                // Simuler le chargement depuis Firebase
+                // Pour la démo, on utilise une liste fixe d'utilisateurs
+                
+                // Si aucun utilisateur
+                if (!currentUser) {
+                    usersList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <div class="empty-state-title">Connexion requise</div>
+                            <div class="empty-state-text">Connectez-vous pour voir les utilisateurs</div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Liste des utilisateurs connectés
+                const users = [
+                    { name: 'Marie Dupont', status: 'En ligne' },
+                    { name: 'Pierre Martin', status: 'Dernière connexion à 13:42' },
+                    { name: 'Sophie Leroy', status: 'En ligne' },
+                    { name: 'Thomas Bernard', status: 'Hors ligne' }
+                ];
+                
+                // Si aucun utilisateur trouvé
+                if (users.length === 0) {
+                    usersList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <div class="empty-state-title">Aucun utilisateur</div>
+                            <div class="empty-state-text">Les utilisateurs apparaîtront ici</div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Créer les éléments pour chaque utilisateur
+                users.forEach(user => {
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item selectable-item';
+                    
+                    userItem.innerHTML = `
+                        <div class="item-select-checkbox"></div>
+                        <div class="profile-pic">
+                            <i class="fas fa-user" style="color: var(--primary-color);"></i>
+                        </div>
+                        <div class="item-content">
+                            <div class="item-title">${user.name}</div>
+                            <div class="item-subtitle">${user.status}</div>
+                        </div>
+                    `;
+                    
+                    // Ajouter les événements
+                    userItem.addEventListener('click', () => openChat(user.name));
+                    
+                    usersList.appendChild(userItem);
+                });
+            } catch (error) {
+                console.error("Erreur lors du chargement des utilisateurs:", error);
                 usersList.innerHTML = `
                     <div class="empty-state">
-                        <i class="fas fa-users"></i>
-                        <div class="empty-state-title">Aucun utilisateur</div>
-                        <div class="empty-state-text">Les utilisateurs apparaîtront ici</div>
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div class="empty-state-title">Erreur de chargement</div>
+                        <div class="empty-state-text">Impossible de charger les utilisateurs. Veuillez réessayer.</div>
                     </div>
                 `;
-                return;
             }
-            
-            // Créer les éléments pour chaque utilisateur
-            users.forEach(user => {
-                const userItem = document.createElement('div');
-                userItem.className = 'user-item selectable-item';
-                
-                userItem.innerHTML = `
-                    <div class="item-select-checkbox"></div>
-                    <div class="profile-pic">
-                        <i class="fas fa-user" style="color: var(--primary-color);"></i>
-                    </div>
-                    <div class="item-content">
-                        <div class="item-title">${user.name}</div>
-                        <div class="item-subtitle">${user.status}</div>
-                    </div>
-                `;
-                
-                // Ajouter les événements
-                userItem.addEventListener('click', () => openChat(user.name));
-                
-                usersList.appendChild(userItem);
-            });
         }
         
         // Charger les messages d'une conversation
@@ -4837,8 +4824,8 @@
             messagesContainer.innerHTML = '';
             
             // S'assurer que le bouton retour reste correct
-            document.getElementById('header-left').innerHTML = '<div class="back-button"><i class="fas fa-chevron-left"></i></div>';
-            document.getElementById('header-left').querySelector('.back-button').addEventListener('click', closeChat);
+            document.getElementById('header-left').innerHTML = '<div class="back-button" id="header-button"><i class="fas fa-chevron-left"></i></div>';
+            document.getElementById('header-button').addEventListener('click', closeChat);
             
             // Déterminer si c'est une conversation de groupe ou individuelle
             const isGroup = (contact === 'Betforce');
@@ -4944,6 +4931,19 @@
                 fragment.appendChild(clearfix);
                 
                 messagesContainer.appendChild(fragment);
+                
+                // Ajouter les messages qui étaient en attente
+                pendingMessages.forEach(msg => {
+                    if (msg.contact === contact) {
+                        const messageElement = document.querySelector(`.message[data-id="${msg.id}"]`);
+                        if (messageElement) {
+                            messageElement.classList.remove('pending');
+                        }
+                    }
+                });
+                
+                // Vider les messages en attente pour ce contact
+                pendingMessages = pendingMessages.filter(msg => msg.contact !== contact);
             } else {
                 // Aucun message
                 messagesContainer.innerHTML = `
@@ -5210,7 +5210,8 @@
                 id: messageId,
                 text: message,
                 from: 'me',
-                time: time
+                time: time,
+                pending: true
             };
             
             // Ajouter la référence au message répondu si existant
@@ -5221,82 +5222,164 @@
             
             // Ajouter l'image si disponible
             if (selectedImage) {
-                newMessage.image = document.getElementById('preview-img').src;
+                // Convertir l'image en base64
+                const base64Image = document.getElementById('preview-img').src;
+                newMessage.image = base64Image;
                 clearImagePreview();
             }
             
-            // Ajouter le message à la liste des messages appropriée
-            if (currentContact === 'Betforce') {
-                if (!chatMessages['Betforce']) {
-                    chatMessages['Betforce'] = [];
+            // Ajouter à la liste des messages en attente
+            pendingMessages.push({
+                id: messageId,
+                contact: currentContact,
+                timestamp: Date.now()
+            });
+            
+            // Simuler l'enregistrement du message dans la base de données
+            // Pour la démonstration, on ajoute un délai pour simuler le temps réseau
+            setTimeout(() => {
+                // Ajouter le message à la liste des messages appropriée
+                if (currentContact === 'Betforce') {
+                    if (!chatMessages['Betforce']) {
+                        chatMessages['Betforce'] = [];
+                    }
+                    // Enlever le statut "pending"
+                    delete newMessage.pending;
+                    chatMessages['Betforce'].push(newMessage);
+                } else {
+                    if (!chatMessages[currentContact]) {
+                        chatMessages[currentContact] = [];
+                    }
+                    // Enlever le statut "pending"
+                    delete newMessage.pending;
+                    chatMessages[currentContact].push(newMessage);
                 }
-                chatMessages['Betforce'].push(newMessage);
-            } else {
-                if (!chatMessages[currentContact]) {
-                    chatMessages[currentContact] = [];
+                
+                // Si on est toujours dans cette conversation, recharger les messages
+                if (currentContact === newMessage.contact) {
+                    loadChatMessages(currentContact);
                 }
-                chatMessages[currentContact].push(newMessage);
-            }
+                
+                // Mettre à jour l'aperçu de la conversation
+                updateChatPreview(currentContact, "me", message || "Image envoyée");
+                
+                // Simuler une réponse après 1-3 secondes (sauf si utilisateur bloqué)
+                if (!blockedUsers.has(currentContact)) {
+                    showTypingIndicator().then(() => {
+                        // Générer la réponse
+                        const responses = [
+                            "D'accord, je vois.",
+                            "Je comprends !",
+                            "Intéressant...",
+                            "Merci pour cette information.",
+                            "Très bien !",
+                            "Je suis d'accord avec toi."
+                        ];
+                        
+                        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                        const responseTime = (parseInt(time.split(':')[0]) + (Math.random() > 0.5 ? 0 : 1)) + ':' + 
+                            Math.floor(Math.random() * 60).toString().padStart(2, '0');
+                        const responseId = 'msg_' + (Date.now() + 1);
+                        
+                        // Déterminer qui répond dans le groupe
+                        let responderId = 'them';
+                        if (currentContact === 'Betforce') {
+                            // Choisir un membre aléatoire du groupe pour répondre
+                            const members = ['marie', 'pierre', 'sophie', 'thomas'];
+                            responderId = members[Math.floor(Math.random() * members.length)];
+                        }
+                        
+                        // Ajouter la réponse
+                        if (currentContact === 'Betforce') {
+                            chatMessages['Betforce'].push({
+                                id: responseId,
+                                text: randomResponse,
+                                from: responderId,
+                                time: responseTime
+                            });
+                        } else {
+                            chatMessages[currentContact].push({
+                                id: responseId,
+                                text: randomResponse,
+                                from: 'them',
+                                time: responseTime
+                            });
+                        }
+                        
+                        // Si on est toujours dans cette conversation, recharger
+                        if (currentContact === newMessage.contact) {
+                            loadChatMessages(currentContact);
+                        }
+                        
+                        // Mise à jour de l'aperçu de la conversation 
+                        updateChatPreview(currentContact, responderId, randomResponse);
+                    });
+                }
+            }, 500); // Simuler un délai réseau
             
-            // Recharger les messages
-            loadChatMessages(currentContact);
-            
-            // Mettre à jour l'aperçu de la conversation
-            updateChatPreview(currentContact, "me", message || "Image envoyée");
-            
-            // Vider l'entrée
+            // Vider l'entrée immédiatement
             input.value = '';
             
-            // Simuler une réponse après 1-3 secondes (sauf si utilisateur bloqué)
-            if (!blockedUsers.has(currentContact)) {
-                // Montrer l'indicateur de frappe
-                await showTypingIndicator();
+            // Afficher le message en "pending" dans l'interface
+            // Créer le message dans l'UI avant la confirmation
+            const messagesContainer = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message message-sent pending';
+            messageDiv.setAttribute('data-id', messageId);
+            messageDiv.setAttribute('data-from', 'me');
+            
+            // Si c'est une réponse à un autre message
+            if (newMessage.replyTo) {
+                const quotedDiv = document.createElement('div');
+                const fromClass = newMessage.replyTo.from === 'me' ? 'from-me' : 'from-them';
+                quotedDiv.className = 'quoted-message ' + fromClass;
                 
-                // Générer la réponse
-                const responses = [
-                    "D'accord, je vois.",
-                    "Je comprends !",
-                    "Intéressant...",
-                    "Merci pour cette information.",
-                    "Très bien !",
-                    "Je suis d'accord avec toi."
-                ];
+                const quotedSender = document.createElement('div');
+                quotedSender.className = 'quoted-sender ' + fromClass;
                 
-                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                const responseTime = (parseInt(time.split(':')[0]) + (Math.random() > 0.5 ? 0 : 1)) + ':' + 
-                    Math.floor(Math.random() * 60).toString().padStart(2, '0');
-                const responseId = 'msg_' + (Date.now() + 1);
-                
-                // Déterminer qui répond dans le groupe
-                let responderId = 'them';
                 if (currentContact === 'Betforce') {
-                    // Choisir un membre aléatoire du groupe pour répondre
-                    const members = ['marie', 'pierre', 'sophie', 'thomas'];
-                    responderId = members[Math.floor(Math.random() * members.length)];
-                }
-                
-                // Ajouter la réponse
-                if (currentContact === 'Betforce') {
-                    chatMessages['Betforce'].push({
-                        id: responseId,
-                        text: randomResponse,
-                        from: responderId,
-                        time: responseTime
-                    });
+                    quotedSender.textContent = getDisplayName(newMessage.replyTo.from);
+                    quotedSender.className += ' sender-' + newMessage.replyTo.from;
                 } else {
-                    chatMessages[currentContact].push({
-                        id: responseId,
-                        text: randomResponse,
-                        from: 'them',
-                        time: responseTime
-                    });
+                    quotedSender.textContent = newMessage.replyTo.from === 'me' ? 'Vous' : currentContact;
                 }
                 
-                loadChatMessages(currentContact);
+                const quotedContent = document.createElement('div');
+                quotedContent.className = 'quoted-content';
+                quotedContent.textContent = newMessage.replyTo.text;
                 
-                // Mise à jour de l'aperçu de la conversation 
-                updateChatPreview(currentContact, responderId, randomResponse);
+                quotedDiv.appendChild(quotedSender);
+                quotedDiv.appendChild(quotedContent);
+                messageDiv.appendChild(quotedDiv);
             }
+            
+            const messageText = document.createElement('div');
+            messageText.textContent = message;
+            messageDiv.appendChild(messageText);
+            
+            if (newMessage.image) {
+                const messageImage = document.createElement('img');
+                messageImage.className = 'message-image';
+                messageImage.src = newMessage.image;
+                messageImage.alt = 'Image';
+                messageDiv.appendChild(messageImage);
+            }
+            
+            const messageTime = document.createElement('div');
+            messageTime.className = 'message-time';
+            messageTime.textContent = time;
+            messageDiv.appendChild(messageTime);
+            
+            messagesContainer.appendChild(messageDiv);
+            
+            // Ajouter un clearfix si nécessaire
+            const clearfix = document.createElement('div');
+            clearfix.style.clear = 'both';
+            messagesContainer.appendChild(clearfix);
+            
+            // Faire défiler vers le bas
+            const chatMessagesContainer = document.querySelector('.chat-messages-container');
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
         }
         
         // Simuler le statut "en train d'écrire"
@@ -5355,6 +5438,72 @@
                 case 'me': return 'Jean';
                 default: return userId;
             }
+        }
+        
+        // Charger les notifications admin
+        function loadAdminNotifications() {
+            const notificationChain = document.getElementById('notification-chain');
+            
+            // Si l'utilisateur est admin, ajouter un bouton pour créer une nouvelle notification
+            if (isAdmin) {
+                const addButton = document.createElement('div');
+                addButton.className = 'notification-item';
+                addButton.style.cursor = 'pointer';
+                addButton.style.backgroundColor = 'var(--primary-color)';
+                addButton.style.color = 'black';
+                addButton.style.textAlign = 'center';
+                addButton.style.fontWeight = 'bold';
+                addButton.innerHTML = '<i class="fas fa-plus"></i> Ajouter une notification';
+                
+                addButton.addEventListener('click', function() {
+                    const notificationText = prompt('Entrez le texte de la notification:');
+                    if (notificationText && notificationText.trim() !== '') {
+                        addAdminNotification(notificationText);
+                    }
+                });
+                
+                notificationChain.appendChild(addButton);
+            }
+        }
+        
+        // Ajouter une notification admin
+        function addAdminNotification(text) {
+            const notificationChain = document.getElementById('notification-chain');
+            const now = new Date();
+            const time = `${now.getHours()}:${now.getMinutes() < 10 ? '0' : ''}${now.getMinutes()}`;
+            
+            const notificationItem = document.createElement('div');
+            notificationItem.className = 'notification-item';
+            
+            notificationItem.innerHTML = `
+                <div class="notification-icon-container">
+                    <i class="fas fa-bullhorn" style="color: var(--primary-color);"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">
+                        Administrateur <span class="admin-badge">Admin</span>
+                    </div>
+                    <div class="notification-text">${text}</div>
+                    <div class="notification-time">À l'instant</div>
+                </div>
+            `;
+            
+            // Insérer la nouvelle notification en haut de la liste (après le bouton d'ajout si présent)
+            const firstChild = notificationChain.firstChild;
+            if (firstChild && firstChild.style && firstChild.style.backgroundColor === 'var(--primary-color)') {
+                notificationChain.insertBefore(notificationItem, firstChild.nextSibling);
+            } else {
+                notificationChain.insertBefore(notificationItem, firstChild);
+            }
+            
+            // Animation d'apparition
+            notificationItem.style.opacity = '0';
+            notificationItem.style.transform = 'translateY(-20px)';
+            setTimeout(() => {
+                notificationItem.style.opacity = '1';
+                notificationItem.style.transform = 'translateY(0)';
+                notificationItem.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            }, 10);
         }
         
         // ================ FONCTIONS POUR LA SÉLECTION ================
@@ -5490,11 +5639,11 @@
             
             // Mettre à jour l'en-tête
             document.getElementById('header-title').innerText = 'Sélection';
-            document.getElementById('header-left').innerHTML = '<div class="back-button"><i class="fas fa-times"></i></div>';
+            document.getElementById('header-left').innerHTML = '<div class="back-button" id="header-button"><i class="fas fa-times"></i></div>';
             document.getElementById('header-action').innerHTML = '';
             
             // Ajouter l'événement sur le bouton retour
-            document.getElementById('header-left').querySelector('.back-button').addEventListener('click', exitSelectionMode);
+            document.getElementById('header-button').addEventListener('click', exitSelectionMode);
             
             // Activer le bouton de suppression flottant
             document.getElementById('conversation-delete-btn').classList.remove('active');
@@ -5555,20 +5704,19 @@
             if (currentContact) {
                 // Si nous sommes dans un chat, restaurer l'en-tête de chat
                 document.getElementById('header-title').innerText = currentContact;
-                document.getElementById('header-left').innerHTML = '<div class="back-button"><i class="fas fa-chevron-left"></i></div>';
+                document.getElementById('header-left').innerHTML = '<div class="back-button" id="header-button"><i class="fas fa-chevron-left"></i></div>';
                 document.getElementById('header-action').innerHTML = '<span class="notification-icon" id="options-button"><i class="fas fa-ellipsis-v"></i></span>';
                 
                 // Réattacher les événements
-                document.getElementById('header-left').querySelector('.back-button').addEventListener('click', closeChat);
+                document.getElementById('header-button').addEventListener('click', closeChat);
                 document.getElementById('options-button').addEventListener('click', toggleOptionsMenu);
             } else {
                 // Sinon, restaurer l'en-tête normal
                 document.getElementById('header-title').innerText = currentSection.charAt(0).toUpperCase() + currentSection.slice(1);
-                document.getElementById('header-left').innerHTML = '<span class="notification-icon badge" id="notification-bell"><i class="fas fa-bell"></i><span class="dot"></span></span>';
+                document.getElementById('header-left').innerHTML = '';
                 document.getElementById('header-action').innerHTML = '<span class="notification-icon" id="options-button"><i class="fas fa-ellipsis-v"></i></span>';
                 
                 // Réattacher les événements
-                document.getElementById('notification-bell').addEventListener('click', toggleNotifications);
                 document.getElementById('options-button').addEventListener('click', toggleOptionsMenu);
             }
             
@@ -5634,9 +5782,6 @@
                         break;
                     }
                 }
-                
-                // Notification
-                addNotification("Utilisateur bloqué", `Vous avez bloqué ${currentContact}`, "ban");
             } else {
                 closeOptionsMenu();
             }
@@ -5670,9 +5815,6 @@
                         break;
                     }
                 }
-                
-                // Notification
-                addNotification("Utilisateur débloqué", `Vous avez débloqué ${currentContact}`, "unlock");
             }
         }
         
@@ -5709,9 +5851,6 @@
                 }
             });
             
-            // Notification
-            addNotification("Utilisateurs bloqués", `${selectedItems.size} contact(s) bloqué(s)`, "ban");
-            
             // Quitter le mode sélection
             exitSelectionMode();
         }
@@ -5731,9 +5870,6 @@
             
             // Fermer le menu
             closeOptionsMenu();
-            
-            // Notification
-            addNotification("Conversation effacée", `La conversation avec ${currentContact} a été effacée`, "trash-alt");
         }
         
         // Supprimer les conversations sélectionnées avec animation
@@ -5749,11 +5885,8 @@
             const handleAnimationEnd = () => {
                 animationsCompleted++;
                 if (animationsCompleted === deletedItemsCount) {
-                    // Notification une fois toutes les animations terminées
+                    // Une fois toutes les animations terminées
                     setTimeout(() => {
-                        addNotification("Conversations supprimées", 
-                            `${deletedItemsCount} conversation(s) supprimée(s)`, "trash-alt");
-                        
                         // Sortir du mode sélection
                         exitSelectionMode();
                     }, 200);
@@ -5780,8 +5913,6 @@
             if (selectedItems.size === 0) return;
             
             exitSelectionMode();
-            addNotification("Conversations lues", 
-                `${selectedItems.size} conversation(s) marquée(s) comme lue(s)`, "check-double");
         }
         
         // Archiver les conversations sélectionnées
@@ -5789,8 +5920,6 @@
             if (selectedItems.size === 0) return;
             
             exitSelectionMode();
-            addNotification("Conversations archivées", 
-                `${selectedItems.size} conversation(s) archivée(s)`, "archive");
         }
         
         // Afficher le dialogue de suppression des messages avec options
@@ -5889,14 +6018,6 @@
                 
                 // Quitter le mode sélection
                 exitSelectionMode();
-                
-                // Ajouter une notification
-                addNotification("Messages supprimés", 
-                    selectedDeleteOption === 'for-me' ? 
-                    `${selectedMessages.size} message(s) supprimé(s) pour vous` : 
-                    `${selectedMessages.size} message(s) supprimé(s) pour tout le monde`, 
-                    "trash-alt"
-                );
             }, 800); // Attendre la fin de l'animation
         }
         
@@ -6036,13 +6157,6 @@
             
             // Quitter le mode sélection
             exitSelectionMode();
-            
-            // Montrer une notification
-            addNotification(
-                "Messages transférés", 
-                `${messagesForForward.length} message(s) transféré(s) à ${targetContactForForward}`,
-                "share"
-            );
         }
         
         // Copier les messages sélectionnés dans le presse-papiers
@@ -6069,11 +6183,9 @@
             // Tentative de copie dans le presse-papiers
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(textToCopy).then(() => {
-                    addNotification("Copié", "Le texte a été copié dans le presse-papiers", "copy");
                     exitSelectionMode();
                 }).catch(err => {
                     console.error('Erreur lors de la copie: ', err);
-                    addNotification("Erreur", "Impossible de copier dans le presse-papiers", "exclamation-circle");
                 });
             } else {
                 // Méthode alternative pour les contextes non sécurisés
@@ -6088,25 +6200,18 @@
                 
                 try {
                     const successful = document.execCommand('copy');
-                    if (successful) {
-                        addNotification("Copié", "Le texte a été copié dans le presse-papiers", "copy");
-                    } else {
-                        addNotification("Erreur", "Impossible de copier dans le presse-papiers", "exclamation-circle");
-                    }
+                    exitSelectionMode();
                 } catch (err) {
                     console.error('Erreur lors de la copie: ', err);
-                    addNotification("Erreur", "Impossible de copier dans le presse-papiers", "exclamation-circle");
                 }
                 
                 document.body.removeChild(textArea);
-                exitSelectionMode();
             }
         }
         
         // Répondre au message sélectionné
         function replyToSelectedMessage() {
             if (selectedMessages.size !== 1) {
-                addNotification("Information", "Veuillez sélectionner un seul message pour répondre", "info-circle");
                 return;
             }
             
@@ -6252,21 +6357,27 @@
         function selectFile() {
             // Simulation
             toggleAttachments();
-            addNotification("Fonctionnalité limitée", "La sélection de fichiers n'est pas disponible pour le moment", "file");
+            showSuccessPopup("Fonctionnalité limitée", "La sélection de fichiers n'est pas disponible dans cette version.", () => {
+                document.getElementById('success-popup').classList.remove('active');
+            });
         }
         
         // Sélectionner l'appareil photo
         function selectCamera() {
             // Simulation
             toggleAttachments();
-            addNotification("Accès refusé", "L'accès à l'appareil photo n'est pas disponible dans cette version", "camera");
+            showSuccessPopup("Accès refusé", "L'accès à l'appareil photo n'est pas disponible dans cette version.", () => {
+                document.getElementById('success-popup').classList.remove('active');
+            });
         }
         
         // Sélectionner la localisation
         function selectLocation() {
             // Simulation
             toggleAttachments();
-            addNotification("Localisation", "Le partage de localisation n'est pas disponible pour le moment", "map-marker-alt");
+            showSuccessPopup("Localisation", "Le partage de localisation n'est pas disponible dans cette version.", () => {
+                document.getElementById('success-popup').classList.remove('active');
+            });
         }
         
         // Effacer l'aperçu d'image
@@ -6276,24 +6387,6 @@
         }
         
         // ================ FONCTIONS UI ================
-        
-        // Basculer l'affichage des notifications
-        function toggleNotifications() {
-            var panel = document.getElementById('notifications-panel');
-            if (isNotificationsOpen) {
-                panel.classList.remove('active');
-            } else {
-                panel.classList.add('active');
-                // Marquer toutes les notifications comme lues (retirer la classe unread)
-                var unreadNotifications = document.querySelectorAll('.notification-item.unread');
-                for (var i = 0; i < unreadNotifications.length; i++) {
-                    unreadNotifications[i].classList.remove('unread');
-                }
-                // Cacher le point de notification
-                document.querySelector('.notification-icon .dot').style.display = 'none';
-            }
-            isNotificationsOpen = !isNotificationsOpen;
-        }
         
         // Basculer le menu d'options selon la section active
         function toggleOptionsMenu() {
@@ -6355,12 +6448,20 @@
             
             document.documentElement.style.setProperty('--primary-color', randomColor);
             
+            // Mettre à jour l'icône de loading
+            const footballSpinner = document.querySelector('.football-spinner');
+            if (footballSpinner) {
+                footballSpinner.style.color = randomColor;
+            }
+            
             if (document.documentElement.classList.contains('dark')) {
                 document.documentElement.style.setProperty('--chat-sent-bg', randomColor);
             }
             
             closeOptionsMenu();
-            addNotification("Thème modifié", "La couleur de l'interface a été changée", "palette");
+            showSuccessPopup("Thème modifié", "La couleur de l'interface a été changée avec succès.", () => {
+                document.getElementById('success-popup').classList.remove('active');
+            });
         }
         
         // Montrer le guide d'installation
@@ -6382,7 +6483,12 @@
         
         // Notifier du lancement des pronostics (fonction simulée)
         function notifyLaunch() {
-            addNotification("Inscription confirmée", "Vous serez alerté(e) du lancement des pronostics sportifs", "bell");
+            showSuccessPopup("Inscription confirmée", 
+                "Vous serez alerté(e) du lancement des pronostics sportifs", 
+                () => {
+                    document.getElementById('success-popup').classList.remove('active');
+                }
+            );
             
             // Changer le texte du bouton
             document.getElementById('notify-launch-button').textContent = "Inscription confirmée";
@@ -6391,51 +6497,6 @@
             // Vibration pour feedback tactile
             if (navigator.vibrate) {
                 navigator.vibrate(30);
-            }
-        }
-        
-        // Ajouter une nouvelle notification
-        function addNotification(title, text, icon) {
-            var container = document.getElementById('notifications-container');
-            var now = new Date();
-            
-            var notificationDiv = document.createElement('div');
-            notificationDiv.className = 'notification-item unread';
-            
-            notificationDiv.innerHTML = `
-                <div class="notification-icon-container">
-                    <i class="fas fa-${icon || 'bell'}" style="color: var(--primary-color);"></i>
-                </div>
-                <div class="notification-content">
-                                        <div class="notification-title">${title}</div>
-                    <div class="notification-text">${text}</div>
-                    <div class="notification-time">À l'instant</div>
-                </div>
-            `;
-            
-            // Ajouter la notification au début du conteneur
-            if (container.firstChild) {
-                container.insertBefore(notificationDiv, container.firstChild);
-            } else {
-                container.appendChild(notificationDiv);
-            }
-            
-            // Afficher le point de notification
-            document.querySelector('.notification-icon .dot').style.display = 'block';
-            
-            // Animation d'apparition
-            notificationDiv.style.opacity = '0';
-            notificationDiv.style.transform = 'translateX(20px)';
-            
-            setTimeout(() => {
-                notificationDiv.style.opacity = '1';
-                notificationDiv.style.transform = 'translateX(0)';
-                notificationDiv.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-            }, 10);
-            
-            // Vibration pour feedback tactile
-            if (navigator.vibrate) {
-                navigator.vibrate([20, 30, 20]);
             }
         }
         
@@ -6467,8 +6528,19 @@
                     completeLogin();
                 }
             } else {
-                // Utilisateur déconnecté
-                showLoginScreen();
+                // Utilisateur déconnecté - afficher l'écran de chargement
+                document.getElementById('loading').style.display = 'flex';
+                
+                // Utiliser la couleur du thème pour l'icône de chargement
+                const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+                if (primaryColor) {
+                    document.querySelector('.football-spinner').style.color = primaryColor;
+                }
+                
+                // Après un court délai pour montrer l'animation, afficher l'écran de connexion
+                setTimeout(() => {
+                    showLoginScreen();
+                }, 2000);
             }
         });
         
@@ -6507,4 +6579,3 @@
     </script>
 </body>
 </html>
-
