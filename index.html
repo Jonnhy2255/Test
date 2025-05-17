@@ -43,7 +43,6 @@
             --overlay-bg: rgba(0, 0, 0, 0.7);
             --image-viewer-bg: rgba(0, 0, 0, 0.9);
             --loading-spinner: rgba(255, 255, 255, 0.8);
-            --warning-color: #FFC107;
         }
         
         /* Mode sombre par défaut */
@@ -2637,7 +2636,7 @@
             color: white;
             text-align: center;
             font-size: 12px;
-            z-index: 10; /* Correction: réduire la valeur z-index pour ne pas bloquer les autres éléments */
+            z-index: 100;
             transform: translateY(-100%);
             transition: transform 0.3s ease;
         }
@@ -2649,75 +2648,6 @@
         .connection-status.reconnecting {
             background-color: var(--warning-color);
             transform: translateY(0);
-        }
-        
-        /* Style explicite pour le groupe BetNews */
-        .chat-item[data-id="BetNews"] .item-title:after {
-            content: "Admin uniquement";
-            display: inline-block;
-            background-color: rgba(93, 92, 222, 0.2);
-            color: var(--primary-color);
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            margin-left: 8px;
-            font-weight: normal;
-        }
-        
-        /* Style explicite pour le groupe Betforce */
-        .chat-item[data-id="Betforce"] .item-title:after {
-            content: "Discussion de groupe";
-            display: inline-block;
-            background-color: rgba(93, 92, 222, 0.2);
-            color: var(--primary-color);
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            margin-left: 8px;
-            font-weight: normal;
-        }
-        
-        /* Améliorer la responsivité sur les petits écrans */
-        @media (max-width: 360px) {
-            .header-title {
-                font-size: 16px;
-            }
-            
-            .tab {
-                font-size: 9px;
-            }
-            
-            .tab-icon {
-                font-size: 20px;
-            }
-            
-            .chat-item, .user-item {
-                padding: 10px 12px;
-            }
-            
-            .profile-pic, .group-pic, .news-group-pic {
-                width: 40px;
-                height: 40px;
-                margin-right: 8px;
-            }
-            
-            .item-title {
-                font-size: 14px;
-            }
-            
-            .item-subtitle {
-                font-size: 12px;
-            }
-            
-            .message {
-                max-width: 85%;
-                padding: 8px 12px;
-            }
-            
-            .group-info-badge {
-                font-size: 9px;
-                padding: 2px 6px;
-            }
         }
     </style>
 </head>
@@ -3730,6 +3660,12 @@
             // Sélection d'image
             document.getElementById('image-input').addEventListener('change', function(e) {
                 if (e.target.files && e.target.files[0]) {
+                    // Reset de la valeur input pour éviter les problèmes avec des sélections multiples
+                    // du même fichier
+                    if (selectedImage) {
+                        clearImagePreview();
+                    }
+                    
                     selectedImage = e.target.files[0];
                     const reader = new FileReader();
                     reader.onload = function(event) {
@@ -4901,6 +4837,16 @@
                         }
                     }
                     
+                    // Créer le badge de groupe si nécessaire
+                    let groupBadge = '';
+                    if (conv.isGroup) {
+                        if (conv.adminOnly) {
+                            groupBadge = '<span class="group-info-badge"><i class="fas fa-lock"></i> Admin uniquement</span>';
+                        } else {
+                            groupBadge = '<span class="group-info-badge"><i class="fas fa-users"></i> Groupe</span>';
+                        }
+                    }
+                    
                     // Formater le dernier message
                     let lastMessageText = conv.lastMessage;
                     if (conv.isGroup && conv.lastSender && conv.lastSender !== 'me') {
@@ -4917,7 +4863,7 @@
                         </div>
                         <div class="item-content">
                             <div style="display: flex; justify-content: space-between;">
-                                <div class="item-title">${conv.name}</div>
+                                <div class="item-title">${conv.name}${groupBadge}</div>
                                 <div class="item-time">${conv.time || ''}</div>
                             </div>
                             <div class="item-subtitle">${lastMessageText}</div>
@@ -6448,211 +6394,212 @@
                         if (currentDiscussionType === 'group') {
                             messagesRef = collection(db, "groups", currentDiscussionId, "messages");
                         } else {
-                                                        messagesRef = collection(db, "discussions", currentDiscussionId, "messages");
+                            messagesRef = collection(db, "discussions", currentDiscussionId, "messages");
                         }
                         
                         // Récupérer tous les messages
-                        const querySnapshot = await getDocs(messagesRef);
+                        const messagesSnapshot = await getDocs(messagesRef);
                         
-                        // Supprimer les messages par lots (batches) pour de meilleures performances
+                        // Supprimer chaque message
                         const batch = writeBatch(db);
-                        
-                        querySnapshot.forEach((doc) => {
+                        messagesSnapshot.forEach(doc => {
                             batch.delete(doc.ref);
                         });
                         
-                        // Exécuter le batch de suppression
+                        // Exécuter le batch
                         await batch.commit();
                         
-                        // Mettre à jour les informations de la discussion
-                        let discussionRef;
-                        if (currentDiscussionType === 'group') {
-                            discussionRef = doc(db, "groups", currentDiscussionId);
-                        } else {
-                            discussionRef = doc(db, "discussions", currentDiscussionId);
-                        }
+                        // Mettre à jour l'aperçu de la conversation
+                        updateChatUI("Conversation effacée");
                         
-                        await updateDoc(discussionRef, {
-                            lastMessage: "Aucun message",
-                            lastMessageTime: serverTimestamp()
-                        });
+                        logSystem.success(`Conversation effacée avec succès`);
+                        showNotification("Conversation effacée avec succès", "success");
                         
-                        // Actualiser la conversation
-                        messagesContainer.innerHTML = `
-                            <div style="text-align: center; padding: 20px; color: var(--inactive-text);">
-                                Aucun message. Commencez la conversation !
-                            </div>
-                        `;
-                        
-                        // Mettre à jour l'aperçu de la conversation dans la liste
-                        const chatItem = document.querySelector(`.chat-item[data-id="${currentDiscussionId}"]`);
-                        if (chatItem) {
-                            const subtitleElement = chatItem.querySelector('.item-subtitle');
-                            if (subtitleElement) {
-                                subtitleElement.textContent = "Aucun message";
-                            }
-                        }
-                        
-                        logSystem.success(`Conversation effacée avec succès: ${currentDiscussionId}`);
-                        showNotification("Conversation effacée", "success");
+                        // Les messages seront automatiquement mis à jour grâce à l'écouteur onSnapshot
                     } catch (error) {
                         logSystem.error(`Erreur lors de l'effacement de la conversation: ${error.message}`);
                         messagesContainer.innerHTML = `
                             <div style="text-align: center; padding: 20px; color: var(--danger-color);">
-                                Erreur lors de la suppression des messages
+                                <i class="fas fa-exclamation-circle" style="font-size: 24px;"></i>
+                                <div style="margin-top: 10px;">Erreur lors de la suppression des messages</div>
                             </div>
                         `;
                         showNotification("Erreur lors de l'effacement de la conversation", "error");
                     }
                 };
                 
+                // Afficher la boite de dialogue
                 document.getElementById('confirmation-dialog').classList.add('active');
                 document.getElementById('overlay').classList.add('active');
+                
+                // Fermer le menu d'options
+                closeOptionsMenu();
             } catch (error) {
-                logSystem.error(`Erreur lors de l'effacement de la conversation: ${error.message}`);
-                showNotification("Erreur lors de l'effacement de la conversation", "error");
+                logSystem.error(`Erreur lors de la préparation de l'effacement: ${error.message}`);
+                showNotification("Erreur lors de la préparation de l'effacement", "error");
+                closeOptionsMenu();
             }
-            
-            closeOptionsMenu();
         }
         
-        // Rechercher dans la conversation
-        function searchInConversation() {
-            closeOptionsMenu();
-            
-            // Afficher l'interface de recherche
-            document.getElementById('search-overlay').classList.add('active');
-            
-            // Focus sur le champ de recherche
-            setTimeout(() => {
-                document.getElementById('message-search-input').focus();
-            }, 100);
-        }
-        
-        // Fermer l'interface de recherche
-        function closeSearchInterface() {
-            document.getElementById('search-overlay').classList.remove('active');
-            document.getElementById('message-search-input').value = '';
-            document.getElementById('search-results').innerHTML = '<div class="no-results">Saisissez un terme à rechercher</div>';
-        }
-        
-        // Rechercher dans les messages
-        async function searchMessages() {
-            const searchInput = document.getElementById('message-search-input');
-            const searchText = searchInput.value.trim().toLowerCase();
-            const resultsContainer = document.getElementById('search-results');
-            
-            if (searchText.length < 2) {
-                resultsContainer.innerHTML = '<div class="no-results">Saisissez au moins 2 caractères</div>';
-                return;
-            }
+        // Mettre à jour l'interface après une action sur une discussion
+        function updateChatUI(statusMessage) {
+            if (!currentDiscussionId) return;
             
             try {
-                resultsContainer.innerHTML = `
-                    <div style="text-align: center; padding: 20px; color: var(--inactive-text);">
-                        <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i>
-                        <div style="margin-top: 10px;">Recherche en cours...</div>
-                    </div>
-                `;
-                
-                let messagesRef;
-                if (currentDiscussionType === 'group') {
-                    messagesRef = collection(db, "groups", currentDiscussionId, "messages");
-                } else {
-                    messagesRef = collection(db, "discussions", currentDiscussionId, "messages");
-                }
-                
-                const q = query(messagesRef, orderBy("createdAt", "desc"));
-                const querySnapshot = await getDocs(q);
-                
-                let results = [];
-                
-                // Filtrer les messages qui contiennent le texte recherché
-                querySnapshot.forEach((doc) => {
-                    const messageData = doc.data();
-                    if (messageData.text && messageData.text.toLowerCase().includes(searchText)) {
-                        results.push({
-                            id: doc.id,
-                            ...messageData
-                        });
-                    }
-                });
-                
-                if (results.length === 0) {
-                    resultsContainer.innerHTML = '<div class="no-results">Aucun résultat trouvé</div>';
-                    return;
-                }
-                
-                // Afficher les résultats
-                resultsContainer.innerHTML = '';
-                
-                results.forEach((result) => {
-                    const resultItem = document.createElement('div');
-                    resultItem.className = 'search-result-item';
-                    
-                    // Mettre en évidence le texte recherché
-                    const textWithHighlight = result.text.replace(
-                        new RegExp(searchText, 'gi'),
-                        match => `<span class="search-highlight">${match}</span>`
-                    );
-                    
-                    resultItem.innerHTML = `
-                        <div class="search-result-text">${textWithHighlight}</div>
-                        <div class="search-result-info">
-                            <span>${result.senderId === currentUser.uid ? 'Vous' : getDisplayName(result.senderId)}</span>
-                            <span>${formatTimestamp(result.createdAt)}</span>
-                        </div>
-                    `;
-                    
-                    // Ajouter un gestionnaire d'événements pour naviguer vers le message
-                    resultItem.addEventListener('click', () => {
-                        closeSearchInterface();
+                // Mettre à jour l'aperçu dans la liste des conversations
+                const chatItems = document.querySelectorAll('.chat-item');
+                for (let i = 0; i < chatItems.length; i++) {
+                    if (chatItems[i].getAttribute('data-id') === currentDiscussionId) {
+                        const subtitle = chatItems[i].querySelector('.item-subtitle');
+                        if (subtitle) {
+                            subtitle.innerHTML = statusMessage;
+                        }
                         
-                        // Trouver le message et le mettre en évidence
-                        setTimeout(() => {
-                            const messageElement = document.querySelector(`.message[data-id="${result.id}"]`);
-                            if (messageElement) {
-                                messageElement.classList.add('selected');
-                                
-                                // Faire défiler jusqu'au message
-                                messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                                
-                                // Retirer la mise en évidence après un délai
-                                setTimeout(() => {
-                                    messageElement.classList.remove('selected');
-                                }, 2000);
-                            }
-                        }, 300);
-                    });
-                    
-                    resultsContainer.appendChild(resultItem);
-                });
+                        // Mettre à jour l'heure
+                        const time = chatItems[i].querySelector('.item-time');
+                        if (time) {
+                            time.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                        }
+                        
+                        break;
+                    }
+                }
             } catch (error) {
-                logSystem.error(`Erreur lors de la recherche de messages: ${error.message}`);
-                resultsContainer.innerHTML = '<div class="no-results">Erreur lors de la recherche</div>';
+                logSystem.error(`Erreur lors de la mise à jour de l'interface: ${error.message}`);
             }
         }
         
-        // Afficher le dialogue de suppression des messages
+        // Supprimer les éléments sélectionnés (discussions ou messages)
+        function deleteSelectedItems() {
+            if (selectionModeType === 'conversations') {
+                showDeleteConversationsConfirmation();
+            } else if (selectionModeType === 'messages') {
+                showDeleteMessageOptions();
+            }
+                        }
+        
+                // Afficher la confirmation pour supprimer les conversations sélectionnées
+        function showDeleteConversationsConfirmation() {
+            if (selectedItems.size === 0) return;
+            
+            document.getElementById('confirmation-text').textContent = 
+                selectedItems.size === 1 ? 
+                'Êtes-vous sûr de vouloir supprimer cette conversation ?' : 
+                `Êtes-vous sûr de vouloir supprimer ces ${selectedItems.size} conversations ?`;
+            
+            document.getElementById('confirmation-confirm').onclick = async function() {
+                closeConfirmationDialog();
+                
+                try {
+                    // Supprimer chaque conversation sélectionnée
+                    for (const discussionId of selectedItems) {
+                        await deleteConversation(discussionId);
+                    }
+                    
+                    showNotification(
+                        selectedItems.size === 1 ? 
+                        'Conversation supprimée avec succès' : 
+                        `${selectedItems.size} conversations supprimées avec succès`, 
+                        'success'
+                    );
+                    
+                    // Recharger les conversations
+                    loadConversations();
+                } catch (error) {
+                    logSystem.error(`Erreur lors de la suppression des conversations: ${error.message}`);
+                    showNotification('Erreur lors de la suppression des conversations', 'error');
+                }
+                
+                // Sortir du mode sélection
+                exitSelectionMode();
+            };
+            
+            // Afficher la boite de dialogue
+            document.getElementById('confirmation-dialog').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+        
+        // Supprimer une conversation
+        async function deleteConversation(discussionId) {
+            if (!discussionId) return;
+            
+            try {
+                logSystem.info(`Suppression de la conversation: ${discussionId}`);
+                
+                // Vérifier le type de discussion (groupe ou privée)
+                const chatItem = document.querySelector(`.chat-item[data-id="${discussionId}"]`);
+                const discussionType = chatItem ? chatItem.getAttribute('data-type') : 'private';
+                
+                // Pour les groupes spéciaux, on ne supprime pas la discussion
+                if (discussionType === 'group') {
+                    const isSpecial = chatItem && chatItem.getAttribute('data-special') === 'true';
+                    if (isSpecial) {
+                        showNotification('Les groupes spéciaux ne peuvent pas être supprimés', 'error');
+                        return;
+                    }
+                }
+                
+                // Récupérer d'abord tous les messages pour les supprimer
+                let messagesRef;
+                let discussionRef;
+                
+                if (discussionType === 'group') {
+                    messagesRef = collection(db, "groups", discussionId, "messages");
+                    discussionRef = doc(db, "groups", discussionId);
+                } else {
+                    messagesRef = collection(db, "discussions", discussionId, "messages");
+                    discussionRef = doc(db, "discussions", discussionId);
+                }
+                
+                // Supprimer d'abord tous les messages
+                const messagesSnapshot = await getDocs(messagesRef);
+                if (!messagesSnapshot.empty) {
+                    const batch = writeBatch(db);
+                    messagesSnapshot.forEach(doc => {
+                        batch.delete(doc.ref);
+                    });
+                    await batch.commit();
+                }
+                
+                // Supprimer ensuite la discussion elle-même
+                await deleteDoc(discussionRef);
+                
+                logSystem.success(`Conversation ${discussionId} supprimée avec succès`);
+                
+                // Si c'est la discussion actuellement ouverte, la fermer
+                if (currentDiscussionId === discussionId) {
+                    closeChat();
+                }
+                
+                return true;
+            } catch (error) {
+                logSystem.error(`Erreur lors de la suppression de la conversation ${discussionId}: ${error.message}`);
+                throw error;
+            }
+        }
+        
+        // Afficher la boîte de dialogue de suppression de messages
         function showDeleteMessageOptions() {
             if (selectedMessages.size === 0) return;
             
-            // Si c'est un groupe et que l'utilisateur n'est pas admin, ne pas proposer l'option "pour tous"
-            if (currentDiscussionType === 'group' && !isAdmin) {
-                document.getElementById('delete-for-all').style.display = 'none';
-            } else {
-                document.getElementById('delete-for-all').style.display = 'block';
-            }
+            // Mettre à jour le texte
+            document.getElementById('delete-title').textContent = 
+                selectedMessages.size === 1 ? 
+                'Supprimer le message' : 
+                `Supprimer ${selectedMessages.size} messages`;
             
-            // Sélectionner l'option par défaut
+            // Sélectionner l'option "supprimer pour moi" par défaut
             selectDeleteOption('for-me');
             
-            // Afficher le dialogue
+            // Afficher la boîte de dialogue et l'overlay
             document.getElementById('delete-message-dialog').classList.add('active');
             document.getElementById('overlay').classList.add('active');
-            
-            // Masquer le menu des actions
-            document.getElementById('message-actions').classList.remove('active');
+        }
+        
+        // Fermer la boîte de dialogue de suppression de messages
+        function closeDeleteMessageDialog() {
+            document.getElementById('delete-message-dialog').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
         }
         
         // Sélectionner une option de suppression
@@ -6663,173 +6610,233 @@
             document.getElementById('delete-for-me').classList.remove('selected');
             document.getElementById('delete-for-all').classList.remove('selected');
             
-            document.getElementById(`delete-${option}`).classList.add('selected');
-        }
-        
-        // Fermer le dialogue de suppression des messages
-        function closeDeleteMessageDialog() {
-            document.getElementById('delete-message-dialog').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-            
-            // Réafficher le menu des actions
-            document.getElementById('message-actions').classList.add('active');
+            document.getElementById('delete-for-' + option).classList.add('selected');
         }
         
         // Confirmer la suppression des messages
         async function confirmDeleteMessages() {
-            if (selectedMessages.size === 0) return;
-            
             closeDeleteMessageDialog();
             
+            if (selectedMessages.size === 0 || !currentDiscussionId) return;
+            
             try {
-                logSystem.info(`Suppression de ${selectedMessages.size} message(s) (${selectedDeleteOption})`);
+                logSystem.info(`Suppression de ${selectedMessages.size} messages (option: ${selectedDeleteOption})`);
                 
-                // Obtenir les références de tous les messages sélectionnés
-                const messageIds = Array.from(selectedMessages);
-                
-                // Récupérer les éléments de message
-                const messageElements = messageIds.map(id => document.querySelector(`.message[data-id="${id}"]`));
-                
-                // Animation de désintégration pour tous les messages
-                for (const element of messageElements) {
-                    if (element) {
-                        element.classList.add('disintegrating');
-                    }
-                }
-                
-                // Attendre la fin de l'animation avant de supprimer réellement
-                await new Promise(resolve => setTimeout(resolve, 800));
-                
-                // Déterminer le chemin de la collection et créer un batch
+                // Déterminer le chemin de la collection de messages
                 let messagesRef;
+                
                 if (currentDiscussionType === 'group') {
                     messagesRef = collection(db, "groups", currentDiscussionId, "messages");
                 } else {
                     messagesRef = collection(db, "discussions", currentDiscussionId, "messages");
                 }
                 
+                // Si on est en mode "supprimer pour tous", il faut que ça soit nos propres messages
+                if (selectedDeleteOption === 'for-all') {
+                    // Vérifier si tous les messages sont de l'utilisateur actuel
+                    const messagesNotMine = Array.from(selectedMessages).filter(messageId => {
+                        const messageElement = document.querySelector(`.message[data-id="${messageId}"]`);
+                        if (messageElement) {
+                            return messageElement.getAttribute('data-from') !== currentUser.uid;
+                        }
+                        return true; // Si on ne trouve pas l'élément, on suppose qu'il n'est pas de l'utilisateur
+                    });
+                    
+                    if (messagesNotMine.length > 0) {
+                        logSystem.warning("Tentative de suppression de messages d'autres utilisateurs");
+                        showNotification("Vous ne pouvez supprimer que vos propres messages", "error");
+                        
+                        // Filtrer les messages pour ne supprimer que les nôtres
+                        for (const messageId of messagesNotMine) {
+                            selectedMessages.delete(messageId);
+                        }
+                        
+                        // S'il ne reste aucun message à supprimer, sortir du mode sélection
+                        if (selectedMessages.size === 0) {
+                            exitSelectionMode();
+                            return;
+                        }
+                    }
+                }
+                
+                // Préparer le batch pour la suppression
                 const batch = writeBatch(db);
                 
-                // Préparer les suppressions
-                for (const messageId of messageIds) {
-                    const messageRef = doc(messagesRef, messageId);
-                    
-                    if (selectedDeleteOption === 'for-all') {
-                        // Supprimer complètement le message
-                        batch.delete(messageRef);
-                    } else {
-                        // Marquer le message comme supprimé pour cet utilisateur uniquement
-                        batch.update(messageRef, {
-                            [`deletedFor.${currentUser.uid}`]: true
-                        });
+                // Animer les messages avant leur suppression
+                const messageElements = [];
+                selectedMessages.forEach(messageId => {
+                    const element = document.querySelector(`.message[data-id="${messageId}"]`);
+                    if (element) {
+                        element.classList.add('disintegrating');
+                        messageElements.push(element);
                     }
+                });
+                
+                // Attendre la fin de l'animation avant de supprimer les messages
+                await new Promise(resolve => setTimeout(resolve, 800));
+                
+                // Ajouter chaque message au batch pour suppression
+                for (const messageId of selectedMessages) {
+                    batch.delete(doc(messagesRef, messageId));
                 }
                 
                 // Exécuter le batch
                 await batch.commit();
                 
-                // Définir le dernier message de la conversation si tous les messages ont été supprimés
-                if (selectedDeleteOption === 'for-all') {
-                    const remainingQuery = query(messagesRef, limit(1));
-                    const remainingSnapshot = await getDocs(remainingQuery);
-                    
-                    if (remainingSnapshot.empty) {
-                        // Mettre à jour les informations de la discussion
-                        let discussionRef;
-                        if (currentDiscussionType === 'group') {
-                            discussionRef = doc(db, "groups", currentDiscussionId);
-                        } else {
-                            discussionRef = doc(db, "discussions", currentDiscussionId);
-                        }
-                        
-                        await updateDoc(discussionRef, {
-                            lastMessage: "Aucun message",
-                            lastMessageTime: serverTimestamp()
-                        });
-                    } else {
-                        // Mettre à jour avec le dernier message restant
-                        const lastMessage = remainingSnapshot.docs[0].data();
-                        let discussionRef;
-                        
-                        if (currentDiscussionType === 'group') {
-                            discussionRef = doc(db, "groups", currentDiscussionId);
-                        } else {
-                            discussionRef = doc(db, "discussions", currentDiscussionId);
-                        }
-                        
-                        await updateDoc(discussionRef, {
-                            lastMessage: lastMessage.text || "Image",
-                            lastMessageTime: lastMessage.createdAt,
-                            lastSenderId: lastMessage.senderId
-                        });
-                    }
-                }
+                // Supprimer les éléments du DOM
+                messageElements.forEach(element => {
+                    element.remove();
+                });
                 
-                // Supprimer les éléments de message de l'interface
-                for (const element of messageElements) {
-                    if (element) {
-                        element.remove();
-                    }
-                }
+                logSystem.success(`${selectedMessages.size} messages supprimés avec succès`);
+                showNotification(
+                    selectedMessages.size === 1 ? 
+                    'Message supprimé avec succès' : 
+                    `${selectedMessages.size} messages supprimés avec succès`, 
+                    'success'
+                );
                 
                 // Sortir du mode sélection
-                exitSelectionMode('messages');
+                exitSelectionMode();
                 
-                logSystem.success(`Messages supprimés avec succès`);
-                showNotification("Messages supprimés", "success");
             } catch (error) {
                 logSystem.error(`Erreur lors de la suppression des messages: ${error.message}`);
                 showNotification("Erreur lors de la suppression des messages", "error");
                 
-                // Sortir du mode sélection
-                exitSelectionMode('messages');
+                // Sortir du mode sélection quand même
+                exitSelectionMode();
             }
         }
         
-        // Transférer les messages sélectionnés
+        // Fonction pour transférer les messages sélectionnés
         function forwardSelectedMessages() {
             if (selectedMessages.size === 0) return;
             
-            logSystem.info(`Préparation du transfert de ${selectedMessages.size} message(s)`);
-            
-            // Stocker les messages à transférer
-            messagesForForward = Array.from(selectedMessages);
-            
-            // Masquer le menu des actions
-            document.getElementById('message-actions').classList.remove('active');
-            
-            // Ouvrir le dialogue de transfert
-            openForwardDialog();
-        }
-        
-        // Ouvrir le dialogue de transfert
-        async function openForwardDialog() {
-            // Mettre à jour le compteur
-            document.getElementById('forward-count-badge').textContent = messagesForForward.length.toString();
-            
-            // Afficher le dialogue
-            document.getElementById('forward-dialog').classList.add('active');
+            logSystem.info(`Préparation du transfert de ${selectedMessages.size} messages`);
             
             try {
-                // Charger les contacts disponibles
-                const contactsList = document.getElementById('forward-contacts-list');
-                contactsList.innerHTML = `
-                    <div style="text-align: center; padding: 20px; color: var(--inactive-text);">
-                        <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i>
-                        <div style="margin-top: 10px;">Chargement des contacts...</div>
-                    </div>
-                `;
+                // Récupérer les messages sélectionnés
+                messagesForForward = [];
+                selectedMessages.forEach(messageId => {
+                    const messageElement = document.querySelector(`.message[data-id="${messageId}"]`);
+                    if (messageElement) {
+                        // Obtenir le texte du message
+                        let messageText = '';
+                        const textElement = messageElement.querySelector('div:not(.message-time):not(.message-sender):not(.message-reactions):not(.message-status):not(.quoted-message)');
+                        if (textElement) {
+                            messageText = textElement.textContent;
+                        }
+                        
+                        // Obtenir l'image du message si présente
+                        let messageImage = null;
+                        const imageElement = messageElement.querySelector('.message-image');
+                        if (imageElement) {
+                            messageImage = imageElement.src;
+                        }
+                        
+                        // Ajouter à la liste des messages à transférer
+                        messagesForForward.push({
+                            text: messageText || '',
+                            image: messageImage
+                        });
+                    }
+                });
                 
-                // Récupérer les discussions individuelles
+                // Sortir du mode sélection
+                document.getElementById('message-actions').classList.remove('active');
+                
+                // Ouvrir l'interface de transfert
+                openForwardDialog();
+            } catch (error) {
+                logSystem.error(`Erreur lors de la préparation du transfert: ${error.message}`);
+                showNotification("Erreur lors de la préparation du transfert", "error");
+            }
+        }
+        
+        // Ouvrir l'interface de transfert de messages
+        function openForwardDialog() {
+            if (messagesForForward.length === 0) return;
+            
+            logSystem.info("Ouverture de l'interface de transfert");
+            
+            try {
+                // Mettre à jour le badge
+                document.getElementById('forward-count-badge').textContent = messagesForForward.length;
+                
+                // Charger les contacts et discussions
+                loadForwardContacts();
+                
+                // Afficher l'interface
+                document.getElementById('forward-dialog').classList.add('active');
+            } catch (error) {
+                logSystem.error(`Erreur lors de l'ouverture de l'interface de transfert: ${error.message}`);
+                showNotification("Erreur lors de l'ouverture de l'interface de transfert", "error");
+            }
+        }
+        
+        // Charger les contacts pour le transfert
+        async function loadForwardContacts() {
+            const contactsList = document.getElementById('forward-contacts-list');
+            contactsList.innerHTML = '';
+            
+            try {
+                logSystem.info("Chargement des contacts pour le transfert");
+                
+                // Récupérer les discussions existantes
                 const discussionsRef = collection(db, "discussions");
-                const discussionsQuery = query(
+                const q = query(
                     discussionsRef,
                     where("participants", "array-contains", currentUser.uid)
                 );
                 
-                const discussionsSnapshot = await getDocs(discussionsQuery);
+                const querySnapshot = await getDocs(q);
                 
-                // Récupérer les groupes
+                // Si on a des conversations
+                if (!querySnapshot.empty) {
+                    for (const docSnapshot of querySnapshot.docs) {
+                        const data = docSnapshot.data();
+                        const otherParticipantId = data.participants.find(id => id !== currentUser.uid);
+                        
+                        if (otherParticipantId) {
+                            // Récupérer les informations de l'autre utilisateur
+                            const otherUserRef = doc(db, "Users", otherParticipantId);
+                            const otherUserSnap = await getDoc(otherUserRef);
+                            
+                            let displayName = "Utilisateur";
+                            if (otherUserSnap.exists()) {
+                                displayName = otherUserSnap.data().displayName || otherUserSnap.data().email.split('@')[0];
+                            }
+                            
+                            // Créer l'élément de contact
+                            const contactItem = document.createElement('div');
+                            contactItem.className = 'chat-item';
+                            contactItem.setAttribute('data-contact', displayName);
+                            contactItem.setAttribute('data-id', docSnapshot.id);
+                            contactItem.setAttribute('data-type', 'private');
+                            contactItem.setAttribute('data-user-id', otherParticipantId);
+                            
+                            contactItem.innerHTML = `
+                                <div class="profile-pic">
+                                    <i class="fas fa-user" style="color: var(--primary-color);"></i>
+                                </div>
+                                <div class="item-content">
+                                    <div class="item-title">${displayName}</div>
+                                </div>
+                            `;
+                            
+                            // Gestionnaire de clic pour le transfert
+                            contactItem.addEventListener('click', function() {
+                                const discussionId = this.getAttribute('data-id');
+                                const contact = this.getAttribute('data-contact');
+                                forwardMessagesTo(discussionId, contact);
+                            });
+                            
+                            contactsList.appendChild(contactItem);
+                        }
+                    }
+                }
+                
+                // Ajouter les groupes
                 const groupsRef = collection(db, "groups");
                 const groupsQuery = query(
                     groupsRef,
@@ -6838,110 +6845,59 @@
                 
                 const groupsSnapshot = await getDocs(groupsQuery);
                 
-                // Préparer la liste
-                contactsList.innerHTML = '';
-                
-                // Ajouter les discussions individuelles
-                for (const discussionDoc of discussionsSnapshot.docs) {
-                    const data = discussionDoc.data();
-                    const otherParticipantId = data.participants.find(id => id !== currentUser.uid);
-                    
-                    if (otherParticipantId) {
-                        const otherUserRef = doc(db, "Users", otherParticipantId);
-                        const otherUserSnap = await getDoc(otherUserRef);
+                if (!groupsSnapshot.empty) {
+                    for (const groupDoc of groupsSnapshot.docs) {
+                        const groupData = groupDoc.data();
                         
-                        let displayName = "Utilisateur";
-                        if (otherUserSnap.exists()) {
-                            displayName = otherUserSnap.data().displayName || otherUserSnap.data().email.split('@')[0];
+                        // Créer l'élément de groupe
+                        const groupItem = document.createElement('div');
+                        groupItem.className = 'chat-item';
+                        groupItem.setAttribute('data-contact', groupData.name);
+                        groupItem.setAttribute('data-id', groupDoc.id);
+                        groupItem.setAttribute('data-type', 'group');
+                        
+                        // Choisir la classe d'icône appropriée
+                        let iconClass = 'group-pic';
+                        let iconContent = '<i class="fas fa-users" style="color: white;"></i>';
+                        
+                        if (groupData.name === 'BetNews') {
+                            iconClass = 'news-group-pic';
+                            iconContent = '<i class="fas fa-newspaper" style="color: white;"></i>';
                         }
                         
-                        const contactItem = document.createElement('div');
-                        contactItem.className = 'chat-item';
-                        contactItem.setAttribute('data-id', discussionDoc.id);
-                        contactItem.setAttribute('data-type', 'private');
-                        contactItem.setAttribute('data-name', displayName);
-                        
-                        contactItem.innerHTML = `
-                            <div class="profile-pic">
-                                <i class="fas fa-user" style="color: var(--primary-color);"></i>
+                        groupItem.innerHTML = `
+                            <div class="${iconClass}">
+                                ${iconContent}
                             </div>
                             <div class="item-content">
-                                <div class="item-title">${displayName}</div>
-                                <div class="item-subtitle">Discussion individuelle</div>
+                                <div class="item-title">${groupData.name}</div>
                             </div>
                         `;
                         
-                        // Ajouter l'écouteur d'événements
-                        contactItem.addEventListener('click', () => {
-                            targetContactForForward = {
-                                id: discussionDoc.id,
-                                type: 'private',
-                                name: displayName
-                            };
-                            forwardMessagesTo(targetContactForForward);
+                        // Gestionnaire de clic pour le transfert
+                        groupItem.addEventListener('click', function() {
+                            const discussionId = this.getAttribute('data-id');
+                            const contact = this.getAttribute('data-contact');
+                            forwardMessagesTo(discussionId, contact, 'group');
                         });
                         
-                        contactsList.appendChild(contactItem);
+                        contactsList.appendChild(groupItem);
                     }
                 }
                 
-                // Ajouter les groupes
-                for (const groupDoc of groupsSnapshot.docs) {
-                    const groupData = groupDoc.data();
-                    
-                    // Ne pas montrer BetNews pour les non-admins
-                    if (groupDoc.id === 'BetNews' && !isAdmin) {
-                        continue;
-                    }
-                    
-                    const contactItem = document.createElement('div');
-                    contactItem.className = 'chat-item';
-                    contactItem.setAttribute('data-id', groupDoc.id);
-                    contactItem.setAttribute('data-type', 'group');
-                    contactItem.setAttribute('data-name', groupData.name);
-                    
-                    // Définir la classe de l'icône en fonction du type de groupe
-                    let iconClass = 'group-pic';
-                    let iconContent = '<i class="fas fa-users" style="color: white;"></i>';
-                    
-                    if (groupDoc.id === 'BetNews') {
-                        iconClass = 'news-group-pic';
-                        iconContent = '<i class="fas fa-newspaper" style="color: white;"></i>';
-                    }
-                    
-                    contactItem.innerHTML = `
-                        <div class="${iconClass}">
-                            ${iconContent}
-                        </div>
-                        <div class="item-content">
-                            <div class="item-title">${groupData.name}</div>
-                            <div class="item-subtitle">Groupe</div>
-                        </div>
-                    `;
-                    
-                    // Ajouter l'écouteur d'événements
-                    contactItem.addEventListener('click', () => {
-                        targetContactForForward = {
-                            id: groupDoc.id,
-                            type: 'group',
-                            name: groupData.name
-                        };
-                        forwardMessagesTo(targetContactForForward);
-                    });
-                    
-                    contactsList.appendChild(contactItem);
-                }
-                
+                // Si aucun contact n'est trouvé
                 if (contactsList.children.length === 0) {
                     contactsList.innerHTML = `
                         <div style="text-align: center; padding: 20px; color: var(--inactive-text);">
-                            Aucun contact disponible
+                            Aucun contact disponible pour le transfert
                         </div>
                     `;
                 }
+                
+                logSystem.success("Contacts chargés avec succès pour le transfert");
             } catch (error) {
-                logSystem.error(`Erreur lors du chargement des contacts pour le transfert: ${error.message}`);
-                document.getElementById('forward-contacts-list').innerHTML = `
+                logSystem.error(`Erreur lors du chargement des contacts: ${error.message}`);
+                contactsList.innerHTML = `
                     <div style="text-align: center; padding: 20px; color: var(--danger-color);">
                         Erreur lors du chargement des contacts
                     </div>
@@ -6950,379 +6906,295 @@
         }
         
         // Transférer les messages à un contact
-        async function forwardMessagesTo(target) {
-            if (!target || messagesForForward.length === 0) return;
+        async function forwardMessagesTo(discussionId, contact, type = 'private') {
+            if (messagesForForward.length === 0 || !discussionId) return;
             
-            logSystem.info(`Transfert de ${messagesForForward.length} message(s) à ${target.name}`);
-            
-            // Fermer le dialogue de transfert
-            closeForwardDialog();
+            logSystem.info(`Transfert de ${messagesForForward.length} messages à ${contact} (${discussionId})`);
             
             try {
-                // Montrer l'indicateur de chargement
-                showNotification("Transfert des messages...", "info");
+                // Fermer l'interface de transfert
+                closeForwardDialog();
                 
-                // Récupérer les messages originaux
+                // Afficher une notification de chargement
+                showNotification(`Transfert en cours...`, 'info');
+                
+                // Déterminer le chemin de la collection de messages
                 let messagesRef;
-                if (currentDiscussionType === 'group') {
-                    messagesRef = collection(db, "groups", currentDiscussionId, "messages");
+                
+                if (type === 'group') {
+                    messagesRef = collection(db, "groups", discussionId, "messages");
                 } else {
-                    messagesRef = collection(db, "discussions", currentDiscussionId, "messages");
+                    messagesRef = collection(db, "discussions", discussionId, "messages");
                 }
                 
-                // Chemin pour les messages cible
-                let targetMessagesRef;
-                if (target.type === 'group') {
-                    targetMessagesRef = collection(db, "groups", target.id, "messages");
-                } else {
-                    targetMessagesRef = collection(db, "discussions", target.id, "messages");
-                }
-                
-                let targetRef;
-                if (target.type === 'group') {
-                    targetRef = doc(db, "groups", target.id);
-                } else {
-                    targetRef = doc(db, "discussions", target.id);
-                }
-                
-                // Transfert de chaque message
-                for (const messageId of messagesForForward) {
-                    // Récupérer le message original
-                    const messageSnapshot = await getDoc(doc(messagesRef, messageId));
+                // Transférer chaque message
+                for (const message of messagesForForward) {
+                    // Créer un nouveau message
+                    const newMessage = {
+                        senderId: currentUser.uid,
+                        createdAt: serverTimestamp(),
+                        forwardedAt: serverTimestamp(),
+                        isForwarded: true
+                    };
                     
-                    if (messageSnapshot.exists()) {
-                        const messageData = messageSnapshot.data();
-                        
-                        // Créer un nouveau message transféré
-                        const forwardedMessage = {
-                            text: messageData.text,
-                            senderId: currentUser.uid,
-                            createdAt: serverTimestamp(),
-                            status: 'sent',
-                            type: messageData.type,
-                            forwardedFrom: {
-                                originalSenderId: messageData.senderId,
-                                originalTimestamp: messageData.createdAt,
-                                source: currentContact
-                            }
-                        };
-                        
-                        // Si c'est une image, la transferer aussi
-                        if (messageData.image) {
-                            forwardedMessage.image = messageData.image;
-                        }
-                        
-                        // Ajouter le message transféré
-                        await addDoc(targetMessagesRef, forwardedMessage);
-                        
-                        // Mettre à jour les informations de la cible
-                        await updateDoc(targetRef, {
-                            lastMessage: forwardedMessage.text || "Image",
-                            lastMessageTime: serverTimestamp(),
-                            lastSenderId: currentUser.uid
-                        });
+                    // Ajouter le texte s'il existe
+                    if (message.text && message.text.trim() !== '') {
+                        newMessage.text = message.text;
+                        newMessage.type = 'text';
                     }
+                    
+                    // Ajouter l'image si elle existe
+                    if (message.image) {
+                        newMessage.image = message.image;
+                        newMessage.type = message.text ? 'mixed' : 'image';
+                    }
+                    
+                    // Ajouter le message à la collection
+                    await addDoc(messagesRef, newMessage);
                 }
                 
-                // Sortir du mode sélection
-                exitSelectionMode('messages');
+                // Mise à jour des infos de la discussion
+                const discussionRef = type === 'group' ? 
+                    doc(db, "groups", discussionId) : 
+                    doc(db, "discussions", discussionId);
                 
-                logSystem.success(`Messages transférés avec succès`);
-                showNotification("Messages transférés", "success");
+                await updateDoc(discussionRef, {
+                    lastMessage: 'Message transféré',
+                    lastMessageTime: serverTimestamp(),
+                    lastSenderId: currentUser.uid
+                });
+                
+                logSystem.success(`Messages transférés avec succès à ${contact}`);
+                showNotification(
+                    messagesForForward.length === 1 ? 
+                    'Message transféré avec succès' : 
+                    `${messagesForForward.length} messages transférés avec succès`, 
+                    'success'
+                );
+                
+                // Vider la liste des messages à transférer
+                messagesForForward = [];
+                
+                // Sortir complètement du mode sélection
+                exitSelectionMode();
             } catch (error) {
                 logSystem.error(`Erreur lors du transfert des messages: ${error.message}`);
                 showNotification("Erreur lors du transfert des messages", "error");
                 
-                // Sortir du mode sélection
-                exitSelectionMode('messages');
+                // Vider la liste des messages à transférer
+                messagesForForward = [];
             }
         }
         
-        // Fermer le dialogue de transfert
+        // Fermer l'interface de transfert
         function closeForwardDialog() {
             document.getElementById('forward-dialog').classList.remove('active');
-            document.getElementById('forward-contacts-list').innerHTML = '';
         }
         
         // Copier les messages sélectionnés
         function copySelectedMessages() {
             if (selectedMessages.size === 0) return;
             
-            const messageIdsArray = Array.from(selectedMessages);
-            
-            if (messageIdsArray.length === 0) return;
+            logSystem.info(`Copie de ${selectedMessages.size} messages`);
             
             try {
-                logSystem.info(`Copie de ${messageIdsArray.length} message(s)`);
+                // Récupérer les messages sélectionnés
+                let messagesToCopy = [];
                 
-                let textToCopy = "";
-                
-                // Parcourir tous les messages sélectionnés
-                messageIdsArray.forEach(messageId => {
+                selectedMessages.forEach(messageId => {
                     const messageElement = document.querySelector(`.message[data-id="${messageId}"]`);
-                    
                     if (messageElement) {
-                        const fromMe = messageElement.classList.contains('message-sent');
+                        // Si le message a un expéditeur (pour les groupes)
+                        const senderElement = messageElement.querySelector('.message-sender');
+                        const sender = senderElement ? senderElement.textContent + ': ' : '';
                         
-                        // Récupérer le texte du message (sans l'heure)
-                        let messageText = messageElement.innerText;
-                        
-                        // Supprimer l'heure et l'état à la fin
-                        messageText = messageText.replace(/\d{1,2}:\d{2}\s*(Envoyé|Livré|Lu|Erreur|\d{1,2}:\d{2})?$/g, '').trim();
-                        
-                        // Formater le message
-                        textToCopy += `${fromMe ? 'Vous' : currentContact}: ${messageText}\n`;
+                        // Récupérer le texte du message
+                        const textElement = messageElement.querySelector('div:not(.message-time):not(.message-sender):not(.message-reactions):not(.message-status):not(.quoted-message)');
+                        if (textElement) {
+                            messagesToCopy.push(sender + textElement.textContent);
+                        }
                     }
                 });
                 
-                // Copier le texte dans le presse-papier
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(textToCopy)
-                        .then(() => {
-                            showNotification("Messages copiés dans le presse-papier", "success");
-                            exitSelectionMode('messages');
-                        })
-                        .catch(err => {
-                            logSystem.error(`Erreur lors de la copie dans le presse-papier: ${err.message}`);
-                            fallbackCopy(textToCopy);
-                        });
-                } else {
-                    fallbackCopy(textToCopy);
-                }
+                // Assembler le texte à copier
+                const textToCopy = messagesToCopy.join('\n\n');
+                
+                // Utiliser l'API Clipboard pour copier le texte
+                navigator.clipboard.writeText(textToCopy)
+                    .then(() => {
+                        logSystem.success('Messages copiés dans le presse-papiers');
+                        showNotification('Messages copiés dans le presse-papiers', 'success');
+                        
+                        // Sortir du mode sélection
+                        exitSelectionMode();
+                    })
+                    .catch(err => {
+                        logSystem.error(`Erreur lors de la copie: ${err.message}`);
+                        showNotification('Erreur lors de la copie des messages', 'error');
+                    });
+                
             } catch (error) {
                 logSystem.error(`Erreur lors de la copie des messages: ${error.message}`);
-                showNotification("Erreur lors de la copie des messages", "error");
-                
-                // Sortir du mode sélection
-                exitSelectionMode('messages');
-            }
-        }
-        
-        // Méthode alternative de copie pour les navigateurs qui ne supportent pas l'API Clipboard
-        function fallbackCopy(text) {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            
-            // Masquer le textarea
-            textArea.style.position = "fixed";
-            textArea.style.left = "-999999px";
-            textArea.style.top = "-999999px";
-            document.body.appendChild(textArea);
-            
-            textArea.focus();
-            textArea.select();
-            
-            let successful = false;
-            try {
-                successful = document.execCommand('copy');
-            } catch (err) {
-                logSystem.error('Fallback: Erreur de copie');
-            }
-            
-            document.body.removeChild(textArea);
-            
-            if (successful) {
-                showNotification("Messages copiés dans le presse-papier", "success");
-                exitSelectionMode('messages');
-            } else {
-                showNotification("Impossible de copier les messages", "error");
+                showNotification('Erreur lors de la copie des messages', 'error');
             }
         }
         
         // Répondre au message sélectionné
         function replyToSelectedMessage() {
             if (selectedMessages.size !== 1) {
-                showNotification("Veuillez sélectionner un seul message pour répondre", "error");
+                showNotification('Veuillez sélectionner un seul message pour répondre', 'error');
                 return;
             }
             
-            const messageId = Array.from(selectedMessages)[0];
+            logSystem.info('Préparation de la réponse à un message');
+            
+            const messageId = selectedMessages.values().next().value;
             replyToMessageAction(messageId);
             
             // Sortir du mode sélection
-            exitSelectionMode('messages');
+            exitSelectionMode();
         }
         
-        // Supprimer les conversations sélectionnées
-        async function deleteSelectedItems() {
-            if (selectedItems.size === 0) return;
+        // ================ FONCTIONS POUR LES INTERACTIONS D'INTERFACE ================
+        
+        // Fermer la boite de dialogue de confirmation
+        function closeConfirmationDialog() {
+            document.getElementById('confirmation-dialog').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+        
+        // Fermer la boite de dialogue de suppression de compte
+        function closeDeleteAccountDialog() {
+            document.getElementById('delete-account-dialog').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+        
+        // Afficher la boite de dialogue de suppression de compte
+        function showDeleteAccountConfirmation() {
+            document.getElementById('delete-account-dialog').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+        
+        // Rechercher dans la conversation
+        function searchInConversation() {
+            closeOptionsMenu();
+            
+            logSystem.info('Ouverture de l\'interface de recherche');
+            
+            document.getElementById('search-overlay').classList.add('active');
+            document.getElementById('message-search-input').value = '';
+            document.getElementById('message-search-input').focus();
+            
+            // Réinitialiser les résultats
+            document.getElementById('search-results').innerHTML = '<div class="no-results">Saisissez un terme à rechercher</div>';
+        }
+        
+        // Fermer l'interface de recherche
+        function closeSearchInterface() {
+            document.getElementById('search-overlay').classList.remove('active');
+        }
+        
+        // Rechercher des messages
+        function searchMessages(event) {
+            const searchTerm = event.target.value.trim().toLowerCase();
+            const resultsContainer = document.getElementById('search-results');
+            
+            if (searchTerm.length < 2) {
+                resultsContainer.innerHTML = '<div class="no-results">Saisissez un terme à rechercher</div>';
+                return;
+            }
+            
+            logSystem.info(`Recherche de "${searchTerm}" dans les messages`);
             
             try {
-                logSystem.info(`Suppression de ${selectedItems.size} conversation(s)`);
+                // Récupérer tous les messages actuellement affichés
+                const messages = document.querySelectorAll('#chat-messages .message');
+                let results = [];
                 
-                // Afficher la confirmation
-                document.getElementById('confirmation-text').textContent = 
-                    selectedItems.size === 1 
-                    ? 'Êtes-vous sûr de vouloir supprimer cette conversation ?'
-                    : `Êtes-vous sûr de vouloir supprimer ces ${selectedItems.size} conversations ?`;
-                
-                document.getElementById('confirmation-confirm').onclick = async function() {
-                    closeConfirmationDialog();
-                    
-                    try {
-                        const selectedItemsArray = Array.from(selectedItems);
-                        
-                        // Pour chaque élément sélectionné
-                        for (const itemId of selectedItemsArray) {
-                            const chatItem = document.querySelector(`.chat-item[data-id="${itemId}"]`);
-                            const discussionType = chatItem?.getAttribute('data-type');
+                messages.forEach(message => {
+                    // Récupérer le texte du message
+                    const textElement = message.querySelector('div:not(.message-time):not(.message-sender):not(.message-reactions):not(.message-status):not(.quoted-message)');
+                    if (textElement) {
+                        const text = textElement.textContent.toLowerCase();
+                        if (text.includes(searchTerm)) {
+                            const messageId = message.getAttribute('data-id');
+                            const fromMe = message.classList.contains('message-sent');
+                            const timestamp = message.querySelector('.message-time')?.textContent || '';
                             
-                            // Ajouter l'animation de suppression
-                            if (chatItem) {
-                                chatItem.classList.add('deleting');
-                            }
-                            
-                            // Attendre la fin de l'animation
-                            await new Promise(resolve => setTimeout(resolve, 500));
-                            
-                            // Supprimer l'élément de l'interface
-                            if (chatItem) {
-                                chatItem.remove();
-                            }
-                            
-                            if (discussionType === 'group') {
-                                // Pour les groupes, se retirer du groupe
-                                if (itemId === 'BetNews' || itemId === 'Betforce') {
-                                    // Ne pas supprimer les groupes spéciaux
-                                    logSystem.warning(`Tentative de suppression d'un groupe spécial: ${itemId}`);
-                                    continue;
-                                }
-                                
-                                const groupRef = doc(db, "groups", itemId);
-                                
-                                try {
-                                    // Récupérer les données du groupe
-                                    const groupSnap = await getDoc(groupRef);
-                                    
-                                    if (groupSnap.exists()) {
-                                        const groupData = groupSnap.data();
-                                        
-                                        // Se retirer des membres
-                                        await updateDoc(groupRef, {
-                                            members: arrayRemove(currentUser.uid)
-                                        });
-                                        
-                                        logSystem.success(`Retiré du groupe: ${itemId}`);
-                                    }
-                                } catch (error) {
-                                    logSystem.error(`Erreur lors du retrait du groupe ${itemId}: ${error.message}`);
-                                }
-                            } else {
-                                // Pour les discussions normales, supprimer l'enregistrement
-                                try {
-                                    await deleteDoc(doc(db, "discussions", itemId));
-                                    logSystem.success(`Discussion supprimée: ${itemId}`);
-                                } catch (error) {
-                                    logSystem.error(`Erreur lors de la suppression de la discussion ${itemId}: ${error.message}`);
-                                }
-                            }
+                            results.push({
+                                id: messageId,
+                                text: textElement.textContent,
+                                fromMe: fromMe,
+                                timestamp: timestamp
+                            });
                         }
-                        
-                        // Vérifier s'il reste des conversations
-                        if (document.querySelectorAll('.chat-item').length === 0) {
-                            const chatList = document.getElementById('chat-list');
-                            chatList.innerHTML = `
-                                <div class="empty-state">
-                                    <i class="fas fa-comments"></i>
-                                    <div class="empty-state-title">Aucune conversation</div>
-                                    <div class="empty-state-text">Vos conversations apparaîtront ici</div>
-                                </div>
-                            `;
-                        }
-                        
-                        // Quitter le mode sélection
-                        exitSelectionMode();
-                        
-                        showNotification(
-                            selectedItemsArray.length === 1
-                            ? "Conversation supprimée"
-                            : `${selectedItemsArray.length} conversations supprimées`,
-                            "success"
-                        );
-                    } catch (error) {
-                        logSystem.error(`Erreur lors de la suppression des conversations: ${error.message}`);
-                        showNotification("Erreur lors de la suppression", "error");
-                        
-                        // Quitter le mode sélection
-                        exitSelectionMode();
                     }
-                };
+                });
                 
-                document.getElementById('confirmation-dialog').classList.add('active');
-                document.getElementById('overlay').classList.add('active');
+                // Afficher les résultats
+                if (results.length === 0) {
+                    resultsContainer.innerHTML = '<div class="no-results">Aucun résultat trouvé</div>';
+                } else {
+                    resultsContainer.innerHTML = '';
+                    
+                    // Afficher les résultats
+                    results.forEach(result => {
+                        // Mettre en évidence le terme recherché
+                        const highlightedText = result.text.replace(
+                            new RegExp(searchTerm, 'gi'),
+                            match => `<span class="search-highlight">${match}</span>`
+                        );
+                        
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'search-result-item';
+                        resultItem.innerHTML = `
+                            <div class="search-result-text">${highlightedText}</div>
+                            <div class="search-result-info">
+                                <div>${result.fromMe ? 'Vous' : currentContact}</div>
+                                <div>${result.timestamp}</div>
+                            </div>
+                        `;
+                        
+                        resultItem.addEventListener('click', function() {
+                            // Fermer l'interface de recherche
+                            closeSearchInterface();
+                            
+                            // Faire défiler jusqu'au message
+                            highlightAndScrollToMessage(result.id);
+                        });
+                        
+                        resultsContainer.appendChild(resultItem);
+                    });
+                    
+                    logSystem.info(`${results.length} résultats trouvés pour "${searchTerm}"`);
+                }
             } catch (error) {
-                logSystem.error(`Erreur lors de la suppression des conversations: ${error.message}`);
-                showNotification("Erreur lors de la suppression", "error");
-                
-                // Quitter le mode sélection
-                exitSelectionMode();
+                logSystem.error(`Erreur lors de la recherche: ${error.message}`);
+                resultsContainer.innerHTML = '<div class="no-results">Erreur lors de la recherche</div>';
             }
         }
         
-        // ================ FONCTIONS POUR LES IMAGES ET PIÈCES JOINTES ================
-        
-        // Afficher/masquer le menu de pièces jointes
-        function toggleAttachments() {
-            const menuElement = document.getElementById('chat-extra-buttons');
+        // Mettre en évidence et faire défiler jusqu'à un message
+        function highlightAndScrollToMessage(messageId) {
+            const message = document.querySelector(`.message[data-id="${messageId}"]`);
+            if (!message) return;
             
-            if (isAttachmentsOpen) {
-                menuElement.classList.remove('active');
-            } else {
-                menuElement.classList.add('active');
-            }
+            // Ajouter la classe de mise en évidence
+            message.classList.add('selected');
             
-            isAttachmentsOpen = !isAttachmentsOpen;
+            // Faire défiler jusqu'au message
+            message.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Retirer la mise en évidence après un délai
+            setTimeout(() => {
+                message.classList.remove('selected');
+            }, 3000);
         }
-        
-        // Sélectionner une image à joindre
-        function selectImage() {
-            document.getElementById('image-input').click();
-            isAttachmentsOpen = false;
-            document.getElementById('chat-extra-buttons').classList.remove('active');
-        }
-        
-        // Sélectionner un fichier à joindre
-        function selectFile() {
-            // Fonctionnalité à implémenter
-            showNotification("Fonctionnalité non disponible", "info");
-            isAttachmentsOpen = false;
-            document.getElementById('chat-extra-buttons').classList.remove('active');
-        }
-        
-        // Sélectionner la caméra
-        function selectCamera() {
-            // Fonctionnalité à implémenter (note: caméra n'est pas disponible dans l'iframe)
-            showNotification("Fonctionnalité non disponible dans le navigateur", "info");
-            isAttachmentsOpen = false;
-            document.getElementById('chat-extra-buttons').classList.remove('active');
-        }
-        
-        // Sélectionner la localisation
-        function selectLocation() {
-            // Fonctionnalité à implémenter
-            showNotification("Fonctionnalité non disponible", "info");
-            isAttachmentsOpen = false;
-            document.getElementById('chat-extra-buttons').classList.remove('active');
-        }
-        
-        // Ouvrir le clavier d'émojis
-        function openEmojiKeyboard() {
-            showNotification("Fonctionnalité d'émojis non disponible", "info");
-        }
-        
-        // Effacer l'aperçu de l'image
-        function clearImagePreview() {
-            document.getElementById('image-preview').classList.remove('active');
-            document.getElementById('preview-img').src = '';
-            selectedImage = null;
-        }
-        
-        // ================ FONCTIONS POUR LES DIALOGUES ET POPUPS ================
         
         // Afficher le guide d'installation
         function showInstallGuide() {
-            document.getElementById('install-guide').classList.add('active');
             closeOptionsMenu();
+            document.getElementById('install-guide').classList.add('active');
         }
         
         // Fermer le guide d'installation
@@ -7330,260 +7202,263 @@
             document.getElementById('install-guide').classList.remove('active');
         }
         
-        // Ouvrir/fermer le menu d'options
+        // Basculer entre les options du menu
         function toggleOptionsMenu() {
-            var overlay = document.getElementById('overlay');
-            
             if (isOptionsMenuOpen) {
                 closeOptionsMenu();
-            } else {
-                // Déterminer quel menu afficher en fonction du contexte
-                let menuToShow;
-                
-                if (document.getElementById('chat-interface').style.display === 'block') {
-                    // Si dans une conversation
-                    menuToShow = document.getElementById('chat-options-menu');
-                    
-                    // Mise à jour de l'option de blocage/déblocage
-                    updateBlockUnblockOption();
-                } else if (currentSection === 'messages') {
-                    // Si dans la liste des messages
-                    menuToShow = document.getElementById('messages-options-menu');
-                } else {
-                    // Pour toutes les autres sections
-                    menuToShow = document.getElementById('simple-options-menu');
-                }
-                
-                // Afficher le menu
-                menuToShow.classList.add('active');
-                overlay.classList.add('active');
-                isOptionsMenuOpen = true;
+                return;
             }
+            
+            logSystem.info('Ouverture du menu d\'options');
+            
+            // Déterminer quel menu afficher
+            let menuElement;
+            
+            if (document.getElementById('chat-interface').style.display === 'block') {
+                // Interface de chat ouverte
+                menuElement = document.getElementById('chat-options-menu');
+                
+                // Mettre à jour l'option de blocage
+                updateBlockUnblockOption();
+            } else if (currentSection === 'messages') {
+                // Section des messages
+                menuElement = document.getElementById('messages-options-menu');
+            } else {
+                // Autres sections
+                menuElement = document.getElementById('simple-options-menu');
+            }
+            
+            // Afficher le menu et l'overlay
+            document.getElementById('overlay').classList.add('active');
+            menuElement.classList.add('active');
+            
+            isOptionsMenuOpen = true;
         }
         
         // Fermer le menu d'options
         function closeOptionsMenu() {
-            var overlay = document.getElementById('overlay');
+            if (!isOptionsMenuOpen) return;
             
-            document.getElementById('simple-options-menu').classList.remove('active');
-            document.getElementById('messages-options-menu').classList.remove('active');
+            logSystem.info('Fermeture du menu d\'options');
+            
+            // Masquer tous les menus d'options et l'overlay
+            document.getElementById('overlay').classList.remove('active');
             document.getElementById('chat-options-menu').classList.remove('active');
+            document.getElementById('messages-options-menu').classList.remove('active');
+            document.getElementById('simple-options-menu').classList.remove('active');
             
-            overlay.classList.remove('active');
             isOptionsMenuOpen = false;
         }
         
-        // Fermer le dialogue de confirmation
-        function closeConfirmationDialog() {
-            document.getElementById('confirmation-dialog').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-        }
-        
-        // Fermer tous les dialogues
+        // Fermer toutes les boîtes de dialogue
         function closeAllDialogs() {
-            closeOptionsMenu();
+            if (isOptionsMenuOpen) {
+                closeOptionsMenu();
+            }
+            
             closeConfirmationDialog();
             closeDeleteAccountDialog();
             closeDeleteMessageDialog();
             closeForwardDialog();
-            document.getElementById('message-actions').classList.remove('active');
             document.getElementById('overlay').classList.remove('active');
         }
         
-        // Afficher le dialogue de suppression de compte
-        function showDeleteAccountConfirmation() {
-            document.getElementById('delete-account-dialog').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
+        // Basculer l'affichage des options d'attachement
+        function toggleAttachments() {
+            if (isAttachmentsOpen) {
+                document.getElementById('chat-extra-buttons').classList.remove('active');
+            } else {
+                document.getElementById('chat-extra-buttons').classList.add('active');
+            }
+            
+            isAttachmentsOpen = !isAttachmentsOpen;
         }
         
-        // Fermer le dialogue de suppression de compte
-        function closeDeleteAccountDialog() {
-            document.getElementById('delete-account-dialog').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
+        // Changer le thème de l'application
+        function changeTheme() {
+            closeOptionsMenu();
+            
+            const isDark = document.documentElement.classList.contains('dark');
+            
+            if (isDark) {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('dark-toggle').checked = false;
+                
+                // En mode clair, utiliser une couleur de message violette
+                document.documentElement.style.setProperty('--chat-sent-bg', '#5D5CDE');
+                document.documentElement.style.setProperty('--chat-sent-text', '#ffffff');
+            } else {
+                document.documentElement.classList.add('dark');
+                document.getElementById('dark-toggle').checked = true;
+                
+                // En mode sombre, utiliser la couleur principale
+                document.documentElement.style.setProperty('--chat-sent-bg', document.documentElement.style.getPropertyValue('--primary-color') || '#F7DC6F');
+                document.documentElement.style.setProperty('--chat-sent-text', '#000000');
+            }
+            
+            // Sauvegarder la préférence
+            localStorage.setItem('ichatDarkMode', !isDark ? 'true' : 'false');
         }
         
-        // Afficher un popup de succès
-        function showSuccessPopup(title, message, onClose) {
-            const popup = document.getElementById('success-popup');
-            
-            document.getElementById('success-title').textContent = title;
-            document.getElementById('success-message').textContent = message;
-            
-            // Configurer le bouton
-            const button = document.getElementById('success-button');
-            button.onclick = onClose || function() {
-                popup.classList.remove('active');
-            };
-            
-            // Afficher le popup
-            popup.classList.add('active');
+        // Déclencher la sélection d'une image
+        function selectImage() {
+            document.getElementById('image-input').click();
+            document.getElementById('chat-extra-buttons').classList.remove('active');
+            isAttachmentsOpen = false;
         }
         
-        // Notification de lancement à venir pour les pronostics
+        // Sélectionner un fichier (non implémenté)
+        function selectFile() {
+            showNotification('La sélection de fichiers n\'est pas encore disponible', 'info');
+            document.getElementById('chat-extra-buttons').classList.remove('active');
+            isAttachmentsOpen = false;
+        }
+        
+        // Prendre une photo (non implémenté)
+        function selectCamera() {
+            showNotification('L\'accès à l\'appareil photo n\'est pas disponible', 'info');
+            document.getElementById('chat-extra-buttons').classList.remove('active');
+            isAttachmentsOpen = false;
+        }
+        
+        // Envoyer la localisation (non implémenté)
+        function selectLocation() {
+            showNotification('L\'envoi de localisation n\'est pas encore disponible', 'info');
+            document.getElementById('chat-extra-buttons').classList.remove('active');
+            isAttachmentsOpen = false;
+        }
+        
+        // Ouvrir le clavier d'emoji (non implémenté)
+        function openEmojiKeyboard() {
+            showNotification('Le clavier d\'emoji n\'est pas encore disponible', 'info');
+        }
+        
+        // Effacer l'aperçu de l'image
+        function clearImagePreview() {
+            document.getElementById('image-preview').classList.remove('active');
+            document.getElementById('preview-img').src = '';
+            document.getElementById('image-input').value = '';
+            selectedImage = null;
+        }
+        
+        // Être notifié du lancement des pronostics (non implémenté)
         function notifyLaunch() {
             showSuccessPopup(
-                "Notification activée",
-                "Vous serez notifié dès le lancement des pronostics sportifs. Merci de votre intérêt !",
+                'Merci !',
+                'Vous serez notifié(e) lors du lancement des pronostics sportifs. Restez à l\'écoute !',
                 function() {
                     document.getElementById('success-popup').classList.remove('active');
-                    document.getElementById('notify-launch-button').textContent = "Notification activée";
-                    document.getElementById('notify-launch-button').disabled = true;
                 }
             );
         }
         
-        // ================ FONCTIONS D'INITIALISATION ================
-        
-        // Compléter le processus de connexion
-        async function completeLogin() {
-            try {
-                logSystem.info("Complétion du processus de connexion...");
-                
-                // Récupérer les données de l'utilisateur
-                currentUserData = await getUserData(currentUser.uid);
-                
-                if (!currentUserData) {
-                    logSystem.error("Données utilisateur non trouvées, création d'un profil...");
-                    
-                    // Créer un profil par défaut si aucun n'existe
-                    await createUserProfile(currentUser.uid, currentUser.email);
-                    currentUserData = await getUserData(currentUser.uid);
-                }
-                
-                isAdmin = currentUserData.statut === 'admin';
-                
-                // Mettre à jour la page pour l'utilisateur connecté
-                updateUIForLoggedInUser();
-                
-                // Charger les utilisateurs bloqués
-                loadBlockedUsers();
-                
-                // Afficher la barre d'onglets
-                document.getElementById('tabbar').style.display = 'flex';
-                
-                // Charger les conversations
-                loadConversations();
-                
-                // Masquer l'écran d'authentification
-                document.getElementById('auth-screen').style.display = 'none';
-                
-                // Masquer l'écran de chargement
-                hideLoading();
-                
-                // Afficher la section messages
-                changeTab('messages');
-                
-                isLoggedIn = true;
-                
-                logSystem.success("Connexion complétée avec succès");
-            } catch (error) {
-                logSystem.error(`Erreur lors de la complétion de la connexion: ${error.message}`);
-                showLoginScreen();
-            }
+        // Afficher un popup de succès
+        function showSuccessPopup(title, message, callback) {
+            document.getElementById('success-title').textContent = title;
+            document.getElementById('success-message').textContent = message;
+            document.getElementById('success-button').onclick = callback;
+            document.getElementById('success-popup').classList.add('active');
         }
         
-        // Mettre à jour l'interface pour l'utilisateur connecté
-        function updateUIForLoggedInUser() {
-            logSystem.info("Mise à jour de l'interface pour l'utilisateur connecté");
-            
-            // Mise à jour des informations de profil
-            document.getElementById('profile-name-text').textContent = currentUserData.displayName || currentUser.email.split('@')[0];
-            document.getElementById('profile-email').textContent = currentUser.email;
-            
-            // Afficher le badge admin si nécessaire
-            if (isAdmin) {
-                document.getElementById('admin-badge').style.display = 'inline-block';
-            } else {
-                document.getElementById('admin-badge').style.display = 'none';
-            }
-            
-            // Autres mises à jour spécifiques à l'utilisateur connecté
-            loadSavedPreferences();
-        }
+        // ================ INITIALISATION DE L'APPLICATION ================
         
-        // Charger les préférences sauvegardées
-        function loadSavedPreferences() {
-            // Charger le mode sombre
-            const darkMode = localStorage.getItem('ichatDarkMode');
-            if (darkMode === 'false') {
-                document.documentElement.classList.remove('dark');
-                document.getElementById('dark-toggle').checked = false;
-                document.documentElement.style.setProperty('--chat-sent-bg', '#5D5CDE');
-            } else {
-                document.documentElement.classList.add('dark');
-                document.getElementById('dark-toggle').checked = true;
-                const primaryColor = document.documentElement.style.getPropertyValue('--primary-color') || '#F7DC6F';
-                document.documentElement.style.setProperty('--chat-sent-bg', primaryColor);
-            }
-            
-            // Charger la couleur personnalisée
-            const savedColor = localStorage.getItem('ichatColor');
-            if (savedColor) {
-                changeAppColor(savedColor);
-                document.getElementById('color-picker').value = savedColor;
-            }
-        }
-        
-        // Charger les utilisateurs bloqués
-        function loadBlockedUsers() {
-            try {
-                const savedBlockedUsers = localStorage.getItem('ichatBlockedUsers');
-                if (savedBlockedUsers) {
-                    blockedUsers = new Set(JSON.parse(savedBlockedUsers));
-                    logSystem.info(`${blockedUsers.size} utilisateur(s) bloqué(s) chargé(s)`);
-                }
-            } catch (error) {
-                logSystem.error(`Erreur lors du chargement des utilisateurs bloqués: ${error.message}`);
-                blockedUsers = new Set();
-            }
-        }
-        
-        // Fonction d'initialisation principale
-        function initialize() {
-            logSystem.info("Initialisation de l'application...");
-            
-            // Configurer les événements de l'interface
+        // Fonction principale qui initialise l'application
+        async function initApp() {
+            // Initialiser les événements de l'interface
             setupUIEvents();
             
-            // Configurer les événements d'authentification
+            // Initialiser les événements d'authentification
             setupAuthEvents();
             
-            // Configurer le mode sombre
+            // Initialiser la détection du mode sombre
             setupDarkMode();
             
-            // Configurer la surveillance de la connexion internet
+            // Initialiser la surveillance de la connexion
             setupConnectionMonitoring();
             
-            // Masquer le bouton de logs au démarrage
+            // Cacher le bouton de logs par défaut
             document.getElementById('logs-toggle').style.display = 'none';
             
-            // Surveiller l'état de l'authentification
-            onAuthStateChanged(auth, (user) => {
+            // Charger les préférences de l'utilisateur depuis le localStorage
+            loadUserPreferences();
+            
+            // Écouter les changements d'authentification
+            onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    // Utilisateur connecté
                     logSystem.info(`Utilisateur connecté: ${user.uid} (${user.email})`);
+                    
                     currentUser = user;
-                    completeLogin();
+                    
+                    // Récupérer les données de l'utilisateur
+                    const userData = await getUserData(user.uid);
+                    
+                    if (userData) {
+                        currentUserData = userData;
+                        isAdmin = userData.statut === 'admin';
+                        
+                        // Mettre à jour le profil
+                        document.getElementById('profile-name-text').textContent = 
+                            userData.displayName || userData.email.split('@')[0];
+                        document.getElementById('profile-email').textContent = userData.email;
+                        
+                        // Afficher le badge admin si applicable
+                        if (isAdmin) {
+                            document.getElementById('admin-badge').style.display = 'inline-block';
+                        } else {
+                            document.getElementById('admin-badge').style.display = 'none';
+                        }
+                    }
+                    
+                    isLoggedIn = true;
+                    
+                    // Masquer l'écran de chargement
+                    hideLoading();
+                    hideLoginScreen();
+                    
                 } else {
-                    // Utilisateur déconnecté
-                    logSystem.info("Aucun utilisateur connecté");
+                    logSystem.warning("Aucun utilisateur connecté");
+                    
+                    // Réinitialiser les variables
+                    currentUser = null;
+                    currentUserData = null;
+                    isAdmin = false;
+                    isLoggedIn = false;
+                    
+                    // Masquer l'écran de chargement
+                    hideLoading();
+                    
+                    // Afficher l'écran de connexion
                     showLoginScreen();
                 }
             });
         }
         
-        // Afficher l'écran de connexion
+        // Fonction pour terminer le processus de connexion
+        function completeLogin() {
+            // Masquer l'écran d'authentification
+            hideLoginScreen();
+            
+            // Afficher l'écran de chargement pendant que les données se chargent
+            document.getElementById('loading').style.display = 'flex';
+            
+            // Charger les conversations
+            changeTab('messages');
+        }
+        
+        // Fonction pour masquer l'écran de chargement
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+        
+        // Fonction pour masquer l'écran de connexion
+        function hideLoginScreen() {
+            document.getElementById('auth-screen').style.display = 'none';
+        }
+        
+        // Fonction pour afficher l'écran de connexion
         function showLoginScreen() {
-            logSystem.info("Affichage de l'écran de connexion");
-            
-            // Masquer la barre d'onglets
-            document.getElementById('tabbar').style.display = 'none';
-            
-            // Masquer l'écran de chargement
-            hideLoading();
-            
-            // Afficher l'écran d'authentification
             document.getElementById('auth-screen').style.display = 'flex';
+            document.getElementById('chat-interface').style.display = 'none';
             
             // Réinitialiser les formulaires
             document.getElementById('login-email').value = '';
@@ -7596,60 +7471,54 @@
             hideLog('login-log');
             hideLog('register-log');
             
-            // Désactiver les loaders de boutons
+            // Désactiver les loaders sur les boutons
             setButtonLoading('loginBtn', false);
             setButtonLoading('registerBtn', false);
         }
         
-        // Masquer l'écran de chargement
-        function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
-        }
-        
-        // Afficher l'écran de chargement
-        function showLoading(message = "Chargement...") {
-            document.getElementById('loading').querySelector('div:nth-child(3)').innerText = message;
-            document.getElementById('loading').style.display = 'flex';
-        }
-        
-        // Changer de thème (clair/sombre)
-        function changeTheme() {
-            closeOptionsMenu();
-            
-            const isDark = document.documentElement.classList.contains('dark');
-            const darkToggle = document.getElementById('dark-toggle');
-            
-            if (isDark) {
-                document.documentElement.classList.remove('dark');
-                darkToggle.checked = false;
-                document.documentElement.style.setProperty('--chat-sent-bg', '#5D5CDE');
-            } else {
-                document.documentElement.classList.add('dark');
-                darkToggle.checked = true;
-                const primaryColor = document.documentElement.style.getPropertyValue('--primary-color') || '#F7DC6F';
-                document.documentElement.style.setProperty('--chat-sent-bg', primaryColor);
-            }
-            
-            // Sauvegarder la préférence
-            localStorage.setItem('ichatDarkMode', !isDark ? 'true' : 'false');
-        }
-        
-        // Mettre à jour l'interface d'une discussion
-        function updateChatUI(message) {
-            // Mettre à jour le dernier message dans la liste des discussions
-            if (currentDiscussionId) {
-                const chatItem = document.querySelector(`.chat-item[data-id="${currentDiscussionId}"]`);
-                if (chatItem) {
-                    const subtitleElement = chatItem.querySelector('.item-subtitle');
-                    if (subtitleElement) {
-                        subtitleElement.textContent = message;
-                    }
+        // Charger les préférences de l'utilisateur depuis le localStorage
+        function loadUserPreferences() {
+            try {
+                // Charger le thème
+                const darkMode = localStorage.getItem('ichatDarkMode');
+                if (darkMode === 'false') {
+                    document.documentElement.classList.remove('dark');
+                    document.getElementById('dark-toggle').checked = false;
+                    
+                    // En mode clair, utiliser une couleur de message violette
+                    document.documentElement.style.setProperty('--chat-sent-bg', '#5D5CDE');
+                    document.documentElement.style.setProperty('--chat-sent-text', '#ffffff');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    document.getElementById('dark-toggle').checked = true;
+                    
+                    // En mode sombre, utiliser la couleur principale
+                    const color = localStorage.getItem('ichatColor') || '#F7DC6F';
+                    document.documentElement.style.setProperty('--chat-sent-bg', color);
+                    document.documentElement.style.setProperty('--chat-sent-text', '#000000');
                 }
+                
+                // Charger la couleur personnalisée
+                const color = localStorage.getItem('ichatColor');
+                if (color) {
+                    document.documentElement.style.setProperty('--primary-color', color);
+                    document.getElementById('color-picker').value = color;
+                }
+                
+                // Charger les utilisateurs bloqués
+                const blockedUsersJson = localStorage.getItem('ichatBlockedUsers');
+                if (blockedUsersJson) {
+                    blockedUsers = new Set(JSON.parse(blockedUsersJson));
+                }
+            } catch (error) {
+                logSystem.error(`Erreur lors du chargement des préférences: ${error.message}`);
             }
         }
         
-        // Initialiser l'application au chargement
-        initialize();
+        // Démarrer l'application
+        document.addEventListener('DOMContentLoaded', () => {
+            initApp();
+        });
     </script>
-  </body>
-  </html>
+</body>
+</html>
