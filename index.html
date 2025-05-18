@@ -43,7 +43,6 @@
             --overlay-bg: rgba(0, 0, 0, 0.7);
             --image-viewer-bg: rgba(0, 0, 0, 0.9);
             --loading-spinner: rgba(255, 255, 255, 0.8);
-            --warning-color: #FFC107;
         }
         
         /* Mode sombre par défaut */
@@ -2324,6 +2323,137 @@
             background-color: var(--selection-color);
         }
 
+        /* ============= FENÊTRE DE LOGS =============== */
+        .logs-window {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            max-height: 50%;
+            background-color: var(--log-bg);
+            color: var(--log-text);
+            z-index: 100;
+            border-top: 2px solid var(--primary-color);
+            display: none;
+            flex-direction: column;
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .logs-window.active {
+            display: flex;
+            transform: translateY(0);
+        }
+
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .logs-title {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .logs-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .logs-action {
+            padding: 4px 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--primary-color);
+        }
+
+        .logs-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 12px;
+        }
+
+        .log-entry {
+            margin-bottom: 4px;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            word-break: break-all;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-entry.info {
+            color: var(--log-info);
+        }
+
+        .log-entry.warning {
+            color: var(--log-warning);
+        }
+
+        .log-entry.error {
+            color: var(--log-error);
+        }
+
+        .log-entry.success {
+            color: var(--log-success);
+        }
+
+        .log-time {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-right: 6px;
+        }
+
+        .logs-toggle {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--log-bg);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 99;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .logs-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* Style pour les informations de groupe */
+        .group-info-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(93, 92, 222, 0.2);
+            color: var(--primary-color);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+
+        .group-info-badge i {
+            margin-right: 4px;
+            font-size: 10px;
+        }
+
         /* ============= VISIONNEUSE D'IMAGES PERSONNALISÉE =============== */
         .image-viewer {
             position: fixed;
@@ -2519,393 +2649,6 @@
             background-color: var(--warning-color);
             transform: translateY(0);
         }
-
-        /* ============= STYLES POUR LA SECTION PRONOSTICS =============== */
-        .matches-container {
-            padding: 15px;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: var(--primary-color);
-        }
-
-        .match-card {
-            background-color: var(--secondary-color);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .match-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 12px;
-            color: var(--inactive-text);
-        }
-
-        .match-league {
-            font-weight: bold;
-        }
-
-        .match-date {
-            font-style: italic;
-        }
-
-        .match-teams {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .team {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 40%;
-        }
-
-        .team-logo {
-            width: 40px;
-            height: 40px;
-            background-color: var(--bg-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 8px;
-            font-size: 18px;
-        }
-
-        .team-name {
-            font-weight: bold;
-            text-align: center;
-            font-size: 14px;
-        }
-
-        .match-separator {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 20%;
-        }
-
-        .match-time {
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .match-status {
-            font-size: 12px;
-            padding: 2px 8px;
-            border-radius: 10px;
-            background-color: var(--primary-color);
-            color: black;
-        }
-
-        .match-status.live {
-            background-color: #ff4d4d;
-            color: white;
-        }
-
-        .match-status.finished {
-            background-color: var(--inactive-text);
-            color: white;
-        }
-
-        .match-odds {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        .odd-button {
-            flex: 1;
-            padding: 8px;
-            margin: 0 5px;
-            border-radius: 8px;
-            background-color: var(--bg-color);
-            text-align: center;
-            font-weight: bold;
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .odd-button:active {
-            transform: scale(0.98);
-        }
-
-        .odd-button.selected {
-            border-color: var(--primary-color);
-            background-color: var(--selection-color);
-        }
-
-        .odd-label {
-            font-size: 12px;
-            color: var(--inactive-text);
-            margin-bottom: 3px;
-        }
-
-        .odd-value {
-            font-size: 16px;
-            color: var(--text-color);
-        }
-
-        .match-prediction {
-            background-color: var(--bg-color);
-            border-radius: 8px;
-            padding: 10px;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
-        .prediction-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-        }
-
-        .prediction-title i {
-            margin-right: 5px;
-        }
-
-        .prediction-text {
-            opacity: 0.9;
-        }
-
-        .bet-form {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .bet-label {
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .bet-input-container {
-            display: flex;
-            margin-bottom: 10px;
-        }
-
-        .bet-input {
-            flex: 1;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background-color: var(--input-bg);
-            font-size: 16px;
-            color: var(--text-color);
-        }
-
-        .bet-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        .bet-currency {
-            padding: 10px;
-            background-color: var(--secondary-color);
-            border: 1px solid var(--border-color);
-            border-left: none;
-            border-radius: 0 8px 8px 0;
-            font-weight: bold;
-        }
-
-        .bet-potential {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .bet-potential-label {
-            color: var(--inactive-text);
-        }
-
-        .bet-potential-value {
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        .featured-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 20px 0 10px;
-            display: flex;
-            align-items: center;
-        }
-
-        .featured-title i {
-            color: var(--primary-color);
-            margin-right: 8px;
-        }
-
-        .forecast-scroll {
-            overflow-x: auto;
-            white-space: nowrap;
-            padding-bottom: 15px;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE/Edge */
-        }
-
-        .forecast-scroll::-webkit-scrollbar { 
-            display: none; /* Chrome/Safari/Opera */
-        }
-
-        .forecast-cards {
-            display: inline-flex;
-            gap: 12px;
-            padding: 2px;
-        }
-
-        .forecast-card {
-            background-color: var(--secondary-color);
-            border-radius: 12px;
-            padding: 15px;
-            width: 220px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            display: inline-block;
-        }
-
-        .forecast-league {
-            font-size: 12px;
-            color: var(--inactive-text);
-            margin-bottom: 8px;
-        }
-
-        .forecast-teams {
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .forecast-tip {
-            background-color: var(--primary-color);
-            color: black;
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 12px;
-            margin-bottom: 8px;
-        }
-
-        .forecast-odds {
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .forecast-odds span {
-            font-weight: bold;
-        }
-
-        .forecast-comment {
-            font-size: 12px;
-            line-height: 1.4;
-            color: var(--text-color);
-            opacity: 0.9;
-        }
-
-        .pronostic-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            margin-bottom: 15px;
-        }
-
-        .pronostic-stat {
-            background-color: var(--secondary-color);
-            border-radius: 12px;
-            padding: 15px 10px;
-            flex: 1;
-            margin: 0 5px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: var(--primary-color);
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--inactive-text);
-        }
-
-        .bet-success {
-            background-color: var(--success-color);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            text-align: center;
-            font-weight: bold;
-            display: none;
-        }
-
-        .bet-success.active {
-            display: block;
-        }
-
-        .hot-picks {
-            margin-top: 20px;
-        }
-
-        .hot-pick-item {
-            display: flex;
-            background-color: var(--secondary-color);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            align-items: center;
-        }
-
-        .hot-pick-icon {
-            background-color: var(--primary-color);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            color: black;
-        }
-
-        .hot-pick-details {
-            flex: 1;
-        }
-
-        .hot-pick-match {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .hot-pick-prediction {
-            font-size: 13px;
-            color: var(--inactive-text);
-        }
-
-        .hot-pick-odds {
-            font-weight: bold;
-            padding: 3px 8px;
-            background-color: var(--bg-color);
-            border-radius: 5px;
-        }
     </style>
 </head>
 <body>
@@ -3002,7 +2745,7 @@
                 <i class="fas fa-chevron-left"></i>
             </span>
         </div>
-        <div id="header-title" class="header-title">Messages</div>
+        <div id="header-title" class="header-title">Betforce</div>
         <div id="header-action">
             <span class="notification-icon" id="options-button">
                 <i class="fas fa-ellipsis-v"></i>
@@ -3079,10 +2822,19 @@
             </div>
             
             <div class="chat-list" id="chat-list">
-                <div class="empty-state">
-                    <i class="fas fa-comments"></i>
-                    <div class="empty-state-title">Aucune conversation</div>
-                    <div class="empty-state-text">Vos conversations apparaîtront ici</div>
+                <!-- Contenu dynamique - uniquement groupe Betforce -->
+                <div class="chat-item selectable-item" data-contact="Betforce" data-id="Betforce" data-type="group">
+                    <div class="group-pic">
+                        <i class="fas fa-users" style="color: white;"></i>
+                    </div>
+                    <div class="item-content">
+                        <div style="display: flex; justify-content: space-between;">
+                            <div class="item-title">Betforce<span class="group-info-badge"><i class="fas fa-users"></i> Groupe</span></div>
+                            <div class="item-time"></div>
+                        </div>
+                        <div class="item-subtitle">Chargement des messages...</div>
+                    </div>
+                    <i class="fas fa-check-circle check-circle"></i>
                 </div>
             </div>
         </div>
@@ -3102,215 +2854,15 @@
             </div>
         </div>
         
-        <!-- Section Pronostics NOUVELLE VERSION -->
+        <!-- Section Pronostics -->
         <div id="pronostics-section" class="section">
-            <div class="search-container">
-                <input type="text" class="search-input" id="pronostics-search" placeholder="Rechercher un match ou une équipe">
-            </div>
-            
-            <!-- Stats des pronostics -->
-            <div class="pronostic-stats">
-                <div class="pronostic-stat">
-                    <div class="stat-value">84%</div>
-                    <div class="stat-label">Réussite</div>
-                </div>
-                <div class="pronostic-stat">
-                    <div class="stat-value">36</div>
-                    <div class="stat-label">Pronostics</div>
-                </div>
-                <div class="pronostic-stat">
-                    <div class="stat-value">1.92</div>
-                    <div class="stat-label">Cote moyenne</div>
-                </div>
-            </div>
-            
-            <!-- Hot picks -->
-            <div class="hot-picks">
-                <div class="featured-title">
-                    <i class="fas fa-fire"></i> Coups sûrs du jour
-                </div>
-                
-                <div class="hot-pick-item">
-                    <div class="hot-pick-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <div class="hot-pick-details">
-                        <div class="hot-pick-match">PSG vs Lyon</div>
-                        <div class="hot-pick-prediction">PSG Vainqueur</div>
-                    </div>
-                    <div class="hot-pick-odds">1.55</div>
-                </div>
-                
-                <div class="hot-pick-item">
-                    <div class="hot-pick-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <div class="hot-pick-details">
-                        <div class="hot-pick-match">Lille vs Nantes</div>
-                        <div class="hot-pick-prediction">Moins de 2.5 buts</div>
-                    </div>
-                    <div class="hot-pick-odds">1.78</div>
-                </div>
-                
-                <div class="hot-pick-item">
-                    <div class="hot-pick-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <div class="hot-pick-details">
-                        <div class="hot-pick-match">Bayern vs Dortmund</div>
-                        <div class="hot-pick-prediction">Les deux équipes marquent</div>
-                    </div>
-                    <div class="hot-pick-odds">1.65</div>
-                </div>
-            </div>
-            
-            <!-- Pronostics recommandés -->
-            <div class="featured-title" style="margin-top: 25px;">
-                <i class="fas fa-certificate"></i> Pronostics experts
-            </div>
-            
-            <div class="forecast-scroll">
-                <div class="forecast-cards">
-                    <div class="forecast-card">
-                        <div class="forecast-league">LIGUE 1</div>
-                        <div class="forecast-teams">PSG vs Marseille</div>
-                        <div class="forecast-tip">PSG -1.5</div>
-                        <div class="forecast-odds">Cote: <span>1.85</span></div>
-                        <div class="forecast-comment">Le PSG est en grande forme à domicile et devrait l'emporter avec au moins deux buts d'écart.</div>
-                    </div>
-                    
-                    <div class="forecast-card">
-                        <div class="forecast-league">PREMIER LEAGUE</div>
-                        <div class="forecast-teams">Man City vs Liverpool</div>
-                        <div class="forecast-tip">Plus de 3.5 buts</div>
-                        <div class="forecast-odds">Cote: <span>1.92</span></div>
-                        <div class="forecast-comment">Ces équipes produisent souvent des matches à haute intensité avec beaucoup de buts.</div>
-                    </div>
-                    
-                    <div class="forecast-card">
-                        <div class="forecast-league">LIGA</div>
-                        <div class="forecast-teams">Barcelone vs Real Madrid</div>
-                        <div class="forecast-tip">Match nul</div>
-                        <div class="forecast-odds">Cote: <span>3.40</span></div>
-                        <div class="forecast-comment">Un Clasico équilibré qui pourrait très bien se terminer par un match nul.</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Matches à venir -->
-            <div class="matches-container">
-                <div class="section-title">Matches du jour</div>
-                
-                <div class="match-card">
-                    <div class="match-header">
-                        <div class="match-league">Ligue 1 - France</div>
-                        <div class="match-date">Aujourd'hui</div>
-                    </div>
-                    
-                    <div class="match-teams">
-                        <div class="team">
-                            <div class="team-logo"><i class="fas fa-shield-alt"></i></div>
-                            <div class="team-name">PSG</div>
-                        </div>
-                        
-                        <div class="match-separator">
-                            <div class="match-time">21:00</div>
-                            <div class="match-status">À venir</div>
-                        </div>
-                        
-                        <div class="team">
-                            <div class="team-logo"><i class="fas fa-shield-alt"></i></div>
-                            <div class="team-name">Marseille</div>
-                        </div>
-                    </div>
-                    
-                    <div class="match-odds">
-                        <div class="odd-button" id="odd-1">
-                            <div class="odd-label">PSG</div>
-                            <div class="odd-value">1.40</div>
-                        </div>
-                        <div class="odd-button" id="odd-x">
-                            <div class="odd-label">Nul</div>
-                            <div class="odd-value">4.50</div>
-                        </div>
-                        <div class="odd-button" id="odd-2">
-                            <div class="odd-label">Marseille</div>
-                            <div class="odd-value">7.20</div>
-                        </div>
-                    </div>
-                    
-                    <div class="match-prediction">
-                        <div class="prediction-title"><i class="fas fa-chart-line"></i> Prédiction</div>
-                        <div class="prediction-text">
-                            Le PSG devrait s'imposer à domicile. Notre recommandation : PSG vainqueur avec une cote de 1.40.
-                        </div>
-                    </div>
-                    
-                    <div class="bet-form">
-                        <div class="bet-label">Placez votre pari (simulé):</div>
-                        <div class="bet-input-container">
-                            <input type="number" class="bet-input" id="bet-amount" placeholder="Montant" min="1">
-                            <div class="bet-currency">€</div>
-                        </div>
-                        
-                        <div class="bet-potential">
-                            <div class="bet-potential-label">Gain potentiel:</div>
-                            <div class="bet-potential-value" id="potential-winnings">0.00 €</div>
-                        </div>
-                        
-                        <button class="button" id="place-bet-btn">Parier</button>
-                        
-                        <div class="bet-success" id="bet-success">
-                            Pari simulé placé avec succès !
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="match-card">
-                    <div class="match-header">
-                        <div class="match-league">Premier League - Angleterre</div>
-                        <div class="match-date">Aujourd'hui</div>
-                    </div>
-                    
-                    <div class="match-teams">
-                        <div class="team">
-                            <div class="team-logo"><i class="fas fa-shield-alt"></i></div>
-                            <div class="team-name">Liverpool</div>
-                        </div>
-                        
-                        <div class="match-separator">
-                            <div class="match-time">16:00</div>
-                            <div class="match-status">À venir</div>
-                        </div>
-                        
-                        <div class="team">
-                            <div class="team-logo"><i class="fas fa-shield-alt"></i></div>
-                            <div class="team-name">Chelsea</div>
-                        </div>
-                    </div>
-                    
-                    <div class="match-odds">
-                        <div class="odd-button" id="liv-win">
-                            <div class="odd-label">Liverpool</div>
-                            <div class="odd-value">1.85</div>
-                        </div>
-                        <div class="odd-button" id="liv-draw">
-                            <div class="odd-label">Nul</div>
-                            <div class="odd-value">3.60</div>
-                        </div>
-                        <div class="odd-button" id="che-win">
-                            <div class="odd-label">Chelsea</div>
-                            <div class="odd-value">4.20</div>
-                        </div>
-                    </div>
-                    
-                    <div class="match-prediction">
-                        <div class="prediction-title"><i class="fas fa-chart-line"></i> Prédiction</div>
-                        <div class="prediction-text">
-                            Liverpool est favori à domicile, mais Chelsea pourrait créer la surprise. Notre conseil : Les deux équipes marquent (Oui) avec une cote de 1.70.
-                        </div>
-                    </div>
-                </div>
+            <div class="coming-soon-container">
+                <i class="fas fa-futbol coming-soon-icon"></i>
+                <div class="coming-soon-title">Pronostics sportifs</div>
+                <p class="coming-soon-text">
+                    Retrouvez bientôt les meilleurs pronostics sportifs pour vos paris. Soyez alerté des opportunités de gains!
+                </p>
+                <button class="button" id="notify-launch-button">Être notifié(e) au lancement</button>
             </div>
         </div>
         
@@ -3375,7 +2927,7 @@
                         </ul>
                     </div>
                     
-                    <div class="about-version">Version 3.0.0</div>
+                    <div class="about-version">Version 2.5.0</div>
                 </div>
                 
                 <button id="logout-btn" class="button">Se déconnecter</button>
@@ -3957,10 +3509,7 @@
             document.getElementById('confirmation-cancel').addEventListener('click', closeConfirmationDialog);
             
             // Pronostics
-            document.getElementById('notify-launch-button')?.addEventListener('click', notifyLaunch);
-            
-            // Événements spécifiques aux pronostics
-            setupPronosticsEvents();
+            document.getElementById('notify-launch-button').addEventListener('click', notifyLaunch);
             
             // Visionneuse d'images
             document.getElementById('image-viewer-close').addEventListener('click', closeImageViewer);
@@ -3969,88 +3518,11 @@
             document.getElementById('image-viewer-download').addEventListener('click', downloadViewerImage);
             
             setupImageViewerGestures();
-        }
-        
-        // Configuration des événements pour la section pronostics
-        function setupPronosticsEvents() {
-            // Événements pour les options de paris
-            const oddButtons = document.querySelectorAll('.odd-button');
-            oddButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Désélectionner tous les boutons du même conteneur
-                    const container = this.closest('.match-odds');
-                    container.querySelectorAll('.odd-button').forEach(btn => {
-                        btn.classList.remove('selected');
-                    });
-                    
-                    // Sélectionner ce bouton
-                    this.classList.add('selected');
-                    
-                    // Calculer les gains potentiels
-                    updatePotentialWinnings();
-                });
+            
+            // Ouvrir le chat Betforce au démarrage
+            document.querySelector('.chat-item[data-id="Betforce"]').addEventListener('click', function() {
+                openChat("Betforce", null, "Betforce", "group");
             });
-            
-            // Mettre à jour les gains lors de la saisie du montant
-            const betInput = document.getElementById('bet-amount');
-            if (betInput) {
-                betInput.addEventListener('input', updatePotentialWinnings);
-            }
-            
-            // Bouton pour placer un pari
-            const placeBetBtn = document.getElementById('place-bet-btn');
-            if (placeBetBtn) {
-                placeBetBtn.addEventListener('click', placeBet);
-            }
-        }
-        
-        // Mettre à jour les gains potentiels basés sur la cote et le montant
-        function updatePotentialWinnings() {
-            const betAmount = parseFloat(document.getElementById('bet-amount').value) || 0;
-            const selectedOdd = document.querySelector('.odd-button.selected');
-            
-            if (selectedOdd && betAmount > 0) {
-                const oddValue = parseFloat(selectedOdd.querySelector('.odd-value').textContent);
-                const potentialWinnings = (betAmount * oddValue).toFixed(2);
-                document.getElementById('potential-winnings').textContent = potentialWinnings + ' €';
-            } else {
-                document.getElementById('potential-winnings').textContent = '0.00 €';
-            }
-        }
-        
-        // Simuler le placement d'un pari
-        function placeBet() {
-            const betAmount = parseFloat(document.getElementById('bet-amount').value);
-            const selectedOdd = document.querySelector('.odd-button.selected');
-            
-            if (!selectedOdd) {
-                showNotification('Veuillez sélectionner une cote', 'error');
-                return;
-            }
-            
-            if (!betAmount || betAmount <= 0) {
-                showNotification('Veuillez entrer un montant valide', 'error');
-                return;
-            }
-            
-            // Afficher le message de succès
-            document.getElementById('bet-success').classList.add('active');
-            
-            // Réinitialiser le formulaire après un délai
-            setTimeout(() => {
-                document.getElementById('bet-amount').value = '';
-                document.querySelector('.odd-button.selected')?.classList.remove('selected');
-                document.getElementById('potential-winnings').textContent = '0.00 €';
-                
-                // Masquer le message de succès après un délai supplémentaire
-                setTimeout(() => {
-                    document.getElementById('bet-success').classList.remove('active');
-                }, 3000);
-                
-            }, 1500);
-            
-            // Afficher une notification
-            showNotification('Pari simulé placé avec succès !', 'success');
         }
         
         // Configuration des gestes pour la visionneuse d'images
@@ -4241,7 +3713,7 @@
             document.querySelector(`.tab[data-section="${tabName}"]`).classList.add('active');
             
             // Mettre à jour le titre dans l'en-tête
-            document.getElementById('header-title').textContent = tabName.charAt(0).toUpperCase() + tabName.slice(1);
+            document.getElementById('header-title').textContent = tabName === 'messages' ? 'Betforce' : tabName.charAt(0).toUpperCase() + tabName.slice(1);
             
             // Réinitialiser l'en-tête
             document.getElementById('header-left').innerHTML = '';
@@ -4262,7 +3734,10 @@
             if (tabName === 'users') {
                 loadUsers();
             } else if (tabName === 'messages') {
-                loadConversations();
+                // Si on est sur la section messages, ouvrir automatiquement Betforce
+                if (isLoggedIn) {
+                    openChat("Betforce", null, "Betforce", "group");
+                }
             }
         }
         
@@ -4314,19 +3789,8 @@
                 document.getElementById('block-banner').classList.remove('active');
             }
             
-            // Vérifier si c'est le groupe BetNews (seul l'admin peut écrire)
-            if (discussionType === 'group' && contact === 'BetNews') {
-                if (isAdmin) {
-                    // Montrer la barre de saisie pour l'admin
-                    document.getElementById('chat-input-container').style.display = 'flex';
-                } else {
-                    // Cacher la barre de saisie pour les utilisateurs non-admin
-                    document.getElementById('chat-input-container').style.display = 'none';
-                }
-            } else {
-                // Pour les autres conversations, toujours montrer la barre de saisie
-                document.getElementById('chat-input-container').style.display = 'flex';
-            }
+            // Pour Betforce, tous les utilisateurs peuvent écrire
+            document.getElementById('chat-input-container').style.display = 'flex';
             
             // Charger les messages
             loadChatMessages(discussionId, discussionType);
@@ -4366,7 +3830,7 @@
             document.getElementById('chat-interface').style.display = 'none';
             
             // Réinitialiser l'en-tête pour revenir à la liste des messages
-            document.getElementById('header-title').innerText = 'Messages';
+            document.getElementById('header-title').innerText = 'Betforce';
             document.getElementById('header-action').innerHTML = '<span class="notification-icon" id="options-button"><i class="fas fa-ellipsis-v"></i></span>';
             document.getElementById('header-left').innerHTML = '';
             
@@ -4645,8 +4109,8 @@
                 // Stocker les informations dans les variables globales
                 currentUser = userCredential.user;
                 
-                // Une fois inscrit, ajouter l'utilisateur aux groupes Betforce et BetNews
-                await addUserToSpecialGroups(uid);
+                // Une fois inscrit, ajouter l'utilisateur aux groupes Betforce
+                await addUserToGroups(uid);
                 
                 setTimeout(() => {
                     completeLogin();
@@ -4727,20 +4191,17 @@
             }
         }
         
-        // Ajouter un utilisateur aux groupes spéciaux (Betforce et BetNews)
-        async function addUserToSpecialGroups(userId) {
+        // Ajouter un utilisateur au groupe Betforce
+        async function addUserToGroups(userId) {
             try {
-                // Récupérer tous les utilisateurs existants pour les ajouter aux groupes spéciaux
+                // Récupérer tous les utilisateurs existants pour les ajouter au groupe
                 const usersRef = collection(db, "Users");
                 const userSnap = await getDocs(usersRef);
                 let allUserIds = userSnap.docs.map(doc => doc.id);
                 
-                // Vérifier si les groupes existent déjà
+                // Vérifier si le groupe existe déjà
                 const betforceRef = doc(db, "groups", "Betforce");
                 const betforceSnap = await getDoc(betforceRef);
-                
-                const betnewsRef = doc(db, "groups", "BetNews");
-                const betnewsSnap = await getDoc(betnewsRef);
                 
                 // Créer ou mettre à jour Betforce avec tous les utilisateurs
                 if (!betforceSnap.exists()) {
@@ -4769,63 +4230,13 @@
                         type: "text"
                     });
                 } else {
-                    // Ajouter l'utilisateur au groupe existant et mettre à jour les membres
-                    // S'assurer que tous les utilisateurs sont dans le groupe
+                    // Ajouter l'utilisateur au groupe existant
                     await updateDoc(betforceRef, {
                         members: allUserIds
                     });
                 }
-                
-                // Créer ou mettre à jour BetNews avec tous les utilisateurs
-                if (!betnewsSnap.exists()) {
-                    // Créer le groupe BetNews avec tous les utilisateurs
-                    await setDoc(betnewsRef, {
-                        name: "BetNews",
-                        description: "Canal d'informations pour les paris sportifs (seuls les admins peuvent poster)",
-                        members: allUserIds,
-                        createdAt: serverTimestamp(),
-                        isSpecial: true,
-                        adminOnly: true
-                    });
-                    
-                    // Créer la collection de messages pour ce groupe
-                    const messagesRef = collection(db, "groups", "BetNews", "messages");
-                    await addDoc(messagesRef, {
-                        text: "Bienvenue dans le canal d'informations BetNews !",
-                        senderId: "admin",
-                        createdAt: serverTimestamp(),
-                        type: "text"
-                    });
-                    
-                    await addDoc(messagesRef, {
-                        text: "Seuls les administrateurs peuvent publier dans ce groupe. Consultez régulièrement pour les dernières actualités et pronostics.",
-                        senderId: "admin",
-                        createdAt: serverTimestamp(),
-                        type: "text"
-                    });
-                    
-                    await addDoc(messagesRef, {
-                        text: "Match PSG vs. Marseille ce dimanche à 21h00. Nos analystes prédisent une victoire du PSG 2-0.",
-                        senderId: "admin",
-                        createdAt: serverTimestamp(),
-                        type: "text"
-                    });
-                    
-                    await addDoc(messagesRef, {
-                        text: "N'oubliez pas de consulter l'onglet Pronostics pour les cotes et analyses détaillées.",
-                        senderId: "admin",
-                        createdAt: serverTimestamp(),
-                        type: "text"
-                    });
-                } else {
-                    // Ajouter l'utilisateur au groupe existant et mettre à jour les membres
-                    // S'assurer que tous les utilisateurs sont dans le groupe
-                    await updateDoc(betnewsRef, {
-                        members: allUserIds
-                    });
-                }
             } catch (error) {
-                console.error("Erreur lors de l'ajout aux groupes spéciaux:", error);
+                console.error("Erreur lors de l'ajout aux groupes:", error);
             }
         }
         
@@ -4858,7 +4269,6 @@
                 // Rediriger vers l'écran de connexion
                 showLoginScreen();
             } catch (error) {
-                console.error("Erreur lors de la déconnexion:", error);
                 // Masquer l'écran de chargement
                 hideLoading();
             }
@@ -4884,8 +4294,15 @@
                     // Supprimer les données de l'utilisateur de Firestore
                     await deleteDoc(doc(db, "Users", currentUser.uid));
                     
-                    // Supprimer l'utilisateur des groupes spéciaux
-                    await removeUserFromSpecialGroups(currentUser.uid);
+                    // Supprimer l'utilisateur du groupe
+                    const betforceRef = doc(db, "groups", "Betforce");
+                    const betforceSnap = await getDoc(betforceRef);
+                    
+                    if (betforceSnap.exists()) {
+                        await updateDoc(betforceRef, {
+                            members: arrayRemove(currentUser.uid)
+                        });
+                    }
                     
                     // Supprimer le compte Firebase Auth
                     await currentUser.delete();
@@ -4903,46 +4320,11 @@
                 // Afficher l'écran de connexion
                 showLoginScreen();
             } catch (error) {
-                console.error("Erreur lors de la suppression du compte:", error);
-                
                 // Masquer l'écran de chargement
                 hideLoading();
                 
                 // Afficher une erreur
-                showSuccessPopup(
-                    'Erreur',
-                    'Une erreur est survenue lors de la suppression du compte. Veuillez vous reconnecter et réessayer.',
-                    () => {
-                        document.getElementById('success-popup').classList.remove('active');
-                    }
-                );
-            }
-        }
-        
-        // Supprimer l'utilisateur des groupes spéciaux
-        async function removeUserFromSpecialGroups(userId) {
-            try {
-                // Mettre à jour Betforce
-                const betforceRef = doc(db, "groups", "Betforce");
-                const betforceSnap = await getDoc(betforceRef);
-                
-                if (betforceSnap.exists()) {
-                    await updateDoc(betforceRef, {
-                        members: arrayRemove(userId)
-                    });
-                }
-                
-                // Mettre à jour BetNews
-                const betnewsRef = doc(db, "groups", "BetNews");
-                const betnewsSnap = await getDoc(betnewsRef);
-                
-                if (betnewsSnap.exists()) {
-                    await updateDoc(betnewsRef, {
-                        members: arrayRemove(userId)
-                    });
-                }
-            } catch (error) {
-                console.error("Erreur lors de la suppression des groupes:", error);
+                document.getElementById('success-popup').classList.add('active');
             }
         }
         
@@ -4958,317 +4340,22 @@
                     return null;
                 }
             } catch (error) {
-                console.error("Erreur lors de la récupération des données utilisateur:", error);
                 return null;
             }
         }
         
-        // ================ FONCTIONS POUR LES MESSAGES ET GROUPES ================
+        // ================ FONCTIONS POUR LES MESSAGES ================
         
         // Charger les conversations dans la liste depuis Firestore
         async function loadConversations() {
-            const chatList = document.getElementById('chat-list');
-            chatList.innerHTML = '';
+            // Pour cet exemple, nous n'avons qu'une seule discussion: Betforce
+            // Le code est simplifié, pas besoin de charger d'autres discussions
+            const chatItem = document.querySelector('.chat-item[data-id="Betforce"]');
             
-            try {
-                // Si pas d'utilisateur authentifié, ne rien faire
-                if (!currentUser) {
-                    return;
-                }
-                
-                // Récupérer les discussions personnelles de l'utilisateur actuel
-                const discussionsRef = collection(db, "discussions");
-                const q = query(
-                    discussionsRef,
-                    where("participants", "array-contains", currentUser.uid),
-                    orderBy("lastMessageTime", "desc")
-                );
-                
-                let conversations = [];
-                
-                try {
-                    const querySnapshot = await getDocs(q);
-                    
-                    // Ajouter les discussions personnelles
-                    for (const docSnapshot of querySnapshot.docs) {
-                        const data = docSnapshot.data();
-                        const otherParticipantId = data.participants.find(id => id !== currentUser.uid);
-                        
-                        if (otherParticipantId) {
-                            // Récupérer les informations de l'autre utilisateur
-                            const otherUserRef = doc(db, "Users", otherParticipantId);
-                            const otherUserSnap = await getDoc(otherUserRef);
-                            
-                            let displayName = "Utilisateur";
-                            if (otherUserSnap.exists()) {
-                                displayName = otherUserSnap.data().displayName || otherUserSnap.data().email.split('@')[0];
-                            }
-                            
-                            conversations.push({
-                                id: docSnapshot.id,
-                                name: displayName,
-                                isGroup: false,
-                                lastMessage: data.lastMessage || "Aucun message",
-                                lastSender: data.lastSenderId,
-                                time: formatTimestamp(data.lastMessageTime),
-                                otherUserId: otherParticipantId
-                            });
-                        }
-                    }
-                } catch (error) {
-                    console.error("Erreur lors de la récupération des discussions:", error);
-                }
-                
-                // Récupérer les groupes dont l'utilisateur est membre
-                try {
-                    // Récupérer les groupes où cet utilisateur est membre
-                    const groupsRef = collection(db, "groups");
-                    const groupsQuery = query(
-                        groupsRef,
-                        where("members", "array-contains", currentUser.uid)
-                    );
-                    
-                    const groupsSnapshot = await getDocs(groupsQuery);
-                    
-                    for (const groupDoc of groupsSnapshot.docs) {
-                        const groupData = groupDoc.data();
-                        
-                        // Récupérer le dernier message du groupe
-                        let lastMessage = "Aucun message";
-                        let lastSenderId = null;
-                        let lastMessageTime = null;
-                        
-                        const messagesRef = collection(db, "groups", groupDoc.id, "messages");
-                        const messagesQuery = query(messagesRef, orderBy("createdAt", "desc"), limit(1));
-                        const messagesSnapshot = await getDocs(messagesQuery);
-                        
-                        if (!messagesSnapshot.empty) {
-                            const lastMessageDoc = messagesSnapshot.docs[0];
-                            const messageData = lastMessageDoc.data();
-                            lastMessage = messageData.text || "Image";
-                            lastSenderId = messageData.senderId;
-                            lastMessageTime = messageData.createdAt;
-                        }
-                        
-                        // Ajouter le groupe à la liste des conversations
-                        conversations.push({
-                            id: groupDoc.id,
-                            name: groupData.name,
-                            isGroup: true,
-                            isSpecial: groupData.isSpecial || false,
-                            lastMessage: lastMessage,
-                            lastSender: lastSenderId,
-                            time: formatTimestamp(lastMessageTime),
-                            adminOnly: groupData.adminOnly || false,
-                            description: groupData.description || "Groupe de discussion"
-                        });
-                    }
-                } catch (error) {
-                    console.error("Erreur lors de la récupération des groupes:", error);
-                }
-                
-                // Trier les conversations par date du dernier message (les plus récentes d'abord)
-                conversations.sort((a, b) => {
-                    // Priorité aux groupes spéciaux
-                    if (a.isSpecial && !b.isSpecial) return -1;
-                    if (!a.isSpecial && b.isSpecial) return 1;
-                    
-                    // Sinon, trier par heure
-                    if (!a.time) return 1;
-                    if (!b.time) return -1;
-                    return 0;
-                });
-                
-                // Si aucune conversation
-                if (conversations.length === 0) {
-                    chatList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-comments"></i>
-                            <div class="empty-state-title">Aucune conversation</div>
-                            <div class="empty-state-text">Vos conversations apparaîtront ici</div>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Créer les éléments pour chaque conversation
-                conversations.forEach(conv => {
-                    const isBlocked = blockedUsers.has(conv.otherUserId);
-                    
-                    const chatItem = document.createElement('div');
-                    chatItem.className = `chat-item selectable-item ${isBlocked ? 'blocked' : ''}`;
-                    chatItem.setAttribute('data-contact', conv.name);
-                    chatItem.setAttribute('data-id', conv.id);
-                    
-                    if (conv.isGroup) {
-                        chatItem.setAttribute('data-type', 'group');
-                    } else {
-                        chatItem.setAttribute('data-type', 'private');
-                        chatItem.setAttribute('data-user-id', conv.otherUserId);
-                    }
-                    
-                    // Choisir la classe d'icône appropriée
-                    let iconClass = 'profile-pic';
-                    let iconContent = '<i class="fas fa-user" style="color: var(--primary-color);"></i>';
-                    
-                    if (conv.isGroup) {
-                        if (conv.name === 'BetNews') {
-                            iconClass = 'news-group-pic';
-                            iconContent = '<i class="fas fa-newspaper" style="color: white;"></i>';
-                        } else {
-                            iconClass = 'group-pic';
-                            iconContent = '<i class="fas fa-users" style="color: white;"></i>';
-                        }
-                    }
-                    
-                    // Créer le badge de groupe si nécessaire
-                    let groupBadge = '';
-                    if (conv.isGroup) {
-                        if (conv.adminOnly) {
-                            groupBadge = '<span class="group-info-badge"><i class="fas fa-lock"></i> Admin uniquement</span>';
-                        } else {
-                            groupBadge = '<span class="group-info-badge"><i class="fas fa-users"></i> Groupe</span>';
-                        }
-                    }
-                    
-                    // Formater le dernier message
-                    let lastMessageText = conv.lastMessage;
-                    if (conv.isGroup && conv.lastSender && conv.lastSender !== 'me') {
-                        lastMessageText = `<strong>${getDisplayName(conv.lastSender)}:</strong> ${conv.lastMessage}`;
-                    }
-                    
-                    if (isBlocked) {
-                        lastMessageText = 'Utilisateur bloqué';
-                    }
-                    
-                    chatItem.innerHTML = `
-                        <div class="${iconClass}">
-                            ${iconContent}
-                        </div>
-                        <div class="item-content">
-                            <div style="display: flex; justify-content: space-between;">
-                                <div class="item-title">${conv.name}${groupBadge}</div>
-                                <div class="item-time">${conv.time || ''}</div>
-                            </div>
-                            <div class="item-subtitle">${lastMessageText}</div>
-                        </div>
-                        <i class="fas fa-check-circle check-circle"></i>
-                    `;
-                    
-                    // Configuration des événements pour la sélection longue
-                    setupLongPressSelection(chatItem);
-                    
-                    // Gestionnaire de clic normal (ouverture de la conversation)
-                    chatItem.addEventListener('click', function(e) {
-                        if (!isSelectionMode) {
-                            const discussionId = this.getAttribute('data-id');
-                            const discussionType = this.getAttribute('data-type');
-                            const contact = this.getAttribute('data-contact');
-                            const userId = this.getAttribute('data-user-id');
-                            
-                            openChat(contact, userId, discussionId, discussionType);
-                        } else {
-                            // Si en mode sélection, sélectionner/désélectionner cet élément
-                            toggleItemSelection(this, this.getAttribute('data-id'));
-                        }
-                    });
-                    
-                    chatList.appendChild(chatItem);
-                });
-            } catch (error) {
-                console.error("Erreur lors du chargement des conversations:", error);
-                chatList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <div class="empty-state-title">Erreur de chargement</div>
-                        <div class="empty-state-text">Impossible de charger les conversations. Veuillez réessayer.</div>
-                    </div>
-                `;
+            // Si on est connecté, ouvrir automatiquement Betforce
+            if (isLoggedIn) {
+                openChat("Betforce", null, "Betforce", "group");
             }
-        }
-
-        // Formater un timestamp Firestore
-        function formatTimestamp(timestamp) {
-            if (!timestamp) return "";
-            
-            // Si c'est un timestamp Firestore
-            if (timestamp.toDate) {
-                const date = timestamp.toDate();
-                return `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
-            }
-            
-            // Si c'est une date standard
-            if (timestamp instanceof Date) {
-                return `${timestamp.getHours()}:${timestamp.getMinutes().toString().padStart(2, '0')}`;
-            }
-            
-            // Si c'est déjà une chaîne formatée
-            return timestamp;
-        }
-        
-        // Configurer la sélection par appui long
-        function setupLongPressSelection(element) {
-            let startX, startY;
-            
-            // Gestionnaires pour appareils tactiles
-            element.addEventListener('touchstart', function(e) {
-                if (isSelectionMode) return;
-                
-                startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
-                
-                // Démarrer le timer d'appui long
-                longPressTimer = setTimeout(() => {
-                    // Effet de vibration pour feedback tactile
-                    if (navigator.vibrate) {
-                        navigator.vibrate(50);
-                    }
-                    
-                    // Démarrer le mode sélection
-                    startSelectionMode();
-                    
-                    // Sélectionner cet élément
-                    const itemId = this.getAttribute('data-id');
-                    toggleItemSelection(this, itemId);
-                    
-                    // Ajouter une classe pour le feedback visuel
-                    this.classList.add('longpressing');
-                    
-                    // Nettoyer après l'animation
-                    setTimeout(() => {
-                        this.classList.remove('longpressing');
-                    }, 300);
-                    
-                }, longPressDuration);
-            }, { passive: true });
-            
-            element.addEventListener('touchmove', function(e) {
-                if (!longPressTimer) return;
-                
-                // Calculer la distance de déplacement
-                const moveX = e.touches[0].clientX;
-                const moveY = e.touches[0].clientY;
-                const distance = Math.sqrt(
-                    Math.pow(moveX - startX, 2) + 
-                    Math.pow(moveY - startY, 2)
-                );
-                
-                // Si le doigt a bougé significativement, annuler l'appui long
-                if (distance > 10) {
-                    clearTimeout(longPressTimer);
-                    longPressTimer = null;
-                }
-            }, { passive: true });
-            
-            element.addEventListener('touchend', function() {
-                clearTimeout(longPressTimer);
-                longPressTimer = null;
-            }, { passive: true });
-            
-            element.addEventListener('touchcancel', function() {
-                clearTimeout(longPressTimer);
-                longPressTimer = null;
-            }, { passive: true });
         }
         
         // Charger la liste des utilisateurs depuis Firestore
@@ -5328,15 +4415,11 @@
                             </div>
                         `;
                         
-                        userItem.addEventListener('click', function() {
-                            startOrOpenConversation(doc.id, displayName);
-                        });
-                        
                         usersList.appendChild(userItem);
                     }
                 });
+                
             } catch (error) {
-                console.error("Erreur lors du chargement des utilisateurs:", error);
                 usersList.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-exclamation-circle"></i>
@@ -5344,61 +4427,6 @@
                         <div class="empty-state-text">Impossible de charger les utilisateurs. Veuillez réessayer.</div>
                     </div>
                 `;
-            }
-        }
-        
-        // Démarrer ou ouvrir une conversation avec un utilisateur
-        async function startOrOpenConversation(userId, displayName) {
-            if (!currentUser) return;
-            
-            try {
-                // Vérifier si une discussion existe déjà entre ces utilisateurs
-                const discussionsRef = collection(db, "discussions");
-                const q = query(
-                    discussionsRef,
-                    where("participants", "array-contains", currentUser.uid)
-                );
-                
-                const querySnapshot = await getDocs(q);
-                let existingDiscussionId = null;
-                
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    if (data.participants.includes(userId)) {
-                        existingDiscussionId = doc.id;
-                    }
-                });
-                
-                if (existingDiscussionId) {
-                    // Si la discussion existe, l'ouvrir
-                    openChat(displayName, userId, existingDiscussionId, 'private');
-                } else {
-                    // Sinon, créer une nouvelle discussion
-                    const newDiscussion = {
-                        participants: [currentUser.uid, userId],
-                        createdAt: serverTimestamp(),
-                        lastMessageTime: serverTimestamp(),
-                        lastMessage: "Aucun message",
-                        lastSenderId: currentUser.uid,
-                        name: displayName
-                    };
-                    
-                    try {
-                        const docRef = await addDoc(collection(db, "discussions"), newDiscussion);
-                        
-                        // Ouvrir la nouvelle discussion
-                        openChat(displayName, userId, docRef.id, 'private');
-                        
-                        // Changer l'onglet à "Messages"
-                        changeTab('messages');
-                    } catch (error) {
-                        console.error("Erreur lors de la création de la discussion:", error);
-                        throw error; // Rethrow pour que l'erreur soit capturée par le catch extérieur
-                    }
-                }
-            } catch (error) {
-                console.error("Erreur lors de la création/ouverture de la discussion:", error);
-                showNotification('Impossible de démarrer la conversation. Veuillez réessayer.', 'error');
             }
         }
         
@@ -5473,8 +4501,6 @@
                     // Défiler vers le bas pour voir les messages les plus récents
                     scrollToBottom();
                 }, (error) => {
-                    console.error("Erreur lors de la récupération des messages:", error);
-                    
                     messagesContainer.innerHTML = `
                         <div style="text-align: center; padding: 20px; color: var(--danger-color);">
                             <i class="fas fa-exclamation-circle" style="font-size: 24px;"></i>
@@ -5486,17 +4512,7 @@
                 // Stocker la fonction d'unsubscribe pour pouvoir la désactiver plus tard
                 chatUnsubscribers[discussionId] = unsubscribe;
                 
-                // Pour le groupe BetNews, ajouter un message spécial si l'utilisateur n'est pas admin
-                if (discussionType === 'group' && currentContact === 'BetNews' && !isAdmin) {
-                    const adminOnlyMsg = document.createElement('div');
-                    adminOnlyMsg.className = 'admin-only-message';
-                    adminOnlyMsg.textContent = 'Seuls les administrateurs peuvent écrire dans ce groupe';
-                    messagesContainer.appendChild(adminOnlyMsg);
-                }
-                
             } catch (error) {
-                console.error("Erreur lors de l'initialisation de l'écouteur:", error);
-                
                 messagesContainer.innerHTML = `
                     <div style="text-align: center; padding: 20px; color: var(--danger-color);">
                         <i class="fas fa-exclamation-circle" style="font-size: 24px;"></i>
@@ -5640,12 +4656,28 @@
             }
             
             // Ajouter les gestionnaires d'événements
-            // (sauf pour le groupe BetNews si l'utilisateur n'est pas admin)
-            if (!(currentContact === 'BetNews' && !isAdmin)) {
-                addMessageEventListeners(messageDiv);
-            }
+            addMessageEventListeners(messageDiv);
             
             return messageDiv;
+        }
+        
+        // Formater un timestamp Firestore
+        function formatTimestamp(timestamp) {
+            if (!timestamp) return "";
+            
+            // Si c'est un timestamp Firestore
+            if (timestamp.toDate) {
+                const date = timestamp.toDate();
+                return `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+            }
+            
+            // Si c'est une date standard
+            if (timestamp instanceof Date) {
+                return `${timestamp.getHours()}:${timestamp.getMinutes().toString().padStart(2, '0')}`;
+            }
+            
+            // Si c'est déjà une chaîne formatée
+            return timestamp;
         }
         
         // Défiler vers le bas de la conversation
@@ -5815,7 +4847,7 @@
                     showNotification('Répondre au message...', 'info');
                 }
             } catch (error) {
-                console.error("Erreur lors de la préparation de la réponse:", error);
+                showNotification("Erreur lors de la préparation de la réponse", "error");
             }
         }
         
@@ -5840,7 +4872,7 @@
                     return userData.displayName || userData.email.split('@')[0];
                 }
             } catch (error) {
-                console.error("Erreur lors de la récupération du nom:", error);
+                // En cas d'erreur, retourner un nom générique
             }
             
             return 'Utilisateur';
@@ -5902,8 +4934,8 @@
                 if (navigator.vibrate) {
                     navigator.vibrate(20);
                 }
+                
             } catch (error) {
-                console.error("Erreur lors de l'ajout de la réaction:", error);
                 showNotification("Impossible d'ajouter la réaction", "error");
             }
         }
@@ -5914,16 +4946,6 @@
             const message = input.value.trim();
             
             if ((message === '' && !selectedImage) || !currentDiscussionId) return;
-            
-            // Ne pas autoriser l'envoi pour les non-admins dans BetNews
-            if (currentDiscussionType === 'group' && currentContact === 'BetNews' && !isAdmin) {
-                return;
-            }
-            
-            // Si l'utilisateur est bloqué, ne pas envoyer de message
-            if (blockedUsers.has(currentContact)) {
-                return;
-            }
             
             // Générer un ID temporaire pour ce message
             const tempMessageId = 'temp_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
@@ -5964,8 +4986,6 @@
                 replyToMessage = null;
                 
             } catch (error) {
-                console.error("Erreur lors de l'envoi du message:", error);
-                
                 // Mettre à jour l'état du message en attente pour indiquer l'erreur
                 updatePendingMessageStatus(tempMessageId, 'error');
                 
@@ -6139,8 +5159,6 @@
                 
                 return docRef.id;
             } catch (error) {
-                console.error("Erreur lors de l'envoi du message:", error);
-                
                 // Mettre à jour le statut du message en attente s'il existe
                 if (tempMessageId) {
                     updatePendingMessageStatus(tempMessageId, 'error');
@@ -6148,24 +5166,6 @@
                 
                 throw error; // Re-throw l'erreur pour la gestion plus haut
             }
-        }
-        
-        // Simuler le statut "en train d'écrire"
-        function showTypingIndicator() {
-            const typingIndicator = document.getElementById('typing-indicator');
-            document.getElementById('typing-name').textContent = getDisplayName('user');
-            typingIndicator.classList.add('active');
-            
-            // Faire défiler vers le bas pour voir l'indicateur
-            const chatMessagesContainer = document.querySelector('.chat-messages-container');
-            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
-            
-            return new Promise(resolve => {
-                setTimeout(() => {
-                    typingIndicator.classList.remove('active');
-                    resolve();
-                }, 1500 + Math.random() * 1000); // Durée aléatoire entre 1.5 et 2.5 secondes
-            });
         }
         
         // Obtenir le nom d'affichage à partir de l'identifiant utilisateur
@@ -6285,23 +5285,26 @@
         
         // ================ FONCTIONS POUR LA SÉLECTION ================
         
-        // Démarrer le mode sélection
-        function startSelectionMode() {
+        // Fonction pour démarrer le mode de sélection des messages
+        function startMessagesSelectionMode() {
+            closeOptionsMenu();
+            
             if (isSelectionMode) return;
             
             isSelectionMode = true;
-            selectionModeType = 'conversations';
-            selectedItems.clear();
+            selectionModeType = 'messages';
+            selectedMessages.clear();
             
-            // Afficher la barre d'action
-            const selectionBar = document.getElementById('selection-action-bar');
-            selectionBar.classList.add('active');
-            document.getElementById('selection-action-count').textContent = '0 sélectionné';
+            // Mettre à jour l'en-tête
+            document.getElementById('header-action').innerHTML = '<div class="select-all-btn" style="color: var(--primary-color);">Tout</div>';
+            document.getElementById('header-action').querySelector('.select-all-btn').addEventListener('click', selectAllMessages);
             
-            // Mettre à jour la barre d'actions pour les discussions
-            document.getElementById('selection-delete').textContent = 'Supprimer';
+            // Activer le menu d'actions
+            document.getElementById('message-actions').classList.add('active');
             
-            updateSelectionCount();
+            // Désactiver la saisie de message pour le mode sélection de messages
+            document.getElementById('chat-input').disabled = true;
+            document.getElementById('send-button').disabled = true;
         }
         
         // Fonction pour basculer la sélection d'un élément
@@ -6365,28 +5368,6 @@
                     }
                 }, 200);
             }
-        }
-        
-        // Fonction pour démarrer le mode de sélection des messages
-        function startMessagesSelectionMode() {
-            closeOptionsMenu();
-            
-            if (isSelectionMode) return;
-            
-            isSelectionMode = true;
-            selectionModeType = 'messages';
-            selectedMessages.clear();
-            
-            // Mettre à jour l'en-tête
-            document.getElementById('header-action').innerHTML = '<div class="select-all-btn" style="color: var(--primary-color);">Tout</div>';
-            document.getElementById('header-action').querySelector('.select-all-btn').addEventListener('click', selectAllMessages);
-            
-            // Activer le menu d'actions
-            document.getElementById('message-actions').classList.add('active');
-            
-            // Désactiver la saisie de message pour le mode sélection de messages
-            document.getElementById('chat-input').disabled = true;
-            document.getElementById('send-button').disabled = true;
         }
         
         // Fonction pour quitter le mode de sélection
@@ -6561,1046 +5542,1156 @@
         // Récupérer le dernier message d'une discussion
         async function getLastMessage(discussionId) {
             if (!discussionId) return null;
-                try {
-        let messagesRef;
-        if (currentDiscussionType === 'group') {
-            messagesRef = collection(db, "groups", discussionId, "messages");
-        } else {
-            messagesRef = collection(db, "discussions", discussionId, "messages");
-        }
-        
-        const q = query(messagesRef, orderBy("createdAt", "desc"), limit(1));
-        const querySnapshot = await getDocs(q);
-        
-        if (!querySnapshot.empty) {
-            return querySnapshot.docs[0].data();
-        }
-    } catch (error) {
-        console.error("Erreur lors de la récupération du dernier message:", error);
-    }
-    
-    return null;
-}
-
-// Mettre à jour l'option de blocage/déblocage dans le menu
-function updateBlockUnblockOption() {
-    const blockOption = document.getElementById('block-option');
-    if (!blockOption) return;
-    
-    const userId = document.querySelector('.chat-item[data-id="' + currentDiscussionId + '"]')?.getAttribute('data-user-id');
-    
-    if (userId && blockedUsers.has(userId)) {
-        blockOption.querySelector('.option-icon i').className = 'fas fa-user-check';
-        blockOption.querySelector('.option-label').textContent = 'Débloquer cette personne';
-    } else {
-        blockOption.querySelector('.option-icon i').className = 'fas fa-ban';
-        blockOption.querySelector('.option-label').textContent = 'Bloquer cette personne';
-    }
-}
-
-// Mettre à jour l'interface de chat avec un message système
-function updateChatUI(message) {
-    const chatMessages = document.getElementById('chat-messages');
-    
-    // Créer un message système
-    const systemMessage = document.createElement('div');
-    systemMessage.style.textAlign = 'center';
-    systemMessage.style.padding = '10px';
-    systemMessage.style.margin = '10px 0';
-    systemMessage.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
-    systemMessage.style.borderRadius = '10px';
-    systemMessage.style.fontSize = '14px';
-    systemMessage.style.color = 'var(--inactive-text)';
-    systemMessage.textContent = message;
-    
-    // Ajouter à la conversation
-    chatMessages.appendChild(systemMessage);
-    
-    // Défiler vers le bas
-    scrollToBottom();
-}
-
-// Ouvrir le clavier d'emojis
-function openEmojiKeyboard() {
-    // Pas de vrai clavier d'emoji, on utilise juste quelques emojis
-    const chat_input = document.getElementById('chat-input');
-    chat_input.value += "😀";
-    chat_input.focus();
-}
-
-// Basculer le menu d'attachements
-function toggleAttachments() {
-    const extraButtons = document.getElementById('chat-extra-buttons');
-    
-    if (isAttachmentsOpen) {
-        extraButtons.classList.remove('active');
-    } else {
-        extraButtons.classList.add('active');
-    }
-    
-    isAttachmentsOpen = !isAttachmentsOpen;
-}
-
-// Nettoyer l'aperçu d'image
-function clearImagePreview() {
-    document.getElementById('image-preview').classList.remove('active');
-    document.getElementById('preview-img').src = '';
-    selectedImage = null;
-}
-
-// Sélectionner une image
-function selectImage() {
-    document.getElementById('image-input').click();
-    isAttachmentsOpen = false;
-    document.getElementById('chat-extra-buttons').classList.remove('active');
-}
-
-// Sélectionner un fichier
-function selectFile() {
-    // Juste une notification pour dire que c'est non supporté
-    showNotification("L'envoi de fichiers n'est pas encore supporté", "info");
-    isAttachmentsOpen = false;
-    document.getElementById('chat-extra-buttons').classList.remove('active');
-}
-
-// Sélectionner la caméra
-function selectCamera() {
-    // Juste une notification pour dire que c'est non supporté
-    showNotification("L'accès à la caméra n'est pas supporté", "info");
-    isAttachmentsOpen = false;
-    document.getElementById('chat-extra-buttons').classList.remove('active');
-}
-
-// Sélectionner la localisation
-function selectLocation() {
-    // Juste une notification pour dire que c'est non supporté
-    showNotification("Le partage de localisation n'est pas encore supporté", "info");
-    isAttachmentsOpen = false;
-    document.getElementById('chat-extra-buttons').classList.remove('active');
-}
-
-// ================ FONCTIONS POUR LES ACTIONS DE MESSAGES ================
-
-// Afficher les options de suppression de messages
-function showDeleteMessageOptions() {
-    if (selectedMessages.size === 0) return;
-    
-    document.getElementById('message-actions').classList.remove('active');
-    document.getElementById('delete-message-dialog').classList.add('active');
-    document.getElementById('overlay').classList.add('active');
-    
-    // Sélectionner l'option par défaut
-    selectDeleteOption('for-me');
-}
-
-// Sélectionner l'option de suppression
-function selectDeleteOption(option) {
-    selectedDeleteOption = option;
-    
-    // Mettre à jour l'interface
-    document.getElementById('delete-for-me').classList.remove('selected');
-    document.getElementById('delete-for-all').classList.remove('selected');
-    
-    document.getElementById('delete-for-' + option).classList.add('selected');
-}
-
-// Fermer le dialogue de suppression
-function closeDeleteMessageDialog() {
-    document.getElementById('delete-message-dialog').classList.remove('active');
-    document.getElementById('overlay').classList.remove('active');
-    document.getElementById('message-actions').classList.add('active');
-}
-
-// Confirmer la suppression des messages
-async function confirmDeleteMessages() {
-    if (selectedMessages.size === 0) return;
-    
-    try {
-        const deleteOption = selectedDeleteOption;
-        const messagesToDelete = Array.from(selectedMessages);
-        
-        // Fermer le dialogue
-        closeDeleteMessageDialog();
-        
-        // Animation de désintégration
-        messagesToDelete.forEach(messageId => {
-            const messageElement = document.querySelector(`.message[data-id="${messageId}"]`);
-            if (messageElement) {
-                messageElement.classList.add('disintegrating');
-            }
-        });
-        
-        // Attendre la fin de l'animation
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        // Supprimer les messages de la base de données
-        for (const messageId of messagesToDelete) {
-            try {
-                let messageRef;
-                if (currentDiscussionType === 'group') {
-                    messageRef = doc(db, "groups", currentDiscussionId, "messages", messageId);
-                } else {
-                    messageRef = doc(db, "discussions", currentDiscussionId, "messages", messageId);
-                }
-                
-                if (deleteOption === 'for-all') {
-                    // Suppression complète
-                    await deleteDoc(messageRef);
-                } else {
-                    // Marquer comme supprimé uniquement pour cet utilisateur
-                    await updateDoc(messageRef, {
-                        [`deletedFor.${currentUser.uid}`]: true
-                    });
-                    
-                    // Supprimer l'élément de l'interface
-                    const messageElement = document.querySelector(`.message[data-id="${messageId}"]`);
-                    if (messageElement) {
-                        messageElement.remove();
-                    }
-                }
-            } catch (error) {
-                console.error(`Erreur lors de la suppression du message ${messageId}:`, error);
-            }
-        }
-        
-        // Réinitialiser la sélection
-        selectedMessages.clear();
-        
-        // Quitter le mode sélection
-        exitSelectionMode('messages');
-        
-        // Notification
-        showNotification(
-            messagesToDelete.length === 1 
-                ? "Message supprimé" 
-                : `${messagesToDelete.length} messages supprimés`,
-            "success"
-        );
-    } catch (error) {
-        console.error("Erreur lors de la suppression des messages:", error);
-        showNotification("Erreur lors de la suppression", "error");
-    }
-}
-
-// Transférer des messages sélectionnés
-function forwardSelectedMessages() {
-    if (selectedMessages.size === 0) return;
-    
-    // Stocker les messages à transférer
-    messagesForForward = Array.from(selectedMessages);
-    
-    // Fermer le menu des actions
-    document.getElementById('message-actions').classList.remove('active');
-    
-    // Ouvrir la boîte de dialogue de transfert
-    openForwardDialog();
-}
-
-// Ouvrir la boîte de dialogue de transfert
-async function openForwardDialog() {
-    // Mettre à jour le badge du nombre de messages
-    document.getElementById('forward-count-badge').textContent = messagesForForward.length;
-    
-    // Afficher la boîte de dialogue
-    document.getElementById('forward-dialog').classList.add('active');
-    
-    // Charger la liste des contacts
-    await loadForwardContacts();
-}
-
-// Charger les contacts pour le transfert
-async function loadForwardContacts() {
-    const contactsList = document.getElementById('forward-contacts-list');
-    contactsList.innerHTML = '';
-    
-    try {
-        // Récupérer les discussions personnelles de l'utilisateur
-        const discussionsRef = collection(db, "discussions");
-        const q = query(
-            discussionsRef,
-            where("participants", "array-contains", currentUser.uid)
-        );
-        
-        const querySnapshot = await getDocs(q);
-        
-        // Ajouter chaque discussion à la liste
-        for (const docSnapshot of querySnapshot.docs) {
-            const data = docSnapshot.data();
-            const otherParticipantId = data.participants.find(id => id !== currentUser.uid);
             
-            if (otherParticipantId) {
-                const otherUserRef = doc(db, "Users", otherParticipantId);
-                const otherUserSnap = await getDoc(otherUserRef);
+            try {
+                // Déterminer le type de discussion
+                const discussionType = document.querySelector(`.chat-item[data-id="${discussionId}"]`)?.getAttribute('data-type') || 'private';
                 
-                if (otherUserSnap.exists()) {
-                    const userData = otherUserSnap.data();
-                    const displayName = userData.displayName || userData.email.split('@')[0];
+                // Récupérer les messages de la discussion
+                let messagesRef;
+                if (discussionType === 'group') {
+                    messagesRef = collection(db, "groups", discussionId, "messages");
+                } else {
+                    messagesRef = collection(db, "discussions", discussionId, "messages");
+                }
+                
+                const q = query(messagesRef, orderBy("createdAt", "desc"), limit(1));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    return null;
+                }
+                
+                return querySnapshot.docs[0].data();
+            } catch (error) {
+                return null;
+            }
+        }
+        
+        // Mettre à jour l'option de blocage/déblocage dans le menu
+        function updateBlockUnblockOption() {
+            const userId = document.querySelector('.chat-item[data-id="' + currentDiscussionId + '"]')?.getAttribute('data-user-id');
+            
+            if (!userId) return;
+            
+            var blockOption = document.getElementById('block-option');
+            var blockIcon = blockOption.querySelector('.option-icon i');
+            var blockLabel = blockOption.querySelector('.option-label');
+            
+            if (blockedUsers.has(userId)) {
+                blockIcon.className = 'fas fa-unlock';
+                blockLabel.textContent = 'Débloquer cette personne';
+            } else {
+                blockIcon.className = 'fas fa-ban';
+                blockLabel.textContent = 'Bloquer cette personne';
+            }
+        }
+        
+        // Effacer une conversation
+        async function clearConversation() {
+            if (!currentDiscussionId) return;
+            
+            try {
+                // Afficher une boite de dialogue de confirmation
+                document.getElementById('confirmation-text').textContent = 
+                    'Êtes-vous sûr de vouloir effacer tous les messages de cette conversation ?';
+                
+                document.getElementById('confirmation-confirm').onclick = async function() {
+                    closeConfirmationDialog();
                     
-                    // Créer l'élément de contact
-                    const contactItem = document.createElement('div');
-                    contactItem.className = 'chat-item';
-                    contactItem.setAttribute('data-id', docSnapshot.id);
-                    contactItem.setAttribute('data-contact', displayName);
-                    contactItem.setAttribute('data-user-id', otherParticipantId);
-                    contactItem.setAttribute('data-type', 'private');
-                    
-                    contactItem.innerHTML = `
-                        <div class="profile-pic">
-                            <i class="fas fa-user" style="color: var(--primary-color);"></i>
-                        </div>
-                        <div class="item-content">
-                            <div class="item-title">${displayName}</div>
-                            <div class="item-subtitle">${userData.email}</div>
+                    // Afficher un indicateur de chargement
+                    const messagesContainer = document.getElementById('chat-messages');
+                    messagesContainer.innerHTML = `
+                        <div style="text-align: center; padding: 20px; color: var(--inactive-text);">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i>
+                            <div style="margin-top: 10px;">Suppression des messages...</div>
                         </div>
                     `;
                     
-                    // Ajouter un gestionnaire de clic
-                    contactItem.addEventListener('click', function() {
-                        forwardMessagesToContact(
-                            this.getAttribute('data-id'),
-                            this.getAttribute('data-contact'),
-                            this.getAttribute('data-type')
-                        );
-                    });
-                    
-                    contactsList.appendChild(contactItem);
-                }
-            }
-        }
-        
-        // Récupérer les groupes dont l'utilisateur est membre
-        const groupsRef = collection(db, "groups");
-        const groupsQuery = query(
-            groupsRef,
-            where("members", "array-contains", currentUser.uid)
-        );
-        
-        const groupsSnapshot = await getDocs(groupsQuery);
-        
-        // Ajouter chaque groupe à la liste
-        for (const groupDoc of groupsSnapshot.docs) {
-            const groupData = groupDoc.data();
-            
-            // Créer l'élément de groupe
-            const groupItem = document.createElement('div');
-            groupItem.className = 'chat-item';
-            groupItem.setAttribute('data-id', groupDoc.id);
-            groupItem.setAttribute('data-contact', groupData.name);
-            groupItem.setAttribute('data-type', 'group');
-            
-            groupItem.innerHTML = `
-                <div class="${groupData.name === 'BetNews' ? 'news-group-pic' : 'group-pic'}">
-                    <i class="${groupData.name === 'BetNews' ? 'fas fa-newspaper' : 'fas fa-users'}" style="color: white;"></i>
-                </div>
-                <div class="item-content">
-                    <div class="item-title">${groupData.name}</div>
-                    <div class="item-subtitle">${groupData.description || 'Groupe de discussion'}</div>
-                </div>
-            `;
-            
-            // Ajouter un gestionnaire de clic
-            groupItem.addEventListener('click', function() {
-                forwardMessagesToContact(
-                    this.getAttribute('data-id'),
-                    this.getAttribute('data-contact'),
-                    this.getAttribute('data-type')
-                );
-            });
-            
-            contactsList.appendChild(groupItem);
-        }
-    } catch (error) {
-        console.error("Erreur lors du chargement des contacts:", error);
-        
-        contactsList.innerHTML = `
-            <div style="text-align: center; padding: 20px; color: var(--danger-color);">
-                <i class="fas fa-exclamation-circle" style="font-size: 24px;"></i>
-                <div style="margin-top: 10px;">Erreur lors du chargement des contacts</div>
-            </div>
-        `;
-    }
-}
-
-// Fermer la boîte de dialogue de transfert
-function closeForwardDialog() {
-    document.getElementById('forward-dialog').classList.remove('active');
-    messagesForForward = [];
-}
-
-// Transférer les messages vers un contact
-async function forwardMessagesToContact(targetId, targetName, targetType) {
-    if (!targetId || messagesForForward.length === 0) return;
-    
-    try {
-        // Fermer la boîte de dialogue
-        closeForwardDialog();
-        
-        // Afficher un indicateur de chargement
-        showNotification(`Transfert vers ${targetName}...`, 'info');
-        
-        // Pour chaque message sélectionné
-        for (const messageId of messagesForForward) {
-            // Récupérer le message d'origine
-            let originalMessageRef;
-            if (currentDiscussionType === 'group') {
-                originalMessageRef = doc(db, "groups", currentDiscussionId, "messages", messageId);
-            } else {
-                originalMessageRef = doc(db, "discussions", currentDiscussionId, "messages", messageId);
-            }
-            
-            const originalMessageSnap = await getDoc(originalMessageRef);
-            
-            if (originalMessageSnap.exists()) {
-                const originalMessage = originalMessageSnap.data();
-                
-                // Créer le nouveau message
-                const newMessage = {
-                    senderId: currentUser.uid,
-                    createdAt: serverTimestamp(),
-                    status: 'sent',
-                    forwardedFrom: {
-                        id: currentDiscussionId,
-                        name: currentContact,
-                        type: currentDiscussionType
+                    try {
+                        // Déterminer le chemin de la collection de messages
+                        let messagesRef;
+                        
+                        if (currentDiscussionType === 'group') {
+                            messagesRef = collection(db, "groups", currentDiscussionId, "messages");
+                        } else {
+                            messagesRef = collection(db, "discussions", currentDiscussionId, "messages");
+                        }
+                        
+                        // Récupérer tous les messages
+                        const messagesSnapshot = await getDocs(messagesRef);
+                        
+                        // Supprimer chaque message
+                        for (const doc of messagesSnapshot.docs) {
+                            await deleteDoc(doc.ref);
+                        }
+                        
+                        // Mettre à jour l'aperçu de la conversation
+                        updateChatUI("Conversation effacée");
+                        
+                        showNotification("Conversation effacée avec succès", "success");
+                        
+                        // Les messages seront automatiquement mis à jour grâce à l'écouteur onSnapshot
+                    } catch (error) {
+                        messagesContainer.innerHTML = `
+                            <div style="text-align: center; padding: 20px; color: var(--danger-color);">
+                                <i class="fas fa-exclamation-circle" style="font-size: 24px;"></i>
+                                <div style="margin-top: 10px;">Erreur lors de la suppression des messages</div>
+                            </div>
+                        `;
+                        showNotification("Erreur lors de l'effacement de la conversation", "error");
                     }
                 };
                 
-                if (originalMessage.text) {
-                    newMessage.text = originalMessage.text;
-                    newMessage.type = 'text';
-                }
+                // Afficher la boite de dialogue
+                document.getElementById('confirmation-dialog').classList.add('active');
+                document.getElementById('overlay').classList.add('active');
                 
-                if (originalMessage.image) {
-                    newMessage.image = originalMessage.image;
-                    newMessage.type = 'image';
-                }
-                
-                // Ajouter le message à la discussion cible
-                let targetMessagesRef;
-                let targetDiscussionRef;
-                
-                if (targetType === 'group') {
-                    targetMessagesRef = collection(db, "groups", targetId, "messages");
-                    targetDiscussionRef = doc(db, "groups", targetId);
-                } else {
-                    targetMessagesRef = collection(db, "discussions", targetId, "messages");
-                    targetDiscussionRef = doc(db, "discussions", targetId);
-                }
-                
-                await addDoc(targetMessagesRef, newMessage);
-                
-                // Mettre à jour les informations de la discussion cible
-                await updateDoc(targetDiscussionRef, {
-                    lastMessage: originalMessage.text || "Image",
-                    lastMessageTime: serverTimestamp(),
-                    lastSenderId: currentUser.uid
-                });
+                // Fermer le menu d'options
+                closeOptionsMenu();
+            } catch (error) {
+                showNotification("Erreur lors de la préparation de l'effacement", "error");
+                closeOptionsMenu();
             }
         }
         
-        // Quitter le mode sélection
-        exitSelectionMode('messages');
-        
-        // Notification de succès
-        showNotification(
-            messagesForForward.length === 1 
-                ? "Message transféré" 
-                : `${messagesForForward.length} messages transférés`,
-            "success"
-        );
-        
-        // Réinitialiser
-        messagesForForward = [];
-    } catch (error) {
-        console.error("Erreur lors du transfert des messages:", error);
-        showNotification("Erreur lors du transfert", "error");
-    }
-}
-
-// Copier les messages sélectionnés
-function copySelectedMessages() {
-    if (selectedMessages.size === 0) return;
-    
-    try {
-        // Récupérer tous les messages sélectionnés
-        const messagesToCopy = Array.from(document.querySelectorAll('.message.selected'))
-            .map(el => {
-                // Obtenir le texte du message
-                let text = el.innerText;
-                
-                // Nettoyage : supprimer l'heure et les infos de statut
-                text = text.replace(/^\d{1,2}:\d{2}$/gm, '').trim();
-                text = text.replace(/^(Envoyé|Livré|Lu|Erreur).*$/gm, '').trim();
-                
-                return text;
-            })
-            .join('\n\n');
-        
-        // Copier dans le presse-papier
-        navigator.clipboard.writeText(messagesToCopy).then(() => {
-            showNotification("Messages copiés dans le presse-papier", "success");
+        // Mettre à jour l'interface après une action sur une discussion
+        function updateChatUI(statusMessage) {
+            if (!currentDiscussionId) return;
             
-            // Quitter le mode sélection
-            exitSelectionMode('messages');
-        });
-    } catch (error) {
-        console.error("Erreur lors de la copie des messages:", error);
-        showNotification("Impossible de copier les messages", "error");
-    }
-}
-
-// Répondre à un message sélectionné
-function replyToSelectedMessage() {
-    if (selectedMessages.size !== 1) {
-        showNotification("Veuillez sélectionner un seul message pour répondre", "error");
-        return;
-    }
-    
-    const messageId = Array.from(selectedMessages)[0];
-    
-    // Quitter le mode sélection
-    exitSelectionMode('messages');
-    
-    // Démarrer la réponse
-    replyToMessageAction(messageId);
-}
-
-// Rechercher dans la conversation
-function searchInConversation() {
-    closeOptionsMenu();
-    
-    if (!currentDiscussionId) return;
-    
-    // Afficher l'interface de recherche
-    document.getElementById('search-overlay').classList.add('active');
-    
-    // Focus sur l'input de recherche
-    setTimeout(() => {
-        document.getElementById('message-search-input').focus();
-    }, 300);
-}
-
-// Fermer l'interface de recherche
-function closeSearchInterface() {
-    document.getElementById('search-overlay').classList.remove('active');
-    document.getElementById('message-search-input').value = '';
-    document.getElementById('search-results').innerHTML = '<div class="no-results">Saisissez un terme à rechercher</div>';
-}
-
-// Rechercher des messages
-async function searchMessages() {
-    if (!currentDiscussionId) return;
-    
-    const searchTerm = document.getElementById('message-search-input').value.trim().toLowerCase();
-    const resultsContainer = document.getElementById('search-results');
-    
-    if (searchTerm === '') {
-        resultsContainer.innerHTML = '<div class="no-results">Saisissez un terme à rechercher</div>';
-        return;
-    }
-    
-    resultsContainer.innerHTML = '<div style="text-align: center; padding: 20px;"><i class="fas fa-spinner fa-spin"></i></div>';
-    
-    try {
-        // Récupérer tous les messages de la conversation
-        let messagesRef;
-        if (currentDiscussionType === 'group') {
-            messagesRef = collection(db, "groups", currentDiscussionId, "messages");
-        } else {
-            messagesRef = collection(db, "discussions", currentDiscussionId, "messages");
-        }
-        
-        const q = query(messagesRef, orderBy("createdAt", "desc"));
-        const querySnapshot = await getDocs(q);
-        
-        // Filtrer les messages qui contiennent le terme de recherche
-        const matchingMessages = [];
-        
-        querySnapshot.forEach(doc => {
-            const messageData = doc.data();
-            
-            // Si le message n'a pas de texte, ignorer
-            if (!messageData.text) return;
-            
-            // Si le message contient le terme de recherche
-            if (messageData.text.toLowerCase().includes(searchTerm)) {
-                matchingMessages.push({
-                    id: doc.id,
-                    ...messageData
-                });
-            }
-        });
-        
-        // Afficher les résultats
-        if (matchingMessages.length === 0) {
-            resultsContainer.innerHTML = '<div class="no-results">Aucun résultat trouvé</div>';
-            return;
-        }
-        
-        resultsContainer.innerHTML = '';
-        
-        // Créer les éléments de résultat
-        matchingMessages.forEach(message => {
-            const resultItem = document.createElement('div');
-            resultItem.className = 'search-result-item';
-            
-            // Mettre en surbrillance le terme recherché
-            const highlightedText = message.text.replace(
-                new RegExp(searchTerm, 'gi'),
-                match => `<span class="search-highlight">${match}</span>`
-            );
-            
-            // Formater la date
-            const messageDate = message.createdAt && message.createdAt.toDate 
-                ? message.createdAt.toDate().toLocaleString() 
-                : 'Date inconnue';
-            
-            resultItem.innerHTML = `
-                <div class="search-result-text">${highlightedText}</div>
-                <div class="search-result-info">
-                    <div>${message.senderId === currentUser.uid ? 'Vous' : 'Autre utilisateur'}</div>
-                    <div>${messageDate}</div>
-                </div>
-            `;
-            
-            // Ajouter un gestionnaire pour aller au message
-            resultItem.addEventListener('click', function() {
-                goToMessage(message.id);
-            });
-            
-            resultsContainer.appendChild(resultItem);
-        });
-        
-    } catch (error) {
-        console.error("Erreur lors de la recherche de messages:", error);
-        resultsContainer.innerHTML = '<div class="no-results" style="color: var(--danger-color);">Erreur lors de la recherche</div>';
-    }
-}
-
-// Naviguer vers un message spécifique
-function goToMessage(messageId) {
-    closeSearchInterface();
-    
-    // Trouver le message dans le DOM
-    const messageElement = document.querySelector(`.message[data-id="${messageId}"]`);
-    
-    if (messageElement) {
-        // Faire défiler vers le message
-        messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        
-        // Mettre en surbrillance le message
-        messageElement.classList.add('selected');
-        
-        // Supprimer la surbrillance après un délai
-        setTimeout(() => {
-            messageElement.classList.remove('selected');
-        }, 2000);
-    }
-}
-
-// Effacer une conversation
-function clearConversation() {
-    closeOptionsMenu();
-    
-    if (!currentDiscussionId) return;
-    
-    // Confirmer l'action
-    document.getElementById('confirmation-text').innerText = "Êtes-vous sûr de vouloir effacer tous les messages de cette conversation ?";
-    
-    const confirmButton = document.getElementById('confirmation-confirm');
-    confirmButton.innerText = "Effacer";
-    
-    // Configurer le bouton de confirmation
-    confirmButton.onclick = async () => {
-        closeConfirmationDialog();
-        
-        try {
-            // Récupérer tous les messages
-            let messagesRef;
-            if (currentDiscussionType === 'group') {
-                messagesRef = collection(db, "groups", currentDiscussionId, "messages");
-            } else {
-                messagesRef = collection(db, "discussions", currentDiscussionId, "messages");
-            }
-            
-            const q = query(messagesRef);
-            const querySnapshot = await getDocs(q);
-            
-            // Supprimer chaque message
-            const batch = writeBatch(db);
-            querySnapshot.forEach(doc => {
-                batch.delete(doc.ref);
-            });
-            
-            // Exécuter le batch
-            await batch.commit();
-            
-            // Mettre à jour l'interface
-            document.getElementById('chat-messages').innerHTML = `
-                <div style="text-align: center; padding: 20px; color: var(--inactive-text);">
-                    Tous les messages ont été effacés.
-                </div>
-            `;
-            
-            // Mettre à jour la conversation dans la liste
-            const chatItem = document.querySelector(`.chat-item[data-id="${currentDiscussionId}"]`);
-            if (chatItem) {
-                const lastMessageElement = chatItem.querySelector('.item-subtitle');
-                if (lastMessageElement) {
-                    lastMessageElement.textContent = "Aucun message";
-                }
-            }
-            
-            showNotification("Conversation effacée", "success");
-        } catch (error) {
-            console.error("Erreur lors de l'effacement de la conversation:", error);
-            showNotification("Erreur lors de l'effacement", "error");
-        }
-    };
-    
-    // Afficher la boîte de dialogue de confirmation
-    document.getElementById('confirmation-dialog').classList.add('active');
-    document.getElementById('overlay').classList.add('active');
-}
-
-// Fermer la boîte de dialogue de confirmation
-function closeConfirmationDialog() {
-    document.getElementById('confirmation-dialog').classList.remove('active');
-    document.getElementById('overlay').classList.remove('active');
-}
-
-// Supprimer les éléments sélectionnés
-async function deleteSelectedItems() {
-    if (selectedItems.size === 0) return;
-    
-    // Confirmer l'action
-    document.getElementById('confirmation-text').innerText = 
-        selectedItems.size === 1 
-            ? "Êtes-vous sûr de vouloir supprimer cette conversation ?" 
-            : `Êtes-vous sûr de vouloir supprimer ces ${selectedItems.size} conversations ?`;
-    
-    const confirmButton = document.getElementById('confirmation-confirm');
-    confirmButton.innerText = "Supprimer";
-    
-    // Configurer le bouton de confirmation
-    confirmButton.onclick = async () => {
-        closeConfirmationDialog();
-        
-        const elementsToDelete = Array.from(selectedItems);
-        
-        for (const itemId of elementsToDelete) {
             try {
-                const item = document.querySelector(`.chat-item[data-id="${itemId}"]`);
-                
-                if (item) {
-                    // Ajouter l'animation de suppression
-                    item.classList.add('deleting');
-                    
-                    // Attendre la fin de l'animation
-                    await new Promise(resolve => setTimeout(resolve, 500));
-                    
-                    // Supprimer l'élément du DOM
-                    item.remove();
-                }
-                
-                // Supprimer la conversation de Firestore
-                const itemType = item.getAttribute('data-type');
-                
-                if (itemType === 'private') {
-                    await deleteDoc(doc(db, "discussions", itemId));
-                } else if (itemType === 'group') {
-                    // Pour les groupes, on ne supprime que les groupes créés par l'utilisateur
-                    // Les groupes spéciaux ne peuvent pas être supprimés
-                    const groupRef = doc(db, "groups", itemId);
-                    const groupSnap = await getDoc(groupRef);
-                    
-                    if (groupSnap.exists()) {
-                        const groupData = groupSnap.data();
-                        
-                        if (!groupData.isSpecial) {
-                            await deleteDoc(groupRef);
+                // Mettre à jour l'aperçu dans la liste des conversations
+                const chatItems = document.querySelectorAll('.chat-item');
+                for (let i = 0; i < chatItems.length; i++) {
+                    if (chatItems[i].getAttribute('data-id') === currentDiscussionId) {
+                        const subtitle = chatItems[i].querySelector('.item-subtitle');
+                        if (subtitle) {
+                            subtitle.innerHTML = statusMessage;
                         }
+                        
+                        // Mettre à jour l'heure
+                        const time = chatItems[i].querySelector('.item-time');
+                        if (time) {
+                            time.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                        }
+                        
+                        break;
                     }
                 }
             } catch (error) {
-                console.error(`Erreur lors de la suppression de l'élément ${itemId}:`, error);
+                showNotification("Erreur lors de la mise à jour de l'interface", "error");
             }
         }
         
-        // Quitter le mode sélection
-        exitSelectionMode();
+        // Supprimer les éléments sélectionnés (discussions ou messages)
+        function deleteSelectedItems() {
+            if (selectionModeType === 'conversations') {
+                showDeleteConversationsConfirmation();
+            } else if (selectionModeType === 'messages') {
+                showDeleteMessageOptions();
+            }
+        }
         
-        // Notification
-        showNotification(
-            elementsToDelete.length === 1 
-                ? "Conversation supprimée" 
-                : `${elementsToDelete.length} conversations supprimées`,
-            "success"
-        );
-    };
-    
-    // Afficher la boîte de dialogue de confirmation
-    document.getElementById('confirmation-dialog').classList.add('active');
-    document.getElementById('overlay').classList.add('active');
-}
-
-// ================ FONCTIONS POUR LES PARAMÈTRES ET L'INTERFACE ===============
-
-// Changer le thème
-function changeTheme() {
-    closeOptionsMenu();
-    
-    // Basculer entre clair et sombre
-    const isDark = document.documentElement.classList.contains('dark');
-    
-    if (isDark) {
-        document.documentElement.classList.remove('dark');
+        // Afficher la confirmation pour supprimer les conversations sélectionnées
+        function showDeleteConversationsConfirmation() {
+            if (selectedItems.size === 0) return;
+            
+            document.getElementById('confirmation-text').textContent = 
+                `Êtes-vous sûr de vouloir supprimer ${selectedItems.size === 1 ? 'cette conversation' : 'ces ' + selectedItems.size + ' conversations'} ?`;
+            
+            document.getElementById('confirmation-confirm').onclick = function() {
+                deleteSelectedConversations();
+                closeConfirmationDialog();
+            };
+            
+            document.getElementById('confirmation-dialog').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
         
-        // Mettre à jour le switch
-        document.getElementById('dark-toggle').checked = false;
+        // Supprimer les conversations sélectionnées
+        async function deleteSelectedConversations() {
+            if (selectedItems.size === 0) return;
+            
+            try {
+                const itemsToDelete = Array.from(selectedItems);
+                let successCount = 0;
+                let errorCount = 0;
+                
+                // Pour chaque conversation sélectionnée
+                for (const discussionId of itemsToDelete) {
+                    try {
+                        // Récupérer le type de discussion
+                        const chatItem = document.querySelector(`.chat-item[data-id="${discussionId}"]`);
+                        const discussionType = chatItem?.getAttribute('data-type') || 'private';
+                        
+                        // Ajouter l'animation de suppression
+                        if (chatItem) {
+                            chatItem.classList.add('deleting');
+                        }
+                        
+                        // Déterminer la référence à la collection de messages
+                        let messagesRef;
+                        let discussionRef;
+                        
+                        if (discussionType === 'group') {
+                            messagesRef = collection(db, "groups", discussionId, "messages");
+                            
+                            // Récupérer tous les messages
+                            const messagesSnapshot = await getDocs(messagesRef);
+                            
+                            // Supprimer chaque message
+                            for (const doc of messagesSnapshot.docs) {
+                                await deleteDoc(doc.ref);
+                            }
+                            
+                            successCount++;
+                        } else {
+                            // Pour les discussions privées
+                            messagesRef = collection(db, "discussions", discussionId, "messages");
+                            discussionRef = doc(db, "discussions", discussionId);
+                            
+                            // Récupérer tous les messages
+                            const messagesSnapshot = await getDocs(messagesRef);
+                            
+                            // Supprimer chaque message
+                            for (const doc of messagesSnapshot.docs) {
+                                await deleteDoc(doc.ref);
+                            }
+                            
+                            // Supprimer la discussion elle-même
+                            await deleteDoc(discussionRef);
+                            
+                            successCount++;
+                        }
+                    } catch (error) {
+                        errorCount++;
+                    }
+                }
+                
+                // Rafraîchir la liste des conversations après un court délai pour l'animation
+                setTimeout(() => {
+                    loadConversations();
+                    
+                    // Sortir du mode sélection
+                    exitSelectionMode();
+                    
+                    // Afficher un message de succès/erreur
+                    if (errorCount === 0) {
+                        showNotification(`${successCount} conversation(s) supprimée(s) avec succès`, "success");
+                    } else if (successCount === 0) {
+                        showNotification(`Erreur: impossible de supprimer les conversations`, "error");
+                    } else {
+                        showNotification(`${successCount} conversation(s) supprimée(s), ${errorCount} échec(s)`, "info");
+                    }
+                }, 500);
+                
+            } catch (error) {
+                showNotification("Erreur lors de la suppression des conversations", "error");
+                exitSelectionMode();
+            }
+        }
         
-        // En mode clair, la couleur des messages envoyés est violette
-        document.documentElement.style.setProperty('--chat-sent-bg', '#5D5CDE');
-        document.documentElement.style.setProperty('--chat-sent-text', '#ffffff');
-    } else {
-        document.documentElement.classList.add('dark');
+        // Afficher le dialogue de suppression des messages avec options
+        function showDeleteMessageOptions() {
+            if (selectedMessages.size === 0) return;
+            
+            // Réinitialiser les options
+            selectedDeleteOption = 'for-me';
+            document.getElementById('delete-for-me').classList.add('selected');
+            document.getElementById('delete-for-all').classList.remove('selected');
+            
+            // Afficher le dialogue
+            document.getElementById('delete-message-dialog').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
         
-        // Mettre à jour le switch
-        document.getElementById('dark-toggle').checked = true;
+        // Sélectionner une option de suppression
+        function selectDeleteOption(option) {
+            // Réinitialiser les options
+            document.getElementById('delete-for-me').classList.remove('selected');
+            document.getElementById('delete-for-all').classList.remove('selected');
+            
+            // Sélectionner l'option cliquée
+            if (option === 'for-me') {
+                document.getElementById('delete-for-me').classList.add('selected');
+            } else {
+                document.getElementById('delete-for-all').classList.add('selected');
+            }
+            
+            selectedDeleteOption = option;
+        }
         
-        // En mode sombre, la couleur du message est la même que la couleur primaire
-        document.documentElement.style.setProperty('--chat-sent-bg', 
-            document.documentElement.style.getPropertyValue('--primary-color') || '#F7DC6F');
-        document.documentElement.style.setProperty('--chat-sent-text', '#000000');
-    }
-    
-    // Sauvegarder la préférence
-    localStorage.setItem('ichatDarkMode', (!isDark).toString());
-}
-
-// Afficher le guide d'installation
-function showInstallGuide() {
-    closeOptionsMenu();
-    document.getElementById('install-guide').classList.add('active');
-}
-
-// Fermer le guide d'installation
-function closeInstallGuide() {
-    document.getElementById('install-guide').classList.remove('active');
-}
-
-// Afficher la confirmation de suppression de compte
-function showDeleteAccountConfirmation() {
-    document.getElementById('delete-account-dialog').classList.add('active');
-    document.getElementById('overlay').classList.add('active');
-}
-
-// Fermer la confirmation de suppression de compte
-function closeDeleteAccountDialog() {
-    document.getElementById('delete-account-dialog').classList.remove('active');
-    document.getElementById('overlay').classList.remove('active');
-}
-
-// Notifier lors du lancement des pronostics (simulé)
-function notifyLaunch() {
-    showSuccessPopup(
-        'Inscription réussie',
-        'Vous serez parmi les premiers à être informé du lancement des pronostics sportifs !',
-        () => {
-            document.getElementById('success-popup').classList.remove('active');
-            document.getElementById('notify-launch-button').textContent = 'Vous êtes inscrit(e)';
+        // Fermer le dialogue de suppression des messages
+        function closeDeleteMessageDialog() {
+            document.getElementById('delete-message-dialog').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+        
+        // Confirmer la suppression des messages
+        async function confirmDeleteMessages() {
+            if (selectedMessages.size === 0 || !currentDiscussionId) return;
+            
+            // Fermer le dialogue avant l'animation
+            closeDeleteMessageDialog();
+            
+            // Tableau pour stocker les IDs des messages à supprimer
+            const messagesToDelete = Array.from(selectedMessages);
+            
+            try {
+                // Déterminer la collection de messages
+                let messagesCollection;
+                if (currentDiscussionType === 'group') {
+                    messagesCollection = collection(db, "groups", currentDiscussionId, "messages");
+                } else {
+                    messagesCollection = collection(db, "discussions", currentDiscussionId, "messages");
+                }
+                
+                // Animation de désintégration pour les messages
+                const messageElements = [];
+                for (const messageId of messagesToDelete) {
+                    const messageElement = document.querySelector(`.message[data-id="${messageId}"]`);
+                    if (messageElement) {
+                        messageElements.push(messageElement);
+                        messageElement.classList.add('disintegrating');
+                    }
+                }
+                
+                // Attendre la fin de l'animation avant de supprimer les messages
+                setTimeout(async () => {
+                    try {
+                        // Pour chaque message à supprimer
+                        for (const messageId of messagesToDelete) {
+                            // Si c'est juste "pour moi", on n'a pas besoin de faire de requête Firestore
+                            // car les messages seront rechargés automatiquement via l'écouteur onSnapshot
+                            if (selectedDeleteOption === 'for-all') {
+                                const messageRef = doc(messagesCollection, messageId);
+                                await deleteDoc(messageRef);
+                            }
+                        }
+                        
+                        // Sortir du mode sélection
+                        exitSelectionMode();
+                        
+                        // Afficher une notification de succès
+                        showNotification(
+                            selectedDeleteOption === 'for-me' ? 
+                            `${messagesToDelete.length} message(s) supprimé(s) pour vous` : 
+                            `${messagesToDelete.length} message(s) supprimé(s) pour tout le monde`,
+                            "success"
+                        );
+                    } catch (error) {
+                        showNotification("Erreur lors de la suppression des messages", "error");
+                    }
+                }, 800); // Attendre la fin de l'animation
+            } catch (error) {
+                showNotification("Erreur lors de la suppression des messages", "error");
+                exitSelectionMode();
+            }
+        }
+        
+        // Ouvrir le dialogue de transfert de messages
+        async function forwardSelectedMessages() {
+            if (selectedMessages.size === 0 || !currentDiscussionId) return;
+            
+            try {
+                // Déterminer la collection de messages
+                let messagesCollection;
+                if (currentDiscussionType === 'group') {
+                    messagesCollection = collection(db, "groups", currentDiscussionId, "messages");
+                } else {
+                    messagesCollection = collection(db, "discussions", currentDiscussionId, "messages");
+                }
+                
+                // Collecter les messages sélectionnés
+                messagesForForward = [];
+                for (const messageId of selectedMessages) {
+                    try {
+                        const messageDoc = await getDoc(doc(messagesCollection, messageId));
+                        if (messageDoc.exists()) {
+                            messagesForForward.push({
+                                id: messageId,
+                                ...messageDoc.data()
+                            });
+                        }
+                    } catch (error) {
+                        // Ignorer les erreurs individuelles
+                    }
+                }
+                
+                if (messagesForForward.length === 0) {
+                    showNotification("Aucun message à transférer", "error");
+                    return;
+                }
+                
+                // Mettre à jour le badge du compteur
+                document.getElementById('forward-count-badge').textContent = messagesForForward.length;
+                
+                // Remplir la liste des contacts
+                const contactsList = document.getElementById('forward-contacts-list');
+                contactsList.innerHTML = '';
+                
+                // Dans cette version simplifiée, nous n'avons que Betforce
+                const contactItem = document.createElement('div');
+                contactItem.className = 'chat-item';
+                contactItem.onclick = function() { forwardMessagesTo("Betforce", "Betforce", "group"); };
+                
+                contactItem.innerHTML = `
+                    <div class="group-pic">
+                        <i class="fas fa-users" style="color: white;"></i>
+                    </div>
+                    <div class="item-content">
+                        <div class="item-title">Betforce</div>
+                    </div>
+                `;
+                
+                contactsList.appendChild(contactItem);
+                
+                // Afficher le dialogue
+                document.getElementById('forward-dialog').classList.add('active');
+            } catch (error) {
+                showNotification("Erreur lors de la préparation du transfert", "error");
+            }
+        }
+        
+        // Fermer le dialogue de transfert
+        function closeForwardDialog() {
+            document.getElementById('forward-dialog').classList.remove('active');
+            messagesForForward = [];
+        }
+        
+        // Transférer les messages à un contact spécifique
+        function forwardMessagesTo(contactId, contactName, contactType) {
+            if (messagesForForward.length === 0) return;
+            
+            targetContactForForward = {
+                id: contactId,
+                name: contactName,
+                type: contactType
+            };
+            
+            // Configurer la boîte de dialogue de confirmation
+            document.getElementById('confirmation-text').textContent = 
+                `Transférer ${messagesForForward.length === 1 ? 'ce message' : 'ces ' + messagesForForward.length + ' messages'} à ${contactName} ?`;
+            
+            document.getElementById('confirmation-confirm').onclick = function() {
+                executeForwardMessages();
+                closeConfirmationDialog();
+            };
+            
+            // Afficher la boîte de dialogue de confirmation
+            document.getElementById('confirmation-dialog').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+        
+        // Fermer la boîte de dialogue de confirmation
+        function closeConfirmationDialog() {
+            document.getElementById('confirmation-dialog').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+        
+        // Fermer la boîte de dialogue de suppression de compte
+        function closeDeleteAccountDialog() {
+            document.getElementById('delete-account-dialog').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+        
+        // Exécuter l'action de transfert
+        async function executeForwardMessages() {
+            // S'assurer que les paramètres nécessaires sont définis
+            if (!targetContactForForward || messagesForForward.length === 0) return;
+            
+            try {
+                // Déterminer la collection de messages cible
+                let targetMessagesCollection;
+                if (targetContactForForward.type === 'group') {
+                    targetMessagesCollection = collection(db, "groups", targetContactForForward.id, "messages");
+                } else {
+                    targetMessagesCollection = collection(db, "discussions", targetContactForForward.id, "messages");
+                }
+                
+                // Transférer chaque message
+                for (const msg of messagesForForward) {
+                    const newMessageData = {
+                        senderId: currentUser.uid,
+                        createdAt: serverTimestamp(),
+                        status: 'sent',
+                        type: msg.type || 'text',
+                        forwarded: true,
+                        originalFrom: msg.senderId === currentUser.uid ? 'moi' : await getDisplayNameFromId(msg.senderId)
+                    };
+                    
+                    // Transférer le texte ou l'image selon le type
+                    if (msg.text) {
+                        newMessageData.text = msg.text;
+                    }
+                    
+                    if (msg.image) {
+                        newMessageData.image = msg.image;
+                    }
+                    
+                    // Ajouter le message transféré
+                    await addDoc(targetMessagesCollection, newMessageData);
+                }
+                
+                // Mettre à jour la conversation cible (dernier message, heure, etc.)
+                let targetConversationRef;
+                if (targetContactForForward.type === 'group') {
+                    targetConversationRef = doc(db, "groups", targetContactForForward.id);
+                } else {
+                    targetConversationRef = doc(db, "discussions", targetContactForForward.id);
+                }
+                
+                // Mettre à jour avec le dernier message transféré
+                const lastMsg = messagesForForward[messagesForForward.length - 1];
+                await updateDoc(targetConversationRef, {
+                    lastMessage: lastMsg.text || "Image",
+                    lastMessageTime: serverTimestamp(),
+                    lastSenderId: currentUser.uid
+                });
+                
+                // Fermer le dialogue de transfert
+                closeForwardDialog();
+                
+                // Quitter le mode sélection
+                exitSelectionMode();
+                
+                // Afficher une notification de succès
+                showNotification(
+                    `${messagesForForward.length} message(s) transféré(s) à ${targetContactForForward.name}`,
+                    "success"
+                );
+                
+            } catch (error) {
+                showNotification("Erreur lors du transfert des messages", "error");
+                
+                // Fermer le dialogue de transfert
+                closeForwardDialog();
+                
+                // Sortir du mode sélection
+                exitSelectionMode();
+            }
+        }
+        
+        // Copier les messages sélectionnés dans le presse-papiers
+        async function copySelectedMessages() {
+            if (selectedMessages.size === 0 || !currentDiscussionId) return;
+            
+            try {
+                // Déterminer la collection de messages
+                let messagesCollection;
+                if (currentDiscussionType === 'group') {
+                    messagesCollection = collection(db, "groups", currentDiscussionId, "messages");
+                } else {
+                    messagesCollection = collection(db, "discussions", currentDiscussionId, "messages");
+                }
+                
+                // Collecter les textes des messages sélectionnés
+                let textToCopy = '';
+                
+                // Pour chaque message dans l'ordre d'affichage
+                const messageElements = document.querySelectorAll('.message');
+                for (const element of messageElements) {
+                    const messageId = element.getAttribute('data-id');
+                    if (selectedMessages.has(messageId)) {
+                        try {
+                            const messageDoc = await getDoc(doc(messagesCollection, messageId));
+                            if (messageDoc.exists()) {
+                                const messageData = messageDoc.data();
+                                const sender = messageData.senderId === currentUser.uid ? 'Vous' : 
+                                    currentDiscussionType === 'group' ? await getDisplayNameFromId(messageData.senderId) : currentContact;
+                                
+                                if (messageData.text) {
+                                    textToCopy += `[${sender}]: ${messageData.text}\n`;
+                                } else if (messageData.type === 'image') {
+                                    textToCopy += `[${sender}]: [Image]\n`;
+                                }
+                            }
+                        } catch (error) {
+                            // Ignorer les erreurs individuelles
+                        }
+                    }
+                }
+                
+                if (textToCopy === '') {
+                    showNotification("Aucun texte à copier", "error");
+                    return;
+                }
+                
+                // Tentative de copie dans le presse-papiers
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(textToCopy);
+                    showNotification("Texte copié dans le presse-papiers", "success");
+                    exitSelectionMode();
+                } else {
+                    // Méthode alternative pour les contextes non sécurisés
+                    const textArea = document.createElement("textarea");
+                    textArea.value = textToCopy;
+                    textArea.style.position = "fixed";
+                    textArea.style.left = "-999999px";
+                    textArea.style.top = "-999999px";
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    
+                    try {
+                        const successful = document.execCommand('copy');
+                        if (successful) {
+                            showNotification("Texte copié dans le presse-papiers", "success");
+                        } else {
+                            showNotification("Échec de la copie dans le presse-papiers", "error");
+                        }
+                        exitSelectionMode();
+                    } catch (err) {
+                        showNotification("Erreur lors de la copie", "error");
+                    }
+                    
+                    document.body.removeChild(textArea);
+                }
+            } catch (error) {
+                showNotification("Erreur lors de la copie des messages", "error");
+            }
+        }
+        
+        // Répondre au message sélectionné
+        async function replyToSelectedMessage() {
+            if (selectedMessages.size !== 1 || !currentDiscussionId) {
+                showNotification("Sélectionnez un seul message pour répondre", "error");
+                return;
+            }
+            
+            try {
+                // Récupérer l'ID du message sélectionné
+                const messageId = Array.from(selectedMessages)[0];
+                
+                // Déterminer la collection de messages
+                let messagesCollection;
+                if (currentDiscussionType === 'group') {
+                    messagesCollection = collection(db, "groups", currentDiscussionId, "messages");
+                } else {
+                    messagesCollection = collection(db, "discussions", currentDiscussionId, "messages");
+                }
+                
+                // Récupérer les informations du message
+                const messageDoc = await getDoc(doc(messagesCollection, messageId));
+                if (messageDoc.exists()) {
+                    const messageData = messageDoc.data();
+                    
+                    // Stocker la référence pour l'envoi
+                    replyToMessage = {
+                        id: messageId,
+                        text: messageData.text,
+                        senderId: messageData.senderId,
+                        senderName: messageData.senderId === currentUser.uid ? 'Vous' : await getDisplayNameFromId(messageData.senderId)
+                    };
+                    
+                    // Quitter le mode sélection
+                    exitSelectionMode();
+                    
+                    // Focus sur l'input
+                    document.getElementById('chat-input').focus();
+                    
+                    // Vibration pour feedback tactile
+                    if (navigator.vibrate) {
+                        navigator.vibrate([30, 50, 30]);
+                    }
+                    
+                    // Montrer une notification
+                    showNotification('Répondre au message...', 'info');
+                }
+            } catch (error) {
+                showNotification("Erreur lors de la préparation de la réponse", "error");
+            }
+        }
+        
+        // Ouvrir l'interface de recherche dans les messages
+        function searchInConversation() {
+            if (!currentDiscussionId) return;
+            closeOptionsMenu();
+            
+            // Afficher l'interface de recherche
+            document.getElementById('search-overlay').classList.add('active');
+            document.getElementById('message-search-input').focus();
+        }
+        
+        // Fermer l'interface de recherche
+        function closeSearchInterface() {
+            document.getElementById('search-overlay').classList.remove('active');
+            document.getElementById('message-search-input').value = '';
+            document.getElementById('search-results').innerHTML = '<div class="no-results">Saisissez un terme à rechercher</div>';
+        }
+        
+        // Rechercher dans les messages
+        async function searchMessages() {
+            const searchTerm = document.getElementById('message-search-input').value.trim().toLowerCase();
+            const resultsContainer = document.getElementById('search-results');
+            
+            if (searchTerm === '') {
+                resultsContainer.innerHTML = '<div class="no-results">Saisissez un terme à rechercher</div>';
+                return;
+            }
+            
+            // Indiquer que la recherche est en cours
+            resultsContainer.innerHTML = `
+                <div style="text-align: center; padding: 20px; color: var(--inactive-text);">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i>
+                    <div style="margin-top: 10px;">Recherche en cours...</div>
+                </div>
+            `;
+            
+            try {
+                // Déterminer la collection de messages
+                let messagesCollection;
+                if (currentDiscussionType === 'group') {
+                    messagesCollection = collection(db, "groups", currentDiscussionId, "messages");
+                } else {
+                    messagesCollection = collection(db, "discussions", currentDiscussionId, "messages");
+                }
+                
+                // Récupérer tous les messages de la conversation
+                const querySnapshot = await getDocs(query(messagesCollection, orderBy("createdAt", "desc")));
+                
+                if (querySnapshot.empty) {
+                    resultsContainer.innerHTML = '<div class="no-results">Aucun message dans cette conversation</div>';
+                    return;
+                }
+                
+                // Rechercher le terme dans les messages
+                const matchingMessages = [];
+                
+                for (const doc of querySnapshot.docs) {
+                    const messageData = doc.data();
+                    if (messageData.text && messageData.text.toLowerCase().includes(searchTerm)) {
+                        matchingMessages.push({
+                            id: doc.id,
+                            ...messageData
+                        });
+                    }
+                }
+                
+                if (matchingMessages.length === 0) {
+                    resultsContainer.innerHTML = '<div class="no-results">Aucun résultat trouvé</div>';
+                    return;
+                }
+                
+                // Afficher les résultats
+                resultsContainer.innerHTML = '';
+                
+                for (const msg of matchingMessages) {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'search-result-item';
+                    
+                    // Mettre en surbrillance le terme recherché
+                    let highlightedText = '';
+                    if (msg.text) {
+                        highlightedText = msg.text.replace(
+                            new RegExp(searchTerm, 'gi'),
+                            match => `<span class="search-highlight">${match}</span>`
+                        );
+                    }
+                    
+                    // Récupérer le nom de l'expéditeur
+                    let senderName = 'Inconnu';
+                    if (msg.senderId === currentUser.uid) {
+                        senderName = 'Vous';
+                    } else if (currentDiscussionType === 'group') {
+                        senderName = await getDisplayNameFromId(msg.senderId);
+                    } else {
+                        senderName = currentContact;
+                    }
+                    
+                    resultItem.innerHTML = `
+                        <div class="search-result-text">${highlightedText}</div>
+                        <div class="search-result-info">
+                            <span>${senderName}</span>
+                            <span>${formatTimestamp(msg.createdAt)}</span>
+                        </div>
+                    `;
+                    
+                    // Ajouter un gestionnaire de clic pour naviguer vers le message
+                    resultItem.addEventListener('click', () => {
+                        closeSearchInterface();
+                        highlightMessage(msg.id);
+                    });
+                    
+                    resultsContainer.appendChild(resultItem);
+                }
+            } catch (error) {
+                resultsContainer.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: var(--danger-color);">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div style="margin-top: 10px;">Erreur lors de la recherche</div>
+                    </div>
+                `;
+            }
+        }
+        
+        // Mettre en évidence un message spécifique
+        function highlightMessage(messageId) {
+            setTimeout(() => {
+                const messageElement = document.querySelector(`.message[data-id="${messageId}"]`);
+                if (messageElement) {
+                    // Faire défiler jusqu'au message
+                    messageElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Mettre en évidence le message
+                    messageElement.classList.add('selected');
+                    
+                    // Vibration pour feedback tactile
+                    if (navigator.vibrate) {
+                        navigator.vibrate(50);
+                    }
+                    
+                    // Retirer la mise en évidence après quelques secondes
+                    setTimeout(() => {
+                        messageElement.classList.remove('selected');
+                    }, 3000);
+                } else {
+                    showNotification("Message non trouvé", "error");
+                }
+            }, 300);
+        }
+        
+        // ================ FONCTIONS POUR LES ATTACHEMENTS ================
+        
+        // Ouvrir le clavier emoji
+        function openEmojiKeyboard() {
+            var input = document.getElementById('chat-input');
+            input.focus();
+            // Simuler l'ouverture du clavier emoji natif
+        }
+        
+        // Basculer le panneau d'attachements
+        function toggleAttachments() {
+            var extraButtons = document.getElementById('chat-extra-buttons');
+            if (isAttachmentsOpen) {
+                extraButtons.classList.remove('active');
+            } else {
+                extraButtons.classList.add('active');
+            }
+            isAttachmentsOpen = !isAttachmentsOpen;
+        }
+        
+        // Sélectionner une image
+        function selectImage() {
+            document.getElementById('image-input').click();
+            toggleAttachments();
+        }
+        
+        // Sélectionner un fichier
+        function selectFile() {
+            // Simulation
+            toggleAttachments();
+            showNotification("La sélection de fichiers n'est pas disponible dans cette version.", "info");
+        }
+        
+        // Sélectionner l'appareil photo
+        function selectCamera() {
+            // Simulation
+            toggleAttachments();
+            showNotification("L'accès à l'appareil photo n'est pas disponible dans cette version.", "info");
+        }
+        
+        // Sélectionner la localisation
+        function selectLocation() {
+            // Simulation
+            toggleAttachments();
+            showNotification("Le partage de localisation n'est pas disponible dans cette version.", "info");
+        }
+        
+        // Effacer l'aperçu d'image
+        function clearImagePreview() {
+            document.getElementById('image-preview').classList.remove('active');
+            selectedImage = null;
+            document.getElementById('preview-img').src = '';
+        }
+        
+        // ================ FONCTIONS UI ================
+        
+        // Basculer le menu d'options selon la section active
+        function toggleOptionsMenu() {
+            var menuId;
+            
+            // Déterminer quel menu afficher selon le contexte
+            if (currentContact && currentDiscussionId) {
+                menuId = 'chat-options-menu';
+            } else if (currentSection === 'messages') {
+                menuId = 'messages-options-menu';
+            } else {
+                menuId = 'simple-options-menu';
+            }
+            
+            var menu = document.getElementById(menuId);
+            var overlay = document.getElementById('overlay');
+            
+            if (isOptionsMenuOpen) {
+                menu.classList.remove('active');
+                overlay.classList.remove('active');
+            } else {
+                menu.classList.add('active');
+                overlay.classList.add('active');
+                
+                // Mettre à jour l'option de blocage si on est dans un chat
+                if (currentContact && currentDiscussionType === 'private') {
+                    updateBlockUnblockOption();
+                    document.getElementById('block-option').style.display = 'flex';
+                } else {
+                    // Masquer l'option de blocage pour les groupes
+                    document.getElementById('block-option').style.display = 'none';
+                }
+            }
+            
+            isOptionsMenuOpen = !isOptionsMenuOpen;
+        }
+        
+        // Fermer le menu d'options
+        function closeOptionsMenu() {
+            document.getElementById('simple-options-menu').classList.remove('active');
+            document.getElementById('messages-options-menu').classList.remove('active');
+            document.getElementById('chat-options-menu').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+            isOptionsMenuOpen = false;
+        }
+        
+        // Fermer tous les dialogues
+        function closeAllDialogs() {
+            closeOptionsMenu();
+            closeDeleteMessageDialog();
+            closeConfirmationDialog();
+            closeDeleteAccountDialog();
+            closeInstallGuide();
+            closeForwardDialog();
+            
+            document.getElementById('overlay').classList.remove('active');
+        }
+        
+        // Changer le thème
+        function changeTheme() {
+            var randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+            
+            // Mettre à jour la couleur de l'interface
+            changeAppColor(randomColor);
+            
+            closeOptionsMenu();
+            showNotification("Thème modifié", "success");
+        }
+        
+        // Montrer le guide d'installation
+        function showInstallGuide() {
+            closeOptionsMenu();
+            document.getElementById('install-guide').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+        
+        // Fermer le guide d'installation
+        function closeInstallGuide() {
+            document.getElementById('install-guide').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+        
+        // Montrer le dialogue de suppression de compte
+        function showDeleteAccountConfirmation() {
+            document.getElementById('delete-account-dialog').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+        
+        // Notifier du lancement des pronostics (fonction simulée)
+        function notifyLaunch() {
+            showNotification("Vous serez alerté(e) du lancement des pronostics sportifs", "success");
+            
+            // Changer le texte du bouton
+            document.getElementById('notify-launch-button').textContent = "Inscription confirmée";
             document.getElementById('notify-launch-button').disabled = true;
-            document.getElementById('notify-launch-button').style.opacity = '0.7';
-        }
-    );
-}
-
-// Afficher un popup de succès
-function showSuccessPopup(title, message, callback) {
-    document.getElementById('success-title').textContent = title;
-    document.getElementById('success-message').textContent = message;
-    document.getElementById('success-button').onclick = callback;
-    document.getElementById('success-popup').classList.add('active');
-    document.getElementById('overlay').classList.add('active');
-}
-
-// Basculer le menu d'options
-function toggleOptionsMenu() {
-    let menu;
-    
-    // Déterminer quel menu afficher selon le contexte
-    if (currentDiscussionId) {
-        menu = document.getElementById('chat-options-menu');
-        
-        // Mettre à jour l'option de blocage/déblocage
-        updateBlockUnblockOption();
-    } else if (currentSection === 'messages') {
-        menu = document.getElementById('messages-options-menu');
-    } else {
-        menu = document.getElementById('simple-options-menu');
-    }
-    
-    if (isOptionsMenuOpen) {
-        menu.classList.remove('active');
-        document.getElementById('overlay').classList.remove('active');
-    } else {
-        menu.classList.add('active');
-        document.getElementById('overlay').classList.add('active');
-    }
-    
-    isOptionsMenuOpen = !isOptionsMenuOpen;
-}
-
-// Fermer le menu d'options
-function closeOptionsMenu() {
-    if (!isOptionsMenuOpen) return;
-    
-    document.querySelectorAll('.options-menu').forEach(menu => {
-        menu.classList.remove('active');
-    });
-    
-    document.getElementById('overlay').classList.remove('active');
-    isOptionsMenuOpen = false;
-}
-
-// Fermer tous les dialogues
-function closeAllDialogs() {
-    closeOptionsMenu();
-    
-    document.getElementById('overlay').classList.remove('active');
-    
-    document.getElementById('confirmation-dialog').classList.remove('active');
-    document.getElementById('delete-account-dialog').classList.remove('active');
-    document.getElementById('delete-message-dialog').classList.remove('active');
-    document.getElementById('forward-dialog').classList.remove('active');
-    document.getElementById('install-guide').classList.remove('active');
-    document.getElementById('success-popup').classList.remove('active');
-    
-    document.getElementById('reaction-panel').style.display = 'none';
-}
-
-// Masquer l'écran de chargement
-function hideLoading() {
-    document.getElementById('loading').style.display = 'none';
-}
-
-// Afficher l'écran de connexion
-function showLoginScreen() {
-    document.getElementById('auth-screen').style.display = 'flex';
-    hideLoading();
-}
-
-// Terminer la connexion et afficher l'application
-async function completeLogin() {
-    // Récupérer les informations de l'utilisateur
-    const userData = await getUserData(currentUser.uid);
-    currentUserData = userData;
-    
-    if (userData) {
-        // Déterminer si l'utilisateur est administrateur
-        isAdmin = userData.statut === 'admin';
-        
-        // Mettre à jour le profil
-        document.getElementById('profile-name-text').textContent = 
-            userData.displayName || userData.email.split('@')[0];
-        document.getElementById('profile-email').textContent = userData.email;
-        
-        // Afficher/masquer le badge admin
-        if (isAdmin) {
-            document.getElementById('admin-badge').style.display = 'inline-block';
-        } else {
-            document.getElementById('admin-badge').style.display = 'none';
-        }
-    }
-    
-    isLoggedIn = true;
-    
-    // Restaurer les préférences sauvegardées
-    restoreUserPreferences();
-    
-    // Masquer l'écran d'authentification
-    document.getElementById('auth-screen').style.display = 'none';
-    
-    // Charger le contenu initial
-    loadConversations();
-    
-    // Masquer l'écran de chargement
-    hideLoading();
-}
-
-// Restaurer les préférences utilisateur depuis le localStorage
-function restoreUserPreferences() {
-    try {
-        // Restaurer le mode sombre
-        const darkMode = localStorage.getItem('ichatDarkMode');
-        if (darkMode === 'true') {
-            document.documentElement.classList.add('dark');
-            document.getElementById('dark-toggle').checked = true;
             
-            // En mode sombre, la couleur du message est la même que la couleur primaire
-            document.documentElement.style.setProperty('--chat-sent-bg', 
-                document.documentElement.style.getPropertyValue('--primary-color') || '#F7DC6F');
-            document.documentElement.style.setProperty('--chat-sent-text', '#000000');
-        } else if (darkMode === 'false') {
-            document.documentElement.classList.remove('dark');
-            document.getElementById('dark-toggle').checked = false;
-            
-            // En mode clair, la couleur des messages envoyés est violette
-            document.documentElement.style.setProperty('--chat-sent-bg', '#5D5CDE');
-            document.documentElement.style.setProperty('--chat-sent-text', '#ffffff');
-        }
-        
-        // Restaurer la couleur personnalisée
-        const savedColor = localStorage.getItem('ichatColor');
-        if (savedColor) {
-            document.documentElement.style.setProperty('--primary-color', savedColor);
-            document.getElementById('color-picker').value = savedColor;
-            
-            // Mettre à jour l'icône de loading
-            const footballSpinner = document.querySelector('.football-spinner');
-            if (footballSpinner) {
-                footballSpinner.style.color = savedColor;
-            }
-            
-            // En mode sombre, mettre à jour la couleur des messages envoyés
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.style.setProperty('--chat-sent-bg', savedColor);
+            // Vibration pour feedback tactile
+            if (navigator.vibrate) {
+                navigator.vibrate(30);
             }
         }
         
-        // Restaurer les utilisateurs bloqués
-        const blockedUsersArray = JSON.parse(localStorage.getItem('ichatBlockedUsers') || '[]');
-        blockedUsers = new Set(blockedUsersArray);
+        // ================ FONCTIONS POUR L'AFFICHAGE ================
         
-    } catch (error) {
-        console.error("Erreur lors de la restauration des préférences:", error);
-    }
-}
-
-// ================ INITIALISATION ================
-
-// Initialiser l'application
-function initApp() {
-    setupDarkMode();
-    setupConnectionMonitoring();
-    setupUIEvents();
-    setupAuthEvents();
-    
-    // Vérifier si l'utilisateur est déjà connecté
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            // L'utilisateur est connecté
-            currentUser = user;
-            await completeLogin();
-        } else {
-            // L'utilisateur n'est pas connecté
-            showLoginScreen();
+        // Masquer l'écran de chargement
+        function hideLoading() {
+            const loadingScreen = document.getElementById('loading');
+            loadingScreen.style.opacity = '0';
+            loadingScreen.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 500);
         }
-    });
-}
-
-// Démarrer l'application
-initApp();
+        
+        // Afficher l'écran de connexion
+        function showLoginScreen() {
+            hideLoading();
+            
+            // Animation d'apparition
+            document.getElementById('auth-screen').style.opacity = '0';
+            document.getElementById('auth-screen').style.display = 'flex';
+            
+            setTimeout(() => {
+                document.getElementById('auth-screen').style.opacity = '1';
+                document.getElementById('auth-screen').style.transition = 'opacity 0.5s ease';
+            }, 10);
+            
+            // Pour permettre le défilement lors de l'inscription/connexion
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Compléter le processus de connexion
+        async function completeLogin() {
+            hideLoading();
+            
+            // Récupérer les données utilisateur
+            currentUserData = await getUserData(currentUser.uid);
+            
+            // Vérifier si l'utilisateur est administrateur
+            if (currentUserData && currentUserData.statut === 'admin') {
+                isAdmin = true;
+            }
+            
+            // Charger les utilisateurs bloqués
+            loadBlockedUsers();
+            
+            // Animer la transition
+            document.getElementById('auth-screen').style.opacity = '0';
+            document.getElementById('auth-screen').style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                document.getElementById('auth-screen').style.display = 'none';
+            }, 500);
+            
+            // Animation d'apparition pour l'application principale
+            setTimeout(() => {
+                document.getElementById('tabbar').style.opacity = '0';
+                document.getElementById('tabbar').style.display = 'flex';
+                
+                document.querySelector('.header').style.opacity = '0';
+                document.querySelector('.header').style.display = 'flex';
+                
+                document.querySelector('.content').style.opacity = '0';
+                document.querySelector('.content').style.display = 'block';
+                
+                setTimeout(() => {
+                    document.getElementById('tabbar').style.opacity = '1';
+                    document.getElementById('tabbar').style.transition = 'opacity 0.5s ease';
+                    
+                    document.querySelector('.header').style.opacity = '1';
+                    document.querySelector('.header').style.transition = 'opacity 0.5s ease';
+                    
+                    document.querySelector('.content').style.opacity = '1';
+                                        document.querySelector('.content').style.transition = 'opacity 0.5s ease';
+                }, 10);
+                
+                // Remplir les données du profil
+                document.getElementById('profile-name-text').textContent = currentUserData?.displayName || currentUser.email.split('@')[0];
+                document.getElementById('profile-email').textContent = currentUser.email;
+                
+                // Afficher le badge admin si nécessaire
+                if (isAdmin) {
+                    document.getElementById('admin-badge').style.display = 'inline-block';
+                } else {
+                    document.getElementById('admin-badge').style.display = 'none';
+                }
+                
+                // Forcer le défilement pour s'assurer que le contenu est correctement positionné
+                document.body.style.overflow = 'hidden';
+                
+                // Charger les conversations
+                isLoggedIn = true;
+                loadConversations();
+                
+                // Auto-ouvrir Betforce
+                setTimeout(() => {
+                    openChat("Betforce", null, "Betforce", "group");
+                }, 300);
+            }, 500);
+        }
+        
+        // Charger les utilisateurs bloqués
+        function loadBlockedUsers() {
+            try {
+                const blockedListString = localStorage.getItem('ichatBlockedUsers');
+                if (blockedListString) {
+                    const blockedList = JSON.parse(blockedListString);
+                    blockedUsers = new Set(blockedList);
+                }
+            } catch (error) {
+                blockedUsers = new Set();
+            }
+        }
+        
+        // ================ INITIALISATION DE L'APPLICATION ================
+        
+        // Fonction d'initialisation principale
+        function initApp() {
+            // Vérifier les préférences utilisateur stockées localement
+            loadSavedPreferences();
+            
+            // Configurer la détection du mode sombre
+            setupDarkMode();
+            
+            // Configurer les événements d'interface
+            setupUIEvents();
+            
+            // Configurer les événements d'authentification
+            setupAuthEvents();
+            
+            // Configurer la surveillance de la connexion internet
+            setupConnectionMonitoring();
+            
+            // Vérifier l'état d'authentification de l'utilisateur
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    // L'utilisateur est connecté
+                    currentUser = user;
+                    
+                    // Afficher l'écran de chargement si nécessaire
+                    document.getElementById('loading').style.display = 'flex';
+                    
+                    try {
+                        // Récupérer les données utilisateur
+                        await completeLogin();
+                    } catch (error) {
+                        hideLoading();
+                        showLoginScreen();
+                    }
+                } else {
+                    // L'utilisateur n'est pas connecté
+                    hideLoading();
+                    showLoginScreen();
+                }
+            });
+        }
+        
+        // Charger les préférences sauvegardées
+        function loadSavedPreferences() {
+            try {
+                // Charger la couleur personnalisée
+                const savedColor = localStorage.getItem('ichatColor');
+                if (savedColor) {
+                    document.getElementById('color-picker').value = savedColor;
+                    changeAppColor(savedColor);
+                }
+                
+                // Charger la préférence de mode sombre
+                const darkMode = localStorage.getItem('ichatDarkMode');
+                if (darkMode === 'false') {
+                    document.documentElement.classList.remove('dark');
+                    document.getElementById('dark-toggle').checked = false;
+                    document.documentElement.style.setProperty('--chat-sent-bg', '#5D5CDE');
+                } else if (darkMode === 'true') {
+                    document.documentElement.classList.add('dark');
+                    document.getElementById('dark-toggle').checked = true;
+                    document.documentElement.style.setProperty('--chat-sent-bg', document.documentElement.style.getPropertyValue('--primary-color') || '#F7DC6F');
+                }
+            } catch (error) {
+                // Ignorer les erreurs de chargement des préférences
+            }
+        }
+        
+        // Démarrer l'application
+        initApp();
     </script>
 </body>
 </html>
