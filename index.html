@@ -129,6 +129,12 @@
             padding: 5px;
             cursor: pointer;
             font-size: 16px;
+            min-width: 40px;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: -10px;
         }
         
         /* Contenu principal */
@@ -167,6 +173,7 @@
             text-decoration: none;
             padding: 8px 0;
             transition: transform 0.15s ease, color 0.2s ease;
+            min-height: 60px;
         }
         
         .tab:active {
@@ -228,12 +235,13 @@
         
         .chat-item, .user-item {
             display: flex;
-            padding: 12px 16px;
+            padding: 16px;
             border-bottom: 1px solid var(--border-color);
             align-items: center;
             cursor: pointer;
             position: relative;
             transition: background-color 0.2s ease, transform 0.3s ease, opacity 0.4s ease;
+            min-height: 76px;
         }
         
         .chat-item:active, .user-item:active {
@@ -262,6 +270,7 @@
             margin-bottom: 2px;
             display: flex;
             align-items: center;
+            font-size: 16px;
         }
         
         .item-subtitle {
@@ -272,6 +281,7 @@
         .item-time {
             color: #6b7280;
             font-size: 12px;
+            margin-left: 8px;
         }
         
         /* Badge Admin */
@@ -280,7 +290,7 @@
             background-color: var(--admin-badge-bg);
             color: var(--admin-badge-text);
             font-size: 10px;
-            padding: 2px 6px;
+            padding: 4px 8px;
             border-radius: 10px;
             margin-left: 6px;
             font-weight: bold;
@@ -298,7 +308,7 @@
         
         .search-input {
             width: 100%;
-            padding: 8px 16px;
+            padding: 12px 16px;
             border-radius: 18px;
             border: none;
             background-color: var(--secondary-color);
@@ -352,11 +362,12 @@
             padding: 15px 0;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
+            min-height: 60px;
         }
         
         .setting-icon {
-            width: 36px;
-            height: 36px;
+            width: 45px;
+            height: 45px;
             background-color: var(--secondary-color);
             border-radius: 50%;
             display: flex;
@@ -373,6 +384,7 @@
         
         .setting-label {
             font-weight: 500;
+            font-size: 16px;
         }
         
         .button {
@@ -380,7 +392,7 @@
             color: black;
             border: none;
             border-radius: 10px;
-            padding: 12px;
+            padding: 15px;
             font-size: 16px;
             font-weight: bold;
             width: 100%;
@@ -389,6 +401,7 @@
             transition: transform 0.15s ease, opacity 0.2s ease;
             position: relative;
             overflow: hidden;
+            min-height: 50px;
         }
         
         .button:active {
@@ -527,7 +540,7 @@
         
         .message {
             max-width: 75%;
-            padding: 10px 14px;
+            padding: 12px 16px;
             margin-bottom: 10px;
             border-radius: 20px; /* Bulles de chat totalement rondes */
             position: relative;
@@ -537,6 +550,7 @@
             transform: translateX(0);
             box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Légère ombre pour effet 3D */
             font-weight: 500; /* Style iOS */
+            min-height: 44px;
         }
         
         .message-received {
@@ -598,8 +612,8 @@
         }
         
         .input-icon {
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -616,8 +630,8 @@
         }
         
         .send-button {
-            width: 35px;
-            height: 35px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background-color: var(--primary-color);
             color: black;
@@ -662,11 +676,17 @@
         
         .selected-count {
             font-weight: bold;
+            font-size: 16px;
         }
         
         .close-actions {
             color: var(--primary-color);
             padding: 8px;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
         }
         
@@ -683,7 +703,9 @@
             align-items: center;
             cursor: pointer;
             transition: transform 0.15s ease;
-            margin: 5px 10px;
+            margin: 10px;
+            min-width: 70px;
+            min-height: 65px;
         }
         
         .action-button:active {
@@ -694,10 +716,15 @@
             font-size: 24px;
             margin-bottom: 8px;
             color: var(--primary-color);
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .action-label {
-            font-size: 12px;
+            font-size: 14px;
         }
         
         /* Selection mode indicator */
@@ -775,11 +802,12 @@
         }
         
         .option-item {
-            padding: 15px;
+            padding: 16px;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             cursor: pointer;
+            min-height: 55px;
         }
         
         .option-item:last-child {
@@ -791,14 +819,19 @@
         }
         
         .option-icon {
-            width: 24px;
+            width: 44px;
             text-align: center;
             margin-right: 15px;
             color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
         }
         
         .option-label {
             flex: 1;
+            font-size: 16px;
         }
         
         .overlay {
@@ -880,8 +913,8 @@
             position: absolute;
             top: 5px;
             right: 5px;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
             border-radius: 50%;
@@ -924,10 +957,12 @@
             color: white;
             border: none;
             border-radius: 5px;
-            padding: 5px 10px;
-            margin-top: 5px;
-            font-size: 12px;
+            padding: 10px 15px;
+            margin-top: 8px;
+            font-size: 14px;
             cursor: pointer;
+            min-height: 44px;
+            min-width: 100px;
         }
         
         /* Style pour la sélection Telegram-like */
@@ -940,8 +975,8 @@
             left: 10px;
             top: 50%;
             transform: translateY(-50%);
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             border: 2px solid var(--border-color);
             background-color: var(--bg-color);
@@ -972,7 +1007,7 @@
         }
         
         .chat-item.selecting {
-            padding-left: 40px;
+            padding-left: 45px;
         }
         
         .telegram-selection-mode .chat-select-checkbox {
@@ -981,7 +1016,7 @@
         }
         
         .telegram-selection-mode .chat-item {
-            padding-left: 40px;
+            padding-left: 45px;
         }
         
         /* Menu de chat supplémentaire */
@@ -1012,16 +1047,22 @@
             padding: 10px;
             color: var(--text-color);
             text-decoration: none;
+            min-height: 80px;
         }
         
         .extra-button i {
-            font-size: 20px;
+            font-size: 22px;
             margin-bottom: 5px;
             color: var(--primary-color);
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .extra-button-label {
-            font-size: 12px;
+            font-size: 14px;
         }
         
         /* Style iOS pour les messages de réponse intégrés */
@@ -1082,11 +1123,16 @@
         }
         
         .reaction-emoji {
-            font-size: 20px;
-            padding: 5px 8px;
+            font-size: 24px;
+            padding: 10px;
             cursor: pointer;
             transition: transform 0.15s ease;
             border-radius: 20px;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .reaction-emoji:hover, .reaction-emoji:active {
@@ -1110,6 +1156,7 @@
             font-size: 14px;
             margin-right: 4px;
             margin-bottom: 4px;
+            min-height: 30px;
         }
         
         .reaction-count {
@@ -1261,6 +1308,11 @@
         .forward-cancel {
             color: var(--primary-color);
             cursor: pointer;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
         }
         
         .forward-list {
@@ -1271,13 +1323,13 @@
         .forward-badge {
             background-color: var(--primary-color);
             color: black;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 14px;
             margin-left: 10px;
         }
         
@@ -1289,8 +1341,8 @@
             background-color: var(--bg-color);
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            width: 80%;
-            max-width: 300px;
+            width: 90%;
+            max-width: 320px;
             padding: 20px;
             z-index: 60;
             display: none;
@@ -1310,6 +1362,7 @@
         .confirmation-text {
             margin-bottom: 20px;
             text-align: center;
+            font-size: 16px;
         }
         
         .confirmation-buttons {
@@ -1319,13 +1372,15 @@
         }
         
         .confirmation-button {
-            padding: 10px 20px;
+            padding: 12px 20px;
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
             margin: 5px;
             flex-basis: 45%;
             text-align: center;
+            min-height: 50px;
+            font-size: 16px;
         }
         
         .confirmation-cancel {
@@ -1353,8 +1408,8 @@
             left: 10px;
             top: 50%;
             transform: translateY(-50%);
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             border: 2px solid var(--border-color);
             background-color: var(--bg-color);
@@ -1385,7 +1440,7 @@
         }
         
         .selection-mode .selectable-item {
-            padding-left: 40px;
+            padding-left: 45px;
         }
         
         .selection-mode .item-select-checkbox {
@@ -1421,6 +1476,11 @@
             color: var(--primary-color);
             padding: 5px 10px;
             cursor: pointer;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .search-input-container {
@@ -1435,18 +1495,20 @@
         }
         
         .search-result-item {
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 10px;
             border-radius: 10px;
             background-color: var(--secondary-color);
+            min-height: 65px;
         }
         
         .search-result-text {
             margin-bottom: 5px;
+            font-size: 16px;
         }
         
         .search-result-info {
-            font-size: 12px;
+            font-size: 14px;
             color: #6b7280;
             display: flex;
             justify-content: space-between;
@@ -1462,6 +1524,7 @@
             text-align: center;
             padding: 20px;
             color: #6b7280;
+            font-size: 16px;
         }
         
         /* Sections "À propos" */
@@ -1588,13 +1651,18 @@
         }
         
         .new-selection-action {
-            padding: 5px 10px;
+            padding: 10px;
             background-color: rgba(0, 0, 0, 0.1);
             border-radius: 15px;
             margin-left: 8px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 500;
             color: black;
+            min-height: 40px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .new-selection-cancel {
@@ -1612,11 +1680,11 @@
             left: 0;
             top: 0;
             bottom: 0;
-            width: 40px;
+            width: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transform: translateX(-40px);
+            transform: translateX(-44px);
             transition: transform 0.3s ease;
         }
         
@@ -1686,7 +1754,11 @@
         
         .install-close {
             color: var(--primary-color);
-            padding: 8px;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
         }
         
@@ -1709,8 +1781,8 @@
         }
         
         .install-step-number {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             background-color: var(--primary-color);
             color: black;
             border-radius: 50%;
@@ -1746,7 +1818,7 @@
             background-color: var(--bg-color);
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            width: 85%;
+            width: 90%;
             max-width: 320px;
             padding: 20px;
             z-index: 60;
@@ -1782,6 +1854,7 @@
             text-align: center;
             line-height: 1.4;
             opacity: 0.8;
+            font-size: 16px;
         }
         
         .delete-options {
@@ -1799,6 +1872,7 @@
             align-items: center;
             cursor: pointer;
             transition: background-color 0.2s ease;
+            min-height: 55px;
         }
         
         .delete-option:active, .delete-option.selected {
@@ -1812,10 +1886,15 @@
         .delete-option-icon {
             margin-right: 10px;
             color: var(--primary-color);
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .delete-option-label {
             font-weight: 500;
+            font-size: 16px;
         }
         
         .delete-buttons {
@@ -1825,11 +1904,13 @@
         
         .delete-button {
             flex-basis: 48%;
-            padding: 12px;
+            padding: 14px;
             border-radius: 8px;
             font-weight: bold;
             text-align: center;
             cursor: pointer;
+            min-height: 50px;
+            font-size: 16px;
         }
         
         .delete-cancel {
@@ -1847,8 +1928,8 @@
             position: fixed;
             bottom: 80px;
             right: 20px;
-            width: 56px;
-            height: 56px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background-color: var(--danger-color);
             color: white;
@@ -1859,6 +1940,7 @@
             z-index: 15;
             transform: scale(0);
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 24px;
         }
         
         .conversation-delete-btn.active {
@@ -1933,6 +2015,8 @@
             position: relative;
             color: var(--inactive-text);
             transition: color 0.3s;
+            min-height: 50px;
+            font-size: 16px;
         }
         
         .auth-tab.active {
@@ -1986,7 +2070,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            font-size: 14px;
+            font-size: 16px;
             transform-origin: left;
             transition: transform 0.3s, color 0.3s;
         }
@@ -2000,6 +2084,7 @@
             font-size: 16px;
             color: var(--text-color);
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            min-height: 50px;
         }
         
         .form-input:focus {
@@ -2014,7 +2099,7 @@
         
         .form-error {
             color: var(--danger-color);
-            font-size: 13px;
+            font-size: 14px;
             margin-top: 6px;
             display: none;
             animation: shakeX 0.75s ease;
@@ -2043,6 +2128,8 @@
             text-decoration: none;
             font-weight: bold;
             transition: color 0.2s;
+            padding: 5px;
+            display: inline-block;
         }
         
         .form-link:hover {
@@ -2058,6 +2145,7 @@
             white-space: pre-line;
             text-align: center;
             animation: fadeIn 0.5s ease;
+            font-size: 16px;
         }
           
         .log-message.info {
@@ -2181,8 +2269,8 @@
             right: 12px;
             top: 50%;
             transform: translateY(-50%);
-            width: 24px;
-            height: 24px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             background-color: var(--secondary-color);
             color: var(--text-color);
@@ -2302,9 +2390,15 @@
         }
 
         .selection-action {
-            padding: 5px 10px;
+            padding: 10px;
             cursor: pointer;
             font-weight: bold;
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
         }
 
         .selection-action.delete {
@@ -2367,12 +2461,17 @@
         }
 
         .logs-action {
-            padding: 4px 8px;
+            padding: 8px;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
             color: var(--primary-color);
+            min-width: 40px;
+            min-height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .logs-content {
@@ -2418,8 +2517,8 @@
             position: fixed;
             bottom: 70px;
             right: 20px;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background-color: var(--log-bg);
             color: var(--primary-color);
@@ -2445,8 +2544,9 @@
             color: var(--primary-color);
             padding: 3px 8px;
             border-radius: 12px;
-            font-size: 11px;
+            font-size: 12px;
             margin-left: 8px;
+            min-height: 25px;
         }
 
         .group-info-badge i {
@@ -2485,8 +2585,8 @@
             color: white;
             font-size: 24px;
             cursor: pointer;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2538,8 +2638,8 @@
         }
 
         .image-viewer-button {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
@@ -2549,6 +2649,7 @@
             margin: 0 10px;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.2s ease;
+            font-size: 18px;
         }
 
         .image-viewer-button:active {
@@ -2577,15 +2678,16 @@
             transform: translateX(-50%) translateY(100px);
             background-color: var(--bg-color);
             color: var(--text-color);
-            padding: 12px 20px;
+            padding: 14px 20px;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             font-weight: 500;
             z-index: 1000;
             opacity: 0;
             transition: transform 0.3s ease, opacity 0.3s ease;
-            max-width: 80%;
+            max-width: 85%;
             text-align: center;
+            font-size: 16px;
         }
 
         .notification.show {
@@ -2607,7 +2709,7 @@
 
         /* État de livraison des messages */
         .message-status {
-            font-size: 10px;
+            font-size: 12px;
             margin-top: 2px;
             text-align: right;
             color: rgba(255, 255, 255, 0.7);
@@ -2631,14 +2733,15 @@
             top: 50px;
             left: 0;
             right: 0;
-            padding: 5px;
+            padding: 8px;
             background-color: var(--danger-color);
             color: white;
             text-align: center;
-            font-size: 12px;
+            font-size: 14px;
             z-index: 100;
             transform: translateY(-100%);
             transition: transform 0.3s ease;
+            font-weight: bold;
         }
 
         .connection-status.offline {
@@ -2839,21 +2942,6 @@
             </div>
         </div>
         
-        <!-- Section utilisateurs -->
-        <div id="users-section" class="section">
-            <div class="search-container">
-                <input type="text" class="search-input" id="users-search" placeholder="Rechercher un utilisateur">
-            </div>
-            
-            <div id="users-list">
-                <div class="empty-state">
-                    <i class="fas fa-users"></i>
-                    <div class="empty-state-title">Connexion en cours</div>
-                    <div class="empty-state-text">La liste des utilisateurs apparaîtra ici une fois connecté</div>
-                </div>
-            </div>
-        </div>
-        
         <!-- Section Pronostics -->
         <div id="pronostics-section" class="section">
             <div class="coming-soon-container">
@@ -2892,7 +2980,7 @@
                         </div>
                         <div class="setting-label">Couleur de l'interface</div>
                     </div>
-                    <input type="color" id="color-picker" value="#F7DC6F" style="width: 30px; height: 30px; border: none;">
+                    <input type="color" id="color-picker" value="#F7DC6F" style="width: 40px; height: 40px; border: none;">
                 </div>
                 
                 <div class="setting-item">
@@ -3204,10 +3292,6 @@
             <i class="tab-icon fas fa-comments"></i>
             <span>Messages</span>
         </a>
-        <a href="#" class="tab" data-section="users">
-            <i class="tab-icon fas fa-users"></i>
-            <span>Utilisateurs</span>
-        </a>
         <a href="#" class="tab" data-section="pronostics">
             <i class="tab-icon fas fa-futbol"></i>
             <span>Pronostics</span>
@@ -3222,7 +3306,7 @@
         // Import Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, addDoc, onSnapshot, where, deleteDoc, serverTimestamp, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, addDoc, onSnapshot, where, deleteDoc, serverTimestamp, updateDoc, arrayUnion, arrayRemove, limit } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
 
         // Firebase config
         const firebaseConfig = {
@@ -3734,9 +3818,7 @@
             document.getElementById(`${tabName}-section`).classList.add('active');
             
             // Charger le contenu approprié selon la section
-            if (tabName === 'users') {
-                loadUsers();
-            } else if (tabName === 'messages') {
+            if (tabName === 'messages') {
                 // Ne pas ouvrir directement Betforce, afficher la liste des discussions
                 if (isLoggedIn) {
                     loadConversations();
@@ -4269,6 +4351,25 @@
                 currentDiscussionType = null;
                 pendingMessages = {};
                 
+                // Nettoyer les formulaires d'authentification
+                document.getElementById('login-email').value = '';
+                document.getElementById('login-password').value = '';
+                document.getElementById('register-email').value = '';
+                document.getElementById('register-password').value = '';
+                document.getElementById('register-confirm-password').value = '';
+                
+                // Masquer tous les messages d'erreur
+                hideLog('login-log');
+                hideLog('register-log');
+                document.getElementById('login-email-error').style.display = 'none';
+                document.getElementById('login-password-error').style.display = 'none';
+                document.getElementById('register-email-error').style.display = 'none';
+                document.getElementById('register-password-error').style.display = 'none';
+                document.getElementById('register-confirm-password-error').style.display = 'none';
+                
+                // Afficher l'onglet de connexion par défaut
+                changeAuthTab('login');
+                
                 // Rediriger vers l'écran de connexion
                 showLoginScreen();
             } catch (error) {
@@ -4319,6 +4420,25 @@
                 currentUser = null;
                 currentUserData = null;
                 isAdmin = false;
+                
+                // Nettoyer les formulaires d'authentification
+                document.getElementById('login-email').value = '';
+                document.getElementById('login-password').value = '';
+                document.getElementById('register-email').value = '';
+                document.getElementById('register-password').value = '';
+                document.getElementById('register-confirm-password').value = '';
+                
+                // Masquer tous les messages d'erreur
+                hideLog('login-log');
+                hideLog('register-log');
+                document.getElementById('login-email-error').style.display = 'none';
+                document.getElementById('login-password-error').style.display = 'none';
+                document.getElementById('register-email-error').style.display = 'none';
+                document.getElementById('register-password-error').style.display = 'none';
+                document.getElementById('register-confirm-password-error').style.display = 'none';
+                
+                // Afficher l'onglet de connexion par défaut
+                changeAuthTab('login');
                 
                 // Afficher l'écran de connexion
                 showLoginScreen();
@@ -4374,78 +4494,6 @@
                 }
             } catch (error) {
                 chatItem.querySelector('.item-subtitle').textContent = "Erreur de chargement";
-            }
-        }
-        
-        // Charger la liste des utilisateurs depuis Firestore
-        async function loadUsers() {
-            const usersList = document.getElementById('users-list');
-            usersList.innerHTML = '';
-            
-            try {
-                // Si aucun utilisateur
-                if (!currentUser) {
-                    usersList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-users"></i>
-                            <div class="empty-state-title">Connexion requise</div>
-                            <div class="empty-state-text">Connectez-vous pour voir les utilisateurs</div>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Récupérer tous les utilisateurs
-                const usersRef = collection(db, "Users");
-                const querySnapshot = await getDocs(usersRef);
-                
-                if (querySnapshot.empty) {
-                    usersList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-users"></i>
-                            <div class="empty-state-title">Aucun utilisateur</div>
-                            <div class="empty-state-text">Les utilisateurs apparaîtront ici quand ils seront connectés</div>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Ajouter chaque utilisateur à la liste, sauf l'utilisateur actuel
-                querySnapshot.forEach((doc) => {
-                    const userData = doc.data();
-                    if (doc.id !== currentUser.uid) {
-                        const userItem = document.createElement('div');
-                        userItem.className = 'user-item';
-                        userItem.setAttribute('data-user-id', doc.id);
-                        userItem.setAttribute('data-user-email', userData.email);
-                        
-                        const displayName = userData.displayName || userData.email.split('@')[0];
-                        
-                        userItem.innerHTML = `
-                            <div class="profile-pic">
-                                <i class="fas fa-user" style="color: var(--primary-color);"></i>
-                            </div>
-                            <div class="item-content">
-                                <div class="item-title">
-                                    ${displayName}
-                                    ${userData.statut === 'admin' ? '<span class="admin-badge">Admin</span>' : ''}
-                                </div>
-                                <div class="item-subtitle">${userData.email}</div>
-                            </div>
-                        `;
-                        
-                        usersList.appendChild(userItem);
-                    }
-                });
-                
-            } catch (error) {
-                usersList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <div class="empty-state-title">Erreur de chargement</div>
-                        <div class="empty-state-text">Impossible de charger les utilisateurs. Veuillez réessayer.</div>
-                    </div>
-                `;
             }
         }
         
@@ -5338,7 +5386,7 @@
             selectedMessages.clear();
             
             // Mettre à jour l'en-tête
-            document.getElementById('header-action').innerHTML = '<div class="select-all-btn" style="color: var(--primary-color);">Tout</div>';
+            document.getElementById('header-action').innerHTML = '<div class="select-all-btn" style="color: var(--primary-color); padding: 8px;">Tout</div>';
             document.getElementById('header-action').querySelector('.select-all-btn').addEventListener('click', selectAllMessages);
             
             // Activer le menu d'actions
@@ -6540,7 +6588,7 @@
         function notifyLaunch() {
             showNotification("Vous serez alerté(e) du lancement des pronostics sportifs", "success");
             
-            // Changer le texte du bouton
+                        // Changer le texte du bouton
             document.getElementById('notify-launch-button').textContent = "Inscription confirmée";
             document.getElementById('notify-launch-button').disabled = true;
             
@@ -6584,7 +6632,7 @@
         async function completeLogin() {
             hideLoading();
             
-                        // Récupérer les données utilisateur
+            // Récupérer les données utilisateur
             currentUserData = await getUserData(currentUser.uid);
             
             // Vérifier si l'utilisateur est administrateur
