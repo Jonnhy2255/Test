@@ -2745,7 +2745,7 @@
                 <i class="fas fa-chevron-left"></i>
             </span>
         </div>
-        <div id="header-title" class="header-title">Betforce</div>
+        <div id="header-title" class="header-title">Messages</div>
         <div id="header-action">
             <span class="notification-icon" id="options-button">
                 <i class="fas fa-ellipsis-v"></i>
@@ -3398,9 +3398,9 @@
         function setupUIEvents() {
             // Onglets
             document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', (e) => {
+                tab.addEventListener('click', function(e) {
                     e.preventDefault();
-                    const sectionName = tab.getAttribute('data-section');
+                    const sectionName = this.getAttribute('data-section');
                     changeTab(sectionName);
                 });
             });
@@ -3519,10 +3519,13 @@
             
             setupImageViewerGestures();
             
-            // Ouvrir le chat Betforce au démarrage
+            // Configurer l'événement de clic sur Betforce dans la liste des discussions
             document.querySelector('.chat-item[data-id="Betforce"]').addEventListener('click', function() {
                 openChat("Betforce", null, "Betforce", "group");
             });
+            
+            // Configurer la touche retour dans l'interface de chat
+            document.getElementById('header-button').addEventListener('click', closeChat);
         }
         
         // Configuration des gestes pour la visionneuse d'images
@@ -3713,7 +3716,7 @@
             document.querySelector(`.tab[data-section="${tabName}"]`).classList.add('active');
             
             // Mettre à jour le titre dans l'en-tête
-            document.getElementById('header-title').textContent = tabName === 'messages' ? 'Betforce' : tabName.charAt(0).toUpperCase() + tabName.slice(1);
+            document.getElementById('header-title').textContent = tabName.charAt(0).toUpperCase() + tabName.slice(1);
             
             // Réinitialiser l'en-tête
             document.getElementById('header-left').innerHTML = '';
@@ -3734,9 +3737,9 @@
             if (tabName === 'users') {
                 loadUsers();
             } else if (tabName === 'messages') {
-                // Si on est sur la section messages, ouvrir automatiquement Betforce
+                // Ne pas ouvrir directement Betforce, afficher la liste des discussions
                 if (isLoggedIn) {
-                    openChat("Betforce", null, "Betforce", "group");
+                    loadConversations();
                 }
             }
         }
@@ -3830,7 +3833,7 @@
             document.getElementById('chat-interface').style.display = 'none';
             
             // Réinitialiser l'en-tête pour revenir à la liste des messages
-            document.getElementById('header-title').innerText = 'Betforce';
+            document.getElementById('header-title').innerText = 'Messages';
             document.getElementById('header-action').innerHTML = '<span class="notification-icon" id="options-button"><i class="fas fa-ellipsis-v"></i></span>';
             document.getElementById('header-left').innerHTML = '';
             
@@ -4348,13 +4351,29 @@
         
         // Charger les conversations dans la liste depuis Firestore
         async function loadConversations() {
-            // Pour cet exemple, nous n'avons qu'une seule discussion: Betforce
-            // Le code est simplifié, pas besoin de charger d'autres discussions
+            // Mettre à jour le texte du chat-item Betforce
             const chatItem = document.querySelector('.chat-item[data-id="Betforce"]');
             
-            // Si on est connecté, ouvrir automatiquement Betforce
-            if (isLoggedIn) {
-                openChat("Betforce", null, "Betforce", "group");
+            try {
+                // Récupérer les derniers messages pour Betforce
+                const messagesRef = collection(db, "groups", "Betforce", "messages");
+                const q = query(messagesRef, orderBy("createdAt", "desc"), limit(1));
+                const messagesSnap = await getDocs(q);
+                
+                if (!messagesSnap.empty) {
+                    const lastMessage = messagesSnap.docs[0].data();
+                    const lastMessageText = lastMessage.text || "Image";
+                    const lastMessageTime = lastMessage.createdAt ? lastMessage.createdAt.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                    
+                    // Mettre à jour le texte et l'heure du dernier message
+                    chatItem.querySelector('.item-subtitle').textContent = lastMessageText;
+                    chatItem.querySelector('.item-time').textContent = lastMessageTime;
+                } else {
+                    chatItem.querySelector('.item-subtitle').textContent = "Aucun message";
+                    chatItem.querySelector('.item-time').textContent = "";
+                }
+            } catch (error) {
+                chatItem.querySelector('.item-subtitle').textContent = "Erreur de chargement";
             }
         }
         
@@ -4539,9 +4558,16 @@
                     // Récupérer le nom de l'expéditeur
                     if (messageData.senderId === 'admin') {
                         senderName.textContent = 'Admin';
+                        senderName.innerHTML += ' <span class="admin-badge">Admin</span>';
                     } else {
                         getDisplayNameFromId(messageData.senderId).then(name => {
                             senderName.textContent = name;
+                            // Vérifier si l'expéditeur est admin et ajouter le badge
+                            checkIfUserIsAdmin(messageData.senderId).then(isAdmin => {
+                                if (isAdmin) {
+                                    senderName.innerHTML += ' <span class="admin-badge">Admin</span>';
+                                }
+                            });
                         });
                     }
                     
@@ -4659,6 +4685,22 @@
             addMessageEventListeners(messageDiv);
             
             return messageDiv;
+        }
+        
+        // Vérifier si un utilisateur est administrateur
+        async function checkIfUserIsAdmin(userId) {
+            try {
+                const userRef = doc(db, "Users", userId);
+                const userSnap = await getDoc(userRef);
+                
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    return userData.statut === 'admin';
+                }
+                return false;
+            } catch (error) {
+                return false;
+            }
         }
         
         // Formater un timestamp Firestore
@@ -6542,7 +6584,7 @@
         async function completeLogin() {
             hideLoading();
             
-            // Récupérer les données utilisateur
+                        // Récupérer les données utilisateur
             currentUserData = await getUserData(currentUser.uid);
             
             // Vérifier si l'utilisateur est administrateur
@@ -6580,7 +6622,7 @@
                     document.querySelector('.header').style.transition = 'opacity 0.5s ease';
                     
                     document.querySelector('.content').style.opacity = '1';
-                                        document.querySelector('.content').style.transition = 'opacity 0.5s ease';
+                    document.querySelector('.content').style.transition = 'opacity 0.5s ease';
                 }, 10);
                 
                 // Remplir les données du profil
@@ -6600,11 +6642,6 @@
                 // Charger les conversations
                 isLoggedIn = true;
                 loadConversations();
-                
-                // Auto-ouvrir Betforce
-                setTimeout(() => {
-                    openChat("Betforce", null, "Betforce", "group");
-                }, 300);
             }, 500);
         }
         
@@ -6695,3 +6732,4 @@
     </script>
 </body>
 </html>
+
