@@ -2738,7 +2738,7 @@
             color: white;
             text-align: center;
             font-size: 14px;
-            z-index: 100;
+            z-index: 20;
             transform: translateY(-100%);
             transition: transform 0.3s ease;
             font-weight: bold;
@@ -3789,6 +3789,9 @@
             // Masquer le panel de réactions s'il est visible
             document.getElementById('reaction-panel').style.display = 'none';
             
+            // Assurez-vous que l'indicateur de connexion est correctement placé
+            resetConnectionStatus();
+            
             // Mettre à jour la section active
             currentSection = tabName;
             
@@ -3817,12 +3820,31 @@
             // Afficher la section active
             document.getElementById(`${tabName}-section`).classList.add('active');
             
+            // S'assurer que la barre d'onglets reste visible
+            document.getElementById('tabbar').style.display = 'flex';
+            
             // Charger le contenu approprié selon la section
             if (tabName === 'messages') {
                 // Ne pas ouvrir directement Betforce, afficher la liste des discussions
                 if (isLoggedIn) {
                     loadConversations();
                 }
+            }
+        }
+
+        // Réinitialiser le statut de connexion
+        function resetConnectionStatus() {
+            const connectionStatus = document.getElementById('connection-status');
+            // S'assurer que l'indicateur est au bon emplacement et qu'il reflète l'état de connexion actuel
+            connectionStatus.style.top = '50px';
+            
+            if (!navigator.onLine) {
+                connectionStatus.textContent = 'Pas de connexion internet';
+                connectionStatus.classList.add('offline');
+            } else {
+                connectionStatus.textContent = '';
+                connectionStatus.classList.remove('offline');
+                connectionStatus.classList.remove('reconnecting');
             }
         }
         
@@ -3854,6 +3876,15 @@
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
+            
+            // Réinitialiser l'interface de chat
+            document.getElementById('chat-messages').innerHTML = '';
+            document.getElementById('chat-input').value = '';
+            document.getElementById('chat-input').disabled = false;
+            document.getElementById('send-button').disabled = false;
+            
+            // S'assurer que l'indicateur de connexion est correctement placé
+            resetConnectionStatus();
             
             // Mettre à jour l'en-tête
             document.getElementById('header-title').innerText = contact;
@@ -3908,7 +3939,19 @@
             // Masquer le panel de réactions s'il est visible
             document.getElementById('reaction-panel').style.display = 'none';
             
-            // Afficher la barre d'onglets
+            // Masquer le message action menu
+            document.getElementById('message-actions').classList.remove('active');
+            
+            // Réinitialiser l'interface de chat
+            document.getElementById('image-preview').classList.remove('active');
+            document.getElementById('chat-messages').innerHTML = '';
+            document.getElementById('chat-input').value = '';
+            
+            // Réactiver le champ de saisie
+            document.getElementById('chat-input').disabled = false;
+            document.getElementById('send-button').disabled = false;
+            
+            // S'assurer que le menu du bas est visible
             document.getElementById('tabbar').style.display = 'flex';
             
             // Cacher l'interface de chat
@@ -3926,11 +3969,15 @@
             document.getElementById('messages-section').classList.add('active');
             currentSection = 'messages';
             
+            // S'assurer que l'indicateur de connexion est correctement placé
+            resetConnectionStatus();
+            
             // Réinitialiser les variables de la conversation active
             currentContact = '';
             currentDiscussionId = null;
             currentDiscussionType = null;
             replyToMessage = null;
+            selectedImage = null;
         }
         
         // Désabonner des écouteurs de chat
@@ -6528,7 +6575,7 @@
                     // Masquer l'option de blocage pour les groupes
                     document.getElementById('block-option').style.display = 'none';
                 }
-            }
+                            }
             
             isOptionsMenuOpen = !isOptionsMenuOpen;
         }
@@ -6588,7 +6635,7 @@
         function notifyLaunch() {
             showNotification("Vous serez alerté(e) du lancement des pronostics sportifs", "success");
             
-                        // Changer le texte du bouton
+            // Changer le texte du bouton
             document.getElementById('notify-launch-button').textContent = "Inscription confirmée";
             document.getElementById('notify-launch-button').disabled = true;
             
@@ -6780,4 +6827,5 @@
     </script>
 </body>
 </html>
+
 
