@@ -44,6 +44,12 @@
             --event-border: #e0e0e0;
             --restricted-badge-bg: #FFC107;
             --restricted-badge-text: #000000;
+            --side-menu-bg: #ffffff;
+            --side-menu-active: #f0f2f5;
+            --side-menu-hover: #f5f5f5;
+            --log-panel-bg: #f8f9fa;
+            --log-panel-border: #e0e0e0;
+            --link-hover: #0056b3;
         }
         
         /* Mode sombre */
@@ -79,6 +85,12 @@
             --event-border: #3e3e3e;
             --restricted-badge-bg: #FFC107;
             --restricted-badge-text: #000000;
+            --side-menu-bg: #222222;
+            --side-menu-active: #333333;
+            --side-menu-hover: #2a2a2a;
+            --log-panel-bg: #222222;
+            --log-panel-border: #3e3e3e;
+            --link-hover: #64B5F6;
         }
         
         /* Reset de base */
@@ -105,6 +117,167 @@
             letter-spacing: -0.2px;
         }
         
+        /* Menu latéral */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            height: 100%;
+            width: 280px;
+            background-color: var(--side-menu-bg);
+            z-index: 1000;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .side-menu.active {
+            left: 0;
+        }
+        
+        .side-menu-header {
+            display: flex;
+            align-items: center;
+            padding: 20px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .side-menu-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-left: 15px;
+        }
+        
+        .side-menu-close {
+            font-size: 20px;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .side-menu-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .side-menu-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .side-menu-item:hover {
+            background-color: var(--side-menu-hover);
+        }
+        
+        .side-menu-item.active {
+            background-color: var(--side-menu-active);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .side-menu-item i {
+            font-size: 20px;
+            width: 30px;
+            color: var(--primary-color);
+        }
+        
+        .side-menu-text {
+            margin-left: 15px;
+            font-weight: 500;
+        }
+        
+        .side-menu-footer {
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        /* Superposition pour fermer le menu */
+        .side-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        .side-menu-overlay.active {
+            display: block;
+        }
+        
+        /* Panneau de logs */
+        .log-panel {
+            position: fixed;
+            top: 50px;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background-color: var(--log-panel-bg);
+            border-bottom: 1px solid var(--log-panel-border);
+            z-index: 900;
+            overflow-y: auto;
+            padding: 10px;
+            display: none;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .log-panel.active {
+            display: block;
+            transform: translateY(0);
+        }
+        
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-family: monospace;
+            font-size: 12px;
+            word-wrap: break-word;
+        }
+        
+        .log-entry a {
+            color: var(--link-color);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        
+        .log-entry a:hover {
+            color: var(--link-hover);
+        }
+        
+        .log-entry.info {
+            color: var(--log-info);
+        }
+        
+        .log-entry.error {
+            color: var(--log-error);
+        }
+        
+        .log-entry.warning {
+            color: var(--log-warning);
+        }
+        
+        .log-entry.success {
+            color: var(--log-success);
+        }
+        
+        .log-panel-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--text-color);
+        }
+        
         /* En-tête fixe */
         .header {
             background-color: var(--bg-color);
@@ -121,6 +294,22 @@
             z-index: 10;
         }
         
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .menu-button, .log-button, .back-button {
+            padding: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+        
+        .log-button {
+            margin-left: 5px;
+        }
+        
         .header-title {
             font-weight: bold;
             font-size: 18px;
@@ -129,11 +318,11 @@
             text-decoration: none; /* Suppression du trait sous les titres */
         }
         
-        .back-button {
+        .events-button {
             color: var(--primary-color);
-            padding: 5px;
+            padding: 10px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
         }
         
         /* Contenu principal */
@@ -148,8 +337,8 @@
             background-color: var(--bg-color);
         }
         
-        /* Barre d'onglets fixe */
-        .tabbar {
+        /* Nouvelle barre d'onglets simplifiée à 2 zones */
+        .bottom-nav {
             background-color: var(--bg-color);
             border-top: 1px solid var(--border-color);
             position: fixed;
@@ -161,31 +350,25 @@
             z-index: 10;
         }
         
-        .tab {
-            flex: 1;
+        .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #8e8e93;
+            flex: 1;
+            color: var(--inactive-text);
             font-size: 10px;
-            text-decoration: none; /* Suppression du trait sous les titres */
-            border-bottom: none; /* Suppression du trait sous les titres */
+            cursor: pointer;
+            transition: color 0.2s ease;
+            height: 100%;
             padding: 8px 0;
-            transition: transform 0.15s ease, color 0.2s ease;
         }
         
-        .tab:active {
-            transform: scale(0.95);
-        }
-        
-        .tab.active {
+        .nav-item.active {
             color: var(--primary-color);
-            text-decoration: none; /* Suppression du trait sous les titres */
-            border-bottom: none; /* Suppression du trait sous les titres */
         }
         
-        .tab-icon {
+        .nav-icon {
             font-size: 22px;
             margin-bottom: 4px;
         }
@@ -376,7 +559,7 @@
         .loading-spinner {
             font-size: 60px;
             color: var(--primary-color);
-            animation: pulse 2s infinite, spin 3s linear infinite;
+            animation: pulse 2s infinite, bounce 1.5s infinite;
             margin-bottom: 20px;
             text-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
@@ -386,9 +569,10 @@
             50% { transform: scale(1.1); }
         }
         
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
         }
         
         /* Paramètres */
@@ -1014,7 +1198,7 @@
         /* About section */
         .about-container {
             padding: 20px;
-            margin-top: 10px;
+            margin: 15px;
             background-color: var(--secondary-color);
             border-radius: 10px;
         }
@@ -1062,46 +1246,16 @@
             justify-content: center;
         }
 
-        .pulse-circle {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: rgba(93, 92, 222, 0.2);
-            position: relative;
-            animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        .football-bounce {
+            font-size: 80px;
+            color: var(--primary-color);
+            animation: bounce 2s infinite;
         }
 
-        .pulse-circle::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            animation: pulse-dot 1.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite;
-        }
-
-        @keyframes pulse-ring {
-            0% {
-                transform: scale(0.33);
-            }
-            80%, 100% {
-                opacity: 0;
-            }
-        }
-
-        @keyframes pulse-dot {
-            0% {
-                transform: scale(0.8);
-            }
-            50% {
-                transform: scale(1);
-            }
-            100% {
-                transform: scale(0.8);
-            }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-40px); }
+            60% { transform: translateY(-20px); }
         }
 
         .verify-text {
@@ -1639,12 +1793,6 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
-        /* Fix pour le menu tabbar */
-        .tabbar .tab {
-            height: 100%;
-            cursor: pointer;
-        }
         
         /* Styles pour la section */
         .section-title {
@@ -1693,24 +1841,147 @@
             flex: 1;
         }
         
-        /* Style pour le conteneur des onglets du profil principal */
-        .section-header {
-            text-align: center;
+        /* Section Pronostics */
+        .forecasts-section {
+            padding: 15px;
+        }
+        
+        .forecasts-title {
             font-weight: bold;
             font-size: 20px;
-            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
             color: var(--primary-color);
-            border-bottom: none; /* Suppression du trait sous les titres */
-            text-decoration: none; /* Suppression du trait sous les titres */
+        }
+        
+        .forecasts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .forecast-item {
+            background-color: var(--secondary-color);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .forecast-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .forecast-match {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .forecast-team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .forecast-team-name {
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .forecast-score {
+            font-size: 22px;
+            font-weight: bold;
+            padding: 0 10px;
+        }
+        
+        .forecast-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .forecast-status.pending {
+            background-color: var(--log-warning);
+        }
+        
+        .forecast-status.correct {
+            background-color: var(--success-color);
+        }
+        
+        .forecast-status.incorrect {
+            background-color: var(--danger-color);
+        }
+        
+        .forecast-date {
+            font-size: 12px;
+            color: var(--inactive-text);
+        }
+        
+        .no-forecasts {
+            text-align: center;
+            padding: 30px 15px;
+            color: var(--inactive-text);
+        }
+        
+        .no-forecasts i {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            opacity: 0.5;
         }
     </style>
 </head>
 <body>
     <!-- Animation de vérification -->
     <div id="verify-animation" class="verify-animation">
-        <div class="pulse-circle"></div>
+        <div class="football-bounce">
+            <i class="fas fa-futbol"></i>
+        </div>
         <div class="verify-spinner"></div>
         <div class="verify-text">Vérification en cours...</div>
+    </div>
+    
+    <!-- Menu latéral -->
+    <div class="side-menu" id="side-menu">
+        <div class="side-menu-header">
+            <div class="side-menu-close" id="side-menu-close">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="side-menu-title">GroupChat</div>
+        </div>
+        <div class="side-menu-content">
+            <div class="side-menu-item" id="menu-profile">
+                <i class="fas fa-user"></i>
+                <div class="side-menu-text">Profil</div>
+            </div>
+            <div class="side-menu-item" id="menu-about">
+                <i class="fas fa-info-circle"></i>
+                <div class="side-menu-text">À propos</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Superposition pour fermer le menu -->
+    <div class="side-menu-overlay" id="side-menu-overlay"></div>
+    
+    <!-- Panneau de logs -->
+    <div class="log-panel" id="log-panel">
+        <div class="log-panel-close" id="log-panel-close">
+            <i class="fas fa-times"></i>
+        </div>
+        <div id="log-container">
+            <!-- Les logs seront ajoutés ici dynamiquement -->
+            <div class="log-entry info">Initialisation de l'application...</div>
+        </div>
     </div>
     
     <!-- Écran d'authentification -->
@@ -1791,7 +2062,7 @@
 
     <!-- Écran de chargement -->
     <div id="loading" class="loading" style="display: none;">
-        <i class="fas fa-users loading-spinner"></i>
+        <i class="fas fa-futbol loading-spinner"></i>
         <div style="font-weight: bold; font-size: 24px; color: var(--primary-color);">GroupChat</div>
         <div style="margin-top: 10px; color: #6b7280;">Chargement...</div>
     </div>
@@ -1801,16 +2072,22 @@
 
     <!-- En-tête -->
     <div class="header">
-        <div id="header-left">
-            <span id="header-button" style="display:none;">
+        <div class="header-left">
+            <div id="header-menu-button" class="menu-button">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div id="header-back-button" class="back-button" style="display:none;">
                 <i class="fas fa-chevron-left"></i>
-            </span>
+            </div>
+            <div class="log-button" id="log-button">
+                <i class="fas fa-list-alt"></i>
+            </div>
         </div>
         <div id="header-title" class="header-title">Groupes</div>
         <div id="header-action">
-            <span class="notification-icon" id="options-button">
-                <i class="fas fa-ellipsis-v"></i>
-            </span>
+            <div class="events-button" id="events-button">
+                <i class="fas fa-bell"></i>
+            </div>
         </div>
     </div>
 
@@ -1853,7 +2130,6 @@
         
         <!-- Section Profil -->
         <div id="profile-section" class="section">
-            <div class="section-header">Profile</div>
             <div class="profile-header">
                 <div class="profile-pic">
                     <i class="fas fa-user"></i>
@@ -1890,31 +2166,46 @@
                     </label>
                 </div>
                 
-                <!-- Section "À propos" -->
-                <div class="section-title">À propos</div>
+                <button id="logout-btn" class="button">Se déconnecter</button>
+            </div>
+        </div>
+        
+        <!-- Section Pronostics -->
+        <div id="forecasts-section" class="section">
+            <div class="forecasts-title">Mes Pronostics</div>
+            
+            <div class="forecasts-list" id="forecasts-list">
+                <!-- Les pronostics seront ajoutés ici dynamiquement -->
+                <div class="no-forecasts">
+                    <i class="fas fa-futbol"></i>
+                    <div class="empty-state-title">Aucun pronostic</div>
+                    <div class="empty-state-text">Vous n'avez pas encore fait de pronostic</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section À propos -->
+        <div id="about-section" class="section">
+            <div class="about-container">
+                <div class="about-title">GroupChat</div>
+                <div class="about-text">Une application de messagerie de groupe simple et facile à utiliser qui vous permet de rester en contact avec vos amis et collègues.</div>
                 
-                <div class="about-container">
-                    <div class="about-title">GroupChat</div>
-                    <div class="about-text">Une application de messagerie de groupe simple et facile à utiliser qui vous permet de rester en contact avec vos amis et collègues.</div>
-                    
-                    <div class="about-divider"></div>
-                    
-                    <div class="about-text">
-                        <strong>Fonctionnalités :</strong>
-                        <ul style="padding-left: 20px; margin-top: 5px;">
-                            <li>Messagerie de groupe</li>
-                            <li>Création de groupes (admins seulement)</li>
-                            <li>Permissions d'écriture configurables</li>
-                            <li>Images de groupe personnalisables</li>
-                            <li>Suivi des événements</li>
-                            <li>Mode sombre</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="about-version">Version 1.2.2</div>
+                <div class="about-divider"></div>
+                
+                <div class="about-text">
+                    <strong>Fonctionnalités :</strong>
+                    <ul style="padding-left: 20px; margin-top: 5px;">
+                        <li>Messagerie de groupe</li>
+                        <li>Création de groupes (admins seulement)</li>
+                        <li>Permissions d'écriture configurables</li>
+                        <li>Images de groupe personnalisables</li>
+                        <li>Suivi des événements</li>
+                        <li>Pronostics sportifs</li>
+                        <li>Mode sombre</li>
+                    </ul>
                 </div>
                 
-                <button id="logout-btn" class="button">Se déconnecter</button>
+                <div class="about-version">Version 1.3.0</div>
             </div>
         </div>
     </div>
@@ -2116,19 +2407,15 @@
     <!-- Notification -->
     <div class="notification" id="notification"></div>
 
-    <!-- Barre d'onglets -->
-    <div class="tabbar" id="tabbar">
-        <div class="tab active" data-section="groups">
-            <i class="tab-icon fas fa-users"></i>
+    <!-- Nouvelle barre de navigation simplifiée à 2 zones -->
+    <div class="bottom-nav" id="bottom-nav">
+        <div class="nav-item active" data-section="groups" style="flex: 1;">
+            <i class="nav-icon fas fa-users"></i>
             <span>Groupes</span>
         </div>
-        <div class="tab" data-section="events">
-            <i class="tab-icon fas fa-bell"></i>
-            <span>Événements</span>
-        </div>
-        <div class="tab" data-section="profile">
-            <i class="tab-icon fas fa-user"></i>
-            <span>Profil</span>
+        <div class="nav-item" data-section="forecasts" style="flex: 1;">
+            <i class="nav-icon fas fa-futbol"></i>
+            <span>Pronostics</span>
         </div>
     </div>
 
@@ -2182,6 +2469,89 @@
         let groupNameChanged = false;
         let groupDescriptionChanged = false;
         let groupPermissionsChanged = false;
+        let appLogs = []; // Pour stocker les logs
+        
+        // Surcharge de console.log pour capturer les logs
+        const originalConsoleLog = console.log;
+        const originalConsoleError = console.error;
+        const originalConsoleWarn = console.warn;
+        const originalConsoleInfo = console.info;
+        
+        console.log = function() {
+            addToLogPanel('info', arguments);
+            originalConsoleLog.apply(console, arguments);
+        };
+        
+        console.error = function() {
+            addToLogPanel('error', arguments);
+            originalConsoleError.apply(console, arguments);
+        };
+        
+        console.warn = function() {
+            addToLogPanel('warning', arguments);
+            originalConsoleWarn.apply(console, arguments);
+        };
+        
+        console.info = function() {
+            addToLogPanel('info', arguments);
+            originalConsoleInfo.apply(console, arguments);
+        };
+        
+        // Ajouter un log au panneau
+        function addToLogPanel(type, args) {
+            try {
+                const logContainer = document.getElementById('log-container');
+                if (!logContainer) return;
+                
+                // Convertir les arguments en texte
+                let logText = Array.from(args).map(arg => {
+                    if (typeof arg === 'object') {
+                        try {
+                            return JSON.stringify(arg);
+                        } catch (e) {
+                            return arg.toString();
+                        }
+                    }
+                    return arg;
+                }).join(' ');
+                
+                // Détecter les liens dans le texte et les rendre cliquables
+                logText = makeLinksClickable(logText);
+                
+                // Créer l'entrée de log
+                const logEntry = document.createElement('div');
+                logEntry.className = `log-entry ${type}`;
+                logEntry.innerHTML = logText;
+                
+                // Ajouter la date
+                const timestamp = new Date().toLocaleTimeString();
+                logEntry.innerHTML = `[${timestamp}] ${logEntry.innerHTML}`;
+                
+                // Ajouter au conteneur
+                logContainer.appendChild(logEntry);
+                
+                // Limiter le nombre de logs (garder les 100 derniers)
+                while (logContainer.children.length > 100) {
+                    logContainer.removeChild(logContainer.firstChild);
+                }
+                
+                // Défiler vers le bas
+                logContainer.scrollTop = logContainer.scrollHeight;
+                
+                // Stocker dans le tableau des logs
+                appLogs.push({type, text: logText, timestamp});
+            } catch (error) {
+                originalConsoleError.call(console, 'Erreur lors de l\'ajout au panneau de logs:', error);
+            }
+        }
+        
+        // Rendre les liens dans le texte cliquables
+        function makeLinksClickable(text) {
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            return text.replace(urlRegex, function(url) {
+                return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+            });
+        }
         
         // Fonction pour détecter le mode sombre du système
         function setupDarkMode() {
@@ -2303,21 +2673,67 @@
         
         // Configuration des événements UI
         function setupUIEvents() {
-            // Onglets - Refondu pour éviter les problèmes de clic
-            const tabs = document.querySelectorAll('.tab');
+            // Menu latéral - Ouvrir
+            document.getElementById('header-menu-button').addEventListener('click', function() {
+                document.getElementById('side-menu').classList.add('active');
+                document.getElementById('side-menu-overlay').classList.add('active');
+            });
             
-            tabs.forEach(tab => {
-                // Utiliser un gestionnaire d'événements plus simple et plus robuste
-                tab.addEventListener('click', function() {
-                    try {
-                        const sectionName = this.getAttribute('data-section');
-                        if (sectionName) {
-                            changeTab(sectionName);
-                        }
-                    } catch (error) {
-                        console.error("Erreur lors du changement d'onglet:", error);
-                    }
-                });
+            // Menu latéral - Fermer (via bouton X)
+            document.getElementById('side-menu-close').addEventListener('click', function() {
+                document.getElementById('side-menu').classList.remove('active');
+                document.getElementById('side-menu-overlay').classList.remove('active');
+            });
+            
+            // Menu latéral - Fermer (via overlay)
+            document.getElementById('side-menu-overlay').addEventListener('click', function() {
+                document.getElementById('side-menu').classList.remove('active');
+                document.getElementById('side-menu-overlay').classList.remove('active');
+            });
+            
+            // Menu latéral - Actions des items
+            document.getElementById('menu-profile').addEventListener('click', function() {
+                document.getElementById('side-menu').classList.remove('active');
+                document.getElementById('side-menu-overlay').classList.remove('active');
+                showProfileSection();
+            });
+            
+            document.getElementById('menu-about').addEventListener('click', function() {
+                document.getElementById('side-menu').classList.remove('active');
+                document.getElementById('side-menu-overlay').classList.remove('active');
+                showAboutSection();
+            });
+            
+            // Panneau de logs - Ouvrir
+            document.getElementById('log-button').addEventListener('click', function() {
+                document.getElementById('log-panel').classList.toggle('active');
+            });
+            
+            // Panneau de logs - Fermer
+            document.getElementById('log-panel-close').addEventListener('click', function() {
+                document.getElementById('log-panel').classList.remove('active');
+            });
+            
+            // Bouton événements dans l'en-tête
+            document.getElementById('events-button').addEventListener('click', function() {
+                showEventsSection();
+            });
+            
+            // Nouvelle barre d'onglets avec deux zones
+            document.getElementById('bottom-nav').addEventListener('click', function(e) {
+                // Détecter la position horizontale du clic
+                const rect = this.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const midPoint = rect.width / 2;
+                
+                // Déterminer la section à activer selon la moitié cliquée
+                if (clickX < midPoint) {
+                    // Clic sur la partie gauche (Groupes)
+                    showGroupsSection();
+                } else {
+                    // Clic sur la partie droite (Pronostics)
+                    showForecastsSection();
+                }
             });
             
             // Événements pour les paramètres
@@ -2366,7 +2782,7 @@
             document.getElementById('send-button').addEventListener('click', sendMessage);
             
             // Bouton retour dans le chat
-            document.getElementById('header-button').addEventListener('click', closeChat);
+            document.getElementById('header-back-button').addEventListener('click', closeChat);
             
             // Création de groupe
             document.getElementById('create-group-btn').addEventListener('click', function() {
@@ -2468,6 +2884,191 @@
                 if (eventsSearch && !eventsSearch.contains(e.target)) {
                     eventsSearch.blur();
                 }
+            });
+            
+            // Ajouter des écouteurs pour le panneau de logs
+            document.getElementById('log-container').addEventListener('click', function(e) {
+                // Vérifier si l'élément cliqué est un lien
+                if (e.target.tagName === 'A') {
+                    e.preventDefault();
+                    // Ouvrir le lien dans une nouvelle fenêtre
+                    window.open(e.target.href, '_blank');
+                }
+            });
+        }
+        
+        // Afficher la section groupes
+        function showGroupsSection() {
+            // Si on est dans l'interface de chat, fermer le chat d'abord
+            if (document.getElementById('chat-interface').style.display === 'block') {
+                closeChat();
+                return;
+            }
+            
+            // Mettre à jour les onglets actifs
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if (item.getAttribute('data-section') === 'groups') {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // Montrer le bouton de menu et masquer le bouton de retour
+            document.getElementById('header-menu-button').style.display = 'block';
+            document.getElementById('header-back-button').style.display = 'none';
+            
+            // Mettre à jour la section active
+            currentSection = 'groups';
+            
+            // Masquer toutes les sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Afficher la section groupes
+            document.getElementById('groups-section').classList.add('active');
+            
+            // Mettre à jour le titre
+            document.getElementById('header-title').textContent = 'Groupes';
+            
+            // Charger les groupes si nécessaire
+            loadGroups();
+        }
+        
+        // Afficher la section pronostics
+        function showForecastsSection() {
+            // Si on est dans l'interface de chat, fermer le chat d'abord
+            if (document.getElementById('chat-interface').style.display === 'block') {
+                closeChat();
+            }
+            
+            // Mettre à jour les onglets actifs
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if (item.getAttribute('data-section') === 'forecasts') {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // Montrer le bouton de menu et masquer le bouton de retour
+            document.getElementById('header-menu-button').style.display = 'block';
+            document.getElementById('header-back-button').style.display = 'none';
+            
+            // Mettre à jour la section active
+            currentSection = 'forecasts';
+            
+            // Masquer toutes les sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Afficher la section pronostics
+            document.getElementById('forecasts-section').classList.add('active');
+            
+            // Mettre à jour le titre
+            document.getElementById('header-title').textContent = 'Pronostics';
+            
+            // Ici, vous pourriez charger les pronostics
+            loadForecasts();
+        }
+        
+        // Charger les pronostics (fonction fictive pour exemple)
+        function loadForecasts() {
+            console.log("Chargement des pronostics...");
+            // Cette fonction serait implémentée pour charger de vrais pronostics
+            // depuis Firestore ou une autre source de données
+        }
+        
+        // Afficher la section événements
+        function showEventsSection() {
+            // Si on est dans l'interface de chat, fermer le chat d'abord
+            if (document.getElementById('chat-interface').style.display === 'block') {
+                closeChat();
+            }
+            
+            // Mettre à jour la section active
+            currentSection = 'events';
+            
+            // Masquer toutes les sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Afficher la section événements
+            document.getElementById('events-section').classList.add('active');
+            
+            // Mettre à jour le titre
+            document.getElementById('header-title').textContent = 'Événements';
+            
+            // Montrer le bouton de menu et masquer le bouton de retour
+            document.getElementById('header-menu-button').style.display = 'block';
+            document.getElementById('header-back-button').style.display = 'none';
+            
+            // Lisez les événements si nécessaire
+            listenToEvents();
+        }
+        
+        // Afficher la section profil
+        function showProfileSection() {
+            // Si on est dans l'interface de chat, fermer le chat d'abord
+            if (document.getElementById('chat-interface').style.display === 'block') {
+                closeChat();
+            }
+            
+            // Mettre à jour la section active
+            currentSection = 'profile';
+            
+            // Masquer toutes les sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Afficher la section profil
+            document.getElementById('profile-section').classList.add('active');
+            
+            // Mettre à jour le titre
+            document.getElementById('header-title').textContent = 'Profil';
+            
+            // Masquer le bouton de menu et montrer le bouton de retour
+            document.getElementById('header-menu-button').style.display = 'none';
+            document.getElementById('header-back-button').style.display = 'block';
+            
+            // Ajouter un écouteur d'événement pour le bouton de retour
+            document.getElementById('header-back-button').addEventListener('click', function() {
+                showGroupsSection();
+            });
+        }
+        
+        // Afficher la section À propos
+        function showAboutSection() {
+            // Si on est dans l'interface de chat, fermer le chat d'abord
+            if (document.getElementById('chat-interface').style.display === 'block') {
+                closeChat();
+            }
+            
+            // Mettre à jour la section active
+            currentSection = 'about';
+            
+            // Masquer toutes les sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Afficher la section à propos
+            document.getElementById('about-section').classList.add('active');
+            
+            // Mettre à jour le titre
+            document.getElementById('header-title').textContent = 'À propos';
+            
+            // Masquer le bouton de menu et montrer le bouton de retour
+            document.getElementById('header-menu-button').style.display = 'none';
+            document.getElementById('header-back-button').style.display = 'block';
+            
+            // Ajouter un écouteur d'événement pour le bouton de retour
+            document.getElementById('header-back-button').addEventListener('click', function() {
+                showGroupsSection();
             });
         }
         
@@ -3924,8 +4525,8 @@
                 
                 setTimeout(() => {
                     // Animation d'apparition pour l'application principale
-                    document.getElementById('tabbar').style.opacity = '0';
-                    document.getElementById('tabbar').style.display = 'flex';
+                    document.getElementById('bottom-nav').style.opacity = '0';
+                    document.getElementById('bottom-nav').style.display = 'flex';
                     
                     document.querySelector('.header').style.opacity = '0';
                     document.querySelector('.header').style.display = 'flex';
@@ -3934,8 +4535,8 @@
                     document.querySelector('.content').style.display = 'block';
                     
                     setTimeout(() => {
-                        document.getElementById('tabbar').style.opacity = '1';
-                        document.getElementById('tabbar').style.transition = 'opacity 0.5s ease';
+                        document.getElementById('bottom-nav').style.opacity = '1';
+                        document.getElementById('bottom-nav').style.transition = 'opacity 0.5s ease';
                         
                         document.querySelector('.header').style.opacity = '1';
                         document.querySelector('.header').style.transition = 'opacity 0.5s ease';
@@ -3966,7 +4567,7 @@
                 document.getElementById('loading').style.display = 'none';
                 
                 // Afficher les éléments de base quand même
-                document.getElementById('tabbar').style.display = 'flex';
+                document.getElementById('bottom-nav').style.display = 'flex';
                 document.querySelector('.header').style.display = 'flex';
                 document.querySelector('.content').style.display = 'block';
             }
@@ -4321,309 +4922,6 @@
             }
         }
         
-        // Fonction pour changer d'onglet - nouvelle implémentation
-        function changeTab(tabName) {
-            // Vérification de la validité du nom d'onglet
-            if (!tabName || (tabName !== 'groups' && tabName !== 'events' && tabName !== 'profile')) {
-                console.error("Nom d'onglet invalide:", tabName);
-                return;
-            }
-            
-            // Si on est dans l'interface de chat, retourner à la liste des groupes
-            if (document.getElementById('chat-interface').style.display === 'block') {
-                closeChat();
-                if (tabName === 'groups') return;
-            }
-            
-            // Mettre à jour la section active
-            currentSection = tabName;
-            
-            // Mettre à jour les onglets actifs
-            document.querySelectorAll('.tab').forEach(tab => {
-                if (tab.getAttribute('data-section') === tabName) {
-                    tab.classList.add('active');
-                } else {
-                    tab.classList.remove('active');
-                }
-            });
-            
-            // Mettre à jour le titre dans l'en-tête
-            const headerTitle = document.getElementById('header-title');
-            if (headerTitle) {
-                headerTitle.textContent = tabName.charAt(0).toUpperCase() + tabName.slice(1);
-            }
-            
-            // Réinitialiser l'en-tête
-            const headerLeft = document.getElementById('header-left');
-            const headerAction = document.getElementById('header-action');
-            
-            if (headerLeft) {
-                headerLeft.innerHTML = '';
-            }
-            
-            if (headerAction) {
-                headerAction.innerHTML = '<span class="notification-icon" id="options-button"><i class="fas fa-ellipsis-v"></i></span>';
-            }
-            
-            // Masquer toutes les sections
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Afficher la section active
-            const activeSection = document.getElementById(`${tabName}-section`);
-            if (activeSection) {
-                activeSection.classList.add('active');
-            }
-            
-            // Charger le contenu approprié selon la section
-            if (tabName === 'groups') {
-                loadGroups();
-            } else if (tabName === 'events') {
-                // Réinitialiser la recherche
-                const eventsSearch = document.getElementById('events-search');
-                if (eventsSearch) {
-                    eventsSearch.value = '';
-                }
-                filterEvents('');
-            }
-        }
-        
-        // Charger les groupes depuis Firestore
-        async function loadGroups() {
-            const groupsList = document.getElementById('groups-list');
-            if (!groupsList) return;
-            
-            // Éviter les chargements multiples
-            if (isLoadingGroups) return;
-            isLoadingGroups = true;
-            
-            try {
-                // Si pas d'utilisateur authentifié, ne rien faire
-                if (!currentUser) {
-                    console.log("Tentative de chargement des groupes sans utilisateur connecté");
-                    isLoadingGroups = false;
-                    return;
-                }
-                
-                console.log("Chargement des groupes...");
-                
-                // Vider la liste de groupes
-                groupsList.innerHTML = `
-                    <div class="empty-state" style="padding: 20px; text-align: center;">
-                        <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary-color);"></i>
-                        <div class="empty-state-title">Chargement</div>
-                        <div class="empty-state-text">Récupération des groupes...</div>
-                    </div>
-                `;
-                
-                // Récupérer les groupes dont l'utilisateur est membre
-                const groupsRef = collection(db, "groups");
-                const q = query(
-                    groupsRef,
-                    where("members", "array-contains", currentUser.uid),
-                    orderBy("lastMessageTime", "desc")
-                );
-                
-                const querySnapshot = await getDocs(q);
-                
-                // Vider complètement la liste après que les données soient chargées
-                groupsList.innerHTML = '';
-                
-                if (querySnapshot.empty) {
-                    console.log("Aucun groupe trouvé");
-                    groupsList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-users"></i>
-                            <div class="empty-state-title">Aucun groupe</div>
-                            <div class="empty-state-text">${isAdmin ? 
-                                'Créez un nouveau groupe en appuyant sur le bouton +' : 
-                                'Aucun groupe disponible pour le moment'}</div>
-                        </div>
-                    `;
-                    isLoadingGroups = false;
-                    return;
-                }
-                
-                // Créer un fragment pour ajouter tous les groupes en une seule fois
-                const fragment = document.createDocumentFragment();
-                
-                for (const groupDoc of querySnapshot.docs) {
-                    const groupData = groupDoc.data();
-                    
-                    // Récupérer le dernier message du groupe
-                    let lastMessage = "Aucun message";
-                    let lastSenderId = null;
-                    let lastMessageTime = null;
-                    
-                    try {
-                        const messagesRef = collection(db, "groups", groupDoc.id, "messages");
-                        const messagesQuery = query(messagesRef, orderBy("createdAt", "desc"), limit(1));
-                        const messagesSnapshot = await getDocs(messagesQuery);
-                        
-                        if (!messagesSnapshot.empty) {
-                            const lastMessageDoc = messagesSnapshot.docs[0];
-                            const messageData = lastMessageDoc.data();
-                            lastMessage = messageData.text || "Image";
-                            lastSenderId = messageData.senderId;
-                            lastMessageTime = messageData.createdAt;
-                        }
-                    } catch (error) {
-                        console.error(`Erreur lors de la récupération du dernier message pour le groupe ${groupDoc.id}:`, error);
-                        // Continuer avec les valeurs par défaut
-                    }
-                    
-                    // Créer l'élément pour ce groupe
-                    const groupItem = document.createElement('div');
-                    groupItem.className = 'chat-item';
-                    groupItem.setAttribute('data-group', groupData.name);
-                    groupItem.setAttribute('data-id', groupDoc.id);
-                    
-                    // Vérifier si les messages sont restreints
-                    const isRestricted = groupData.allowPublicMessages === false;
-                    
-                    // Déterminer si l'utilisateur est administrateur de ce groupe
-                    const isGroupAdmin = isAdmin || (groupData.admins && groupData.admins.includes(currentUser.uid));
-                    
-                    // Formater le dernier message
-                    let lastMessageText = lastMessage;
-                    try {
-                        if (lastSenderId) {
-                            // Si c'est moi qui a envoyé le dernier message
-                            if (lastSenderId === currentUser.uid) {
-                                lastMessageText = `Vous: ${lastMessage}`;
-                            } else {
-                                // Récupérer le nom de l'expéditeur
-                                const senderName = await getDisplayNameFromId(lastSenderId);
-                                lastMessageText = `${senderName}: ${lastMessage}`;
-                            }
-                        }
-                    } catch (error) {
-                        console.error("Erreur lors du formatage du dernier message:", error);
-                        // Garder le dernier message tel quel
-                    }
-                    
-                    // Date pour affichage
-                    const timeDisplay = formatTimestamp(lastMessageTime);
-                    
-                    // Préparer l'élément groupe
-                    let groupImageHTML = '';
-                    if (groupData.imageURL) {
-                        groupImageHTML = `<img src="${groupData.imageURL}" alt="${groupData.name}">`;
-                    } else {
-                        groupImageHTML = `<i class="fas fa-users" style="color: white;"></i>`;
-                    }
-                    
-                    // Ajouter le bouton d'édition si l'utilisateur est admin du groupe
-                    if (isGroupAdmin) {
-                        groupImageHTML += `
-                            <div class="group-pic-edit" data-group-id="${groupDoc.id}">
-                                <i class="fas fa-pencil-alt"></i>
-                            </div>
-                        `;
-                    }
-                    
-                    groupItem.innerHTML = `
-                        <div class="group-pic">
-                            ${groupImageHTML}
-                        </div>
-                        <div class="item-content">
-                            <div style="display: flex; justify-content: space-between;">
-                                <div class="item-title">
-                                    ${groupData.name}
-                                    ${isRestricted ? '<span class="restricted-badge">Restreint</span>' : ''}
-                                </div>
-                                <div class="item-time">${timeDisplay || ''}</div>
-                            </div>
-                            <div class="item-subtitle">${lastMessageText}</div>
-                        </div>
-                    `;
-                    
-                    // Ajouter l'événement de clic pour ouvrir ce groupe
-                    groupItem.addEventListener('click', function(e) {
-                        // Si on clique sur le bouton d'édition, afficher le dialogue de modification du groupe
-                        if (e.target.closest('.group-pic-edit')) {
-                            e.stopPropagation();
-                            showEditGroupDialog(groupDoc.id, groupData);
-                            return;
-                        }
-                        
-                        const groupId = this.getAttribute('data-id');
-                        const groupName = this.getAttribute('data-group');
-                        openGroup(groupName, groupId);
-                    });
-                    
-                    // Ajouter le groupe au fragment
-                    fragment.appendChild(groupItem);
-                }
-                
-                // Ajouter tous les groupes en une seule opération DOM
-                groupsList.appendChild(fragment);
-                
-                console.log(`${querySnapshot.size} groupes chargés avec succès`);
-            } catch (error) {
-                console.error(`Erreur lors du chargement des groupes: ${error.message}`);
-                groupsList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <div class="empty-state-title">Erreur de chargement</div>
-                        <div class="empty-state-text">Impossible de charger les groupes. Veuillez réessayer.</div>
-                    </div>
-                `;
-                showNotification("Erreur lors du chargement des groupes", "error");
-            } finally {
-                isLoadingGroups = false;
-            }
-        }
-        
-        // Récupérer le nom d'affichage d'un utilisateur à partir de son ID
-        async function getDisplayNameFromId(userId) {
-            if (!userId) return 'Utilisateur';
-            
-            // Si c'est l'utilisateur actuel
-            if (userId === currentUser.uid) {
-                return 'Vous';
-            }
-            
-            try {
-                const userRef = doc(db, "Users", userId);
-                const userSnap = await getDoc(userRef);
-                
-                if (userSnap.exists()) {
-                    const userData = userSnap.data();
-                    return userData.displayName || userData.email.split('@')[0];
-                }
-            } catch (error) {
-                console.error(`Erreur lors de la récupération du nom: ${error.message}`);
-            }
-            
-            return 'Utilisateur';
-        }
-        
-        // Formater un timestamp Firestore
-        function formatTimestamp(timestamp) {
-            if (!timestamp) return "";
-            
-            try {
-                // Si c'est un timestamp Firestore
-                if (timestamp.toDate) {
-                    const date = timestamp.toDate();
-                    return `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
-                }
-                
-                // Si c'est une date standard
-                if (timestamp instanceof Date) {
-                    return `${timestamp.getHours()}:${timestamp.getMinutes().toString().padStart(2, '0')}`;
-                }
-                
-                // Si c'est déjà une chaîne formatée
-                return timestamp;
-            } catch (error) {
-                console.error("Erreur lors du formatage du timestamp:", error);
-                return "";
-            }
-        }
-        
         // Fonction pour ouvrir un groupe
         async function openGroup(groupName, groupId) {
             if (!groupName || !groupId) return;
@@ -4656,7 +4954,7 @@
             }
             
             // Cacher la barre d'onglets
-            document.getElementById('tabbar').style.display = 'none';
+            document.getElementById('bottom-nav').style.display = 'none';
             
             // Cacher les sections normales
             document.querySelectorAll('.section').forEach(section => {
@@ -4666,8 +4964,9 @@
             // Vérifier si l'utilisateur est admin du groupe
             const isGroupAdmin = isAdmin || (currentGroupData && currentGroupData.admins && currentGroupData.admins.includes(currentUser.uid));
             
-            // Mettre à jour l'en-tête
-            document.getElementById('header-left').innerHTML = '<div class="back-button" id="header-button"><i class="fas fa-chevron-left"></i></div>';
+            // Mettre à jour l'en-tête pour le chat
+            document.getElementById('header-menu-button').style.display = 'none';
+            document.getElementById('header-back-button').style.display = 'block';
             
             // Ajouter un bouton d'édition si l'utilisateur est admin du groupe
             if (isGroupAdmin) {
@@ -4689,7 +4988,7 @@
             updateGroupHeader();
             
             // Réattacher l'événement du bouton de retour
-            document.getElementById('header-button').addEventListener('click', closeChat);
+            document.getElementById('header-back-button').addEventListener('click', closeChat);
             
             // Afficher l'interface de chat
             document.getElementById('chat-interface').style.display = 'block';
@@ -4753,15 +5052,19 @@
             unsubscribeFromCurrentChat();
             
             // Afficher la barre d'onglets
-            document.getElementById('tabbar').style.display = 'flex';
+            document.getElementById('bottom-nav').style.display = 'flex';
             
             // Cacher l'interface de chat
             document.getElementById('chat-interface').style.display = 'none';
             
             // Réinitialiser l'en-tête pour revenir à la liste des messages
             document.getElementById('header-title').innerText = 'Groupes';
-            document.getElementById('header-left').innerHTML = '';
-            document.getElementById('header-action').innerHTML = '<span class="notification-icon" id="options-button"><i class="fas fa-ellipsis-v"></i></span>';
+            document.getElementById('header-menu-button').style.display = 'block';
+            document.getElementById('header-back-button').style.display = 'none';
+            document.getElementById('header-action').innerHTML = '<div class="events-button" id="events-button"><i class="fas fa-bell"></i></div>';
+            
+            // Réattacher l'événement du bouton d'événements
+            document.getElementById('events-button').addEventListener('click', showEventsSection);
             
             // Afficher la section groupes
             document.getElementById('groups-section').classList.add('active');
@@ -4919,9 +5222,16 @@
                 const messageTime = document.createElement('div');
                 messageTime.className = 'message-time';
                 
-                // Formater l'heure du message
+                // Format timestamp for display
                 if (messageData.createdAt) {
-                    messageTime.textContent = formatTimestamp(messageData.createdAt);
+                    if (messageData.createdAt.toDate) { // Firestore Timestamp
+                        const date = messageData.createdAt.toDate();
+                        messageTime.textContent = `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+                    } else if (messageData.createdAt instanceof Date) {
+                        messageTime.textContent = `${messageData.createdAt.getHours()}:${messageData.createdAt.getMinutes().toString().padStart(2, '0')}`;
+                    } else {
+                        messageTime.textContent = messageData.createdAt;
+                    }
                 } else {
                     messageTime.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 }
@@ -5075,7 +5385,7 @@
             }, 10);
             
             // Masquer la barre d'onglets et autres éléments de l'interface principale
-            document.getElementById('tabbar').style.display = 'none';
+            document.getElementById('bottom-nav').style.display = 'none';
             document.querySelector('.header').style.display = 'none';
             document.querySelector('.content').style.display = 'none';
             
@@ -5125,6 +5435,227 @@
             });
         }
         
+        // Charger les groupes depuis Firestore
+        async function loadGroups() {
+            const groupsList = document.getElementById('groups-list');
+            if (!groupsList) return;
+            
+            // Éviter les chargements multiples
+            if (isLoadingGroups) return;
+            isLoadingGroups = true;
+            
+            try {
+                // Si pas d'utilisateur authentifié, ne rien faire
+                if (!currentUser) {
+                    console.log("Tentative de chargement des groupes sans utilisateur connecté");
+                    isLoadingGroups = false;
+                    return;
+                }
+                
+                console.log("Chargement des groupes...");
+                
+                // Vider la liste de groupes
+                groupsList.innerHTML = `
+                    <div class="empty-state" style="padding: 20px; text-align: center;">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary-color);"></i>
+                        <div class="empty-state-title">Chargement</div>
+                        <div class="empty-state-text">Récupération des groupes...</div>
+                    </div>
+                `;
+                
+                // Récupérer les groupes dont l'utilisateur est membre
+                const groupsRef = collection(db, "groups");
+                const q = query(
+                    groupsRef,
+                    where("members", "array-contains", currentUser.uid),
+                    orderBy("lastMessageTime", "desc")
+                );
+                
+                const querySnapshot = await getDocs(q);
+                
+                // Vider complètement la liste après que les données soient chargées
+                groupsList.innerHTML = '';
+                
+                if (querySnapshot.empty) {
+                    console.log("Aucun groupe trouvé");
+                    groupsList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <div class="empty-state-title">Aucun groupe</div>
+                            <div class="empty-state-text">${isAdmin ? 
+                                'Créez un nouveau groupe en appuyant sur le bouton +' : 
+                                'Aucun groupe disponible pour le moment'}</div>
+                        </div>
+                    `;
+                    isLoadingGroups = false;
+                    return;
+                }
+                
+                // Créer un fragment pour ajouter tous les groupes en une seule fois
+                const fragment = document.createDocumentFragment();
+                
+                for (const groupDoc of querySnapshot.docs) {
+                    const groupData = groupDoc.data();
+                    
+                    // Récupérer le dernier message du groupe
+                    let lastMessage = "Aucun message";
+                    let lastSenderId = null;
+                    let lastMessageTime = null;
+                    
+                    try {
+                        const messagesRef = collection(db, "groups", groupDoc.id, "messages");
+                        const messagesQuery = query(messagesRef, orderBy("createdAt", "desc"), limit(1));
+                        const messagesSnapshot = await getDocs(messagesQuery);
+                        
+                        if (!messagesSnapshot.empty) {
+                            const lastMessageDoc = messagesSnapshot.docs[0];
+                            const messageData = lastMessageDoc.data();
+                            lastMessage = messageData.text || "Image";
+                            lastSenderId = messageData.senderId;
+                            lastMessageTime = messageData.createdAt;
+                        }
+                    } catch (error) {
+                        console.error(`Erreur lors de la récupération du dernier message pour le groupe ${groupDoc.id}:`, error);
+                        // Continuer avec les valeurs par défaut
+                    }
+                    
+                    // Créer l'élément pour ce groupe
+                    const groupItem = document.createElement('div');
+                    groupItem.className = 'chat-item';
+                    groupItem.setAttribute('data-group', groupData.name);
+                    groupItem.setAttribute('data-id', groupDoc.id);
+                    
+                    // Vérifier si les messages sont restreints
+                    const isRestricted = groupData.allowPublicMessages === false;
+                    
+                    // Déterminer si l'utilisateur est administrateur de ce groupe
+                    const isGroupAdmin = isAdmin || (groupData.admins && groupData.admins.includes(currentUser.uid));
+                    
+                    // Formater le dernier message
+                    let lastMessageText = lastMessage;
+                    try {
+                        if (lastSenderId) {
+                            // Si c'est moi qui a envoyé le dernier message
+                            if (lastSenderId === currentUser.uid) {
+                                lastMessageText = `Vous: ${lastMessage}`;
+                            } else {
+                                // Récupérer le nom de l'expéditeur
+                                const senderName = await getDisplayNameFromId(lastSenderId);
+                                lastMessageText = `${senderName}: ${lastMessage}`;
+                            }
+                        }
+                    } catch (error) {
+                        console.error("Erreur lors du formatage du dernier message:", error);
+                        // Garder le dernier message tel quel
+                    }
+                    
+                    // Format the timestamp for display
+                    let timeDisplay = '';
+                    if (lastMessageTime) {
+                        if (lastMessageTime.toDate) { // Firestore Timestamp
+                            const date = lastMessageTime.toDate();
+                            timeDisplay = `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+                        } else if (lastMessageTime instanceof Date) {
+                            timeDisplay = `${lastMessageTime.getHours()}:${lastMessageTime.getMinutes().toString().padStart(2, '0')}`;
+                        } else {
+                            timeDisplay = lastMessageTime;
+                        }
+                    }
+                    
+                    // Préparer l'élément groupe
+                    let groupImageHTML = '';
+                    if (groupData.imageURL) {
+                        groupImageHTML = `<img src="${groupData.imageURL}" alt="${groupData.name}">`;
+                    } else {
+                        groupImageHTML = `<i class="fas fa-users" style="color: white;"></i>`;
+                    }
+                    
+                    // Ajouter le bouton d'édition si l'utilisateur est admin du groupe
+                    if (isGroupAdmin) {
+                        groupImageHTML += `
+                            <div class="group-pic-edit" data-group-id="${groupDoc.id}">
+                                <i class="fas fa-pencil-alt"></i>
+                            </div>
+                        `;
+                    }
+                    
+                    groupItem.innerHTML = `
+                        <div class="group-pic">
+                            ${groupImageHTML}
+                        </div>
+                        <div class="item-content">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div class="item-title">
+                                    ${groupData.name}
+                                    ${isRestricted ? '<span class="restricted-badge">Restreint</span>' : ''}
+                                </div>
+                                <div class="item-time">${timeDisplay || ''}</div>
+                            </div>
+                            <div class="item-subtitle">${lastMessageText}</div>
+                        </div>
+                    `;
+                    
+                    // Ajouter l'événement de clic pour ouvrir ce groupe
+                    groupItem.addEventListener('click', function(e) {
+                        // Si on clique sur le bouton d'édition, afficher le dialogue de modification du groupe
+                        if (e.target.closest('.group-pic-edit')) {
+                            e.stopPropagation();
+                            showEditGroupDialog(groupDoc.id, groupData);
+                            return;
+                        }
+                        
+                        const groupId = this.getAttribute('data-id');
+                        const groupName = this.getAttribute('data-group');
+                        openGroup(groupName, groupId);
+                    });
+                    
+                    // Ajouter le groupe au fragment
+                    fragment.appendChild(groupItem);
+                }
+                
+                // Ajouter tous les groupes en une seule opération DOM
+                groupsList.appendChild(fragment);
+                
+                console.log(`${querySnapshot.size} groupes chargés avec succès`);
+            } catch (error) {
+                console.error(`Erreur lors du chargement des groupes: ${error.message}`);
+                groupsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div class="empty-state-title">Erreur de chargement</div>
+                        <div class="empty-state-text">Impossible de charger les groupes. Veuillez réessayer.</div>
+                    </div>
+                `;
+                showNotification("Erreur lors du chargement des groupes", "error");
+            } finally {
+                isLoadingGroups = false;
+            }
+        }
+        
+        // Récupérer le nom d'affichage d'un utilisateur à partir de son ID
+        async function getDisplayNameFromId(userId) {
+            if (!userId) return 'Utilisateur';
+            
+            // Si c'est l'utilisateur actuel
+            if (userId === currentUser.uid) {
+                return 'Vous';
+            }
+            
+            try {
+                const userRef = doc(db, "Users", userId);
+                const userSnap = await getDoc(userRef);
+                
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    return userData.displayName || userData.email.split('@')[0];
+                }
+            } catch (error) {
+                console.error(`Erreur lors de la récupération du nom: ${error.message}`);
+            }
+            
+            return 'Utilisateur';
+        }
+        
         // Initialiser l'application
         document.addEventListener('DOMContentLoaded', function() {
             try {
@@ -5161,7 +5692,7 @@
                     }
                 }
                 
-                console.log("Application initialisée");
+                console.log("Application initialisée avec succès");
             } catch (error) {
                 console.error("Erreur lors de l'initialisation de l'application:", error);
             }
