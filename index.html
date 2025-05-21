@@ -1275,23 +1275,6 @@
             opacity: 0.8;
             text-align: center;
         }
-
-        .verify-spinner {
-            width: 40px;
-            height: 40px;
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            border: 4px solid rgba(93, 92, 222, 0.2);
-            border-radius: 50%;
-            border-top: 4px solid var(--primary-color);
-            animation: verify-spin 1s linear infinite;
-        }
-
-        @keyframes verify-spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
         
         /* Message context menu */
         .message-context-menu {
@@ -2161,6 +2144,30 @@
             z-index: 50;
             cursor: pointer;
         }
+        
+        /* Styles pour les options de score */
+        .score-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .score-option {
+            padding: 5px 12px;
+            border-radius: 15px;
+            background-color: var(--bg-color);
+            font-weight: bold;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+        }
+
+        .score-option.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
     </style>
 </head>
 <body>
@@ -2169,7 +2176,6 @@
         <div class="football-bounce">
             <i class="fas fa-futbol"></i>
         </div>
-        <div class="verify-spinner"></div>
         <div class="verify-text">Vérification en cours...</div>
     </div>
     
@@ -3594,7 +3600,7 @@
                     }
                 ];
                 
-                // Données pour les "scores exacts"
+                // Données pour les "scores exacts" avec 3 options par match
                 const exactDemoData = [
                     {
                         type: "exact",
@@ -3602,7 +3608,8 @@
                         date: new Date(Date.now() + 86400000), // demain
                         homeTeam: "Real Madrid",
                         awayTeam: "Barcelone",
-                        prediction: "2-1", // Score exact
+                        scoreOptions: ["2-1", "2-0", "3-1"],
+                        primaryOption: "2-1",
                         homeScore: 2,
                         awayScore: 1,
                         confidence: 65,
@@ -3615,7 +3622,8 @@
                         date: new Date(Date.now() + 86400000 * 3), // dans 3 jours
                         homeTeam: "Bayern Munich",
                         awayTeam: "Dortmund",
-                        prediction: "3-2", // Score exact
+                        scoreOptions: ["3-2", "3-1", "2-1"],
+                        primaryOption: "3-2",
                         homeScore: 3,
                         awayScore: 2,
                         confidence: 55,
@@ -3628,7 +3636,8 @@
                         date: new Date(Date.now() - 86400000 * 2), // il y a 2 jours
                         homeTeam: "Chelsea",
                         awayTeam: "Arsenal",
-                        prediction: "1-1", // Score exact
+                        scoreOptions: ["1-1", "1-2", "2-2"],
+                        primaryOption: "1-1",
                         homeScore: 1,
                         awayScore: 1,
                         result: "2-1",
@@ -3648,9 +3657,7 @@
                         date: new Date(Date.now() + 86400000 * 4), // dans 4 jours
                         homeTeam: "PSG",
                         awayTeam: "Manchester City",
-                        prediction: "1-2", // Score exact
-                        homeScore: 1,
-                        awayScore: 2,
+                        prediction: "Victoire de Manchester City",
                         confidence: 72,
                         analysis: "Manchester City a un meilleur bilan en déplacement et PSG a des absences clés en défense.",
                         status: "pending",
@@ -3662,9 +3669,7 @@
                         date: new Date(Date.now() + 86400000 * 5), // dans 5 jours
                         homeTeam: "AS Roma",
                         awayTeam: "Arsenal",
-                        prediction: "1-1", // Score exact
-                        homeScore: 1,
-                        awayScore: 1,
+                        prediction: "Match nul",
                         confidence: 68,
                         analysis: "Les deux équipes ont un style de jeu similaire et les statistiques suggèrent un match équilibré.",
                         status: "pending",
@@ -3676,12 +3681,9 @@
                         date: new Date(Date.now() - 86400000), // hier
                         homeTeam: "Tottenham",
                         awayTeam: "Manchester United",
-                        prediction: "2-0", // Score exact
-                        homeScore: 2,
-                        awayScore: 0,
+                        prediction: "Victoire de Tottenham (2-0)",
                         result: "2-0",
-                        resultHomeScore: 2,
-                        resultAwayScore: 0,
+                        resultScore: "2-0",
                         confidence: 65,
                         analysis: "Tottenham est en grande forme à domicile et Manchester United a des problèmes défensifs.",
                         status: "win",
@@ -3767,7 +3769,7 @@
                     </div>
                 `;
             } else if (type === 'exact') {
-                // Format pour les scores exacts
+                // Format pour les scores exacts avec 3 options
                 let resultDisplay = '';
                 if (forecastData.status !== 'pending') {
                     resultDisplay = `
@@ -3776,6 +3778,18 @@
                         </div>
                     `;
                 }
+                
+                // Affichage des options de score
+                const scoreOptions = forecastData.scoreOptions || [forecastData.primaryOption || `${forecastData.homeScore}-${forecastData.awayScore}`];
+                const scoreOptionsHTML = `
+                    <div class="score-options">
+                        ${scoreOptions.map(score => `
+                            <div class="score-option ${score === (forecastData.primaryOption || `${forecastData.homeScore}-${forecastData.awayScore}`) ? 'active' : ''}">
+                                ${score}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
                 
                 mainContent = `
                     <div class="forecast-header">
@@ -3789,13 +3803,17 @@
                             </div>
                             <div class="forecast-team-name">${forecastData.homeTeam}</div>
                         </div>
-                        <div class="forecast-score">${forecastData.homeScore} - ${forecastData.awayScore}</div>
+                        <div class="forecast-score">VS</div>
                         <div class="forecast-team">
                             <div class="forecast-team-logo">
                                 <i class="fas fa-shield-alt"></i>
                             </div>
                             <div class="forecast-team-name">${forecastData.awayTeam}</div>
                         </div>
+                    </div>
+                    <div style="text-align: center; margin: 10px 0;">
+                        <div style="font-weight: bold; margin-bottom: 5px;">Options de score:</div>
+                        ${scoreOptionsHTML}
                     </div>
                     ${resultDisplay}
                 `;
@@ -3804,8 +3822,8 @@
                 let resultDisplay = '';
                 if (forecastData.status !== 'pending') {
                     resultDisplay = `
-                        <div style="margin-top: 5px; text-align: center;">
-                            Résultat final: ${forecastData.resultHomeScore}-${forecastData.resultAwayScore}
+                        <div style="margin-top: 5px; text-align: center; font-weight: bold; color: ${forecastData.status === 'win' ? 'var(--success-color)' : 'var(--danger-color)'}">
+                            Résultat final: ${forecastData.resultScore || forecastData.result}
                         </div>
                     `;
                 }
@@ -3822,13 +3840,16 @@
                             </div>
                             <div class="forecast-team-name">${forecastData.homeTeam}</div>
                         </div>
-                        <div class="forecast-score">${forecastData.homeScore} - ${forecastData.awayScore}</div>
+                        <div class="forecast-score">VS</div>
                         <div class="forecast-team">
                             <div class="forecast-team-logo">
                                 <i class="fas fa-shield-alt"></i>
                             </div>
                             <div class="forecast-team-name">${forecastData.awayTeam}</div>
                         </div>
+                    </div>
+                    <div style="text-align: center; font-weight: bold; margin: 10px 0;">
+                        Prédiction: ${forecastData.prediction}
                     </div>
                     ${resultDisplay}
                     <div style="font-size: 13px; margin-top: 10px; font-style: italic;">
@@ -6351,7 +6372,7 @@
             }
         }
         
-        // Envoyer un message à Firestore
+                // Envoyer un message à Firestore (suite)
         async function sendMessageToFirestore(groupId, text) {
             if (!groupId || !text) return;
             
@@ -6379,7 +6400,7 @@
                     lastSenderId: currentUser.uid
                 });
                 
-                                console.log(`Message envoyé avec succès: ${docRef.id}`);
+                console.log(`Message envoyé avec succès: ${docRef.id}`);
                 return docRef.id;
             } catch (error) {
                 console.error(`Erreur lors de l'envoi du message: ${error.message}`);
@@ -6447,6 +6468,30 @@
                     }, 1500);
                 }
             });
+        }
+        
+        // Récupérer le nom d'affichage d'un utilisateur à partir de son ID
+        async function getDisplayNameFromId(userId) {
+            if (!userId) return 'Utilisateur';
+            
+            // Si c'est l'utilisateur actuel
+            if (userId === currentUser.uid) {
+                return 'Vous';
+            }
+            
+            try {
+                const userRef = doc(db, "Users", userId);
+                const userSnap = await getDoc(userRef);
+                
+                if (userSnap.exists()) {
+                    const userData = userSnap.data();
+                    return userData.displayName || userData.email.split('@')[0];
+                }
+            } catch (error) {
+                console.error(`Erreur lors de la récupération du nom: ${error.message}`);
+            }
+            
+            return 'Utilisateur';
         }
         
         // Charger les groupes depuis Firestore
@@ -6645,31 +6690,7 @@
                 isLoadingGroups = false;
             }
         }
-        
-        // Récupérer le nom d'affichage d'un utilisateur à partir de son ID
-        async function getDisplayNameFromId(userId) {
-            if (!userId) return 'Utilisateur';
-            
-            // Si c'est l'utilisateur actuel
-            if (userId === currentUser.uid) {
-                return 'Vous';
-            }
-            
-            try {
-                const userRef = doc(db, "Users", userId);
-                const userSnap = await getDoc(userRef);
-                
-                if (userSnap.exists()) {
-                    const userData = userSnap.data();
-                    return userData.displayName || userData.email.split('@')[0];
-                }
-            } catch (error) {
-                console.error(`Erreur lors de la récupération du nom: ${error.message}`);
-            }
-            
-            return 'Utilisateur';
-        }
-        
+
         // Initialiser l'application
         document.addEventListener('DOMContentLoaded', function() {
             try {
@@ -6714,4 +6735,5 @@
     </script>
 </body>
 </html>
+
 
