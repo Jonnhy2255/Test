@@ -50,6 +50,11 @@
             --log-panel-bg: #f8f9fa;
             --log-panel-border: #e0e0e0;
             --link-hover: #0056b3;
+            --admin-notif-bg: #e3f2fd;
+            --admin-notif-border: #bbdefb;
+            --forecast-win-bg: rgba(76, 175, 80, 0.2);
+            --forecast-loss-bg: rgba(244, 67, 54, 0.2);
+            --forecast-pending-bg: rgba(255, 193, 7, 0.2);
         }
         
         /* Mode sombre */
@@ -91,6 +96,11 @@
             --log-panel-bg: #222222;
             --log-panel-border: #3e3e3e;
             --link-hover: #64B5F6;
+            --admin-notif-bg: #1a3b53;
+            --admin-notif-border: #2a5a82;
+            --forecast-win-bg: rgba(76, 175, 80, 0.15);
+            --forecast-loss-bg: rgba(244, 67, 54, 0.15);
+            --forecast-pending-bg: rgba(255, 193, 7, 0.15);
         }
         
         /* Reset de base */
@@ -1841,17 +1851,72 @@
             flex: 1;
         }
         
-        /* Section Pronostics */
+        /* Section Pronostics - Nouveau design */
         .forecasts-section {
-            padding: 15px;
+            padding: 0 0 15px 0;
         }
         
         .forecasts-title {
             font-weight: bold;
             font-size: 20px;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 5px;
             color: var(--primary-color);
+        }
+        
+        .forecasts-subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: var(--inactive-text);
+            margin-bottom: 15px;
+        }
+        
+        .forecasts-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 15px;
+            background-color: var(--bg-color);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        
+        .forecast-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            position: relative;
+            color: var(--inactive-text);
+            transition: color 0.3s;
+        }
+        
+        .forecast-tab.active {
+            color: var(--primary-color);
+        }
+        
+        .forecast-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 20%;
+            width: 60%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px 3px 0 0;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .forecasts-content {
+            display: none;
+            padding: 0 15px;
+        }
+        
+        .forecasts-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
         }
         
         .forecasts-list {
@@ -1886,17 +1951,32 @@
             flex-direction: column;
             align-items: center;
             gap: 5px;
+            flex: 1;
+        }
+        
+        .forecast-team-logo {
+            width: 40px;
+            height: 40px;
+            background-color: var(--bg-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
         }
         
         .forecast-team-name {
             font-weight: 500;
             text-align: center;
+            font-size: 14px;
         }
         
         .forecast-score {
             font-size: 22px;
             font-weight: bold;
-            padding: 0 10px;
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
         }
         
         .forecast-status {
@@ -1905,25 +1985,49 @@
             border-radius: 10px;
             font-size: 12px;
             font-weight: bold;
-            background-color: var(--primary-color);
-            color: white;
         }
         
         .forecast-status.pending {
-            background-color: var(--log-warning);
+            background-color: var(--forecast-pending-bg);
+            color: var(--text-color);
         }
         
-        .forecast-status.correct {
-            background-color: var(--success-color);
+        .forecast-status.win {
+            background-color: var(--forecast-win-bg);
+            color: var(--text-color);
         }
         
-        .forecast-status.incorrect {
-            background-color: var(--danger-color);
+        .forecast-status.loss {
+            background-color: var(--forecast-loss-bg);
+            color: var(--text-color);
         }
         
         .forecast-date {
             font-size: 12px;
             color: var(--inactive-text);
+        }
+        
+        .forecast-confidence {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--text-color);
+        }
+        
+        .confidence-bar-container {
+            flex: 1;
+            height: 6px;
+            background-color: var(--border-color);
+            border-radius: 3px;
+            margin: 0 10px;
+            overflow: hidden;
+        }
+        
+        .confidence-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 3px;
         }
         
         .no-forecasts {
@@ -1937,6 +2041,125 @@
             margin-bottom: 15px;
             color: var(--primary-color);
             opacity: 0.5;
+        }
+
+        /* Style pour les notifications admin */
+        .admin-notification {
+            background-color: var(--admin-notif-bg);
+            border: 1px solid var(--admin-notif-border);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .admin-notification-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .admin-notification-title {
+            display: flex;
+            align-items: center;
+        }
+        
+        .admin-notification-title i {
+            margin-right: 8px;
+        }
+        
+        .admin-notification-content {
+            padding: 12px 15px;
+            line-height: 1.4;
+        }
+        
+        .admin-notification-footer {
+            padding: 5px 15px 12px;
+            font-size: 12px;
+            color: var(--inactive-text);
+            text-align: right;
+        }
+        
+        /* Boutons d'action pour les événements */
+        .event-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        
+        .event-action-btn {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 4px;
+            padding: 3px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .event-action-btn.delete {
+            color: var(--danger-color);
+        }
+        
+        /* Nouvelle dialogue pour les notifications admin */
+        .admin-notif-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-color);
+            z-index: 120;
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .admin-notif-dialog.active {
+            display: flex;
+        }
+        
+        .terms-of-use {
+            background-color: var(--secondary-color);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .terms-of-use h4 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .terms-of-use p {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .close-events-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+            z-index: 50;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -2126,6 +2349,16 @@
                     <div class="empty-state-text">Les événements apparaîtront ici</div>
                 </div>
             </div>
+            
+            <!-- Bouton de fermeture de la section événements -->
+            <div class="close-events-btn" id="close-events-btn">
+                <i class="fas fa-times"></i>
+            </div>
+            
+            <!-- Bouton pour créer une notification (admin seulement) -->
+            <div class="fab" id="create-notification-btn" style="display: none;">
+                <i class="fas fa-bullhorn"></i>
+            </div>
         </div>
         
         <!-- Section Profil -->
@@ -2172,14 +2405,34 @@
         
         <!-- Section Pronostics -->
         <div id="forecasts-section" class="section">
-            <div class="forecasts-title">Mes Pronostics</div>
+            <div class="forecasts-title">Pronostics Sportifs</div>
+            <div class="forecasts-subtitle">Prédictions sans paris - Uniquement à titre informatif</div>
             
-            <div class="forecasts-list" id="forecasts-list">
-                <!-- Les pronostics seront ajoutés ici dynamiquement -->
-                <div class="no-forecasts">
-                    <i class="fas fa-futbol"></i>
-                    <div class="empty-state-title">Aucun pronostic</div>
-                    <div class="empty-state-text">Vous n'avez pas encore fait de pronostic</div>
+            <!-- Onglets de navigation pour les pronostics -->
+            <div class="forecasts-tabs">
+                <div class="forecast-tab active" data-tab="safes">Safes du jour</div>
+                <div class="forecast-tab" data-tab="exact">Scores exacts</div>
+                <div class="forecast-tab" data-tab="ai">Prédictions IA</div>
+            </div>
+            
+            <!-- Contenu des safes du jour -->
+            <div class="forecasts-content active" id="safes-content">
+                <div class="forecasts-list" id="safes-list">
+                    <!-- Les pronostics "Safes du jour" seront ajoutés ici dynamiquement -->
+                </div>
+            </div>
+            
+            <!-- Contenu des scores exacts -->
+            <div class="forecasts-content" id="exact-content">
+                <div class="forecasts-list" id="exact-list">
+                    <!-- Les pronostics de scores exacts seront ajoutés ici dynamiquement -->
+                </div>
+            </div>
+            
+            <!-- Contenu des prédictions IA -->
+            <div class="forecasts-content" id="ai-content">
+                <div class="forecasts-list" id="ai-list">
+                    <!-- Les prédictions IA seront ajoutées ici dynamiquement -->
                 </div>
             </div>
         </div>
@@ -2205,7 +2458,19 @@
                     </ul>
                 </div>
                 
-                <div class="about-version">Version 1.3.0</div>
+                <div class="about-divider"></div>
+                
+                <!-- Nouvelle section de conditions d'utilisation -->
+                <div class="terms-of-use">
+                    <h4>Conditions d'utilisation</h4>
+                    <p>En utilisant cette application, vous acceptez les conditions suivantes :</p>
+                    <p>1. <strong>Respect de la communauté</strong> - Les utilisateurs s'engagent à communiquer de manière respectueuse et à ne pas publier de contenu offensant, discriminatoire ou illégal.</p>
+                    <p>2. <strong>Confidentialité</strong> - Les informations personnelles partagées au sein des groupes doivent être traitées avec respect et ne doivent pas être divulguées à des tiers sans consentement.</p>
+                    <p>3. <strong>Pronostics sportifs</strong> - Les prédictions sportives sont fournies à titre informatif uniquement et ne constituent pas des conseils de paris. Aucune garantie de résultat n'est offerte.</p>
+                    <p>4. <strong>Responsabilité</strong> - Les administrateurs de l'application se réservent le droit de supprimer tout contenu inapproprié et de restreindre l'accès aux utilisateurs qui ne respectent pas ces conditions.</p>
+                </div>
+                
+                <div class="about-version">Version 1.3.1</div>
             </div>
         </div>
     </div>
@@ -2352,6 +2617,43 @@
         </div>
     </div>
     
+    <!-- Dialogue de création de notification admin -->
+    <div id="admin-notif-dialog" class="admin-notif-dialog">
+        <div class="edit-header">
+            <div class="edit-back" id="admin-notif-back">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <div class="edit-title">Nouvelle notification</div>
+        </div>
+        <div class="edit-content">
+            <div class="form-group">
+                <label class="form-label">Titre de la notification</label>
+                <input type="text" class="form-input" id="notif-title" placeholder="Titre de votre notification">
+                <div id="notif-title-error" class="field-error">Le titre est requis</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Contenu</label>
+                <textarea class="form-input" id="notif-content" placeholder="Contenu de votre notification" rows="5" style="resize: none;"></textarea>
+                <div id="notif-content-error" class="field-error">Le contenu est requis</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Type de notification</label>
+                <select class="form-input" id="notif-type">
+                    <option value="info">Information</option>
+                    <option value="alert">Alerte</option>
+                    <option value="update">Mise à jour</option>
+                </select>
+            </div>
+            
+            <button class="button" id="send-notification-btn">
+                <span class="btn-loader" style="display:none;"></span>
+                <span class="btn-text">Envoyer la notification</span>
+            </button>
+        </div>
+    </div>
+    
     <!-- Dialogue de modification du profil -->
     <div id="profile-edit-dialog" class="profile-edit-dialog">
         <div class="edit-header">
@@ -2398,6 +2700,16 @@
         <div class="confirmation-buttons">
             <div class="confirmation-button confirmation-cancel" id="delete-cancel">Annuler</div>
             <div class="confirmation-button confirmation-delete" id="delete-confirm">Supprimer</div>
+        </div>
+    </div>
+    
+    <!-- Dialogue de confirmation de suppression d'événement -->
+    <div id="delete-event-confirmation" class="confirmation-dialog">
+        <div class="confirmation-title">Supprimer cet événement ?</div>
+        <div class="confirmation-text">Cette action est irréversible et l'événement sera supprimé.</div>
+        <div class="confirmation-buttons">
+            <div class="confirmation-button confirmation-cancel" id="delete-event-cancel">Annuler</div>
+            <div class="confirmation-button confirmation-delete" id="delete-event-confirm">Supprimer</div>
         </div>
     </div>
 
@@ -2459,6 +2771,7 @@
         let activeContextMenu = null;
         let currentMessageForAction = null;
         let eventsUnsubscribe = null;
+        let forecastsUnsubscribe = null;
         let groupImageFile = null;
         let profileImageFile = null;
         let editingGroupId = null;
@@ -2470,6 +2783,8 @@
         let groupDescriptionChanged = false;
         let groupPermissionsChanged = false;
         let appLogs = []; // Pour stocker les logs
+        let currentEventForDeletion = null; // Pour la suppression d'événements
+        let currentForecastTab = 'safes'; // Onglet de pronostic actif par défaut
         
         // Surcharge de console.log pour capturer les logs
         const originalConsoleLog = console.log;
@@ -2719,6 +3034,14 @@
                 showEventsSection();
             });
             
+            // Bouton fermer événements
+            document.getElementById('close-events-btn').addEventListener('click', function() {
+                // Revenir à la section précédente ou à la section groupes par défaut
+                if (currentSection === 'events') {
+                    showGroupsSection();
+                }
+            });
+            
             // Nouvelle barre d'onglets avec deux zones
             document.getElementById('bottom-nav').addEventListener('click', function(e) {
                 // Détecter la position horizontale du clic
@@ -2734,6 +3057,14 @@
                     // Clic sur la partie droite (Pronostics)
                     showForecastsSection();
                 }
+            });
+            
+            // Onglets de pronostics
+            document.querySelectorAll('.forecast-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    switchForecastTab(tabId);
+                });
             });
             
             // Événements pour les paramètres
@@ -2797,6 +3128,18 @@
             document.getElementById('create-group-back').addEventListener('click', hideCreateGroupDialog);
             document.getElementById('create-group-submit').addEventListener('click', createNewGroup);
             
+            // Création de notification admin
+            document.getElementById('create-notification-btn').addEventListener('click', function() {
+                if (isAdmin) {
+                    showAdminNotificationDialog();
+                } else {
+                    showNotification("Seuls les administrateurs peuvent envoyer des notifications", "error");
+                }
+            });
+            
+            document.getElementById('admin-notif-back').addEventListener('click', hideAdminNotificationDialog);
+            document.getElementById('send-notification-btn').addEventListener('click', sendAdminNotification);
+            
             // Upload d'image de groupe
             document.getElementById('new-group-image-upload').addEventListener('click', function() {
                 document.getElementById('new-group-image-input').click();
@@ -2835,9 +3178,13 @@
                 document.getElementById('save-group-permissions-btn').disabled = false;
             });
             
-            // Dialogue de suppression
+            // Dialogue de suppression de message
             document.getElementById('delete-cancel').addEventListener('click', hideDeleteConfirmation);
             document.getElementById('delete-confirm').addEventListener('click', confirmDeleteMessage);
+            
+            // Dialogue de suppression d'événement
+            document.getElementById('delete-event-cancel').addEventListener('click', hideDeleteEventConfirmation);
+            document.getElementById('delete-event-confirm').addEventListener('click', confirmDeleteEvent);
             
             // Fermer le menu contextuel lors d'un clic ailleurs
             document.addEventListener('click', function(e) {
@@ -2897,6 +3244,142 @@
             });
         }
         
+        // Afficher le dialogue d'envoi de notification admin
+        function showAdminNotificationDialog() {
+            // Réinitialiser le formulaire
+            document.getElementById('notif-title').value = '';
+            document.getElementById('notif-content').value = '';
+            document.getElementById('notif-type').value = 'info';
+            
+            // Masquer les messages d'erreur
+            document.getElementById('notif-title-error').style.display = 'none';
+            document.getElementById('notif-content-error').style.display = 'none';
+            
+            // Afficher le dialogue
+            document.getElementById('admin-notif-dialog').classList.add('active');
+            document.getElementById('notif-title').focus();
+        }
+        
+        // Masquer le dialogue d'envoi de notification admin
+        function hideAdminNotificationDialog() {
+            document.getElementById('admin-notif-dialog').classList.remove('active');
+        }
+        
+        // Envoyer une notification admin
+        async function sendAdminNotification() {
+            const title = document.getElementById('notif-title').value.trim();
+            const content = document.getElementById('notif-content').value.trim();
+            const type = document.getElementById('notif-type').value;
+            
+            // Valider les champs
+            let isValid = true;
+            
+            if (!title) {
+                document.getElementById('notif-title-error').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('notif-title-error').style.display = 'none';
+            }
+            
+            if (!content) {
+                document.getElementById('notif-content-error').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('notif-content-error').style.display = 'none';
+            }
+            
+            if (!isValid) return;
+            
+            // Afficher le loader sur le bouton
+            setButtonLoading('send-notification-btn', true);
+            
+            try {
+                // Créer l'événement de notification admin dans Firestore
+                await addDoc(collection(db, "events"), {
+                    type: 'admin-notification',
+                    title: title,
+                    content: content,
+                    notificationType: type,
+                    userId: currentUser.uid,
+                    timestamp: serverTimestamp()
+                });
+                
+                // Masquer le loader
+                setButtonLoading('send-notification-btn', false);
+                
+                // Masquer le dialogue
+                hideAdminNotificationDialog();
+                
+                // Afficher une notification
+                showNotification('Notification envoyée avec succès', 'success');
+            } catch (error) {
+                console.error(`Erreur lors de l'envoi de la notification: ${error.message}`);
+                showNotification("Erreur lors de l'envoi de la notification", "error");
+                setButtonLoading('send-notification-btn', false);
+            }
+        }
+        
+        // Afficher le dialogue de confirmation de suppression d'événement
+        function showDeleteEventConfirmation(eventId) {
+            currentEventForDeletion = eventId;
+            document.getElementById('delete-event-confirmation').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+        
+        // Masquer le dialogue de confirmation de suppression d'événement
+        function hideDeleteEventConfirmation() {
+            document.getElementById('delete-event-confirmation').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+            currentEventForDeletion = null;
+        }
+        
+        // Confirmer la suppression d'un événement
+        async function confirmDeleteEvent() {
+            if (!currentEventForDeletion) {
+                hideDeleteEventConfirmation();
+                return;
+            }
+            
+            try {
+                // Supprimer l'événement de Firestore
+                await deleteDoc(doc(db, "events", currentEventForDeletion));
+                console.log(`Événement ${currentEventForDeletion} supprimé avec succès`);
+                showNotification('Événement supprimé', 'success');
+            } catch (error) {
+                console.error(`Erreur lors de la suppression de l'événement: ${error.message}`);
+                showNotification("Erreur lors de la suppression de l'événement", "error");
+            } finally {
+                hideDeleteEventConfirmation();
+            }
+        }
+        
+        // Changer d'onglet dans les pronostics
+        function switchForecastTab(tabId) {
+            // Mettre à jour la variable globale
+            currentForecastTab = tabId;
+            
+            // Mettre à jour les onglets actifs
+            document.querySelectorAll('.forecast-tab').forEach(tab => {
+                if (tab.getAttribute('data-tab') === tabId) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            // Mettre à jour le contenu actif
+            document.querySelectorAll('.forecasts-content').forEach(content => {
+                if (content.id === `${tabId}-content`) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+            
+            // Charger les pronostics si nécessaire
+            loadForecastsData(tabId);
+        }
+        
         // Afficher la section groupes
         function showGroupsSection() {
             // Si on est dans l'interface de chat, fermer le chat d'abord
@@ -2931,6 +3414,10 @@
             
             // Mettre à jour le titre
             document.getElementById('header-title').textContent = 'Groupes';
+            
+            // Mettre à jour le header-action
+            document.getElementById('header-action').innerHTML = '<div class="events-button" id="events-button"><i class="fas fa-bell"></i></div>';
+            document.getElementById('events-button').addEventListener('click', showEventsSection);
             
             // Charger les groupes si nécessaire
             loadGroups();
@@ -2970,15 +3457,403 @@
             // Mettre à jour le titre
             document.getElementById('header-title').textContent = 'Pronostics';
             
-            // Ici, vous pourriez charger les pronostics
-            loadForecasts();
+            // Mettre à jour le header-action
+            document.getElementById('header-action').innerHTML = '<div class="events-button" id="events-button"><i class="fas fa-bell"></i></div>';
+            document.getElementById('events-button').addEventListener('click', showEventsSection);
+            
+            // Charger les pronostics de l'onglet actif
+            loadForecastsData(currentForecastTab);
         }
         
-        // Charger les pronostics (fonction fictive pour exemple)
-        function loadForecasts() {
-            console.log("Chargement des pronostics...");
-            // Cette fonction serait implémentée pour charger de vrais pronostics
-            // depuis Firestore ou une autre source de données
+        // Charger les données de pronostics
+        async function loadForecastsData(tabType) {
+            console.log(`Chargement des pronostics du type: ${tabType}`);
+            
+            // Réinitialiser ou créer la collection Forecasts si elle n'existe pas
+            try {
+                // Vérifier si la collection existe déjà
+                const forecastsRef = collection(db, "forecasts");
+                const forecastsSnap = await getDocs(forecastsRef);
+                
+                // Si la collection est vide, créer des données démo
+                if (forecastsSnap.empty) {
+                    console.log("Collection de pronostics vide, création de données démo");
+                    await createDemoForecasts();
+                }
+            } catch (error) {
+                console.error("Erreur lors de la vérification de la collection de pronostics:", error);
+            }
+            
+            // Désabonner de l'écouteur précédent si présent
+            if (forecastsUnsubscribe) {
+                forecastsUnsubscribe();
+                forecastsUnsubscribe = null;
+            }
+            
+            // Récupérer la liste appropriée
+            const listElement = document.getElementById(`${tabType}-list`);
+            if (!listElement) return;
+            
+            // Afficher un indicateur de chargement
+            listElement.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary-color);"></i>
+                    <div style="margin-top: 10px; font-weight: bold;">Chargement des pronostics...</div>
+                </div>
+            `;
+            
+            try {
+                // Configurer l'écouteur pour les pronostics
+                const forecastsRef = collection(db, "forecasts");
+                const q = query(
+                    forecastsRef, 
+                    where("type", "==", tabType), 
+                    orderBy("date", "desc"),
+                    limit(20)
+                );
+                
+                forecastsUnsubscribe = onSnapshot(q, (snapshot) => {
+                    if (snapshot.empty) {
+                        listElement.innerHTML = `
+                            <div class="no-forecasts">
+                                <i class="fas fa-futbol"></i>
+                                <div class="empty-state-title">Aucun pronostic</div>
+                                <div class="empty-state-text">Aucun pronostic disponible actuellement</div>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    // Vider la liste
+                    listElement.innerHTML = '';
+                    
+                    // Créer un fragment pour ajouter tous les pronostics en une seule fois
+                    const fragment = document.createDocumentFragment();
+                    
+                    snapshot.forEach((doc) => {
+                        const forecastData = doc.data();
+                        const forecastElement = createForecastElement(forecastData, tabType);
+                        fragment.appendChild(forecastElement);
+                    });
+                    
+                    // Ajouter tous les pronostics
+                    listElement.appendChild(fragment);
+                });
+            } catch (error) {
+                console.error(`Erreur lors du chargement des pronostics: ${error.message}`);
+                listElement.innerHTML = `
+                    <div class="no-forecasts">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div class="empty-state-title">Erreur</div>
+                        <div class="empty-state-text">Impossible de charger les pronostics</div>
+                    </div>
+                `;
+            }
+        }
+        
+        // Créer des pronostics de démonstration
+        async function createDemoForecasts() {
+            try {
+                const forecastsRef = collection(db, "forecasts");
+                
+                // Données pour les "safes du jour"
+                const safesDemoData = [
+                    {
+                        type: "safes",
+                        league: "Ligue 1",
+                        date: new Date(Date.now() + 86400000), // demain
+                        homeTeam: "PSG",
+                        awayTeam: "Marseille",
+                        prediction: "1", // Victoire domicile
+                        confidence: 85,
+                        status: "pending",
+                        createdAt: serverTimestamp()
+                    },
+                    {
+                        type: "safes",
+                        league: "Premier League",
+                        date: new Date(Date.now() + 86400000 * 2), // après-demain
+                        homeTeam: "Manchester City",
+                        awayTeam: "Liverpool",
+                        prediction: "Over 2.5", // Plus de 2.5 buts
+                        confidence: 78,
+                        status: "pending",
+                        createdAt: serverTimestamp()
+                    },
+                    {
+                        type: "safes",
+                        league: "Serie A",
+                        date: new Date(Date.now() - 86400000), // hier
+                        homeTeam: "Juventus",
+                        awayTeam: "Milan AC",
+                        prediction: "X", // Match nul
+                        confidence: 70,
+                        result: "X",
+                        status: "win",
+                        createdAt: serverTimestamp()
+                    }
+                ];
+                
+                // Données pour les "scores exacts"
+                const exactDemoData = [
+                    {
+                        type: "exact",
+                        league: "Liga",
+                        date: new Date(Date.now() + 86400000), // demain
+                        homeTeam: "Real Madrid",
+                        awayTeam: "Barcelone",
+                        prediction: "2-1", // Score exact
+                        homeScore: 2,
+                        awayScore: 1,
+                        confidence: 65,
+                        status: "pending",
+                        createdAt: serverTimestamp()
+                    },
+                    {
+                        type: "exact",
+                        league: "Bundesliga",
+                        date: new Date(Date.now() + 86400000 * 3), // dans 3 jours
+                        homeTeam: "Bayern Munich",
+                        awayTeam: "Dortmund",
+                        prediction: "3-2", // Score exact
+                        homeScore: 3,
+                        awayScore: 2,
+                        confidence: 55,
+                        status: "pending",
+                        createdAt: serverTimestamp()
+                    },
+                    {
+                        type: "exact",
+                        league: "Premier League",
+                        date: new Date(Date.now() - 86400000 * 2), // il y a 2 jours
+                        homeTeam: "Chelsea",
+                        awayTeam: "Arsenal",
+                        prediction: "1-1", // Score exact
+                        homeScore: 1,
+                        awayScore: 1,
+                        result: "2-1",
+                        resultHomeScore: 2,
+                        resultAwayScore: 1,
+                        confidence: 60,
+                        status: "loss",
+                        createdAt: serverTimestamp()
+                    }
+                ];
+                
+                // Données pour les "prédictions IA"
+                const aiDemoData = [
+                    {
+                        type: "ai",
+                        league: "Ligue des Champions",
+                        date: new Date(Date.now() + 86400000 * 4), // dans 4 jours
+                        homeTeam: "PSG",
+                        awayTeam: "Manchester City",
+                        prediction: "1-2", // Score exact
+                        homeScore: 1,
+                        awayScore: 2,
+                        confidence: 72,
+                        analysis: "Manchester City a un meilleur bilan en déplacement et PSG a des absences clés en défense.",
+                        status: "pending",
+                        createdAt: serverTimestamp()
+                    },
+                    {
+                        type: "ai",
+                        league: "Europa League",
+                        date: new Date(Date.now() + 86400000 * 5), // dans 5 jours
+                        homeTeam: "AS Roma",
+                        awayTeam: "Arsenal",
+                        prediction: "1-1", // Score exact
+                        homeScore: 1,
+                        awayScore: 1,
+                        confidence: 68,
+                        analysis: "Les deux équipes ont un style de jeu similaire et les statistiques suggèrent un match équilibré.",
+                        status: "pending",
+                        createdAt: serverTimestamp()
+                    },
+                    {
+                        type: "ai",
+                        league: "Premier League",
+                        date: new Date(Date.now() - 86400000), // hier
+                        homeTeam: "Tottenham",
+                        awayTeam: "Manchester United",
+                        prediction: "2-0", // Score exact
+                        homeScore: 2,
+                        awayScore: 0,
+                        result: "2-0",
+                        resultHomeScore: 2,
+                        resultAwayScore: 0,
+                        confidence: 65,
+                        analysis: "Tottenham est en grande forme à domicile et Manchester United a des problèmes défensifs.",
+                        status: "win",
+                        createdAt: serverTimestamp()
+                    }
+                ];
+                
+                // Ajouter tous les pronostics de démo
+                const allDemoForecasts = [...safesDemoData, ...exactDemoData, ...aiDemoData];
+                
+                for (const forecast of allDemoForecasts) {
+                    await addDoc(forecastsRef, forecast);
+                }
+                
+                console.log("Données de démonstration de pronostics créées avec succès");
+            } catch (error) {
+                console.error("Erreur lors de la création des données de démonstration:", error);
+            }
+        }
+        
+        // Créer un élément de pronostic
+        function createForecastElement(forecastData, type) {
+            const forecastElement = document.createElement('div');
+            forecastElement.className = 'forecast-item';
+            
+            // Configuration commune
+            let statusClass = 'pending';
+            let statusText = 'À venir';
+            
+            if (forecastData.status === 'win') {
+                statusClass = 'win';
+                statusText = 'Gagné';
+            } else if (forecastData.status === 'loss') {
+                statusClass = 'loss';
+                statusText = 'Perdu';
+            }
+            
+            // Formater la date
+            let formattedDate = 'Date inconnue';
+            if (forecastData.date) {
+                let date;
+                if (forecastData.date.toDate) {
+                    date = forecastData.date.toDate();
+                } else {
+                    date = new Date(forecastData.date);
+                }
+                
+                formattedDate = date.toLocaleDateString('fr-FR', {
+                    day: 'numeric',
+                    month: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+            
+            // Contenu spécifique au type
+            let mainContent = '';
+            
+            if (type === 'safes') {
+                // Format pour les safes du jour
+                mainContent = `
+                    <div class="forecast-header">
+                        <div>${forecastData.league}</div>
+                        <div class="forecast-status ${statusClass}">${statusText}</div>
+                    </div>
+                    <div class="forecast-match">
+                        <div class="forecast-team">
+                            <div class="forecast-team-logo">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="forecast-team-name">${forecastData.homeTeam}</div>
+                        </div>
+                        <div class="forecast-score">VS</div>
+                        <div class="forecast-team">
+                            <div class="forecast-team-logo">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="forecast-team-name">${forecastData.awayTeam}</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; font-weight: bold; margin: 10px 0;">
+                        Pronostic: ${forecastData.prediction}
+                    </div>
+                `;
+            } else if (type === 'exact') {
+                // Format pour les scores exacts
+                let resultDisplay = '';
+                if (forecastData.status !== 'pending') {
+                    resultDisplay = `
+                        <div style="margin-top: 5px; text-align: center;">
+                            Résultat final: ${forecastData.resultHomeScore}-${forecastData.resultAwayScore}
+                        </div>
+                    `;
+                }
+                
+                mainContent = `
+                    <div class="forecast-header">
+                        <div>${forecastData.league}</div>
+                        <div class="forecast-status ${statusClass}">${statusText}</div>
+                    </div>
+                    <div class="forecast-match">
+                        <div class="forecast-team">
+                            <div class="forecast-team-logo">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="forecast-team-name">${forecastData.homeTeam}</div>
+                        </div>
+                        <div class="forecast-score">${forecastData.homeScore} - ${forecastData.awayScore}</div>
+                        <div class="forecast-team">
+                            <div class="forecast-team-logo">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="forecast-team-name">${forecastData.awayTeam}</div>
+                        </div>
+                    </div>
+                    ${resultDisplay}
+                `;
+            } else if (type === 'ai') {
+                // Format pour les prédictions IA
+                let resultDisplay = '';
+                if (forecastData.status !== 'pending') {
+                    resultDisplay = `
+                        <div style="margin-top: 5px; text-align: center;">
+                            Résultat final: ${forecastData.resultHomeScore}-${forecastData.resultAwayScore}
+                        </div>
+                    `;
+                }
+                
+                mainContent = `
+                    <div class="forecast-header">
+                        <div>${forecastData.league}</div>
+                        <div class="forecast-status ${statusClass}">${statusText}</div>
+                    </div>
+                    <div class="forecast-match">
+                        <div class="forecast-team">
+                            <div class="forecast-team-logo">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="forecast-team-name">${forecastData.homeTeam}</div>
+                        </div>
+                        <div class="forecast-score">${forecastData.homeScore} - ${forecastData.awayScore}</div>
+                        <div class="forecast-team">
+                            <div class="forecast-team-logo">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="forecast-team-name">${forecastData.awayTeam}</div>
+                        </div>
+                    </div>
+                    ${resultDisplay}
+                    <div style="font-size: 13px; margin-top: 10px; font-style: italic;">
+                        "${forecastData.analysis}"
+                    </div>
+                `;
+            }
+            
+            // Barre de confiance et footer communs
+            const confidenceBar = `
+                <div class="forecast-confidence">
+                    <span>Confiance:</span>
+                    <div class="confidence-bar-container">
+                        <div class="confidence-bar" style="width: ${forecastData.confidence}%"></div>
+                    </div>
+                    <span>${forecastData.confidence}%</span>
+                </div>
+            `;
+            
+            const footer = `
+                <div class="forecast-date">${formattedDate}</div>
+            `;
+            
+            forecastElement.innerHTML = mainContent + confidenceBar + footer;
+            return forecastElement;
         }
         
         // Afficher la section événements
@@ -3006,7 +3881,20 @@
             document.getElementById('header-menu-button').style.display = 'block';
             document.getElementById('header-back-button').style.display = 'none';
             
-            // Lisez les événements si nécessaire
+            // Mettre à jour les actions du header (vider)
+            document.getElementById('header-action').innerHTML = '';
+            
+            // Afficher ou masquer le bouton de création de notification selon le statut admin
+            const createNotifBtn = document.getElementById('create-notification-btn');
+            if (createNotifBtn) {
+                if (isAdmin) {
+                    createNotifBtn.style.display = 'flex';
+                } else {
+                    createNotifBtn.style.display = 'none';
+                }
+            }
+            
+            // Lire les événements
             listenToEvents();
         }
         
@@ -3034,6 +3922,9 @@
             // Masquer le bouton de menu et montrer le bouton de retour
             document.getElementById('header-menu-button').style.display = 'none';
             document.getElementById('header-back-button').style.display = 'block';
+            
+            // Mettre à jour le header-action (vider)
+            document.getElementById('header-action').innerHTML = '';
             
             // Ajouter un écouteur d'événement pour le bouton de retour
             document.getElementById('header-back-button').addEventListener('click', function() {
@@ -3065,6 +3956,9 @@
             // Masquer le bouton de menu et montrer le bouton de retour
             document.getElementById('header-menu-button').style.display = 'none';
             document.getElementById('header-back-button').style.display = 'block';
+            
+            // Mettre à jour le header-action (vider)
+            document.getElementById('header-action').innerHTML = '';
             
             // Ajouter un écouteur d'événement pour le bouton de retour
             document.getElementById('header-back-button').addEventListener('click', function() {
@@ -4587,10 +5481,30 @@
                 // S'abonner aux événements
                 await listenToEvents();
                 
+                // Initialiser la collection de pronostics si nécessaire
+                await initForecastsCollection();
+                
                 console.log("Données initiales chargées avec succès");
             } catch (error) {
                 console.error(`Erreur lors du chargement des données initiales: ${error.message}`);
                 showNotification("Erreur lors du chargement des données", "error");
+            }
+        }
+        
+        // Initialiser la collection de pronostics
+        async function initForecastsCollection() {
+            try {
+                // Vérifier si la collection forecasts existe déjà
+                const forecastsRef = collection(db, "forecasts");
+                const forecastsSnap = await getDocs(forecastsRef);
+                
+                // Si la collection est vide, ajouter des données de démonstration
+                if (forecastsSnap.empty) {
+                    console.log("Collection forecasts vide, création des données de démonstration");
+                    await createDemoForecasts();
+                }
+            } catch (error) {
+                console.error("Erreur lors de l'initialisation de la collection de pronostics:", error);
             }
         }
         
@@ -4649,7 +5563,7 @@
                     try {
                         for (const eventDoc of snapshot.docs) {
                             const eventData = eventDoc.data();
-                            const eventElement = await createEventElement(eventData);
+                            const eventElement = await createEventElement(eventDoc.id, eventData);
                             fragment.appendChild(eventElement);
                         }
                         
@@ -4700,9 +5614,15 @@
         }
         
         // Créer un élément d'événement pour l'affichage
-        async function createEventElement(eventData) {
+        async function createEventElement(eventId, eventData) {
+            // Traitement spécial pour les notifications admin
+            if (eventData.type === 'admin-notification') {
+                return createAdminNotificationElement(eventId, eventData);
+            }
+            
             const eventItem = document.createElement('div');
             eventItem.className = `event-item ${eventData.type}`;
+            eventItem.setAttribute('data-id', eventId);
             
             // Formater la date
             let formattedDate = '';
@@ -4764,6 +5684,18 @@
                     break;
             }
             
+            // Options de suppression (seulement pour les admins)
+            let actionButtons = '';
+            if (isAdmin) {
+                actionButtons = `
+                    <div class="event-actions">
+                        <button class="event-action-btn delete" data-id="${eventId}">
+                            <i class="fas fa-trash-alt"></i> Supprimer
+                        </button>
+                    </div>
+                `;
+            }
+            
             eventItem.innerHTML = `
                 <div class="event-icon">
                     <i class="${iconClass}"></i>
@@ -4772,10 +5704,86 @@
                     <div class="event-header">${headerText}</div>
                     <div class="event-content">${contentText}</div>
                     <div class="event-time">${formattedDate}</div>
+                    ${actionButtons}
                 </div>
             `;
             
+            // Ajouter les écouteurs d'événements pour les boutons d'action
+            if (isAdmin) {
+                const deleteBtn = eventItem.querySelector('.event-action-btn.delete');
+                if (deleteBtn) {
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        showDeleteEventConfirmation(eventId);
+                    });
+                }
+            }
+            
             return eventItem;
+        }
+        
+        // Créer un élément de notification admin
+        function createAdminNotificationElement(eventId, eventData) {
+            const notificationType = eventData.notificationType || 'info';
+            let iconClass = 'fas fa-info-circle';
+            
+            // Déterminer l'icône en fonction du type de notification
+            switch (notificationType) {
+                case 'alert':
+                    iconClass = 'fas fa-exclamation-triangle';
+                    break;
+                case 'update':
+                    iconClass = 'fas fa-sync';
+                    break;
+                default:
+                    iconClass = 'fas fa-info-circle';
+            }
+            
+            // Formater la date
+            let formattedDate = '';
+            if (eventData.timestamp) {
+                if (eventData.timestamp.toDate) {
+                    // Timestamp Firestore
+                    const date = eventData.timestamp.toDate();
+                    formattedDate = date.toLocaleString('fr-FR');
+                } else if (eventData.timestamp instanceof Date) {
+                    formattedDate = eventData.timestamp.toLocaleString('fr-FR');
+                }
+            }
+            
+            // Créer l'élément notification
+            const notificationElement = document.createElement('div');
+            notificationElement.className = 'admin-notification';
+            notificationElement.setAttribute('data-id', eventId);
+            
+            notificationElement.innerHTML = `
+                <div class="admin-notification-header">
+                    <div class="admin-notification-title">
+                        <i class="${iconClass}"></i> ${eventData.title || 'Notification'}
+                    </div>
+                </div>
+                <div class="admin-notification-content">
+                    ${eventData.content || 'Sans contenu'}
+                </div>
+                <div class="admin-notification-footer">
+                    ${formattedDate}
+                </div>
+            `;
+            
+            // Ajouter un bouton de suppression pour les administrateurs
+            if (isAdmin) {
+                const header = notificationElement.querySelector('.admin-notification-header');
+                const deleteBtn = document.createElement('div');
+                deleteBtn.innerHTML = '<i class="fas fa-times"></i>';
+                deleteBtn.style.cursor = 'pointer';
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    showDeleteEventConfirmation(eventId);
+                });
+                header.appendChild(deleteBtn);
+            }
+            
+            return notificationElement;
         }
         
         // Formater une date pour l'affichage
@@ -4897,6 +5905,12 @@
                 if (eventsUnsubscribe) {
                     eventsUnsubscribe();
                     eventsUnsubscribe = null;
+                }
+                
+                // Désabonner des pronostics
+                if (forecastsUnsubscribe) {
+                    forecastsUnsubscribe();
+                    forecastsUnsubscribe = null;
                 }
                 
                 await signOut(auth);
@@ -5365,7 +6379,7 @@
                     lastSenderId: currentUser.uid
                 });
                 
-                console.log(`Message envoyé avec succès: ${docRef.id}`);
+                                console.log(`Message envoyé avec succès: ${docRef.id}`);
                 return docRef.id;
             } catch (error) {
                 console.error(`Erreur lors de l'envoi du message: ${error.message}`);
@@ -5700,3 +6714,4 @@
     </script>
 </body>
 </html>
+
