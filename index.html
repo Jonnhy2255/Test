@@ -6,7 +6,6 @@
     <title>GroupChat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <style>
-        /* Variables de couleurs */
         :root {
             --primary-color: #5D5CDE;
             --text-color: #000000;
@@ -62,7 +61,6 @@
             --social-youtube: #FF0000;
         }
         
-        /* Mode sombre */
         .dark {
             --bg-color: #181818;
             --text-color: #ffffff;
@@ -110,7 +108,6 @@
             --comment-border: #333333;
         }
         
-        /* Reset de base */
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
@@ -134,7 +131,6 @@
             letter-spacing: -0.2px;
         }
         
-        /* Menu latéral */
         .side-menu {
             position: fixed;
             top: 0;
@@ -213,7 +209,6 @@
             border-top: 1px solid var(--border-color);
         }
         
-        /* Superposition pour fermer le menu */
         .side-menu-overlay {
             position: fixed;
             top: 0;
@@ -229,7 +224,6 @@
             display: block;
         }
         
-        /* Panneau de logs */
         .log-panel {
             position: fixed;
             top: 50px;
@@ -295,7 +289,6 @@
             color: var(--text-color);
         }
         
-        /* En-tête fixe */
         .header {
             background-color: var(--bg-color);
             border-bottom: 1px solid var(--border-color);
@@ -331,8 +324,8 @@
             font-weight: bold;
             font-size: 18px;
             color: var(--primary-color);
-            border-bottom: none; /* Suppression du trait sous les titres */
-            text-decoration: none; /* Suppression du trait sous les titres */
+            border-bottom: none;
+            text-decoration: none;
         }
         
         .events-button {
@@ -342,7 +335,6 @@
             font-size: 18px;
         }
         
-        /* Contenu principal */
         .content {
             position: fixed;
             top: 50px;
@@ -354,7 +346,6 @@
             background-color: var(--bg-color);
         }
         
-        /* Nouvelle barre d'onglets simplifiée à 2 zones */
         .bottom-nav {
             background-color: var(--bg-color);
             border-top: 1px solid var(--border-color);
@@ -390,7 +381,6 @@
             margin-bottom: 4px;
         }
         
-        /* Sections de contenu */
         .section {
             padding: 10px 0;
             display: none;
@@ -400,7 +390,6 @@
             display: block;
         }
         
-        /* Profil et éléments utilisateur */
         .profile-pic {
             width: 50px;
             height: 50px;
@@ -512,7 +501,6 @@
             font-size: 12px;
         }
         
-        /* Badge Admin */
         .admin-badge {
             display: inline-block;
             background-color: var(--admin-badge-bg);
@@ -525,7 +513,6 @@
             text-transform: uppercase;
         }
 
-        /* Badge Groupe Restreint */
         .restricted-badge {
             display: inline-block;
             background-color: var(--restricted-badge-bg);
@@ -538,7 +525,6 @@
             text-transform: uppercase;
         }
         
-        /* Formulaires et entrées */
         .search-container {
             padding: 10px 16px;
             position: sticky;
@@ -557,7 +543,6 @@
             color: var(--text-color);
         }
         
-        /* Écran de chargement */
         .loading {
             position: fixed;
             top: 0;
@@ -572,7 +557,6 @@
             z-index: 999;
         }
         
-        /* Animation avec Font Awesome */
         .loading-spinner {
             font-size: 60px;
             color: var(--primary-color);
@@ -592,7 +576,6 @@
             60% { transform: translateY(-10px); }
         }
         
-        /* Paramètres */
         .settings-container {
             padding: 15px;
         }
@@ -659,7 +642,6 @@
             color: white;
         }
         
-        /* Switch */
         .switch {
             position: relative;
             display: inline-block;
@@ -705,7 +687,6 @@
             transform: translateX(24px);
         }
         
-        /* Interface de chat */
         .chat-section {
             display: none;
             position: fixed;
@@ -834,7 +815,6 @@
             cursor: not-allowed;
         }
         
-        /* Style pour le profil */
         .profile-header {
             display: flex;
             align-items: flex-start;
@@ -887,7 +867,6 @@
             gap: 5px;
         }
         
-        /* Écran d'authentification */
         .auth-screen {
             position: fixed;
             top: 0;
@@ -949,8 +928,8 @@
             position: relative;
             color: var(--inactive-text);
             transition: color 0.3s;
-            text-decoration: none; /* Suppression du trait sous les titres */
-            border-bottom: none; /* Suppression du trait sous les titres */
+            text-decoration: none;
+            border-bottom: none;
         }
         
         .auth-tab.active {
@@ -1065,7 +1044,6 @@
             text-decoration: underline;
         }
 
-        /* Message log */
         .log-message {
             margin-top: 15px;
             padding: 12px;
@@ -1091,7 +1069,6 @@
             color: #721c24;
         }
 
-        /* Empty state message */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -1116,7 +1093,6 @@
             margin-bottom: 20px;
         }
 
-        /* LOADER POUR LES REQUÊTES */
         .btn-loader {
             display: inline-block;
             width: 20px;
@@ -1151,7 +1127,6 @@
             visibility: visible;
         }
         
-        /* Notification */
         .notification {
             position: fixed;
             bottom: 80px;
@@ -1187,32 +1162,6 @@
             border-left: 4px solid var(--primary-color);
         }
         
-        /* Connection status */
-        .connection-status {
-            position: fixed;
-            top: 50px;
-            left: 0;
-            right: 0;
-            padding: 5px;
-            background-color: var(--danger-color);
-            color: white;
-            text-align: center;
-            font-size: 12px;
-            z-index: 100;
-            transform: translateY(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .connection-status.offline {
-            transform: translateY(0);
-        }
-
-        .connection-status.reconnecting {
-            background-color: var(--log-warning);
-            transform: translateY(0);
-        }
-        
-        /* About section */
         .about-container {
             padding: 20px;
             margin: 15px;
@@ -1248,7 +1197,6 @@
             margin-top: 20px;
         }
         
-        /* Verification animation */
         .verify-animation {
             position: fixed;
             top: 0;
@@ -1283,7 +1231,6 @@
             text-align: center;
         }
         
-        /* Message context menu */
         .message-context-menu {
             position: absolute;
             background-color: var(--bg-color);
@@ -1332,7 +1279,6 @@
             color: var(--danger-color);
         }
         
-        /* Message delete animation */
         @keyframes deleteMessage {
             0% {
                 opacity: 1;
@@ -1356,7 +1302,6 @@
             pointer-events: none;
         }
         
-        /* Create Group Dialog */
         .create-group-dialog {
             position: fixed;
             top: 0;
@@ -1386,8 +1331,8 @@
             text-align: center;
             font-weight: bold;
             font-size: 18px;
-            text-decoration: none; /* Suppression du trait sous les titres */
-            border-bottom: none; /* Suppression du trait sous les titres */
+            text-decoration: none;
+            border-bottom: none;
         }
         
         .create-group-back {
@@ -1407,7 +1352,6 @@
             flex-direction: column;
         }
         
-        /* Edit Dialog */
         .edit-dialog {
             position: fixed;
             top: 0;
@@ -1437,8 +1381,8 @@
             text-align: center;
             font-weight: bold;
             font-size: 18px;
-            text-decoration: none; /* Suppression du trait sous les titres */
-            border-bottom: none; /* Suppression du trait sous les titres */
+            text-decoration: none;
+            border-bottom: none;
         }
         
         .edit-back {
@@ -1513,7 +1457,6 @@
             background-color: var(--selection-color);
         }
         
-        /* FAB - Floating Action Button */
         .fab {
             position: fixed;
             bottom: 80px;
@@ -1552,7 +1495,6 @@
             font-size: 24px;
         }
         
-        /* Confirmation Dialog */
         .confirmation-dialog {
             position: fixed;
             top: 50%;
@@ -1614,7 +1556,6 @@
             color: white;
         }
         
-        /* Overlay */
         .overlay {
             position: fixed;
             top: 0;
@@ -1630,7 +1571,6 @@
             display: block;
         }
 
-        /* Section événements */
         .event-icon {
             width: 50px;
             height: 50px;
@@ -1670,7 +1610,6 @@
             margin-top: 5px;
         }
         
-        /* Badge compteur d'admin */
         .admin-count-badge {
             display: inline-block;
             background-color: var(--primary-color);
@@ -1682,7 +1621,6 @@
             margin-left: 6px;
         }
 
-        /* Styles d'événements spécifiques */
         .event-item.group-create .event-icon {
             background-color: rgba(76, 175, 80, 0.2);
         }
@@ -1707,7 +1645,6 @@
             color: var(--log-info);
         }
 
-        /* Message d'écriture restreinte */
         .restricted-message {
             text-align: center;
             padding: 10px;
@@ -1718,7 +1655,6 @@
             color: var(--text-color);
         }
         
-        /* Édition de profil */
         .profile-edit-dialog {
             position: fixed;
             top: 0;
@@ -1784,7 +1720,6 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        /* Cacher l'input de fichier */
         input[type="file"] {
             display: none;
         }
@@ -1794,18 +1729,16 @@
             to { opacity: 1; }
         }
         
-        /* Styles pour la section */
         .section-title {
             font-weight: bold;
             font-size: 18px;
             margin-bottom: 10px;
-            text-decoration: none; /* Suppression du trait sous les titres */
-            border-bottom: none; /* Suppression du trait sous les titres */
+            text-decoration: none;
+            border-bottom: none;
             padding: 0 16px; 
             margin: 15px 0;
         }
         
-        /* Style pour les messages d'erreur individuels */
         .field-error {
             color: var(--danger-color);
             font-size: 12px;
@@ -1813,7 +1746,6 @@
             display: none;
         }
         
-        /* Style pour les boutons de sauvegarde des champs individuels */
         .save-field-btn {
             background-color: var(--primary-color);
             color: white;
@@ -1830,7 +1762,6 @@
             cursor: not-allowed;
         }
         
-        /* Style pour les champs éditables individuellement */
         .editable-field {
             display: flex;
             align-items: center;
@@ -1841,7 +1772,6 @@
             flex: 1;
         }
         
-        /* Section Pronostics - Nouveau design */
         .forecasts-section {
             padding: 0 0 15px 0;
         }
@@ -1852,13 +1782,6 @@
             text-align: center;
             margin-bottom: 5px;
             color: var(--primary-color);
-        }
-        
-        .forecasts-subtitle {
-            text-align: center;
-            font-size: 14px;
-            color: var(--inactive-text);
-            margin-bottom: 15px;
         }
         
         .forecasts-tabs {
@@ -2033,7 +1956,6 @@
             opacity: 0.5;
         }
 
-        /* Style pour les notifications admin */
         .admin-notification {
             background-color: var(--admin-notif-bg);
             border: 1px solid var(--admin-notif-border);
@@ -2074,7 +1996,6 @@
             text-align: right;
         }
         
-        /* Boutons d'action pour les événements */
         .event-actions {
             display: flex;
             justify-content: flex-end;
@@ -2099,7 +2020,6 @@
             color: var(--danger-color);
         }
         
-        /* Nouvelle dialogue pour les notifications admin */
         .admin-notif-dialog {
             position: fixed;
             top: 0;
@@ -2152,7 +2072,6 @@
             cursor: pointer;
         }
         
-        /* Styles pour les options de score */
         .score-options {
             display: flex;
             gap: 10px;
@@ -2176,7 +2095,6 @@
             border-color: var(--primary-color);
         }
         
-        /* Section Nous Rejoindre */
         .join-us-section {
             padding: 0 15px 20px;
         }
@@ -2250,7 +2168,6 @@
             font-weight: bold;
         }
         
-        /* Section Commentaires */
         .comments-section {
             padding: 20px 15px;
             margin-top: 20px;
@@ -2348,7 +2265,6 @@
             color: var(--inactive-text);
         }
         
-        /* Dialogue de confirmation de suppression de compte */
         #delete-account-confirmation .confirmation-text {
             color: var(--danger-color);
             font-weight: bold;
@@ -2356,7 +2272,6 @@
     </style>
 </head>
 <body>
-    <!-- Animation de vérification -->
     <div id="verify-animation" class="verify-animation">
         <div class="football-bounce">
             <i class="fas fa-futbol"></i>
@@ -2364,7 +2279,6 @@
         <div class="verify-text">Vérification en cours...</div>
     </div>
     
-    <!-- Menu latéral -->
     <div class="side-menu" id="side-menu">
         <div class="side-menu-header">
             <div class="side-menu-close" id="side-menu-close">
@@ -2388,21 +2302,17 @@
         </div>
     </div>
     
-    <!-- Superposition pour fermer le menu -->
     <div class="side-menu-overlay" id="side-menu-overlay"></div>
     
-    <!-- Panneau de logs -->
     <div class="log-panel" id="log-panel">
         <div class="log-panel-close" id="log-panel-close">
             <i class="fas fa-times"></i>
         </div>
         <div id="log-container">
-            <!-- Les logs seront ajoutés ici dynamiquement -->
             <div class="log-entry info">Initialisation de l'application...</div>
         </div>
     </div>
     
-    <!-- Écran d'authentification -->
     <div id="auth-screen" class="auth-screen" style="display: none;">
         <div class="auth-header">
             <div class="auth-logo">
@@ -2417,7 +2327,6 @@
             <div class="auth-tab" id="register-tab">Inscription</div>
         </div>
         
-        <!-- Formulaire de Connexion -->
         <div id="login-form" class="auth-form active">
             <div class="form-group">
                 <label class="form-label">Email</label>
@@ -2444,7 +2353,6 @@
             </div>
         </div>
         
-        <!-- Formulaire d'Inscription -->
         <div id="register-form" class="auth-form">
             <div class="form-group">
                 <label class="form-label">Email</label>
@@ -2478,17 +2386,12 @@
         </div>
     </div>
 
-    <!-- Écran de chargement -->
     <div id="loading" class="loading" style="display: none;">
         <i class="fas fa-futbol loading-spinner"></i>
         <div style="font-weight: bold; font-size: 24px; color: var(--primary-color);">GroupChat</div>
         <div style="margin-top: 10px; color: #6b7280;">Chargement...</div>
     </div>
 
-    <!-- Indicateur de connexion -->
-    <div class="connection-status" id="connection-status"></div>
-
-    <!-- En-tête -->
     <div class="header">
         <div class="header-left">
             <div id="header-menu-button" class="menu-button">
@@ -2509,9 +2412,7 @@
         </div>
     </div>
 
-    <!-- Contenu principal de l'application -->
     <div class="content">
-        <!-- Section Groupes -->
         <div id="groups-section" class="section active">
             <div class="search-container">
                 <input type="text" class="search-input" id="groups-search" placeholder="Rechercher un groupe">
@@ -2525,13 +2426,11 @@
                 </div>
             </div>
             
-            <!-- Bouton d'ajout de groupe -->
             <div class="fab" id="create-group-btn">
                 <i class="fas fa-plus"></i>
             </div>
         </div>
         
-        <!-- Section Événements -->
         <div id="events-section" class="section">
             <div class="search-container">
                 <input type="text" class="search-input" id="events-search" placeholder="Rechercher un événement">
@@ -2545,18 +2444,15 @@
                 </div>
             </div>
             
-            <!-- Bouton de fermeture de la section événements -->
             <div class="close-events-btn" id="close-events-btn">
                 <i class="fas fa-times"></i>
             </div>
             
-            <!-- Bouton pour créer une notification (admin seulement) -->
             <div class="fab" id="create-notification-btn" style="display: none;">
                 <i class="fas fa-bullhorn"></i>
             </div>
         </div>
         
-        <!-- Section Profil -->
         <div id="profile-section" class="section">
             <div class="profile-header">
                 <div class="profile-pic">
@@ -2599,40 +2495,30 @@
             </div>
         </div>
         
-        <!-- Section Pronostics -->
         <div id="forecasts-section" class="section">
             <div class="forecasts-title">Pronostics Sportifs</div>
-            <div class="forecasts-subtitle">Prédictions sans paris - Uniquement à titre informatif</div>
             
-            <!-- Onglets de navigation pour les pronostics -->
             <div class="forecasts-tabs">
                 <div class="forecast-tab active" data-tab="safes">Safes du jour</div>
                 <div class="forecast-tab" data-tab="exact">Scores exacts</div>
                 <div class="forecast-tab" data-tab="ai">Prédictions IA</div>
             </div>
             
-            <!-- Contenu des safes du jour -->
             <div class="forecasts-content active" id="safes-content">
                 <div class="forecasts-list" id="safes-list">
-                    <!-- Les pronostics "Safes du jour" seront ajoutés ici dynamiquement -->
                 </div>
             </div>
             
-            <!-- Contenu des scores exacts -->
             <div class="forecasts-content" id="exact-content">
                 <div class="forecasts-list" id="exact-list">
-                    <!-- Les pronostics de scores exacts seront ajoutés ici dynamiquement -->
                 </div>
             </div>
             
-            <!-- Contenu des prédictions IA -->
             <div class="forecasts-content" id="ai-content">
                 <div class="forecasts-list" id="ai-list">
-                    <!-- Les prédictions IA seront ajoutées ici dynamiquement -->
                 </div>
             </div>
             
-            <!-- Section Commentaires -->
             <div class="comments-section">
                 <h3 class="section-title">Commentaires</h3>
                 
@@ -2646,7 +2532,6 @@
                 </div>
                 
                 <div class="comment-list" id="comment-list">
-                    <!-- Les commentaires seront ajoutés ici dynamiquement -->
                     <div class="no-comments">
                         <i class="fas fa-comments" style="font-size: 30px; color: var(--inactive-text); margin-bottom: 10px;"></i>
                         <p>Soyez le premier à commenter!</p>
@@ -2655,7 +2540,6 @@
             </div>
         </div>
         
-        <!-- Section Nous Rejoindre -->
         <div id="join-us-section" class="section">
             <div class="join-us-section">
                 <h2 class="section-title">Rejoignez-nous</h2>
@@ -2706,7 +2590,6 @@
             </div>
         </div>
         
-        <!-- Section À propos -->
         <div id="about-section" class="section">
             <div class="about-container">
                 <div class="about-title">GroupChat</div>
@@ -2729,7 +2612,6 @@
                 
                 <div class="about-divider"></div>
                 
-                <!-- Nouvelle section de conditions d'utilisation -->
                 <div class="terms-of-use">
                     <h4>Conditions d'utilisation</h4>
                     <p>En utilisant cette application, vous acceptez les conditions suivantes :</p>
@@ -2744,11 +2626,9 @@
         </div>
     </div>
 
-    <!-- Interface de Chat -->
     <div id="chat-interface" class="chat-section">
         <div class="chat-messages-container">
             <div class="chat-messages" id="chat-messages">
-                <!-- Les messages seront ajoutés dynamiquement ici -->
             </div>
         </div>
         <div class="chat-input-container" id="chat-input-container">
@@ -2761,7 +2641,6 @@
         </div>
     </div>
     
-    <!-- Menu contextuel pour les messages -->
     <div id="message-context-menu" class="message-context-menu" style="display: none;">
         <div class="context-menu-item reply">
             <div class="context-menu-icon"><i class="fas fa-reply"></i></div>
@@ -2777,7 +2656,6 @@
         </div>
     </div>
     
-    <!-- Dialogue de création de groupe -->
     <div id="create-group-dialog" class="create-group-dialog">
         <div class="create-group-header">
             <div class="create-group-back" id="create-group-back">
@@ -2825,7 +2703,6 @@
         </div>
     </div>
     
-    <!-- Dialogue de modification du groupe -->
     <div id="edit-group-dialog" class="edit-dialog">
         <div class="edit-header">
             <div class="edit-back" id="edit-group-back">
@@ -2842,7 +2719,6 @@
             </div>
             <input type="file" id="edit-group-image-input" accept="image/*">
             
-            <!-- Champs avec modification individuelle -->
             <div class="form-group">
                 <label class="form-label">Nom du groupe</label>
                 <div class="editable-field">
@@ -2886,7 +2762,6 @@
         </div>
     </div>
     
-    <!-- Dialogue de création de notification admin -->
     <div id="admin-notif-dialog" class="admin-notif-dialog">
         <div class="edit-header">
             <div class="edit-back" id="admin-notif-back">
@@ -2923,7 +2798,6 @@
         </div>
     </div>
     
-    <!-- Dialogue de modification du profil -->
     <div id="profile-edit-dialog" class="profile-edit-dialog">
         <div class="edit-header">
             <div class="edit-back" id="profile-edit-back">
@@ -2942,7 +2816,6 @@
                 <input type="file" id="profile-image-input" accept="image/*">
             </div>
             
-            <!-- Nom utilisateur avec bouton individuel -->
             <div class="form-group">
                 <label class="form-label">Nom d'utilisateur</label>
                 <div class="editable-field">
@@ -2962,7 +2835,6 @@
         </div>
     </div>
     
-    <!-- Dialogue de confirmation de suppression -->
     <div id="delete-confirmation" class="confirmation-dialog">
         <div class="confirmation-title">Supprimer ce message ?</div>
         <div class="confirmation-text">Cette action est irréversible et le message sera supprimé pour tout le monde.</div>
@@ -2972,7 +2844,6 @@
         </div>
     </div>
     
-    <!-- Dialogue de confirmation de suppression d'événement -->
     <div id="delete-event-confirmation" class="confirmation-dialog">
         <div class="confirmation-title">Supprimer cet événement ?</div>
         <div class="confirmation-text">Cette action est irréversible et l'événement sera supprimé.</div>
@@ -2982,7 +2853,6 @@
         </div>
     </div>
     
-    <!-- Dialogue de confirmation de suppression de compte -->
     <div id="delete-account-confirmation" class="confirmation-dialog">
         <div class="confirmation-title">Supprimer votre compte ?</div>
         <div class="confirmation-text">ATTENTION : Cette action est définitive et irréversible. Toutes vos données seront supprimées.</div>
@@ -2991,14 +2861,20 @@
             <div class="confirmation-button confirmation-delete" id="delete-account-confirm">Supprimer</div>
         </div>
     </div>
+    
+    <div id="logout-confirmation" class="confirmation-dialog">
+        <div class="confirmation-title">Se déconnecter ?</div>
+        <div class="confirmation-text">Voulez-vous vraiment vous déconnecter de l'application ?</div>
+        <div class="confirmation-buttons">
+            <div class="confirmation-button confirmation-cancel" id="logout-cancel">Annuler</div>
+            <div class="confirmation-button confirmation-confirm" id="logout-confirm">Se déconnecter</div>
+        </div>
+    </div>
 
-    <!-- Overlay pour les dialogues -->
     <div id="overlay" class="overlay"></div>
 
-    <!-- Notification -->
     <div class="notification" id="notification"></div>
 
-    <!-- Nouvelle barre de navigation simplifiée à 2 zones -->
     <div class="bottom-nav" id="bottom-nav">
         <div class="nav-item active" data-section="groups" style="flex: 1;">
             <i class="nav-icon fas fa-users"></i>
@@ -3011,12 +2887,10 @@
     </div>
 
     <script type="module">
-        // Import Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, addDoc, onSnapshot, where, deleteDoc, serverTimestamp, updateDoc, arrayUnion, arrayRemove, limit, Timestamp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
 
-        // Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyDTPLxUiA8lj82kqc6CyCPLQDITc0CtLUE",
             authDomain: "ichat-betai.firebaseapp.com",
@@ -3028,12 +2902,10 @@
             measurementId: "G-STXPSZN7X8"
         };
 
-        // Initialiser Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Variables globales
         let isLoggedIn = false;
         let currentUser = null;
         let currentUserData = null;
@@ -3046,7 +2918,7 @@
         let messageQueue = [];
         let chatUnsubscribers = {};
         let longPressTimer = null;
-        let longPressDuration = 500; // Durée en ms pour un appui long
+        let longPressDuration = 500;
         let activeContextMenu = null;
         let currentMessageForAction = null;
         let eventsUnsubscribe = null;
@@ -3062,189 +2934,9 @@
         let groupNameChanged = false;
         let groupDescriptionChanged = false;
         let groupPermissionsChanged = false;
-        let appLogs = []; // Pour stocker les logs
-        let currentEventForDeletion = null; // Pour la suppression d'événements
-        let currentForecastTab = 'safes'; // Onglet de pronostic actif par défaut
-        
-        // Surcharge de console.log pour capturer les logs
-        const originalConsoleLog = console.log;
-        const originalConsoleError = console.error;
-        const originalConsoleWarn = console.warn;
-        const originalConsoleInfo = console.info;
-        
-        console.log = function() {
-            addToLogPanel('info', arguments);
-            originalConsoleLog.apply(console, arguments);
-        };
-        
-        console.error = function() {
-            addToLogPanel('error', arguments);
-            originalConsoleError.apply(console, arguments);
-        };
-        
-        console.warn = function() {
-            addToLogPanel('warning', arguments);
-            originalConsoleWarn.apply(console, arguments);
-        };
-        
-        console.info = function() {
-            addToLogPanel('info', arguments);
-            originalConsoleInfo.apply(console, arguments);
-        };
-        
-        // Ajouter un log au panneau
-        function addToLogPanel(type, args) {
-            try {
-                const logContainer = document.getElementById('log-container');
-                if (!logContainer) return;
-                
-                // Convertir les arguments en texte
-                let logText = Array.from(args).map(arg => {
-                    if (typeof arg === 'object') {
-                        try {
-                            return JSON.stringify(arg);
-                        } catch (e) {
-                            return arg.toString();
-                        }
-                    }
-                    return arg;
-                }).join(' ');
-                
-                // Détecter les liens dans le texte et les rendre cliquables
-                logText = makeLinksClickable(logText);
-                
-                // Créer l'entrée de log
-                const logEntry = document.createElement('div');
-                logEntry.className = `log-entry ${type}`;
-                logEntry.innerHTML = logText;
-                
-                // Ajouter la date
-                const timestamp = new Date().toLocaleTimeString();
-                logEntry.innerHTML = `[${timestamp}] ${logEntry.innerHTML}`;
-                
-                // Ajouter au conteneur
-                logContainer.appendChild(logEntry);
-                
-                // Limiter le nombre de logs (garder les 100 derniers)
-                while (logContainer.children.length > 100) {
-                    logContainer.removeChild(logContainer.firstChild);
-                }
-                
-                // Défiler vers le bas
-                logContainer.scrollTop = logContainer.scrollHeight;
-                
-                // Stocker dans le tableau des logs
-                appLogs.push({type, text: logText, timestamp});
-            } catch (error) {
-                originalConsoleError.call(console, 'Erreur lors de l\'ajout au panneau de logs:', error);
-            }
-        }
-        
-        // Rendre les liens dans le texte cliquables
-        function makeLinksClickable(text) {
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
-            return text.replace(urlRegex, function(url) {
-                return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
-            });
-        }
-        
-        // Fonction pour détecter le mode sombre du système
-        function setupDarkMode() {
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-            
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-                if (event.matches) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-            });
-            
-            // Initialiser l'état du toggle
-            document.getElementById('dark-toggle').checked = document.documentElement.classList.contains('dark');
-        }
-        
-        // Surveiller la connexion internet
-        function setupConnectionMonitoring() {
-            const connectionStatus = document.getElementById('connection-status');
-            
-            function updateConnectionStatus() {
-                if (navigator.onLine) {
-                    connectionStatus.textContent = '';
-                    connectionStatus.classList.remove('offline');
-                    connectionStatus.classList.remove('reconnecting');
-                    isOnline = true;
-                    
-                    // Traiter les messages en attente d'envoi
-                    processQueuedMessages();
-                } else {
-                    connectionStatus.textContent = 'Pas de connexion internet';
-                    connectionStatus.classList.add('offline');
-                    isOnline = false;
-                }
-            }
-            
-            window.addEventListener('online', () => {
-                console.log('Connexion internet rétablie');
-                connectionStatus.textContent = 'Reconnexion en cours...';
-                connectionStatus.classList.remove('offline');
-                connectionStatus.classList.add('reconnecting');
-                
-                // Attendre un peu pour s'assurer que la connexion est stable
-                setTimeout(() => {
-                    updateConnectionStatus();
-                    // Recharger les groupes si on est connecté
-                    if (isLoggedIn && currentSection === 'groups') {
-                        loadGroups();
-                    }
-                }, 1500);
-            });
-            
-            window.addEventListener('offline', () => {
-                console.log('Connexion internet perdue');
-                updateConnectionStatus();
-                showNotification('Pas de connexion internet. Les messages seront envoyés lorsque vous serez connecté.', 'error');
-            });
-            
-            // Vérifier l'état initial
-            updateConnectionStatus();
-        }
-        
-        // Traiter les messages en attente d'envoi
-        async function processQueuedMessages() {
-            if (messageQueue.length === 0) return;
-            
-            console.log(`Traitement de ${messageQueue.length} message(s) en attente d'envoi`);
-            
-            const processedMessages = [...messageQueue];
-            messageQueue = [];
-            
-            for (const message of processedMessages) {
-                try {
-                    await sendMessageToFirestore(
-                        message.groupId, 
-                        message.text
-                    );
-                    console.log(`Message envoyé après reconnexion`);
-                } catch (error) {
-                    console.error(`Échec de l'envoi après reconnexion: ${error.message}`);
-                    // Remettre le message dans la file d'attente
-                    messageQueue.push(message);
-                }
-            }
-            
-            if (messageQueue.length > 0) {
-                showNotification(`${messageQueue.length} message(s) n'ont pas pu être envoyés`, 'error');
-            } else if (processedMessages.length > 0) {
-                showNotification('Tous les messages ont été envoyés', 'success');
-            }
-        }
-        
-        // Afficher une notification dans l'interface
+        let currentEventForDeletion = null;
+        let currentForecastTab = 'safes';
+
         function showNotification(message, type = 'info') {
             const notification = document.getElementById('notification');
             if (!notification) return;
@@ -3252,12 +2944,10 @@
             notification.textContent = message;
             notification.className = 'notification ' + type;
             
-            // Afficher la notification
             setTimeout(() => {
                 notification.classList.add('show');
             }, 100);
             
-            // Masquer la notification après un délai
             setTimeout(() => {
                 notification.classList.remove('show');
                 setTimeout(() => {
@@ -3266,27 +2956,22 @@
             }, 3000);
         }
         
-        // Configuration des événements UI
         function setupUIEvents() {
-            // Menu latéral - Ouvrir
             document.getElementById('header-menu-button').addEventListener('click', function() {
                 document.getElementById('side-menu').classList.add('active');
                 document.getElementById('side-menu-overlay').classList.add('active');
             });
             
-            // Menu latéral - Fermer (via bouton X)
             document.getElementById('side-menu-close').addEventListener('click', function() {
                 document.getElementById('side-menu').classList.remove('active');
                 document.getElementById('side-menu-overlay').classList.remove('active');
             });
             
-            // Menu latéral - Fermer (via overlay)
             document.getElementById('side-menu-overlay').addEventListener('click', function() {
                 document.getElementById('side-menu').classList.remove('active');
                 document.getElementById('side-menu-overlay').classList.remove('active');
             });
             
-            // Menu latéral - Actions des items
             document.getElementById('menu-profile').addEventListener('click', function() {
                 document.getElementById('side-menu').classList.remove('active');
                 document.getElementById('side-menu-overlay').classList.remove('active');
@@ -3305,47 +2990,36 @@
                 showAboutSection();
             });
             
-            // Panneau de logs - Ouvrir
             document.getElementById('log-button').addEventListener('click', function() {
                 document.getElementById('log-panel').classList.toggle('active');
             });
             
-            // Panneau de logs - Fermer
             document.getElementById('log-panel-close').addEventListener('click', function() {
                 document.getElementById('log-panel').classList.remove('active');
             });
             
-            // Bouton événements dans l'en-tête
             document.getElementById('events-button').addEventListener('click', function() {
                 showEventsSection();
             });
             
-            // Bouton fermer événements
             document.getElementById('close-events-btn').addEventListener('click', function() {
-                // Revenir à la section précédente ou à la section groupes par défaut
                 if (currentSection === 'events') {
                     showGroupsSection();
                 }
             });
             
-            // Nouvelle barre d'onglets avec deux zones
             document.getElementById('bottom-nav').addEventListener('click', function(e) {
-                // Détecter la position horizontale du clic
                 const rect = this.getBoundingClientRect();
                 const clickX = e.clientX - rect.left;
                 const midPoint = rect.width / 2;
                 
-                // Déterminer la section à activer selon la moitié cliquée
                 if (clickX < midPoint) {
-                    // Clic sur la partie gauche (Groupes)
                     showGroupsSection();
                 } else {
-                    // Clic sur la partie droite (Pronostics)
                     showForecastsSection();
                 }
             });
             
-            // Onglets de pronostics
             document.querySelectorAll('.forecast-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     const tabId = this.getAttribute('data-tab');
@@ -3353,7 +3027,6 @@
                 });
             });
             
-            // Événements pour les paramètres
             document.getElementById('dark-toggle').addEventListener('change', function() {
                 if (this.checked) {
                     document.documentElement.classList.add('dark');
@@ -3361,19 +3034,17 @@
                     document.documentElement.classList.remove('dark');
                 }
                 
-                // Sauvegarder la préférence
                 localStorage.setItem('groupChatDarkMode', this.checked ? 'true' : 'false');
             });
             
-            // Événements du profil
-            document.getElementById('logout-btn').addEventListener('click', logoutUser);
-            document.getElementById('delete-account-btn').addEventListener('click', showDeleteAccountConfirmation);
+            document.getElementById('logout-btn').addEventListener('click', showLogoutConfirmation);
+            document.getElementById('logout-cancel').addEventListener('click', hideLogoutConfirmation);
+            document.getElementById('logout-confirm').addEventListener('click', logoutUser);
             
-            // Confirmation de suppression de compte
+            document.getElementById('delete-account-btn').addEventListener('click', showDeleteAccountConfirmation);
             document.getElementById('delete-account-cancel').addEventListener('click', hideDeleteAccountConfirmation);
             document.getElementById('delete-account-confirm').addEventListener('click', deleteAccount);
             
-            // Modification du profil
             document.getElementById('edit-profile-btn').addEventListener('click', showProfileEditDialog);
             document.getElementById('edit-profile-pic').addEventListener('click', showProfileEditDialog);
             
@@ -3384,17 +3055,14 @@
             
             document.getElementById('profile-image-input').addEventListener('change', handleProfileImageSelect);
             
-            // Boutons de sauvegarde individuelle pour le profil
             document.getElementById('save-display-name-btn').addEventListener('click', updateDisplayName);
             document.getElementById('save-profile-image-btn').addEventListener('click', updateProfileImage);
             
-            // Surveillance des changements dans les champs pour boutons de sauvegarde
             document.getElementById('edit-display-name').addEventListener('input', function() {
                 profileNameChanged = true;
                 document.getElementById('save-display-name-btn').disabled = this.value.trim() === '';
             });
             
-            // Interface de chat
             document.getElementById('chat-input').addEventListener('keyup', function(e) {
                 if (e.key === 'Enter') {
                     sendMessage();
@@ -3403,12 +3071,9 @@
             
             document.getElementById('send-button').addEventListener('click', sendMessage);
             
-            // Bouton retour dans le chat
             document.getElementById('header-back-button').addEventListener('click', closeChat);
             
-            // Création de groupe
             document.getElementById('create-group-btn').addEventListener('click', function() {
-                // Vérifier si l'utilisateur est administrateur
                 if (isAdmin) {
                     showCreateGroupDialog();
                 } else {
@@ -3419,7 +3084,6 @@
             document.getElementById('create-group-back').addEventListener('click', hideCreateGroupDialog);
             document.getElementById('create-group-submit').addEventListener('click', createNewGroup);
             
-            // Création de notification admin
             document.getElementById('create-notification-btn').addEventListener('click', function() {
                 if (isAdmin) {
                     showAdminNotificationDialog();
@@ -3431,14 +3095,12 @@
             document.getElementById('admin-notif-back').addEventListener('click', hideAdminNotificationDialog);
             document.getElementById('send-notification-btn').addEventListener('click', sendAdminNotification);
             
-            // Upload d'image de groupe
             document.getElementById('new-group-image-upload').addEventListener('click', function() {
                 document.getElementById('new-group-image-input').click();
             });
             
             document.getElementById('new-group-image-input').addEventListener('change', handleNewGroupImageSelect);
             
-            // Modification de groupe
             document.getElementById('edit-group-back').addEventListener('click', hideEditGroupDialog);
             
             document.getElementById('edit-group-image-upload').addEventListener('click', function() {
@@ -3447,13 +3109,11 @@
             
             document.getElementById('edit-group-image-input').addEventListener('change', handleEditGroupImageSelect);
             
-            // Boutons de sauvegarde individuelle pour l'édition de groupe
             document.getElementById('save-group-name-btn').addEventListener('click', updateGroupName);
             document.getElementById('save-group-description-btn').addEventListener('click', updateGroupDescription);
             document.getElementById('save-group-permissions-btn').addEventListener('click', updateGroupPermissions);
             document.getElementById('save-group-image-btn').addEventListener('click', updateGroupImage);
             
-            // Surveillance des changements dans les champs
             document.getElementById('edit-group-name').addEventListener('input', function() {
                 groupNameChanged = true;
                 document.getElementById('save-group-name-btn').disabled = this.value.trim() === '';
@@ -3469,46 +3129,37 @@
                 document.getElementById('save-group-permissions-btn').disabled = false;
             });
             
-            // Dialogue de suppression de message
             document.getElementById('delete-cancel').addEventListener('click', hideDeleteConfirmation);
             document.getElementById('delete-confirm').addEventListener('click', confirmDeleteMessage);
             
-            // Dialogue de suppression d'événement
             document.getElementById('delete-event-cancel').addEventListener('click', hideDeleteEventConfirmation);
             document.getElementById('delete-event-confirm').addEventListener('click', confirmDeleteEvent);
             
-            // Fermer le menu contextuel lors d'un clic ailleurs
             document.addEventListener('click', function(e) {
                 if (activeContextMenu) {
                     const menu = document.getElementById('message-context-menu');
-                    // Si le clic n'est pas sur le menu et que le menu est ouvert
                     if (menu && !menu.contains(e.target)) {
                         hideContextMenu();
                     }
                 }
             });
             
-            // Configurer les actions du menu contextuel
             document.querySelector('.context-menu-item.delete').addEventListener('click', showDeleteConfirmation);
             document.querySelector('.context-menu-item.copy').addEventListener('click', copyMessageText);
             
-            // Configuration pour le document entier pour gérer les appuis longs
             document.addEventListener('touchstart', handleGlobalTouchStart, { passive: true });
             document.addEventListener('touchend', handleGlobalTouchEnd, { passive: true });
             document.addEventListener('touchmove', handleGlobalTouchMove, { passive: true });
             document.addEventListener('touchcancel', handleGlobalTouchCancel, { passive: true });
 
-            // Recherche pour les groupes
             document.getElementById('groups-search').addEventListener('input', function() {
                 filterGroups(this.value);
             });
 
-            // Recherche pour les événements
             document.getElementById('events-search').addEventListener('input', function() {
                 filterEvents(this.value);
             });
             
-            // Système de commentaires
             document.getElementById('comment-submit').addEventListener('click', submitComment);
             document.getElementById('comment-input').addEventListener('keyup', function(e) {
                 if (e.key === 'Enter') {
@@ -3516,34 +3167,27 @@
                 }
             });
             
-            // Fermer les barres de recherche quand on clique ailleurs
             document.addEventListener('click', function(e) {
                 const groupsSearch = document.getElementById('groups-search');
                 const eventsSearch = document.getElementById('events-search');
                 
-                // Si on clique ailleurs que dans la barre de recherche des groupes
                 if (groupsSearch && !groupsSearch.contains(e.target)) {
                     groupsSearch.blur();
                 }
                 
-                // Si on clique ailleurs que dans la barre de recherche des événements
                 if (eventsSearch && !eventsSearch.contains(e.target)) {
                     eventsSearch.blur();
                 }
             });
             
-            // Ajouter des écouteurs pour le panneau de logs
             document.getElementById('log-container').addEventListener('click', function(e) {
-                // Vérifier si l'élément cliqué est un lien
                 if (e.target.tagName === 'A') {
                     e.preventDefault();
-                    // Ouvrir le lien dans une nouvelle fenêtre
                     window.open(e.target.href, '_blank');
                 }
             });
         }
         
-        // Soumettre un commentaire
         async function submitComment() {
             const commentInput = document.getElementById('comment-input');
             const commentText = commentInput.value.trim();
@@ -3551,7 +3195,6 @@
             if (!commentText) return;
             
             try {
-                // Créer le commentaire dans Firestore
                 await addDoc(collection(db, "commentaires"), {
                     content: commentText,
                     userId: currentUser.uid,
@@ -3561,18 +3204,14 @@
                     likes: 0
                 });
                 
-                // Vider l'input
                 commentInput.value = '';
                 showNotification('Commentaire publié', 'success');
             } catch (error) {
-                console.error('Erreur lors de la publication du commentaire:', error);
                 showNotification('Erreur lors de la publication du commentaire', 'error');
             }
         }
         
-        // Charger les commentaires
         function loadComments() {
-            // Se désabonner d'abord si on était déjà abonné
             if (commentsUnsubscribe) {
                 commentsUnsubscribe();
                 commentsUnsubscribe = null;
@@ -3582,11 +3221,9 @@
             if (!commentsList) return;
             
             try {
-                // Requête pour récupérer les commentaires triés par date décroissante
                 const commentsRef = collection(db, "commentaires");
                 const q = query(commentsRef, orderBy("timestamp", "desc"), limit(50));
                 
-                // S'abonner aux changements
                 commentsUnsubscribe = onSnapshot(q, (snapshot) => {
                     if (snapshot.empty) {
                         commentsList.innerHTML = `
@@ -3598,17 +3235,14 @@
                         return;
                     }
                     
-                    // Vider la liste
                     commentsList.innerHTML = '';
                     
-                    // Ajouter les commentaires
                     snapshot.forEach(doc => {
                         const commentData = doc.data();
                         const commentElement = createCommentElement(doc.id, commentData);
                         commentsList.appendChild(commentElement);
                     });
                 }, error => {
-                    console.error('Erreur de chargement des commentaires:', error);
                     commentsList.innerHTML = `
                         <div class="no-comments">
                             <i class="fas fa-exclamation-circle" style="font-size: 30px; color: var(--danger-color); margin-bottom: 10px;"></i>
@@ -3617,17 +3251,14 @@
                     `;
                 });
             } catch (error) {
-                console.error('Erreur lors de la configuration du chargement des commentaires:', error);
             }
         }
         
-        // Créer un élément de commentaire
         function createCommentElement(commentId, commentData) {
             const commentItem = document.createElement('div');
             commentItem.className = 'comment-item';
             commentItem.setAttribute('data-id', commentId);
             
-            // Formater la date
             let formattedDate = '';
             if (commentData.timestamp) {
                 if (commentData.timestamp.toDate) {
@@ -3638,10 +3269,8 @@
                 }
             }
             
-            // Déterminer si l'utilisateur peut supprimer ce commentaire
             const canDelete = isAdmin || commentData.userId === currentUser.uid;
             
-            // Construire le HTML
             commentItem.innerHTML = `
                 <div class="comment-header">
                     <div class="comment-author">
@@ -3665,7 +3294,6 @@
                 </div>
             `;
             
-            // Ajouter les événements
             const likeBtn = commentItem.querySelector('.like-action');
             if (likeBtn) {
                 likeBtn.addEventListener('click', function() {
@@ -3684,7 +3312,6 @@
             return commentItem;
         }
         
-        // Liker un commentaire
         async function likeComment(commentId) {
             try {
                 const commentRef = doc(db, "commentaires", commentId);
@@ -3697,23 +3324,19 @@
                     });
                 }
             } catch (error) {
-                console.error('Erreur lors du like du commentaire:', error);
                 showNotification('Erreur lors du like', 'error');
             }
         }
         
-        // Supprimer un commentaire
         async function deleteComment(commentId) {
             try {
                 await deleteDoc(doc(db, "commentaires", commentId));
                 showNotification('Commentaire supprimé', 'success');
             } catch (error) {
-                console.error('Erreur lors de la suppression du commentaire:', error);
                 showNotification('Erreur lors de la suppression', 'error');
             }
         }
         
-        // Formater une date relative
         function formatRelativeDate(date) {
             if (!date) return '';
             
@@ -3737,34 +3360,27 @@
             }
         }
         
-        // Afficher le dialogue d'envoi de notification admin
         function showAdminNotificationDialog() {
-            // Réinitialiser le formulaire
             document.getElementById('notif-title').value = '';
             document.getElementById('notif-content').value = '';
             document.getElementById('notif-type').value = 'info';
             
-            // Masquer les messages d'erreur
             document.getElementById('notif-title-error').style.display = 'none';
             document.getElementById('notif-content-error').style.display = 'none';
             
-            // Afficher le dialogue
             document.getElementById('admin-notif-dialog').classList.add('active');
             document.getElementById('notif-title').focus();
         }
         
-        // Masquer le dialogue d'envoi de notification admin
         function hideAdminNotificationDialog() {
             document.getElementById('admin-notif-dialog').classList.remove('active');
         }
         
-        // Envoyer une notification admin
         async function sendAdminNotification() {
             const title = document.getElementById('notif-title').value.trim();
             const content = document.getElementById('notif-content').value.trim();
             const type = document.getElementById('notif-type').value;
             
-            // Valider les champs
             let isValid = true;
             
             if (!title) {
@@ -3783,11 +3399,9 @@
             
             if (!isValid) return;
             
-            // Afficher le loader sur le bouton
             setButtonLoading('send-notification-btn', true);
             
             try {
-                // Créer l'événement de notification admin dans Firestore
                 await addDoc(collection(db, "events"), {
                     type: 'admin-notification',
                     title: title,
@@ -3797,36 +3411,29 @@
                     timestamp: serverTimestamp()
                 });
                 
-                // Masquer le loader
                 setButtonLoading('send-notification-btn', false);
                 
-                // Masquer le dialogue
                 hideAdminNotificationDialog();
                 
-                // Afficher une notification
                 showNotification('Notification envoyée avec succès', 'success');
             } catch (error) {
-                console.error(`Erreur lors de l'envoi de la notification: ${error.message}`);
                 showNotification("Erreur lors de l'envoi de la notification", "error");
                 setButtonLoading('send-notification-btn', false);
             }
         }
         
-        // Afficher le dialogue de confirmation de suppression d'événement
         function showDeleteEventConfirmation(eventId) {
             currentEventForDeletion = eventId;
             document.getElementById('delete-event-confirmation').classList.add('active');
             document.getElementById('overlay').classList.add('active');
         }
         
-        // Masquer le dialogue de confirmation de suppression d'événement
         function hideDeleteEventConfirmation() {
             document.getElementById('delete-event-confirmation').classList.remove('active');
             document.getElementById('overlay').classList.remove('active');
             currentEventForDeletion = null;
         }
         
-        // Confirmer la suppression d'un événement
         async function confirmDeleteEvent() {
             if (!currentEventForDeletion) {
                 hideDeleteEventConfirmation();
@@ -3834,38 +3441,40 @@
             }
             
             try {
-                // Supprimer l'événement de Firestore
                 await deleteDoc(doc(db, "events", currentEventForDeletion));
-                console.log(`Événement ${currentEventForDeletion} supprimé avec succès`);
                 showNotification('Événement supprimé', 'success');
             } catch (error) {
-                console.error(`Erreur lors de la suppression de l'événement: ${error.message}`);
                 showNotification("Erreur lors de la suppression de l'événement", "error");
             } finally {
                 hideDeleteEventConfirmation();
             }
         }
         
-        // Afficher le dialogue de confirmation de suppression de compte
         function showDeleteAccountConfirmation() {
             document.getElementById('delete-account-confirmation').classList.add('active');
             document.getElementById('overlay').classList.add('active');
         }
         
-        // Masquer le dialogue de confirmation de suppression de compte
         function hideDeleteAccountConfirmation() {
             document.getElementById('delete-account-confirmation').classList.remove('active');
             document.getElementById('overlay').classList.remove('active');
         }
         
-        // Supprimer le compte utilisateur
+        function showLogoutConfirmation() {
+            document.getElementById('logout-confirmation').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+        
+        function hideLogoutConfirmation() {
+            document.getElementById('logout-confirmation').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+        
         async function deleteAccount() {
-            // Afficher l'écran de chargement
             document.getElementById('loading').style.display = 'flex';
             document.getElementById('loading').querySelector('div:nth-child(3)').innerText = 'Suppression du compte...';
             
             try {
-                // Désabonner de tous les écouteurs
                 Object.keys(chatUnsubscribers).forEach(groupId => {
                     if (chatUnsubscribers[groupId]) {
                         chatUnsubscribers[groupId]();
@@ -3873,29 +3482,24 @@
                 });
                 chatUnsubscribers = {};
                 
-                // Désabonner des événements
                 if (eventsUnsubscribe) {
                     eventsUnsubscribe();
                     eventsUnsubscribe = null;
                 }
                 
-                // Désabonner des pronostics
                 if (forecastsUnsubscribe) {
                     forecastsUnsubscribe();
                     forecastsUnsubscribe = null;
                 }
                 
-                // Désabonner des commentaires
                 if (commentsUnsubscribe) {
                     commentsUnsubscribe();
                     commentsUnsubscribe = null;
                 }
                 
-                // 1. Supprimer les données utilisateur de Firestore
                 const userRef = doc(db, "Users", currentUser.uid);
                 await deleteDoc(userRef);
                 
-                // 2. Supprimer des groupes
                 const groupsRef = collection(db, "groups");
                 const groupsQuery = query(groupsRef, where("members", "array-contains", currentUser.uid));
                 const groupsSnapshot = await getDocs(groupsQuery);
@@ -3903,12 +3507,10 @@
                 for (const groupDoc of groupsSnapshot.docs) {
                     const groupData = groupDoc.data();
                     
-                    // Mettre à jour les membres du groupe
                     await updateDoc(doc(db, "groups", groupDoc.id), {
                         members: arrayRemove(currentUser.uid)
                     });
                     
-                    // Si l'utilisateur était admin, le retirer aussi de la liste des admins
                     if (groupData.admins && groupData.admins.includes(currentUser.uid)) {
                         await updateDoc(doc(db, "groups", groupDoc.id), {
                             admins: arrayRemove(currentUser.uid)
@@ -3916,7 +3518,6 @@
                     }
                 }
                 
-                // 3. Supprimer des commentaires de l'utilisateur
                 const commentsRef = collection(db, "commentaires");
                 const commentsQuery = query(commentsRef, where("userId", "==", currentUser.uid));
                 const commentsSnapshot = await getDocs(commentsQuery);
@@ -3925,41 +3526,32 @@
                     await deleteDoc(doc(db, "commentaires", commentDoc.id));
                 }
                 
-                // 4. Supprimer l'utilisateur de Firebase Auth
                 await deleteUser(currentUser);
                 
-                // Masquer le dialogue de confirmation
                 hideDeleteAccountConfirmation();
                 
-                // Réinitialiser les variables
                 isLoggedIn = false;
                 currentUser = null;
                 currentUserData = null;
                 isAdmin = false;
                 
-                // Afficher un message temporaire de confirmation
                 const loadingText = document.getElementById('loading').querySelector('div:nth-child(3)');
                 loadingText.innerText = 'Compte supprimé avec succès';
                 
-                // Rediriger vers l'écran de connexion après un délai
                 setTimeout(() => {
                     showLoginScreen();
                 }, 2000);
                 
             } catch (error) {
-                console.error('Erreur lors de la suppression du compte:', error);
                 document.getElementById('loading').style.display = 'none';
                 showNotification('Erreur lors de la suppression du compte', 'error');
                 hideDeleteAccountConfirmation();
             }
         }
         
-        // Changer d'onglet dans les pronostics
         function switchForecastTab(tabId) {
-            // Mettre à jour la variable globale
             currentForecastTab = tabId;
             
-            // Mettre à jour les onglets actifs
             document.querySelectorAll('.forecast-tab').forEach(tab => {
                 if (tab.getAttribute('data-tab') === tabId) {
                     tab.classList.add('active');
@@ -3968,7 +3560,6 @@
                 }
             });
             
-            // Mettre à jour le contenu actif
             document.querySelectorAll('.forecasts-content').forEach(content => {
                 if (content.id === `${tabId}-content`) {
                     content.classList.add('active');
@@ -3977,19 +3568,15 @@
                 }
             });
             
-            // Charger les pronostics si nécessaire
             loadForecastsData(tabId);
         }
         
-        // Afficher la section groupes
         function showGroupsSection() {
-            // Si on est dans l'interface de chat, fermer le chat d'abord
             if (document.getElementById('chat-interface').style.display === 'block') {
                 closeChat();
                 return;
             }
             
-            // Mettre à jour les onglets actifs
             document.querySelectorAll('.nav-item').forEach(item => {
                 if (item.getAttribute('data-section') === 'groups') {
                     item.classList.add('active');
@@ -3998,74 +3585,55 @@
                 }
             });
             
-            // Montrer le bouton de menu et masquer le bouton de retour
             document.getElementById('header-menu-button').style.display = 'block';
             document.getElementById('header-back-button').style.display = 'none';
             
-            // Mettre à jour la section active
             currentSection = 'groups';
             
-            // Masquer toutes les sections
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
             
-            // Afficher la section groupes
             document.getElementById('groups-section').classList.add('active');
             
-            // Mettre à jour le titre
             document.getElementById('header-title').textContent = 'Groupes';
             
-            // Mettre à jour le header-action
             document.getElementById('header-action').innerHTML = '<div class="events-button" id="events-button"><i class="fas fa-bell"></i></div>';
             document.getElementById('events-button').addEventListener('click', showEventsSection);
             
-            // Charger les groupes si nécessaire
             loadGroups();
         }
         
-        // Afficher la section "Nous rejoindre"
         function showJoinUsSection() {
-            // Si on est dans l'interface de chat, fermer le chat d'abord
             if (document.getElementById('chat-interface').style.display === 'block') {
                 closeChat();
             }
             
-            // Mettre à jour la section active
             currentSection = 'join-us';
             
-            // Masquer toutes les sections
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
             
-            // Afficher la section "Nous rejoindre"
             document.getElementById('join-us-section').classList.add('active');
             
-            // Mettre à jour le titre
             document.getElementById('header-title').textContent = 'Nous rejoindre';
             
-            // Masquer le bouton de menu et montrer le bouton de retour
             document.getElementById('header-menu-button').style.display = 'none';
             document.getElementById('header-back-button').style.display = 'block';
             
-            // Mettre à jour le header-action (vider)
             document.getElementById('header-action').innerHTML = '';
             
-            // Ajouter un écouteur d'événement pour le bouton de retour
             document.getElementById('header-back-button').addEventListener('click', function() {
                 showGroupsSection();
             });
         }
         
-        // Afficher la section pronostics
         function showForecastsSection() {
-            // Si on est dans l'interface de chat, fermer le chat d'abord
             if (document.getElementById('chat-interface').style.display === 'block') {
                 closeChat();
             }
             
-            // Mettre à jour les onglets actifs
             document.querySelectorAll('.nav-item').forEach(item => {
                 if (item.getAttribute('data-section') === 'forecasts') {
                     item.classList.add('active');
@@ -4074,65 +3642,36 @@
                 }
             });
             
-            // Montrer le bouton de menu et masquer le bouton de retour
             document.getElementById('header-menu-button').style.display = 'block';
             document.getElementById('header-back-button').style.display = 'none';
             
-            // Mettre à jour la section active
             currentSection = 'forecasts';
             
-            // Masquer toutes les sections
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
             
-            // Afficher la section pronostics
             document.getElementById('forecasts-section').classList.add('active');
             
-            // Mettre à jour le titre
             document.getElementById('header-title').textContent = 'Pronostics';
             
-            // Mettre à jour le header-action
             document.getElementById('header-action').innerHTML = '<div class="events-button" id="events-button"><i class="fas fa-bell"></i></div>';
             document.getElementById('events-button').addEventListener('click', showEventsSection);
             
-            // Charger les pronostics de l'onglet actif
             loadForecastsData(currentForecastTab);
             
-            // Charger les commentaires 
             loadComments();
         }
         
-        // Charger les données de pronostics
         async function loadForecastsData(tabType) {
-            console.log(`Chargement des pronostics du type: ${tabType}`);
-            
-            // Réinitialiser ou créer la collection Forecasts si elle n'existe pas
-            try {
-                // Vérifier si la collection existe déjà
-                const forecastsRef = collection(db, "forecasts");
-                const forecastsSnap = await getDocs(forecastsRef);
-                
-                // Si la collection est vide, créer des données démo
-                if (forecastsSnap.empty) {
-                    console.log("Collection de pronostics vide, création de données démo");
-                    await createDemoForecasts();
-                }
-            } catch (error) {
-                console.error("Erreur lors de la vérification de la collection de pronostics:", error);
-            }
-            
-            // Désabonner de l'écouteur précédent si présent
             if (forecastsUnsubscribe) {
                 forecastsUnsubscribe();
                 forecastsUnsubscribe = null;
             }
             
-            // Récupérer la liste appropriée
             const listElement = document.getElementById(`${tabType}-list`);
             if (!listElement) return;
             
-            // Afficher un indicateur de chargement
             listElement.innerHTML = `
                 <div style="text-align: center; padding: 20px;">
                     <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary-color);"></i>
@@ -4141,7 +3680,6 @@
             `;
             
             try {
-                // Configurer l'écouteur pour les pronostics
                 const forecastsRef = collection(db, "forecasts");
                 const q = query(
                     forecastsRef, 
@@ -4162,10 +3700,8 @@
                         return;
                     }
                     
-                    // Vider la liste
                     listElement.innerHTML = '';
                     
-                    // Créer un fragment pour ajouter tous les pronostics en une seule fois
                     const fragment = document.createDocumentFragment();
                     
                     snapshot.forEach((doc) => {
@@ -4174,11 +3710,9 @@
                         fragment.appendChild(forecastElement);
                     });
                     
-                    // Ajouter tous les pronostics
                     listElement.appendChild(fragment);
                 });
             } catch (error) {
-                console.error(`Erreur lors du chargement des pronostics: ${error.message}`);
                 listElement.innerHTML = `
                     <div class="no-forecasts">
                         <i class="fas fa-exclamation-circle"></i>
@@ -4189,210 +3723,10 @@
             }
         }
         
-        // Créer des pronostics de démonstration
-        async function createDemoForecasts() {
-            try {
-                const forecastsRef = collection(db, "forecasts");
-                
-                // Données pour les "safes du jour"
-                const safesDemoData = [
-                    {
-                        type: "safes",
-                        league: "Ligue 1",
-                        date: new Date(Date.now() + 86400000), // demain
-                        homeTeam: "PSG",
-                        awayTeam: "Marseille",
-                        prediction: "1", // Victoire domicile
-                        confidence: 85,
-                        status: "pending",
-                        createdAt: serverTimestamp()
-                    },
-                    {
-                        type: "safes",
-                        league: "Premier League",
-                        date: new Date(Date.now() + 86400000 * 2), // après-demain
-                        homeTeam: "Manchester City",
-                        awayTeam: "Liverpool",
-                        prediction: "Over 2.5", // Plus de 2.5 buts
-                        confidence: 78,
-                        status: "pending",
-                        createdAt: serverTimestamp()
-                    },
-                    {
-                        type: "safes",
-                        league: "Serie A",
-                        date: new Date(Date.now() - 86400000), // hier
-                        homeTeam: "Juventus",
-                        awayTeam: "Milan AC",
-                        prediction: "X", // Match nul
-                        confidence: 70,
-                        result: "X",
-                        status: "win",
-                        createdAt: serverTimestamp()
-                    }
-                ];
-                
-                // Données pour les "scores exacts" avec 3 options par match
-                const exactDemoData = [
-                    {
-                        type: "exact",
-                        league: "Liga",
-                        date: new Date(Date.now() + 86400000), // demain
-                        homeTeam: "Real Madrid",
-                        awayTeam: "Barcelone",
-                        scoreOptions: ["2-1", "2-0", "3-1"],
-                        primaryOption: "2-1",
-                        homeScore: 2,
-                        awayScore: 1,
-                        confidence: 65,
-                        status: "pending",
-                        createdAt: serverTimestamp()
-                    },
-                    {
-                        type: "exact",
-                        league: "Bundesliga",
-                        date: new Date(Date.now() + 86400000 * 3), // dans 3 jours
-                        homeTeam: "Bayern Munich",
-                        awayTeam: "Dortmund",
-                        scoreOptions: ["3-2", "3-1", "2-1"],
-                        primaryOption: "3-2",
-                        homeScore: 3,
-                        awayScore: 2,
-                        confidence: 55,
-                        status: "pending",
-                        createdAt: serverTimestamp()
-                    },
-                    {
-                        type: "exact",
-                        league: "Premier League",
-                        date: new Date(Date.now() - 86400000 * 2), // il y a 2 jours
-                        homeTeam: "Chelsea",
-                        awayTeam: "Arsenal",
-                        scoreOptions: ["1-1", "1-2", "2-2"],
-                        primaryOption: "1-1",
-                        homeScore: 1,
-                        awayScore: 1,
-                        homeScoreResult: 2,
-                        awayScoreResult: 1,
-                        status: "loss",
-                        createdAt: serverTimestamp()
-                    }
-                ];
-                
-                // Données pour les "prédictions IA"
-                const aiDemoData = [
-                    {
-                        type: "ai",
-                        league: "Ligue des Champions",
-                        date: new Date(Date.now() + 86400000 * 4), // dans 4 jours
-                        homeTeam: "PSG",
-                        awayTeam: "Manchester City",
-                        prediction: "Victoire de Manchester City",
-                        confidence: 72,
-                        analysis: "Manchester City a un meilleur bilan en déplacement et PSG a des absences clés en défense.",
-                        status: "pending",
-                        createdAt: serverTimestamp()
-                    },
-                    {
-                        type: "ai",
-                        league: "Europa League",
-                        date: new Date(Date.now() + 86400000 * 5), // dans 5 jours
-                        homeTeam: "AS Roma",
-                        awayTeam: "Arsenal",
-                        prediction: "Match nul",
-                        confidence: 68,
-                        analysis: "Les deux équipes ont un style de jeu similaire et les statistiques suggèrent un match équilibré.",
-                        status: "pending",
-                        createdAt: serverTimestamp()
-                    },
-                    {
-                        type: "ai",
-                        league: "Premier League",
-                        date: new Date(Date.now() - 86400000), // hier
-                        homeTeam: "Tottenham",
-                        awayTeam: "Manchester United",
-                        prediction: "Victoire de Tottenham (2-0)",
-                        homeScoreResult: 2,
-                        awayScoreResult: 0,
-                        confidence: 65,
-                        analysis: "Tottenham est en grande forme à domicile et Manchester United a des problèmes défensifs.",
-                        status: "win",
-                        createdAt: serverTimestamp()
-                    }
-                ];
-                
-                // Ajouter tous les pronostics de démo
-                const allDemoForecasts = [...safesDemoData, ...exactDemoData, ...aiDemoData];
-                
-                for (const forecast of allDemoForecasts) {
-                    await addDoc(forecastsRef, forecast);
-                }
-                
-                console.log("Données de démonstration de pronostics créées avec succès");
-                
-                // Créer quelques commentaires de démonstration
-                await createDemoComments();
-            } catch (error) {
-                console.error("Erreur lors de la création des données de démonstration:", error);
-            }
-        }
-        
-        // Créer des commentaires de démonstration
-        async function createDemoComments() {
-            try {
-                // Vérifier si la collection existe déjà et contient des données
-                const commentsRef = collection(db, "commentaires");
-                const commentsSnap = await getDocs(commentsRef);
-                
-                if (!commentsSnap.empty) {
-                    // La collection existe déjà et contient des données
-                    return;
-                }
-                
-                const demoComments = [
-                    {
-                        content: "Les pronostics sur la Premier League sont vraiment précis cette saison !",
-                        userName: "FootballFan22",
-                        userId: "demo_user_1",
-                        userIsAdmin: false,
-                        timestamp: Timestamp.fromDate(new Date(Date.now() - 86400000 * 2)), // Il y a 2 jours
-                        likes: 5
-                    },
-                    {
-                        content: "J'ai suivi le pronostic PSG-Lyon et c'était exactement comme prédit. Merci pour ces analyses !",
-                        userName: "ParisSG_Fan",
-                        userId: "demo_user_2",
-                        userIsAdmin: false,
-                        timestamp: Timestamp.fromDate(new Date(Date.now() - 86400000)), // Il y a 1 jour
-                        likes: 3
-                    },
-                    {
-                        content: "Bonjour à tous ! Nous sommes ravis de vous présenter notre nouvelle section de pronostics. N'hésitez pas à nous faire vos retours !",
-                        userName: "Admin",
-                        userId: "admin_user",
-                        userIsAdmin: true,
-                        timestamp: Timestamp.fromDate(new Date(Date.now() - 86400000 * 5)), // Il y a 5 jours
-                        likes: 10
-                    }
-                ];
-                
-                for (const comment of demoComments) {
-                    await addDoc(commentsRef, comment);
-                }
-                
-                console.log("Commentaires de démonstration créés avec succès");
-                
-            } catch (error) {
-                console.error("Erreur lors de la création des commentaires de démonstration:", error);
-            }
-        }
-        
-        // Créer un élément de pronostic
         function createForecastElement(forecastData, type) {
             const forecastElement = document.createElement('div');
             forecastElement.className = 'forecast-item';
             
-            // Configuration commune
             let statusClass = 'pending';
             let statusText = 'À venir';
             
@@ -4404,7 +3738,6 @@
                 statusText = 'Perdu';
             }
             
-            // Formater la date
             let formattedDate = 'Date inconnue';
             if (forecastData.date) {
                 let date;
@@ -4422,11 +3755,9 @@
                 });
             }
             
-            // Contenu spécifique au type
             let mainContent = '';
             
             if (type === 'safes') {
-                // Format pour les safes du jour
                 mainContent = `
                     <div class="forecast-header">
                         <div>${forecastData.league}</div>
@@ -4452,7 +3783,6 @@
                     </div>
                 `;
             } else if (type === 'exact') {
-                // Format pour les scores exacts avec 3 options
                 let resultDisplay = '';
                 if (forecastData.status !== 'pending') {
                     resultDisplay = `
@@ -4462,7 +3792,6 @@
                     `;
                 }
                 
-                // Affichage des options de score
                 const scoreOptions = forecastData.scoreOptions || [forecastData.primaryOption || `${forecastData.homeScore}-${forecastData.awayScore}`];
                 const scoreOptionsHTML = `
                     <div class="score-options">
@@ -4501,7 +3830,6 @@
                     ${resultDisplay}
                 `;
             } else if (type === 'ai') {
-                // Format pour les prédictions IA
                 let resultDisplay = '';
                 if (forecastData.status !== 'pending') {
                     resultDisplay = `
@@ -4541,7 +3869,6 @@
                 `;
             }
             
-            // Barre de confiance et footer communs
             const confidenceBar = `
                 <div class="forecast-confidence">
                     <span>Confiance:</span>
@@ -4560,35 +3887,26 @@
             return forecastElement;
         }
         
-        // Afficher la section événements
         function showEventsSection() {
-            // Si on est dans l'interface de chat, fermer le chat d'abord
             if (document.getElementById('chat-interface').style.display === 'block') {
                 closeChat();
             }
             
-            // Mettre à jour la section active
             currentSection = 'events';
             
-            // Masquer toutes les sections
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
             
-            // Afficher la section événements
             document.getElementById('events-section').classList.add('active');
             
-            // Mettre à jour le titre
             document.getElementById('header-title').textContent = 'Événements';
             
-            // Montrer le bouton de menu et masquer le bouton de retour
             document.getElementById('header-menu-button').style.display = 'block';
             document.getElementById('header-back-button').style.display = 'none';
             
-            // Mettre à jour les actions du header (vider)
             document.getElementById('header-action').innerHTML = '';
             
-            // Afficher ou masquer le bouton de création de notification selon le statut admin
             const createNotifBtn = document.getElementById('create-notification-btn');
             if (createNotifBtn) {
                 if (isAdmin) {
@@ -4598,85 +3916,64 @@
                 }
             }
             
-            // Lire les événements
             listenToEvents();
         }
         
-        // Afficher la section profil
         function showProfileSection() {
-            // Si on est dans l'interface de chat, fermer le chat d'abord
             if (document.getElementById('chat-interface').style.display === 'block') {
                 closeChat();
             }
             
-            // Mettre à jour la section active
             currentSection = 'profile';
             
-            // Masquer toutes les sections
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
             
-            // Afficher la section profil
             document.getElementById('profile-section').classList.add('active');
             
-            // Mettre à jour le titre
             document.getElementById('header-title').textContent = 'Profil';
             
-            // Masquer le bouton de menu et montrer le bouton de retour
             document.getElementById('header-menu-button').style.display = 'none';
             document.getElementById('header-back-button').style.display = 'block';
             
-            // Mettre à jour le header-action (vider)
             document.getElementById('header-action').innerHTML = '';
             
-            // Ajouter un écouteur d'événement pour le bouton de retour
             document.getElementById('header-back-button').addEventListener('click', function() {
                 showGroupsSection();
             });
         }
         
-        // Afficher la section À propos
         function showAboutSection() {
-            // Si on est dans l'interface de chat, fermer le chat d'abord
             if (document.getElementById('chat-interface').style.display === 'block') {
                 closeChat();
             }
             
-            // Mettre à jour la section active
             currentSection = 'about';
             
-            // Masquer toutes les sections
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
             
-            // Afficher la section à propos
             document.getElementById('about-section').classList.add('active');
             
-            // Mettre à jour le titre
             document.getElementById('header-title').textContent = 'À propos';
             
-            // Masquer le bouton de menu et montrer le bouton de retour
             document.getElementById('header-menu-button').style.display = 'none';
             document.getElementById('header-back-button').style.display = 'block';
             
-            // Mettre à jour le header-action (vider)
             document.getElementById('header-action').innerHTML = '';
             
-            // Ajouter un écouteur d'événement pour le bouton de retour
             document.getElementById('header-back-button').addEventListener('click', function() {
                 showGroupsSection();
             });
         }
         
-        // Mettre à jour le nom d'utilisateur
         async function updateDisplayName() {
             if (!profileNameChanged) return;
             
             const displayName = document.getElementById('edit-display-name').value.trim();
             
-            // Validation
             if (!displayName) {
                 document.getElementById('edit-display-name-error').style.display = 'block';
                 return;
@@ -4684,72 +3981,59 @@
                 document.getElementById('edit-display-name-error').style.display = 'none';
             }
             
-            // Afficher le loader
             document.getElementById('save-display-name-btn').disabled = true;
             
             try {
-                // Mettre à jour le profil dans Firestore
                 const userRef = doc(db, "Users", currentUser.uid);
                 await updateDoc(userRef, {
                     displayName: displayName
                 });
                 
-                // Mettre à jour les données locales
                 currentUserData.displayName = displayName;
                 
-                // Mettre à jour l'interface
                 updateProfileInfo();
                 
                 showNotification('Nom d\'utilisateur mis à jour', 'success');
                 profileNameChanged = false;
             } catch (error) {
-                console.error('Erreur lors de la mise à jour du nom d\'utilisateur:', error);
                 showNotification('Erreur lors de la mise à jour du nom d\'utilisateur', 'error');
             } finally {
                 document.getElementById('save-display-name-btn').disabled = false;
             }
         }
         
-        // Mettre à jour l'image du profil
         async function updateProfileImage() {
             if (!profileImageFile) {
                 showNotification('Aucune nouvelle image sélectionnée', 'info');
                 return;
             }
             
-            // Afficher le loader
             setButtonLoading('save-profile-image-btn', true);
             
             try {
-                // Mettre à jour le profil dans Firestore
                 const userRef = doc(db, "Users", currentUser.uid);
                 await updateDoc(userRef, {
                     photoURL: profileImageFile
                 });
                 
-                // Mettre à jour les données locales
                 currentUserData.photoURL = profileImageFile;
                 
-                // Mettre à jour l'interface
                 updateProfileInfo();
                 
                 showNotification('Photo de profil mise à jour', 'success');
-                profileImageFile = null; // Réinitialiser
+                profileImageFile = null;
             } catch (error) {
-                console.error('Erreur lors de la mise à jour de la photo de profil:', error);
                 showNotification('Erreur lors de la mise à jour de la photo', 'error');
             } finally {
                 setButtonLoading('save-profile-image-btn', false);
             }
         }
         
-        // Mettre à jour le nom du groupe
         async function updateGroupName() {
             if (!groupNameChanged || !editingGroupId) return;
             
             const groupName = document.getElementById('edit-group-name').value.trim();
             
-            // Validation
             if (!groupName) {
                 document.getElementById('edit-group-name-error').style.display = 'block';
                 return;
@@ -4757,42 +4041,35 @@
                 document.getElementById('edit-group-name-error').style.display = 'none';
             }
             
-            // Désactiver le bouton pendant la sauvegarde
             document.getElementById('save-group-name-btn').disabled = true;
             
             try {
-                // Mettre à jour le groupe dans Firestore
                 const groupRef = doc(db, "groups", editingGroupId);
                 await updateDoc(groupRef, {
                     name: groupName,
                     lastUpdated: serverTimestamp()
                 });
                 
-                // Si on est dans le groupe, mettre à jour les données et l'interface
                 if (currentGroupId === editingGroupId) {
                     currentGroup = groupName;
                     if (currentGroupData) {
                         currentGroupData.name = groupName;
                     }
                     
-                    // Mettre à jour l'en-tête
                     updateGroupHeader();
                 }
                 
                 showNotification('Nom du groupe mis à jour', 'success');
                 groupNameChanged = false;
                 
-                // Recharger la liste des groupes
                 loadGroups();
             } catch (error) {
-                console.error('Erreur lors de la mise à jour du nom du groupe:', error);
                 showNotification('Erreur lors de la mise à jour du nom', 'error');
             } finally {
                 document.getElementById('save-group-name-btn').disabled = false;
             }
         }
         
-        // Mettre à jour l'en-tête du groupe
         function updateGroupHeader() {
             if (!currentGroupData) return;
             
@@ -4806,24 +4083,20 @@
             }
         }
         
-        // Mettre à jour la description du groupe
         async function updateGroupDescription() {
             if (!groupDescriptionChanged || !editingGroupId) return;
             
             const groupDescription = document.getElementById('edit-group-description').value.trim();
             
-            // Désactiver le bouton pendant la sauvegarde
             document.getElementById('save-group-description-btn').disabled = true;
             
             try {
-                // Mettre à jour le groupe dans Firestore
                 const groupRef = doc(db, "groups", editingGroupId);
                 await updateDoc(groupRef, {
                     description: groupDescription,
                     lastUpdated: serverTimestamp()
                 });
                 
-                // Si on est dans le groupe, mettre à jour les données
                 if (currentGroupId === editingGroupId && currentGroupData) {
                     currentGroupData.description = groupDescription;
                 }
@@ -4831,27 +4104,22 @@
                 showNotification('Description du groupe mise à jour', 'success');
                 groupDescriptionChanged = false;
             } catch (error) {
-                console.error('Erreur lors de la mise à jour de la description:', error);
                 showNotification('Erreur lors de la mise à jour de la description', 'error');
             } finally {
                 document.getElementById('save-group-description-btn').disabled = false;
             }
         }
         
-        // Mettre à jour les permissions du groupe
         async function updateGroupPermissions() {
             if (!groupPermissionsChanged || !editingGroupId) return;
             
             const allowPublicMessages = document.getElementById('edit-group-public-messages').checked;
             
-            // Désactiver le bouton pendant la sauvegarde
             document.getElementById('save-group-permissions-btn').disabled = true;
             
             try {
-                // Mettre à jour le groupe dans Firestore
                 const groupRef = doc(db, "groups", editingGroupId);
                 
-                // Récupérer d'abord les données actuelles pour vérifier si les permissions changent
                 const groupDoc = await getDoc(groupRef);
                 if (!groupDoc.exists()) {
                     throw new Error("Groupe introuvable");
@@ -4865,7 +4133,6 @@
                     lastUpdated: serverTimestamp()
                 });
                 
-                // Si les permissions ont changé, enregistrer un événement
                 if (permissionsChanged) {
                     try {
                         await addEventLog({
@@ -4877,76 +4144,62 @@
                             timestamp: new Date()
                         });
                     } catch (error) {
-                        console.error("Erreur lors de l'enregistrement de l'événement:", error);
                     }
                 }
                 
-                // Si on est dans le groupe, mettre à jour les données et l'interface
                 if (currentGroupId === editingGroupId) {
                     if (currentGroupData) {
                         currentGroupData.allowPublicMessages = allowPublicMessages;
                     }
                     
-                    // Mettre à jour l'en-tête
                     updateGroupHeader();
                     
-                    // Vérifier les permissions d'envoi
                     checkSendPermissions();
                 }
                 
                 showNotification('Permissions du groupe mises à jour', 'success');
                 groupPermissionsChanged = false;
             } catch (error) {
-                console.error('Erreur lors de la mise à jour des permissions:', error);
                 showNotification('Erreur lors de la mise à jour des permissions', 'error');
             } finally {
                 document.getElementById('save-group-permissions-btn').disabled = false;
             }
         }
         
-        // Mettre à jour l'image du groupe
         async function updateGroupImage() {
             if (!groupImageFile || !editingGroupId) {
                 showNotification('Aucune nouvelle image sélectionnée', 'info');
                 return;
             }
             
-            // Afficher le loader
             setButtonLoading('save-group-image-btn', true);
             
             try {
-                // Mettre à jour le groupe dans Firestore
                 const groupRef = doc(db, "groups", editingGroupId);
                 await updateDoc(groupRef, {
                     imageURL: groupImageFile,
                     lastUpdated: serverTimestamp()
                 });
                 
-                // Si on est dans le groupe actuel, mettre à jour les données
                 if (currentGroupId === editingGroupId && currentGroupData) {
                     currentGroupData.imageURL = groupImageFile;
                 }
                 
                 showNotification('Image du groupe mise à jour', 'success');
-                groupImageFile = null; // Réinitialiser
+                groupImageFile = null;
                 
-                // Recharger la liste des groupes
                 loadGroups();
             } catch (error) {
-                console.error('Erreur lors de la mise à jour de l\'image:', error);
                 showNotification('Erreur lors de la mise à jour de l\'image', 'error');
             } finally {
                 setButtonLoading('save-group-image-btn', false);
             }
         }
         
-        // Configuration des événements d'authentification
         function setupAuthEvents() {
-            // Tabs d'authentification
             document.getElementById('login-tab').addEventListener('click', () => changeAuthTab('login'));
             document.getElementById('register-tab').addEventListener('click', () => changeAuthTab('register'));
             
-            // Navigation entre les formulaires
             document.getElementById('goto-register').addEventListener('click', (e) => {
                 e.preventDefault();
                 changeAuthTab('register');
@@ -4957,18 +4210,15 @@
                 changeAuthTab('login');
             });
             
-            // Boutons d'action
             document.getElementById('loginBtn').addEventListener('click', loginUser);
             document.getElementById('registerBtn').addEventListener('click', registerUser);
             
-            // Validation en temps réel
             document.getElementById('login-email').addEventListener('input', validateLoginEmail);
             document.getElementById('login-password').addEventListener('input', validateLoginPassword);
             document.getElementById('register-email').addEventListener('input', validateRegisterEmail);
             document.getElementById('register-password').addEventListener('input', validateRegisterPassword);
             document.getElementById('register-confirm-password').addEventListener('input', validateRegisterConfirmPassword);
             
-            // Validation à la soumission
             document.getElementById('login-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 if (validateLoginForm()) {
@@ -4984,7 +4234,6 @@
             });
         }
         
-        // Encoder l'image en base64
         function encodeImageToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -4998,7 +4247,6 @@
             });
         }
         
-        // Gérer la sélection de l'image de profil
         async function handleProfileImageSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -5009,30 +4257,24 @@
             }
             
             try {
-                // Vérifier la taille de l'image (max 5 Mo)
                 if (file.size > 5 * 1024 * 1024) {
                     showNotification('L\'image est trop volumineuse (max 5 Mo)', 'error');
                     return;
                 }
                 
-                // Encoder l'image en base64
                 const base64Image = await encodeImageToBase64(file);
                 profileImageFile = base64Image;
                 
-                // Afficher l'aperçu de l'image
                 const preview = document.getElementById('profile-image-preview');
                 preview.innerHTML = `<img src="${base64Image}" alt="Profile Image">`;
                 
-                // Activer le bouton de sauvegarde
                 document.getElementById('save-profile-image-btn').disabled = false;
                 
             } catch (error) {
-                console.error('Erreur lors de l\'encodage de l\'image:', error);
                 showNotification('Erreur lors du traitement de l\'image', 'error');
             }
         }
         
-        // Gérer la sélection de l'image du nouveau groupe
         async function handleNewGroupImageSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -5043,17 +4285,14 @@
             }
             
             try {
-                // Vérifier la taille de l'image (max 5 Mo)
                 if (file.size > 5 * 1024 * 1024) {
                     showNotification('L\'image est trop volumineuse (max 5 Mo)', 'error');
                     return;
                 }
                 
-                // Encoder l'image en base64
                 const base64Image = await encodeImageToBase64(file);
                 groupImageFile = base64Image;
                 
-                // Afficher l'aperçu de l'image
                 const preview = document.getElementById('new-group-image-preview');
                 preview.innerHTML = `
                     <img src="${base64Image}" alt="Group Image">
@@ -5062,18 +4301,15 @@
                     </div>
                 `;
                 
-                // Réattacher l'événement de clic
                 document.getElementById('new-group-image-upload').addEventListener('click', () => {
                     document.getElementById('new-group-image-input').click();
                 });
                 
             } catch (error) {
-                console.error('Erreur lors de l\'encodage de l\'image:', error);
                 showNotification('Erreur lors du traitement de l\'image', 'error');
             }
         }
         
-        // Gérer la sélection de l'image pour la modification du groupe
         async function handleEditGroupImageSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -5084,17 +4320,14 @@
             }
             
             try {
-                // Vérifier la taille de l'image (max 5 Mo)
                 if (file.size > 5 * 1024 * 1024) {
                     showNotification('L\'image est trop volumineuse (max 5 Mo)', 'error');
                     return;
                 }
                 
-                // Encoder l'image en base64
                 const base64Image = await encodeImageToBase64(file);
                 groupImageFile = base64Image;
                 
-                // Afficher l'aperçu de l'image
                 const preview = document.getElementById('edit-group-image-preview');
                 preview.innerHTML = `
                     <img src="${base64Image}" alt="Group Image">
@@ -5103,36 +4336,28 @@
                     </div>
                 `;
                 
-                // Réattacher l'événement de clic
                 document.getElementById('edit-group-image-upload').addEventListener('click', () => {
                     document.getElementById('edit-group-image-input').click();
                 });
                 
-                // Activer le bouton de sauvegarde
                 document.getElementById('save-group-image-btn').disabled = false;
                 
             } catch (error) {
-                console.error('Erreur lors de l\'encodage de l\'image:', error);
                 showNotification('Erreur lors du traitement de l\'image', 'error');
             }
         }
         
-        // Afficher le dialogue de modification du profil
         function showProfileEditDialog() {
             document.getElementById('profile-edit-dialog').classList.add('active');
             
-            // Pré-remplir les champs avec les valeurs actuelles
             document.getElementById('edit-display-name').value = currentUserData.displayName || '';
             
-            // Désactiver les boutons de sauvegarde au départ
             document.getElementById('save-display-name-btn').disabled = true;
             document.getElementById('save-profile-image-btn').disabled = true;
             
-            // Réinitialiser les flags de changement
             profileNameChanged = false;
             profileImageFile = null;
             
-            // Afficher l'image de profil si elle existe
             const profileImagePreview = document.getElementById('profile-image-preview');
             if (currentUserData.photoURL) {
                 profileImagePreview.innerHTML = `<img src="${currentUserData.photoURL}" alt="Profile">`;
@@ -5141,17 +4366,14 @@
             }
         }
         
-        // Masquer le dialogue de modification du profil
         function hideProfileEditDialog() {
             document.getElementById('profile-edit-dialog').classList.remove('active');
             
-            // Réinitialiser les valeurs
             profileNameChanged = false;
             profileImageFile = null;
             document.getElementById('profile-image-input').value = '';
         }
         
-        // Filtrer les groupes en fonction de la recherche
         function filterGroups(searchText) {
             const groupItems = document.querySelectorAll('.chat-item');
             const lowerSearchText = searchText.toLowerCase();
@@ -5165,7 +4387,6 @@
                 }
             });
             
-            // Si aucun résultat après filtrage
             let visibleGroups = 0;
             groupItems.forEach(item => {
                 if (item.style.display !== 'none') {
@@ -5175,7 +4396,6 @@
             
             const emptyState = document.querySelector('#groups-list .empty-state');
             if (visibleGroups === 0 && groupItems.length > 0) {
-                // Créer un état vide pour la recherche si ça n'existe pas déjà
                 if (emptyState) {
                     emptyState.style.display = 'block';
                     emptyState.querySelector('.empty-state-title').textContent = 'Aucun résultat';
@@ -5192,20 +4412,17 @@
                 }
             } else if (emptyState) {
                 if (groupItems.length === 0) {
-                    // Si aucun groupe n'existe
                     emptyState.style.display = 'block';
                     emptyState.querySelector('.empty-state-title').textContent = 'Aucun groupe';
                     emptyState.querySelector('.empty-state-text').textContent = isAdmin ? 
                         'Créez un nouveau groupe en appuyant sur le bouton +' : 
                         'Aucun groupe disponible pour le moment';
                 } else {
-                    // Si des groupes existent mais sont filtrés
                     emptyState.style.display = visibleGroups > 0 ? 'none' : 'block';
                 }
             }
         }
         
-        // Filtrer les événements en fonction de la recherche
         function filterEvents(searchText) {
             const eventItems = document.querySelectorAll('.event-item');
             const lowerSearchText = searchText.toLowerCase();
@@ -5221,7 +4438,6 @@
                 }
             });
             
-            // Si aucun résultat après filtrage
             let visibleEvents = 0;
             eventItems.forEach(item => {
                 if (item.style.display !== 'none') {
@@ -5231,7 +4447,6 @@
             
             const emptyState = document.querySelector('#events-list .empty-state');
             if (visibleEvents === 0 && eventItems.length > 0) {
-                // Créer un état vide pour la recherche
                 if (emptyState) {
                     emptyState.style.display = 'block';
                     emptyState.querySelector('.empty-state-title').textContent = 'Aucun résultat';
@@ -5248,47 +4463,37 @@
                 }
             } else if (emptyState) {
                 if (eventItems.length === 0) {
-                    // Si aucun événement n'existe
                     emptyState.style.display = 'block';
                     emptyState.querySelector('.empty-state-title').textContent = 'Aucun événement';
                     emptyState.querySelector('.empty-state-text').textContent = 'Les événements apparaîtront ici';
                 } else {
-                    // Si des événements existent mais sont filtrés
                     emptyState.style.display = visibleEvents > 0 ? 'none' : 'block';
                 }
             }
         }
         
-        // Gestion des événements tactiles
         function handleGlobalTouchStart(e) {
-            // Vérifier si l'élément touché est un message
             const messageElement = findParentMessage(e.target);
             if (messageElement) {
                 const messageId = messageElement.getAttribute('data-id');
                 const messageFrom = messageElement.getAttribute('data-from');
                 
-                // Ne pas traiter les appuis longs pour les messages des autres utilisateurs
                 if (messageFrom !== currentUser.uid) return;
                 
-                // Démarrer un timer pour l'appui long
                 longPressTimer = setTimeout(() => {
                     try {
-                        // Vibration pour feedback tactile
                         if (navigator.vibrate) {
                             navigator.vibrate(50);
                         }
                         
-                        // Afficher le menu contextuel pour le message
                         showContextMenu(messageElement, messageId);
                     } catch (error) {
-                        console.error("Erreur lors de l'affichage du menu contextuel:", error);
                     }
                 }, longPressDuration);
             }
         }
         
         function handleGlobalTouchEnd(e) {
-            // Annuler le timer d'appui long si on relâche
             if (longPressTimer) {
                 clearTimeout(longPressTimer);
                 longPressTimer = null;
@@ -5296,7 +4501,6 @@
         }
         
         function handleGlobalTouchMove(e) {
-            // Annuler le timer d'appui long si on bouge le doigt
             if (longPressTimer) {
                 clearTimeout(longPressTimer);
                 longPressTimer = null;
@@ -5304,14 +4508,12 @@
         }
         
         function handleGlobalTouchCancel(e) {
-            // Annuler le timer d'appui long si le tactile est annulé
             if (longPressTimer) {
                 clearTimeout(longPressTimer);
                 longPressTimer = null;
             }
         }
         
-        // Trouver l'élément parent de type message
         function findParentMessage(element) {
             while (element && !element.classList.contains('message')) {
                 element = element.parentElement;
@@ -5319,7 +4521,6 @@
             return element;
         }
         
-        // Afficher le menu contextuel pour un message
         function showContextMenu(messageElement, messageId) {
             if (!messageElement || !messageId) return;
             
@@ -5327,10 +4528,8 @@
                 const rect = messageElement.getBoundingClientRect();
                 const menu = document.getElementById('message-context-menu');
                 
-                // Positionner le menu près du message
                 menu.style.top = `${rect.top}px`;
                 
-                // Si c'est un message envoyé (à droite), aligner à droite
                 if (messageElement.classList.contains('message-sent')) {
                     menu.style.right = `${window.innerWidth - rect.right}px`;
                     menu.style.left = 'auto';
@@ -5339,21 +4538,17 @@
                     menu.style.right = 'auto';
                 }
                 
-                // Afficher le menu
                 menu.style.display = 'block';
                 activeContextMenu = menu;
                 
-                // Stocker la référence au message pour les actions
                 currentMessageForAction = {
                     element: messageElement,
                     id: messageId
                 };
             } catch (error) {
-                console.error("Erreur lors de l'affichage du menu contextuel:", error);
             }
         }
         
-        // Masquer le menu contextuel
         function hideContextMenu() {
             try {
                 const menu = document.getElementById('message-context-menu');
@@ -5362,25 +4557,21 @@
                 }
                 activeContextMenu = null;
             } catch (error) {
-                console.error("Erreur lors de la fermeture du menu contextuel:", error);
             }
         }
         
-        // Afficher la confirmation de suppression
         function showDeleteConfirmation() {
             hideContextMenu();
             document.getElementById('delete-confirmation').classList.add('active');
             document.getElementById('overlay').classList.add('active');
         }
         
-        // Masquer la confirmation de suppression
         function hideDeleteConfirmation() {
             document.getElementById('delete-confirmation').classList.remove('active');
             document.getElementById('overlay').classList.remove('active');
             currentMessageForAction = null;
         }
         
-        // Confirmer la suppression d'un message
         async function confirmDeleteMessage() {
             if (!currentMessageForAction || !currentGroupId) {
                 hideDeleteConfirmation();
@@ -5391,17 +4582,13 @@
             const messageElement = currentMessageForAction.element;
             
             try {
-                // Animation de suppression
                 messageElement.classList.add('deleting');
                 
-                // Attendre un peu que l'animation commence
                 setTimeout(async () => {
                     try {
-                        // Supprimer le message de Firestore
                         const messageRef = doc(db, "groups", currentGroupId, "messages", messageId);
                         await deleteDoc(messageRef);
                         
-                        // Enregistrer l'événement de suppression
                         await addEventLog({
                             type: 'message-delete',
                             groupId: currentGroupId,
@@ -5410,27 +4597,21 @@
                             timestamp: new Date()
                         });
                         
-                        console.log(`Message ${messageId} supprimé avec succès`);
                         showNotification('Message supprimé', 'success');
                     } catch (error) {
-                        console.error(`Erreur lors de la suppression du message: ${error.message}`);
                         showNotification('Erreur lors de la suppression du message', 'error');
                         
-                        // Retirer la classe d'animation pour revenir à la normale
                         messageElement.classList.remove('deleting');
                     }
                 }, 100);
                 
-                // Fermer la confirmation
                 hideDeleteConfirmation();
             } catch (error) {
-                console.error(`Erreur lors de la suppression: ${error.message}`);
                 showNotification('Erreur lors de la suppression', 'error');
                 hideDeleteConfirmation();
             }
         }
         
-        // Copier le texte d'un message
         function copyMessageText() {
             if (!currentMessageForAction) {
                 hideContextMenu();
@@ -5438,20 +4619,16 @@
             }
             
             try {
-                // Récupérer le texte du message
                 const messageElement = currentMessageForAction.element;
                 const messageText = messageElement.querySelector('div:not(.message-time):not(.message-sender)').textContent;
                 
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(messageText).then(() => {
-                        console.log('Texte copié dans le presse-papiers');
                         showNotification('Texte copié dans le presse-papiers', 'success');
                     }).catch(err => {
-                        console.error('Erreur lors de la copie: ', err);
                         showNotification('Erreur lors de la copie du texte', 'error');
                     });
                 } else {
-                    // Fallback pour les navigateurs qui ne supportent pas l'API Clipboard
                     const textArea = document.createElement('textarea');
                     textArea.value = messageText;
                     document.body.appendChild(textArea);
@@ -5465,34 +4642,29 @@
                             showNotification('Impossible de copier le texte', 'error');
                         }
                     } catch (err) {
-                        console.error('Erreur lors de la copie: ', err);
                         showNotification('Erreur lors de la copie du texte', 'error');
                     }
                     
                     document.body.removeChild(textArea);
                 }
             } catch (error) {
-                console.error("Erreur lors de la copie du texte:", error);
                 showNotification('Erreur lors de la copie du texte', 'error');
             } finally {
                 hideContextMenu();
             }
         }
         
-        // Afficher le dialogue de création de groupe
         function showCreateGroupDialog() {
             if (!isAdmin) {
                 showNotification("Seuls les administrateurs peuvent créer des groupes", "error");
                 return;
             }
             
-            // Réinitialiser le formulaire
             document.getElementById('group-name').value = '';
             document.getElementById('group-description').value = '';
             document.getElementById('group-public-messages').checked = true;
             document.getElementById('group-name-error').style.display = 'none';
             
-            // Réinitialiser l'image
             groupImageFile = null;
             document.getElementById('new-group-image-preview').innerHTML = `
                 <i class="fas fa-users" style="color: white; font-size: 40px;"></i>
@@ -5502,7 +4674,6 @@
             `;
             document.getElementById('new-group-image-input').value = '';
             
-            // Réattacher l'événement de clic
             document.getElementById('new-group-image-upload').addEventListener('click', () => {
                 document.getElementById('new-group-image-input').click();
             });
@@ -5511,12 +4682,10 @@
             document.getElementById('group-name').focus();
         }
         
-        // Masquer le dialogue de création de groupe
         function hideCreateGroupDialog() {
             document.getElementById('create-group-dialog').classList.remove('active');
         }
         
-        // Afficher le dialogue de modification du groupe
         function showEditGroupDialog(groupId, groupData) {
             if (!isAdmin) {
                 showNotification("Seuls les administrateurs peuvent modifier le groupe", "error");
@@ -5525,24 +4694,20 @@
             
             editingGroupId = groupId;
             
-            // Pré-remplir les champs avec les données du groupe
             document.getElementById('edit-group-name').value = groupData.name || '';
             document.getElementById('edit-group-description').value = groupData.description || '';
             document.getElementById('edit-group-public-messages').checked = groupData.allowPublicMessages !== false;
             
-            // Désactiver les boutons de sauvegarde au départ
             document.getElementById('save-group-name-btn').disabled = true;
             document.getElementById('save-group-description-btn').disabled = true;
             document.getElementById('save-group-permissions-btn').disabled = true;
             document.getElementById('save-group-image-btn').disabled = true;
             
-            // Réinitialiser les flags de changement
             groupNameChanged = false;
             groupDescriptionChanged = false;
             groupPermissionsChanged = false;
             groupImageFile = null;
             
-            // Afficher l'image du groupe si elle existe
             const groupImagePreview = document.getElementById('edit-group-image-preview');
             if (groupData.imageURL) {
                 groupImagePreview.innerHTML = `
@@ -5560,7 +4725,6 @@
                 `;
             }
             
-            // Réattacher l'événement de clic
             document.getElementById('edit-group-image-upload').addEventListener('click', () => {
                 document.getElementById('edit-group-image-input').click();
             });
@@ -5568,12 +4732,10 @@
             document.getElementById('edit-group-dialog').classList.add('active');
         }
         
-        // Masquer le dialogue de modification du groupe
         function hideEditGroupDialog() {
             document.getElementById('edit-group-dialog').classList.remove('active');
             editingGroupId = null;
             
-            // Réinitialiser les valeurs
             groupNameChanged = false;
             groupDescriptionChanged = false;
             groupPermissionsChanged = false;
@@ -5581,9 +4743,7 @@
             document.getElementById('edit-group-image-input').value = '';
         }
         
-        // Créer un nouveau groupe
         async function createNewGroup() {
-            // Vérifier si l'utilisateur est admin
             if (!isAdmin) {
                 showNotification("Seuls les administrateurs peuvent créer des groupes", "error");
                 return;
@@ -5593,34 +4753,29 @@
             const groupDescription = document.getElementById('group-description').value.trim();
             const allowPublicMessages = document.getElementById('group-public-messages').checked;
             
-            // Valider le nom du groupe
             if (!groupName) {
                 document.getElementById('group-name-error').style.display = 'block';
                 return;
             }
             
-            // Afficher le loader sur le bouton
             setButtonLoading('create-group-submit', true);
             
             try {
-                // Créer le groupe dans Firestore
                 const groupRef = collection(db, "groups");
                 const newGroup = {
                     name: groupName,
                     description: groupDescription || "Groupe de discussion",
                     createdBy: currentUser.uid,
                     createdAt: serverTimestamp(),
-                    members: [currentUser.uid], // Au début, seul le créateur est membre
+                    members: [currentUser.uid],
                     lastMessageTime: serverTimestamp(),
-                    allowPublicMessages: allowPublicMessages, // Propriété pour les permissions
-                    admins: [currentUser.uid], // Le créateur est automatiquement admin du groupe
-                    imageURL: groupImageFile || null // Stocker l'image en base64 directement
+                    allowPublicMessages: allowPublicMessages,
+                    admins: [currentUser.uid],
+                    imageURL: groupImageFile || null
                 };
                 
                 const groupDocRef = await addDoc(groupRef, newGroup);
-                console.log(`Groupe créé avec l'ID: ${groupDocRef.id}`);
                 
-                // Ajouter un message de bienvenue
                 const messagesRef = collection(db, "groups", groupDocRef.id, "messages");
                 await addDoc(messagesRef, {
                     text: `Bienvenue dans le groupe "${groupName}" !${allowPublicMessages ? '' : '\n(Groupe avec messages restreints - seuls les admins peuvent écrire)'}`,
@@ -5628,7 +4783,6 @@
                     createdAt: serverTimestamp()
                 });
                 
-                // Enregistrer l'événement de création du groupe
                 await addEventLog({
                     type: 'group-create',
                     groupId: groupDocRef.id,
@@ -5638,51 +4792,38 @@
                     timestamp: new Date()
                 });
                 
-                // Masquer le loader
                 setButtonLoading('create-group-submit', false);
                 
-                // Masquer le dialogue
                 hideCreateGroupDialog();
                 
-                // Recharger la liste des groupes
                 loadGroups();
                 
-                // Afficher une notification
                 showNotification(`Groupe "${groupName}" créé avec succès`, 'success');
             } catch (error) {
-                console.error(`Erreur lors de la création du groupe: ${error.message}`);
                 showNotification('Erreur lors de la création du groupe', 'error');
                 setButtonLoading('create-group-submit', false);
             }
         }
         
-        // Enregistrer un événement dans l'historique
         async function addEventLog(eventData) {
             try {
-                // S'assurer que l'événement contient toutes les informations nécessaires
                 if (!eventData.type || !eventData.timestamp) {
-                    console.error("Données d'événement incomplètes");
                     return;
                 }
                 
-                // Ajouter des informations communes à tous les événements
                 const completeEventData = {
                     ...eventData,
                     timestamp: serverTimestamp(),
                     userId: eventData.userId || currentUser.uid
                 };
                 
-                // Stocker l'événement dans la collection 'events'
                 const eventsRef = collection(db, "events");
                 await addDoc(eventsRef, completeEventData);
                 
-                console.log(`Événement enregistré: ${eventData.type}`);
             } catch (error) {
-                console.error(`Erreur lors de l'enregistrement de l'événement: ${error.message}`);
             }
         }
         
-        // Changer l'onglet dans l'écran d'authentification
         function changeAuthTab(tab) {
             const loginTab = document.getElementById('login-tab');
             const registerTab = document.getElementById('register-tab');
@@ -5693,9 +4834,8 @@
                 loginTab.classList.add('active');
                 registerTab.classList.remove('active');
                 
-                // Transition animée
                 registerForm.style.animation = 'none';
-                void registerForm.offsetWidth; // Forcer le reflow pour redémarrer l'animation
+                void registerForm.offsetWidth;
                 registerForm.style.animation = '';
                 
                 loginForm.classList.add('active');
@@ -5704,25 +4844,21 @@
                 loginTab.classList.remove('active');
                 registerTab.classList.add('active');
                 
-                // Transition animée
                 loginForm.style.animation = 'none';
-                void loginForm.offsetWidth; // Forcer le reflow pour redémarrer l'animation
+                void loginForm.offsetWidth;
                 loginForm.style.animation = '';
                 
                 loginForm.classList.remove('active');
                 registerForm.classList.add('active');
             }
             
-            // Masquer les messages d'erreur
             hideLog('login-log');
             hideLog('register-log');
             
-            // Activer l'animation du formulaire qui apparaît
             const activeForm = tab === 'login' ? loginForm : registerForm;
             activeForm.style.animation = 'fadeUp 0.5s ease';
         }
         
-        // Valider l'email de connexion
         function validateLoginEmail() {
             const email = document.getElementById('login-email').value.trim();
             const errorElement = document.getElementById('login-email-error');
@@ -5741,7 +4877,6 @@
             }
         }
         
-        // Valider le mot de passe de connexion
         function validateLoginPassword() {
             const password = document.getElementById('login-password').value;
             const errorElement = document.getElementById('login-password-error');
@@ -5756,7 +4891,6 @@
             }
         }
         
-        // Valider l'email d'inscription
         function validateRegisterEmail() {
             const email = document.getElementById('register-email').value.trim();
             const errorElement = document.getElementById('register-email-error');
@@ -5775,7 +4909,6 @@
             }
         }
         
-        // Valider le mot de passe d'inscription
         function validateRegisterPassword() {
             const password = document.getElementById('register-password').value;
             const errorElement = document.getElementById('register-password-error');
@@ -5794,7 +4927,6 @@
             }
         }
         
-        // Valider la confirmation du mot de passe
         function validateRegisterConfirmPassword() {
             const password = document.getElementById('register-password').value;
             const confirmPassword = document.getElementById('register-confirm-password').value;
@@ -5814,23 +4946,19 @@
             }
         }
         
-        // Valider le formulaire de connexion complet
         function validateLoginForm() {
             return validateLoginEmail() && validateLoginPassword();
         }
         
-        // Valider le formulaire d'inscription complet
         function validateRegisterForm() {
             return validateRegisterEmail() && validateRegisterPassword() && validateRegisterConfirmPassword();
         }
         
-        // Vérifier si un email est valide
         function isValidEmail(email) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailRegex.test(email);
         }
         
-        // Afficher un message de log
         function showLog(elementId, text, type="info") {
             const logDiv = document.getElementById(elementId);
             if (!logDiv) return;
@@ -5839,11 +4967,9 @@
             logDiv.className = `log-message ${type}`;
             logDiv.style.display = "block";
             
-            // Ajouter une animation d'apparition
             logDiv.style.animation = 'fadeIn 0.5s ease';
         }
         
-        // Masquer un message de log
         function hideLog(elementId) {
             const logDiv = document.getElementById(elementId);
             if (logDiv) {
@@ -5851,9 +4977,7 @@
             }
         }
         
-        // Connexion d'un utilisateur
         async function loginUser() {
-            // Validation finale avant de soumettre
             if (!validateLoginForm()) {
                 return;
             }
@@ -5861,30 +4985,23 @@
             const email = document.getElementById("login-email").value.trim();
             const password = document.getElementById("login-password").value;
             
-            // Afficher le loader sur le bouton
             setButtonLoading('loginBtn', true);
             hideLog("login-log");
             
             try {
                 showLog("login-log", "Connexion en cours...", "info");
-                console.log(`Tentative de connexion pour: ${email}`);
                 
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 
-                // Stocker les informations dans les variables globales
                 currentUser = userCredential.user;
                 
-                console.log(`Connexion réussie pour: ${email}`);
                 showLog("login-log", "Connexion réussie ! Redirection...", "success");
                 
-                // Rediriger vers l'application après un court délai
                 setTimeout(() => {
                     hideAuthScreen();
                 }, 1000);
             } catch (error) {
                 let errorMessage = "Erreur de connexion";
-                
-                console.error(`Échec de connexion pour ${email}: ${error.code} - ${error.message}`);
                 
                 switch (error.code) {
                     case 'auth/user-not-found':
@@ -5906,9 +5023,7 @@
             }
         }
         
-        // Inscription d'un utilisateur
         async function registerUser() {
-            // Validation finale avant de soumettre
             if (!validateRegisterForm()) {
                 return;
             }
@@ -5916,22 +5031,18 @@
             const email = document.getElementById("register-email").value.trim();
             const password = document.getElementById("register-password").value;
             
-            // Afficher le loader sur le bouton
             setButtonLoading('registerBtn', true);
             hideLog("register-log");
             
             try {
                 showLog("register-log", "Inscription en cours...", "info");
-                console.log(`Tentative d'inscription pour: ${email}`);
                 
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const uid = userCredential.user.uid;
                 const statut = await createUserProfile(uid, email);
                 
                 showLog("register-log", `Inscription réussie ! Compte créé avec succès.`, "success");
-                console.log(`Inscription réussie pour: ${email}, statut: ${statut}`);
                 
-                // Stocker les informations dans les variables globales
                 currentUser = userCredential.user;
                 
                 setTimeout(() => {
@@ -5939,8 +5050,6 @@
                 }, 1000);
             } catch (error) {
                 let errorMessage = "Erreur d'inscription";
-                
-                console.error(`Échec d'inscription pour ${email}: ${error.code} - ${error.message}`);
                 
                 switch (error.code) {
                     case 'auth/email-already-in-use':
@@ -5961,34 +5070,22 @@
             }
         }
         
-        // Création d'un profil utilisateur dans Firestore
         async function createUserProfile(uid, email) {
             try {
-                console.log(`Création du profil utilisateur pour: ${uid} (${email})`);
-                
-                // Pour le premier utilisateur inscrit, le déclarer admin
                 const usersRef = collection(db, "Users");
                 const usersSnap = await getDocs(usersRef);
                 
-                // Si il n'y a aucun utilisateur, le nouvel utilisateur sera admin
                 const isNewUserAdmin = usersSnap.empty;
                 
-                console.log(`Nombre d'utilisateurs existants: ${usersSnap.size}`);
-                console.log(`Le nouvel utilisateur sera admin: ${isNewUserAdmin}`);
-                
-                // Créer le document pour l'utilisateur admin
                 if (isNewUserAdmin) {
-                    // Vérifier le ConfigDoc
                     const configAdminRef = doc(db, "Config", "admins");
                     const configAdminSnap = await getDoc(configAdminRef);
                     
                     if (configAdminSnap.exists()) {
-                        // Ajouter cet admin à la liste
                         await updateDoc(configAdminRef, {
                             adminUids: arrayUnion(uid)
                         });
                     } else {
-                        // Créer le document de configuration avec ce premier admin
                         await setDoc(configAdminRef, {
                             adminUids: [uid],
                             maxAdmins: 5
@@ -5996,21 +5093,18 @@
                     }
                 }
                 
-                // Créer le profil utilisateur dans Users
                 const userRef = doc(db, "Users", uid);
                 await setDoc(userRef, {
                     email: email,
                     statut: isNewUserAdmin ? "admin" : "simple",
                     createdAt: new Date().toISOString(),
-                    displayName: email.split('@')[0] // Utilisez la partie avant @ comme nom d'affichage
+                    displayName: email.split('@')[0]
                 });
                 
-                // Créer un groupe général si c'est le premier utilisateur
                 const groupsRef = collection(db, "groups");
                 const groupsSnapshot = await getDocs(groupsRef);
                 
                 if (groupsSnapshot.empty && isNewUserAdmin) {
-                    // Créer un groupe général
                     const generalGroup = {
                         name: "Général",
                         description: "Groupe général pour tous les utilisateurs",
@@ -6024,7 +5118,6 @@
                     
                     const generalGroupRef = await addDoc(groupsRef, generalGroup);
                     
-                    // Ajouter un premier message
                     const messagesRef = collection(db, "groups", generalGroupRef.id, "messages");
                     await addDoc(messagesRef, {
                         text: "Bienvenue dans le groupe général !",
@@ -6032,7 +5125,6 @@
                         createdAt: serverTimestamp()
                     });
                     
-                    // Enregistrer l'événement
                     await addDoc(collection(db, "events"), {
                         type: 'group-create',
                         groupId: generalGroupRef.id,
@@ -6042,15 +5134,12 @@
                         timestamp: serverTimestamp()
                     });
                     
-                    console.log("Groupe général créé");
                 } else {
-                    // Ajouter l'utilisateur à tous les groupes existants
                     for (const groupDoc of groupsSnapshot.docs) {
                         await updateDoc(doc(db, "groups", groupDoc.id), {
                             members: arrayUnion(uid)
                         });
                         
-                        // Enregistrer l'événement d'ajout au groupe
                         await addDoc(collection(db, "events"), {
                             type: 'user-join',
                             groupId: groupDoc.id,
@@ -6059,10 +5148,8 @@
                             timestamp: serverTimestamp()
                         });
                     }
-                    console.log("Utilisateur ajouté aux groupes existants");
                 }
                 
-                // Enregistrer l'événement de création d'utilisateur
                 await addDoc(collection(db, "events"), {
                     type: 'user-create',
                     userId: uid,
@@ -6070,15 +5157,12 @@
                     timestamp: serverTimestamp()
                 });
                 
-                console.log(`Profil utilisateur créé avec succès pour: ${email} (statut: ${isNewUserAdmin ? "admin" : "simple"})`);
                 return isNewUserAdmin ? "admin" : "simple";
             } catch (error) {
-                console.error(`Erreur lors de la création du profil: ${error.message}`);
                 return "simple";
             }
         }
         
-        // Afficher/masquer le loader sur un bouton
         function setButtonLoading(buttonId, isLoading) {
             const button = document.getElementById(buttonId);
             if (!button) return;
@@ -6095,7 +5179,6 @@
             }
         }
         
-        // Masquer l'écran d'authentification
         function hideAuthScreen() {
             document.getElementById('auth-screen').style.opacity = '0';
             document.getElementById('auth-screen').style.transition = 'opacity 0.5s ease';
@@ -6106,23 +5189,17 @@
             }, 500);
         }
         
-        // Compléter le processus de connexion
         async function completeLogin() {
             try {
-                // Récupérer les données utilisateur
                 currentUserData = await getUserData(currentUser.uid);
                 
-                // Vérifier si l'utilisateur est administrateur
                 if (currentUserData && currentUserData.statut === 'admin') {
                     isAdmin = true;
-                    console.log("Statut admin détecté");
                 }
                 
-                // Afficher l'écran de chargement pendant la préparation de l'app
                 document.getElementById('loading').style.display = 'flex';
                 
                 setTimeout(() => {
-                    // Animation d'apparition pour l'application principale
                     document.getElementById('bottom-nav').style.opacity = '0';
                     document.getElementById('bottom-nav').style.display = 'flex';
                     
@@ -6142,85 +5219,47 @@
                         document.querySelector('.content').style.opacity = '1';
                         document.querySelector('.content').style.transition = 'opacity 0.5s ease';
                         
-                        // Masquer l'écran de chargement
                         document.getElementById('loading').style.display = 'none';
                         
-                        // Chargement des données initiales
                         loadInitialData();
                     }, 10);
                 }, 500);
                 
-                // Mettre à jour les informations du profil
                 updateProfileInfo();
                 
-                // L'utilisateur est maintenant connecté
                 isLoggedIn = true;
                 
-                console.log("Connexion complétée avec succès");
             } catch (error) {
-                console.error("Erreur lors de la finalisation de la connexion:", error);
                 showNotification("Erreur lors de la connexion à l'application", "error");
                 
-                // Masquer l'écran de chargement
                 document.getElementById('loading').style.display = 'none';
                 
-                // Afficher les éléments de base quand même
                 document.getElementById('bottom-nav').style.display = 'flex';
                 document.querySelector('.header').style.display = 'flex';
                 document.querySelector('.content').style.display = 'block';
             }
         }
         
-        // Charger les données initiales de l'application
         async function loadInitialData() {
             try {
-                console.log("Chargement des données initiales...");
-                
-                // Charger les groupes
                 await loadGroups();
                 
-                // Mettre à jour l'apparence du bouton de création en fonction du statut admin
                 updateCreateButtonAppearance();
                 
-                // S'abonner aux événements
                 await listenToEvents();
                 
-                // Initialiser les collections si nécessaires
-                await initCollections();
+                window.addEventListener('online', () => {
+                    showNotification('Connexion internet rétablie', 'success');
+                });
                 
-                console.log("Données initiales chargées avec succès");
+                window.addEventListener('offline', () => {
+                    showNotification('Connexion internet perdue', 'error');
+                });
             } catch (error) {
-                console.error(`Erreur lors du chargement des données initiales: ${error.message}`);
                 showNotification("Erreur lors du chargement des données", "error");
             }
         }
         
-        // Initialiser les collections nécessaires
-        async function initCollections() {
-            try {
-                // Initialiser la collection de pronostics si nécessaire
-                const forecastsRef = collection(db, "forecasts");
-                const forecastsSnap = await getDocs(forecastsRef);
-                
-                if (forecastsSnap.empty) {
-                    console.log("Collection forecasts vide, création des données de démonstration");
-                    await createDemoForecasts();
-                }
-                
-                // Initialiser la collection de commentaires si nécessaire
-                const commentsRef = collection(db, "commentaires");
-                const commentsSnap = await getDocs(commentsRef);
-                
-                if (commentsSnap.empty) {
-                    console.log("Collection commentaires vide, création des commentaires de démonstration");
-                    await createDemoComments();
-                }
-            } catch (error) {
-                console.error("Erreur lors de l'initialisation des collections:", error);
-            }
-        }
-        
-        // Mettre à jour l'apparence du bouton de création en fonction du statut admin
         function updateCreateButtonAppearance() {
             const createButton = document.getElementById('create-group-btn');
             if (!createButton) return;
@@ -6234,9 +5273,7 @@
             }
         }
         
-        // S'abonner aux événements
         async function listenToEvents() {
-            // Se désabonner d'abord si on était déjà abonné
             if (eventsUnsubscribe) {
                 eventsUnsubscribe();
                 eventsUnsubscribe = null;
@@ -6246,11 +5283,9 @@
             isLoadingEvents = true;
             
             try {
-                // Recherche des événements
                 const eventsRef = collection(db, "events");
                 const q = query(eventsRef, orderBy("timestamp", "desc"), limit(100));
                 
-                // Abonnement aux événements
                 eventsUnsubscribe = onSnapshot(q, async (snapshot) => {
                     const eventsList = document.getElementById('events-list');
                     if (!eventsList) return;
@@ -6269,7 +5304,6 @@
                         return;
                     }
                     
-                    // Générer les éléments d'événements
                     const fragment = document.createDocumentFragment();
                     
                     try {
@@ -6281,7 +5315,6 @@
                         
                         eventsList.appendChild(fragment);
                     } catch (error) {
-                        console.error("Erreur lors du traitement des événements:", error);
                         eventsList.innerHTML = `
                             <div class="empty-state">
                                 <i class="fas fa-exclamation-triangle"></i>
@@ -6293,7 +5326,6 @@
                     
                     isLoadingEvents = false;
                 }, (error) => {
-                    console.error("Erreur dans l'écouteur d'événements:", error);
                     isLoadingEvents = false;
                     const eventsList = document.getElementById('events-list');
                     if (eventsList) {
@@ -6307,10 +5339,7 @@
                     }
                 });
                 
-                console.log("Abonnement aux événements réussi");
-                
             } catch (error) {
-                console.error(`Erreur lors de l'abonnement aux événements: ${error.message}`);
                 isLoadingEvents = false;
                 const eventsList = document.getElementById('events-list');
                 if (eventsList) {
@@ -6325,9 +5354,7 @@
             }
         }
         
-        // Créer un élément d'événement pour l'affichage
         async function createEventElement(eventId, eventData) {
-            // Traitement spécial pour les notifications admin
             if (eventData.type === 'admin-notification') {
                 return createAdminNotificationElement(eventId, eventData);
             }
@@ -6336,11 +5363,9 @@
             eventItem.className = `event-item ${eventData.type}`;
             eventItem.setAttribute('data-id', eventId);
             
-            // Formater la date
             let formattedDate = '';
             if (eventData.timestamp) {
                 if (eventData.timestamp.toDate) {
-                    // Timestamp Firestore
                     const date = eventData.timestamp.toDate();
                     formattedDate = formatDate(date);
                 } else if (eventData.timestamp instanceof Date) {
@@ -6348,18 +5373,15 @@
                 }
             }
             
-            // Déterminer l'icône et le contenu en fonction du type d'événement
             let iconClass = 'fas fa-bell';
             let headerText = 'Événement';
             let contentText = 'Action effectuée dans l\'application';
             
-            // Récupérer le nom de l'utilisateur qui a effectué l'action
             let userName = 'Utilisateur';
             if (eventData.userId) {
                 try {
                     userName = await getDisplayNameFromId(eventData.userId);
                 } catch (error) {
-                    console.error("Erreur lors de la récupération du nom d'utilisateur:", error);
                     userName = 'Utilisateur';
                 }
             }
@@ -6396,7 +5418,6 @@
                     break;
             }
             
-            // Options de suppression (seulement pour les admins)
             let actionButtons = '';
             if (isAdmin) {
                 actionButtons = `
@@ -6420,12 +5441,12 @@
                 </div>
             `;
             
-            // Ajouter les écouteurs d'événements pour les boutons d'action
             if (isAdmin) {
                 const deleteBtn = eventItem.querySelector('.event-action-btn.delete');
                 if (deleteBtn) {
                     deleteBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();                        showDeleteEventConfirmation(eventId);
+                        e.stopPropagation();
+                        showDeleteEventConfirmation(eventId);
                     });
                 }
             }
@@ -6433,13 +5454,11 @@
             return eventItem;
         }
         
-        // Créer un élément de notification admin
         function createAdminNotificationElement(eventId, eventData) {
             const notificationElement = document.createElement('div');
             notificationElement.className = 'admin-notification';
             notificationElement.setAttribute('data-id', eventId);
             
-            // Déterminer l'icône en fonction du type de notification
             const notificationType = eventData.notificationType || 'info';
             let iconClass = 'fas fa-info-circle';
             
@@ -6454,11 +5473,9 @@
                     iconClass = 'fas fa-info-circle';
             }
             
-            // Formater la date
             let formattedDate = '';
             if (eventData.timestamp) {
                 if (eventData.timestamp.toDate) {
-                    // Timestamp Firestore
                     const date = eventData.timestamp.toDate();
                     formattedDate = date.toLocaleString('fr-FR');
                 } else if (eventData.timestamp instanceof Date) {
@@ -6480,7 +5497,6 @@
                 </div>
             `;
             
-            // Ajouter un bouton de suppression pour les administrateurs
             if (isAdmin) {
                 const header = notificationElement.querySelector('.admin-notification-header');
                 const deleteBtn = document.createElement('div');
@@ -6496,7 +5512,6 @@
             return notificationElement;
         }
         
-        // Formater une date pour l'affichage
         function formatDate(date) {
             if (!date) return '';
             
@@ -6520,38 +5535,27 @@
                     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
                 }
             } catch (error) {
-                console.error("Erreur lors du formatage de la date:", error);
                 return '';
             }
         }
         
-        // Récupérer les données utilisateur de Firestore
         async function getUserData(uid) {
             try {
-                console.log(`Récupération des données utilisateur pour: ${uid}`);
-                
                 const userRef = doc(db, "Users", uid);
                 const userSnap = await getDoc(userRef);
                 
                 if (userSnap.exists()) {
-                    console.log(`Données utilisateur récupérées avec succès`);
                     return { id: userSnap.id, ...userSnap.data() };
                 } else {
-                    console.error(`Utilisateur non trouvé dans Firestore: ${uid}`);
                     return null;
                 }
             } catch (error) {
-                console.error(`Erreur lors de la récupération des données utilisateur: ${error.message}`);
                 return null;
             }
         }
         
-        // Mettre à jour les informations du profil
         function updateProfileInfo() {
             if (currentUserData) {
-                console.log("Mise à jour des informations de profil");
-                
-                // Mettre à jour le nom et l'email
                 const profileNameText = document.getElementById('profile-name-text');
                 const profileEmail = document.getElementById('profile-email');
                 
@@ -6563,7 +5567,6 @@
                     profileEmail.textContent = currentUserData.email;
                 }
                 
-                // Mettre à jour l'image de profil si elle existe
                 if (currentUserData.photoURL) {
                     const profilePic = document.querySelector('.profile-header .profile-pic');
                     if (profilePic) {
@@ -6574,7 +5577,6 @@
                             </div>
                         `;
                         
-                        // Réattacher l'événement de clic
                         const editProfilePic = document.getElementById('edit-profile-pic');
                         if (editProfilePic) {
                             editProfilePic.addEventListener('click', showProfileEditDialog);
@@ -6582,12 +5584,10 @@
                     }
                 }
                 
-                // Afficher le badge admin si nécessaire
                 const adminBadge = document.getElementById('admin-badge');
                 if (adminBadge) {
                     if (currentUserData.statut === 'admin') {
                         adminBadge.style.display = 'inline-block';
-                        console.log("Badge admin affiché");
                     } else {
                         adminBadge.style.display = 'none';
                     }
@@ -6595,15 +5595,11 @@
             }
         }
         
-        // Déconnexion de l'utilisateur
         async function logoutUser() {
             document.getElementById('loading').style.display = 'flex';
             document.getElementById('loading').querySelector('div:nth-child(3)').innerText = 'Déconnexion...';
             
-            console.log("Déconnexion en cours...");
-            
             try {
-                // Désabonner de tous les écouteurs
                 Object.keys(chatUnsubscribers).forEach(groupId => {
                     if (chatUnsubscribers[groupId]) {
                         chatUnsubscribers[groupId]();
@@ -6611,19 +5607,16 @@
                 });
                 chatUnsubscribers = {};
                 
-                // Désabonner des événements
                 if (eventsUnsubscribe) {
                     eventsUnsubscribe();
                     eventsUnsubscribe = null;
                 }
                 
-                // Désabonner des pronostics
                 if (forecastsUnsubscribe) {
                     forecastsUnsubscribe();
                     forecastsUnsubscribe = null;
                 }
                 
-                // Désabonner des commentaires
                 if (commentsUnsubscribe) {
                     commentsUnsubscribe();
                     commentsUnsubscribe = null;
@@ -6631,7 +5624,6 @@
                 
                 await signOut(auth);
                 
-                // Réinitialiser les variables globales
                 isLoggedIn = false;
                 currentUser = null;
                 currentUserData = null;
@@ -6640,65 +5632,49 @@
                 currentGroupId = null;
                 currentGroupData = null;
                 
-                console.log("Déconnexion réussie");
+                hideLogoutConfirmation();
                 
-                // Rediriger vers l'écran de connexion
                 showLoginScreen();
             } catch (error) {
-                console.error(`Erreur lors de la déconnexion: ${error.message}`);
-                // Masquer l'écran de chargement
                 document.getElementById('loading').style.display = 'none';
                 showNotification("Erreur lors de la déconnexion", "error");
             }
         }
         
-        // Fonction pour ouvrir un groupe
         async function openGroup(groupName, groupId) {
             if (!groupName || !groupId) return;
             
-            console.log(`Ouverture du groupe: ${groupName} (${groupId})`);
-            
-            // Désabonner des anciens listeners si présents
             unsubscribeFromCurrentChat();
             
             currentGroup = groupName;
             currentGroupId = groupId;
             
-            // Récupérer les données complètes du groupe
             try {
                 const groupRef = doc(db, "groups", groupId);
                 const groupSnap = await getDoc(groupRef);
                 
                 if (groupSnap.exists()) {
                     currentGroupData = groupSnap.data();
-                    console.log(`Données du groupe chargées: ${JSON.stringify(currentGroupData)}`);
                 } else {
-                    console.error(`Groupe non trouvé dans Firestore: ${groupId}`);
                     showNotification("Groupe introuvable", "error");
                     return;
                 }
             } catch (error) {
-                console.error(`Erreur lors de la récupération des données du groupe: ${error.message}`);
                 showNotification("Erreur lors de l'ouverture du groupe", "error");
                 return;
             }
             
-            // Cacher la barre d'onglets
             document.getElementById('bottom-nav').style.display = 'none';
             
-            // Cacher les sections normales
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
             
-            // Vérifier si l'utilisateur est admin du groupe
             const isGroupAdmin = isAdmin || (currentGroupData && currentGroupData.admins && currentGroupData.admins.includes(currentUser.uid));
             
-            // Mettre à jour l'en-tête pour le chat
             document.getElementById('header-menu-button').style.display = 'none';
             document.getElementById('header-back-button').style.display = 'block';
             
-            // Ajouter un bouton d'édition si l'utilisateur est admin du groupe
             if (isGroupAdmin) {
                 document.getElementById('header-action').innerHTML = `
                     <span class="notification-icon" id="edit-group-btn">
@@ -6706,7 +5682,6 @@
                     </span>
                 `;
                 
-                // Ajouter l'événement de clic pour le bouton d'édition
                 document.getElementById('edit-group-btn').addEventListener('click', () => {
                     showEditGroupDialog(currentGroupId, currentGroupData);
                 });
@@ -6714,23 +5689,17 @@
                 document.getElementById('header-action').innerHTML = '';
             }
             
-            // Mettre à jour l'en-tête
             updateGroupHeader();
             
-            // Réattacher l'événement du bouton de retour
             document.getElementById('header-back-button').addEventListener('click', closeChat);
             
-            // Afficher l'interface de chat
             document.getElementById('chat-interface').style.display = 'block';
             
-            // Vérifier si l'utilisateur peut envoyer des messages
             checkSendPermissions();
             
-            // Charger les messages
             loadGroupMessages(groupId);
         }
         
-        // Vérifier si l'utilisateur peut envoyer des messages
         function checkSendPermissions() {
             const chatInput = document.getElementById('chat-input');
             const sendButton = document.getElementById('send-button');
@@ -6741,22 +5710,18 @@
             let canSend = true;
             let restrictionReason = '';
             
-            // Si les messages publics ne sont pas autorisés
             if (currentGroupData && currentGroupData.allowPublicMessages === false) {
-                // Vérifier si l'utilisateur est admin du groupe
                 if (!currentGroupData.admins || !currentGroupData.admins.includes(currentUser.uid)) {
                     canSend = false;
                     restrictionReason = 'Seuls les administrateurs peuvent envoyer des messages dans ce groupe.';
                 }
             }
             
-            // Appliquer les restrictions si nécessaire
             if (!canSend) {
                 chatInput.disabled = true;
                 chatInput.placeholder = "Vous ne pouvez pas écrire dans ce groupe";
                 sendButton.disabled = true;
                 
-                // Ajouter un message de restriction s'il n'existe pas déjà
                 if (!document.querySelector('.restricted-message')) {
                     const restrictedMsg = document.createElement('div');
                     restrictedMsg.className = 'restricted-message';
@@ -6768,7 +5733,6 @@
                 chatInput.placeholder = "Écrire un message...";
                 sendButton.disabled = false;
                 
-                // Supprimer le message de restriction s'il existe
                 const restrictedMsg = document.querySelector('.restricted-message');
                 if (restrictedMsg) {
                     restrictedMsg.remove();
@@ -6776,46 +5740,35 @@
             }
         }
         
-        // Fermer un groupe (retour à la liste)
         function closeChat() {
-            // Désabonner des écouteurs de chat
             unsubscribeFromCurrentChat();
             
-            // Afficher la barre d'onglets
             document.getElementById('bottom-nav').style.display = 'flex';
             
-            // Cacher l'interface de chat
             document.getElementById('chat-interface').style.display = 'none';
             
-            // Réinitialiser l'en-tête pour revenir à la liste des messages
             document.getElementById('header-title').innerText = 'Groupes';
             document.getElementById('header-menu-button').style.display = 'block';
             document.getElementById('header-back-button').style.display = 'none';
             document.getElementById('header-action').innerHTML = '<div class="events-button" id="events-button"><i class="fas fa-bell"></i></div>';
             
-            // Réattacher l'événement du bouton d'événements
             document.getElementById('events-button').addEventListener('click', showEventsSection);
             
-            // Afficher la section groupes
             document.getElementById('groups-section').classList.add('active');
             currentSection = 'groups';
             
-            // Réinitialiser les variables de la conversation active
             currentGroup = '';
             currentGroupId = null;
             currentGroupData = null;
         }
         
-        // Désabonner des écouteurs de chat
         function unsubscribeFromCurrentChat() {
             if (currentGroupId && chatUnsubscribers[currentGroupId]) {
-                console.log(`Désabonnement des écouteurs pour: ${currentGroupId}`);
                 chatUnsubscribers[currentGroupId]();
                 delete chatUnsubscribers[currentGroupId];
             }
         }
         
-        // Charger les messages d'un groupe avec écouteur en temps réel
         function loadGroupMessages(groupId) {
             if (!groupId) return;
             
@@ -6824,7 +5777,6 @@
             
             messagesContainer.innerHTML = '';
             
-            // Montrer un indicateur de chargement
             messagesContainer.innerHTML = `
                 <div style="text-align: center; padding: 20px; color: var(--inactive-text);">
                     <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i>
@@ -6832,15 +5784,11 @@
                 </div>
             `;
             
-            console.log(`Mise en place de l'écouteur pour les messages du groupe: ${groupId}`);
-            
             try {
                 const messagesRef = collection(db, "groups", groupId, "messages");
                 const q = query(messagesRef, orderBy("createdAt", "asc"));
                 
-                // S'abonner aux mises à jour des messages
                 const unsubscribe = onSnapshot(q, (snapshot) => {
-                    // Initialiser ou vider le conteneur de messages
                     messagesContainer.innerHTML = '';
                     
                     if (snapshot.empty) {
@@ -6855,11 +5803,9 @@
                         return;
                     }
                     
-                    // Créer un fragment pour améliorer les performances
                     const fragment = document.createDocumentFragment();
                     
                     try {
-                        // Ajouter les messages dans l'ordre chronologique
                         snapshot.forEach(doc => {
                             const messageData = doc.data();
                             const messageId = doc.id;
@@ -6875,13 +5821,10 @@
                             fragment.appendChild(messageElement);
                         });
                         
-                        // Ajouter tous les messages au conteneur
                         messagesContainer.appendChild(fragment);
                         
-                        // Défiler vers le bas pour voir les messages les plus récents
                         scrollToBottom();
                     } catch (error) {
-                        console.error("Erreur lors du traitement des messages:", error);
                         messagesContainer.innerHTML = `
                             <div style="text-align: center; padding: 20px; color: var(--danger-color);">
                                 <i class="fas fa-exclamation-circle" style="font-size: 24px;"></i>
@@ -6890,8 +5833,6 @@
                         `;
                     }
                 }, (error) => {
-                    console.error(`Erreur lors de la récupération des messages: ${error.message}`);
-                    
                     messagesContainer.innerHTML = `
                         <div style="text-align: center; padding: 20px; color: var(--danger-color);">
                             <i class="fas fa-exclamation-circle" style="font-size: 24px;"></i>
@@ -6900,12 +5841,9 @@
                     `;
                 });
                 
-                // Stocker la fonction d'unsubscribe pour pouvoir la désactiver plus tard
                 chatUnsubscribers[groupId] = unsubscribe;
                 
             } catch (error) {
-                console.error(`Erreur lors de l'initialisation de l'écouteur: ${error.message}`);
-                
                 messagesContainer.innerHTML = `
                     <div style="text-align: center; padding: 20px; color: var(--danger-color);">
                         <i class="fas fa-exclamation-circle" style="font-size: 24px;"></i>
@@ -6915,7 +5853,6 @@
             }
         }
         
-        // Créer un élément de message
         function createMessageElement(messageId, messageData, fromMe) {
             try {
                 const messageDiv = document.createElement('div');
@@ -6925,15 +5862,12 @@
                 } else {
                     messageDiv.className = 'message message-received';
                     
-                    // Ajouter le nom de l'expéditeur
                     const senderName = document.createElement('div');
                     senderName.className = `message-sender sender-${messageData.senderId}`;
                     
-                    // Récupérer le nom de l'expéditeur
                     getDisplayNameFromId(messageData.senderId).then(name => {
                         senderName.textContent = name;
                     }).catch(error => {
-                        console.error("Erreur lors de la récupération du nom de l'expéditeur:", error);
                         senderName.textContent = "Utilisateur";
                     });
                     
@@ -6943,18 +5877,15 @@
                 messageDiv.setAttribute('data-id', messageId);
                 messageDiv.setAttribute('data-from', messageData.senderId || 'unknown');
                 
-                // Ajouter le contenu du message
                 const messageText = document.createElement('div');
                 messageText.textContent = messageData.text || "";
                 messageDiv.appendChild(messageText);
                 
-                // Ajouter l'heure du message
                 const messageTime = document.createElement('div');
                 messageTime.className = 'message-time';
                 
-                // Format timestamp for display
                 if (messageData.createdAt) {
-                    if (messageData.createdAt.toDate) { // Firestore Timestamp
+                    if (messageData.createdAt.toDate) {
                         const date = messageData.createdAt.toDate();
                         messageTime.textContent = `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
                     } else if (messageData.createdAt instanceof Date) {
@@ -6970,9 +5901,6 @@
                 
                 return messageDiv;
             } catch (error) {
-                console.error("Erreur lors de la création de l'élément de message:", error);
-                
-                // Créer un élément de message d'erreur
                 const errorDiv = document.createElement('div');
                 errorDiv.className = fromMe ? 'message message-sent' : 'message message-received';
                 errorDiv.textContent = "Erreur d'affichage du message";
@@ -6980,7 +5908,6 @@
             }
         }
         
-        // Défiler vers le bas de la conversation
         function scrollToBottom() {
             try {
                 const chatMessagesContainer = document.querySelector('.chat-messages-container');
@@ -6988,11 +5915,9 @@
                     chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
                 }
             } catch (error) {
-                console.error("Erreur lors du défilement vers le bas:", error);
             }
         }
         
-        // Envoyer un message
         async function sendMessage() {
             const input = document.getElementById('chat-input');
             if (!input) return;
@@ -7001,7 +5926,6 @@
             
             if (message === '' || !currentGroupId) return;
             
-            // Vérifier si l'utilisateur peut envoyer des messages dans ce groupe
             if (currentGroupData && currentGroupData.allowPublicMessages === false) {
                 if (!currentGroupData.admins || !currentGroupData.admins.includes(currentUser.uid)) {
                     showNotification("Vous n'avez pas la permission d'envoyer des messages dans ce groupe", "error");
@@ -7009,103 +5933,79 @@
                 }
             }
             
-            // Vider l'entrée immédiatement
             input.value = '';
             
             try {
-                // Créer un élément de message "en attente"
                 addPendingMessageToUI(message);
                 
-                // Défiler vers le bas pour voir le nouveau message
                 scrollToBottom();
                 
-                // Si on est en ligne, envoyer immédiatement le message
                 if (isOnline) {
                     await sendMessageToFirestore(currentGroupId, message);
                 } else {
-                    // Si hors ligne, ajouter à la file d'attente
                     messageQueue.push({
                         groupId: currentGroupId,
                         text: message
                     });
                     
-                    console.log("Message ajouté à la file d'attente (hors ligne)");
                     showNotification("Vous êtes hors ligne. Le message sera envoyé lorsque vous serez connecté.", "info");
                 }
                 
             } catch (error) {
-                console.error(`Erreur lors de l'envoi du message: ${error.message}`);
                 showNotification("Erreur lors de l'envoi du message", "error");
             }
         }
         
-        // Ajouter un message en attente à l'interface
         function addPendingMessageToUI(text) {
             const messagesContainer = document.getElementById('chat-messages');
             if (!messagesContainer) return;
             
             try {
-                // Créer l'élément de message
                 const messageDiv = document.createElement('div');
                 messageDiv.className = 'message message-sent';
                 
-                // Ajouter le texte
                 const messageText = document.createElement('div');
                 messageText.textContent = text;
                 messageDiv.appendChild(messageText);
                 
-                // Ajouter l'heure du message
                 const messageTime = document.createElement('div');
                 messageTime.className = 'message-time';
                 messageTime.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 messageDiv.appendChild(messageTime);
                 
-                // Ajouter le message à l'interface
                 messagesContainer.appendChild(messageDiv);
             } catch (error) {
-                console.error("Erreur lors de l'ajout du message en attente à l'interface:", error);
             }
         }
         
-        // Envoyer un message à Firestore
         async function sendMessageToFirestore(groupId, text) {
             if (!groupId || !text) return;
             
-            console.log(`Envoi d'un message au groupe ${groupId}: ${text.substring(0, 30) + (text.length > 30 ? '...' : '')}`);
-            
             try {
-                // Référence au groupe et à ses messages
                 const groupRef = doc(db, "groups", groupId);
                 const messagesRef = collection(db, "groups", groupId, "messages");
                 
-                // Préparer les données du message
                 const messageData = {
                     text: text,
                     senderId: currentUser.uid,
                     createdAt: serverTimestamp()
                 };
                 
-                // Ajouter le message à la collection
                 const docRef = await addDoc(messagesRef, messageData);
                 
-                // Mettre à jour les informations du groupe
                 await updateDoc(groupRef, {
                     lastMessage: text,
                     lastMessageTime: serverTimestamp(),
                     lastSenderId: currentUser.uid
                 });
                 
-                console.log(`Message envoyé avec succès: ${docRef.id}`);
                 return docRef.id;
             } catch (error) {
-                console.error(`Erreur lors de l'envoi du message: ${error.message}`);
-                throw error; // Re-throw l'erreur pour la gestion plus haut
+                throw error;
             }
         }
         
-        // Fonction pour afficher l'écran de connexion
         function showLoginScreen() {
-            // Animation d'apparition
             document.getElementById('auth-screen').style.opacity = '0';
             document.getElementById('auth-screen').style.display = 'flex';
             
@@ -7114,62 +6014,42 @@
                 document.getElementById('auth-screen').style.transition = 'opacity 0.5s ease';
             }, 10);
             
-            // Masquer la barre d'onglets et autres éléments de l'interface principale
             document.getElementById('bottom-nav').style.display = 'none';
             document.querySelector('.header').style.display = 'none';
             document.querySelector('.content').style.display = 'none';
             
-            // Masquer l'écran de chargement
             document.getElementById('loading').style.display = 'none';
             
-            // Pour permettre le défilement lors de l'inscription/connexion
             document.body.style.overflow = 'auto';
-            
-            console.log("Écran de connexion affiché");
         }
         
-        // Observer les changements d'authentification
         function setupAuthObserver() {
-            // Activer l'animation de vérification
             const verifyAnimation = document.getElementById('verify-animation');
             verifyAnimation.style.display = 'flex';
             
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
-                    // Utilisateur connecté
                     currentUser = user;
                     
-                    console.log(`Utilisateur connecté détecté: ${user.email}`);
-                    
-                    // Masquer l'animation de vérification après un délai pour montrer le processus
                     setTimeout(() => {
                         verifyAnimation.style.display = 'none';
                         
-                        // Masquer l'écran d'authentification
                         document.getElementById('auth-screen').style.display = 'none';
                         
-                        // Compléter la connexion
                         completeLogin();
                     }, 1500);
                 } else {
-                    // Utilisateur déconnecté
-                    console.log("Aucun utilisateur connecté, affichage de l'écran de connexion");
-                    
-                    // Masquer l'animation de vérification après un délai pour montrer le processus
                     setTimeout(() => {
                         verifyAnimation.style.display = 'none';
-                        // Afficher l'écran de connexion
                         showLoginScreen();
                     }, 1500);
                 }
             });
         }
         
-        // Récupérer le nom d'affichage d'un utilisateur à partir de son ID
         async function getDisplayNameFromId(userId) {
             if (!userId) return 'Utilisateur';
             
-            // Si c'est l'utilisateur actuel
             if (userId === currentUser.uid) {
                 return 'Vous';
             }
@@ -7183,32 +6063,24 @@
                     return userData.displayName || userData.email.split('@')[0];
                 }
             } catch (error) {
-                console.error(`Erreur lors de la récupération du nom: ${error.message}`);
             }
             
             return 'Utilisateur';
         }
         
-        // Charger les groupes depuis Firestore
         async function loadGroups() {
             const groupsList = document.getElementById('groups-list');
             if (!groupsList) return;
             
-            // Éviter les chargements multiples
             if (isLoadingGroups) return;
             isLoadingGroups = true;
             
             try {
-                // Si pas d'utilisateur authentifié, ne rien faire
                 if (!currentUser) {
-                    console.log("Tentative de chargement des groupes sans utilisateur connecté");
                     isLoadingGroups = false;
                     return;
                 }
                 
-                console.log("Chargement des groupes...");
-                
-                // Vider la liste de groupes
                 groupsList.innerHTML = `
                     <div class="empty-state" style="padding: 20px; text-align: center;">
                         <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary-color);"></i>
@@ -7217,7 +6089,6 @@
                     </div>
                 `;
                 
-                // Récupérer les groupes dont l'utilisateur est membre
                 const groupsRef = collection(db, "groups");
                 const q = query(
                     groupsRef,
@@ -7227,11 +6098,9 @@
                 
                 const querySnapshot = await getDocs(q);
                 
-                // Vider complètement la liste après que les données soient chargées
                 groupsList.innerHTML = '';
                 
                 if (querySnapshot.empty) {
-                    console.log("Aucun groupe trouvé");
                     groupsList.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-users"></i>
@@ -7245,13 +6114,11 @@
                     return;
                 }
                 
-                // Créer un fragment pour ajouter tous les groupes en une seule fois
                 const fragment = document.createDocumentFragment();
                 
                 for (const groupDoc of querySnapshot.docs) {
                     const groupData = groupDoc.data();
                     
-                    // Récupérer le dernier message du groupe
                     let lastMessage = "Aucun message";
                     let lastSenderId = null;
                     let lastMessageTime = null;
@@ -7269,44 +6136,33 @@
                             lastMessageTime = messageData.createdAt;
                         }
                     } catch (error) {
-                        console.error(`Erreur lors de la récupération du dernier message pour le groupe ${groupDoc.id}:`, error);
-                        // Continuer avec les valeurs par défaut
                     }
                     
-                    // Créer l'élément pour ce groupe
                     const groupItem = document.createElement('div');
                     groupItem.className = 'chat-item';
                     groupItem.setAttribute('data-group', groupData.name);
                     groupItem.setAttribute('data-id', groupDoc.id);
                     
-                    // Vérifier si les messages sont restreints
                     const isRestricted = groupData.allowPublicMessages === false;
                     
-                    // Déterminer si l'utilisateur est administrateur de ce groupe
                     const isGroupAdmin = isAdmin || (groupData.admins && groupData.admins.includes(currentUser.uid));
                     
-                    // Formater le dernier message
                     let lastMessageText = lastMessage;
                     try {
                         if (lastSenderId) {
-                            // Si c'est moi qui a envoyé le dernier message
                             if (lastSenderId === currentUser.uid) {
                                 lastMessageText = `Vous: ${lastMessage}`;
                             } else {
-                                // Récupérer le nom de l'expéditeur
                                 const senderName = await getDisplayNameFromId(lastSenderId);
                                 lastMessageText = `${senderName}: ${lastMessage}`;
                             }
                         }
                     } catch (error) {
-                        console.error("Erreur lors du formatage du dernier message:", error);
-                        // Garder le dernier message tel quel
                     }
                     
-                    // Format the timestamp for display
                     let timeDisplay = '';
                     if (lastMessageTime) {
-                        if (lastMessageTime.toDate) { // Firestore Timestamp
+                        if (lastMessageTime.toDate) {
                             const date = lastMessageTime.toDate();
                             timeDisplay = `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
                         } else if (lastMessageTime instanceof Date) {
@@ -7316,7 +6172,6 @@
                         }
                     }
                     
-                    // Préparer l'élément groupe
                     let groupImageHTML = '';
                     if (groupData.imageURL) {
                         groupImageHTML = `<img src="${groupData.imageURL}" alt="${groupData.name}">`;
@@ -7324,7 +6179,6 @@
                         groupImageHTML = `<i class="fas fa-users" style="color: white;"></i>`;
                     }
                     
-                    // Ajouter le bouton d'édition si l'utilisateur est admin du groupe
                     if (isGroupAdmin) {
                         groupImageHTML += `
                             <div class="group-pic-edit" data-group-id="${groupDoc.id}">
@@ -7349,9 +6203,7 @@
                         </div>
                     `;
                     
-                    // Ajouter l'événement de clic pour ouvrir ce groupe
                     groupItem.addEventListener('click', function(e) {
-                        // Si on clique sur le bouton d'édition, afficher le dialogue de modification du groupe
                         if (e.target.closest('.group-pic-edit')) {
                             e.stopPropagation();
                             showEditGroupDialog(groupDoc.id, groupData);
@@ -7363,16 +6215,12 @@
                         openGroup(groupName, groupId);
                     });
                     
-                    // Ajouter le groupe au fragment
                     fragment.appendChild(groupItem);
                 }
                 
-                // Ajouter tous les groupes en une seule opération DOM
                 groupsList.appendChild(fragment);
                 
-                console.log(`${querySnapshot.size} groupes chargés avec succès`);
             } catch (error) {
-                console.error(`Erreur lors du chargement des groupes: ${error.message}`);
                 groupsList.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-exclamation-circle"></i>
@@ -7386,25 +6234,16 @@
             }
         }
 
-        // Initialiser l'application
         document.addEventListener('DOMContentLoaded', function() {
             try {
-                // Configurer les événements UI
                 setupUIEvents();
                 
-                // Configurer les événements d'authentification
                 setupAuthEvents();
                 
-                // Configurer le mode sombre
                 setupDarkMode();
                 
-                // Configurer la surveillance de la connexion internet
-                setupConnectionMonitoring();
-                
-                // Configurer l'observateur d'authentification
                 setupAuthObserver();
                 
-                // Restaurer le mode sombre si sauvegardé
                 const savedDarkMode = localStorage.getItem('groupChatDarkMode');
                 if (savedDarkMode !== null) {
                     const isDarkMode = savedDarkMode === 'true';
@@ -7415,21 +6254,14 @@
                         document.documentElement.classList.remove('dark');
                     }
                 } else {
-                    // Sinon, par défaut, détecter les préférences du système
                     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                         document.documentElement.classList.add('dark');
                         document.getElementById('dark-toggle').checked = true;
                     }
                 }
-                
-                console.log("Application initialisée avec succès");
             } catch (error) {
-                console.error("Erreur lors de l'initialisation de l'application:", error);
             }
         });
     </script>
 </body>
 </html>
-
-
-                
