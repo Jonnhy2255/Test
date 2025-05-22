@@ -2013,11 +2013,18 @@
             <div class="side-menu-title">GroupChat</div>
         </div>
         <div class="side-menu-content">
-            
-        <div class="side-menu-item" id="menu-join-us">
-            <i class="fas fa-hands-helping"></i>
-            <div class="side-menu-text">Nous Rejoindre</div>
-        </div>
+            <div class="side-menu-item" id="menu-join">
+                <div class="side-menu-text">Nous rejoindre</div>
+            </div>
+            <div class="side-menu-item sub-item" style="padding-left: 40px;">
+                <div class="side-menu-text">Whatsapp</div>
+            </div>
+            <div class="side-menu-item sub-item" style="padding-left: 40px;">
+                <div class="side-menu-text">Telegram</div>
+            </div>
+            <div class="side-menu-item sub-item" style="padding-left: 40px;">
+                <div class="side-menu-text">YouTube</div>
+            </div>
 
             <div class="side-menu-item" id="menu-profile">
                 <i class="fas fa-user"></i>
@@ -5668,79 +5675,5 @@
             }
         });
     </script>
-
-    <div id="join-us-section" class="section">
-      <section id="nous-rejoindre">
-        <h2>Nous Rejoindre</h2>
-        <div class="mini-section youtube" onclick="openLink('https://www.youtube.com/channel/yourchannel')">
-          <i class="fab fa-youtube"></i>
-          <span>YouTube</span>
-        </div>
-        <div class="mini-section whatsapp" onclick="openLink('https://wa.me/yourwhatsappnumber')">
-          <i class="fab fa-whatsapp"></i>
-          <span>WhatsApp</span>
-        </div>
-        <div class="mini-section telegram" onclick="openLink('https://t.me/yourtelegramchannel')">
-          <i class="fab fa-telegram"></i>
-          <span>Télégram</span>
-        </div>
-      </section>
-    </div>
-
-    <style>
-      section#nous-rejoindre {
-        padding: 20px;
-        background-color: #f9f9f9;
-        max-width: 600px;
-        margin: auto;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      }
-      section#nous-rejoindre h2 {
-        text-align: center;
-        margin-bottom: 20px;
-      }
-      .mini-section {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        padding: 10px 15px;
-        margin: 10px 0;
-        background-color: white;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-      .mini-section:hover {
-        background-color: #e0e0e0;
-      }
-      .mini-section i {
-        font-size: 32px;
-        width: 40px;
-        text-align: center;
-        flex-shrink: 0;
-      }
-      .youtube i { color: #FF0000; }
-      .whatsapp i { color: #25D366; }
-      .telegram i { color: #0088cc; }
-      .mini-section span {
-        font-size: 18px;
-        font-weight: 600;
-        color: #333;
-      }
-    </style>
-
-    <script>
-      function openLink(url) {
-        window.open(url, '_blank');
-      }
-
-      document.getElementById("menu-join-us").addEventListener("click", function () {
-        document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-        document.getElementById("join-us-section").classList.add("active");
-        document.getElementById("header-title").innerText = "Nous Rejoindre";
-      });
-    </script>
-
 </body>
 </html>
