@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GroupChat</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>GroupChat</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
+<style>
         :root {
             --primary-color: #5D5CDE;
             --text-color: #000000;
@@ -2198,615 +2199,537 @@
     </style>
 </head>
 <body>
-    <div id="verify-animation" class="verify-animation">
-        <div class="football-bounce">
-            <i class="fas fa-futbol"></i>
-        </div>
-        <div class="verify-text">Vérification en cours...</div>
-    </div>
-    
-    <div class="side-menu" id="side-menu">
-        <div class="side-menu-header">
-            <div class="side-menu-close" id="side-menu-close">
-                <i class="fas fa-times"></i>
-            </div>
-            <div class="side-menu-title">GroupChat</div>
-        </div>
-        <div class="side-menu-content">
-            <div class="side-menu-item" id="menu-profile">
-                <i class="fas fa-user"></i>
-                <div class="side-menu-text">Profil</div>
-            </div>
-            <div class="side-menu-item" id="menu-join-us">
-                <i class="fas fa-handshake"></i>
-                <div class="side-menu-text">Nous rejoindre</div>
-            </div>
-            <div class="side-menu-item" id="menu-about">
-                <i class="fas fa-info-circle"></i>
-                <div class="side-menu-text">À propos</div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="side-menu-overlay" id="side-menu-overlay"></div>
-    
-    <div id="auth-screen" class="auth-screen" style="display: none;">
-        <div class="auth-header">
-            <div class="auth-logo">
-                <i class="fas fa-users"></i>
-            </div>
-            <h1 class="auth-title">GroupChat</h1>
-            <p class="auth-subtitle">Messagerie de groupe sécurisée</p>
-        </div>
-        
-        <div class="auth-tabs">
-            <div class="auth-tab active" id="login-tab">Connexion</div>
-            <div class="auth-tab" id="register-tab">Inscription</div>
-        </div>
-        
-        <div id="login-form" class="auth-form active">
-            <div class="form-group">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-input" id="login-email" placeholder="Votre email">
-                <div id="login-email-error" class="form-error">Veuillez entrer un email valide</div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Mot de passe</label>
-                <input type="password" class="form-input" id="login-password" placeholder="Votre mot de passe">
-                <div id="login-password-error" class="form-error">Le mot de passe est obligatoire</div>
-            </div>
-            
-            <div id="login-log" class="log-message" style="display:none;"></div>
-
-            <div class="form-footer">
-                <button class="button" id="loginBtn">
-                    <span class="btn-loader" style="display:none;"></span>
-                    <span class="btn-text">Se connecter</span>
-                </button>
-                <p class="form-footer-text">
-                    Vous n'avez pas de compte ? <a href="#" class="form-link" id="goto-register">S'inscrire</a>
-                </p>
-            </div>
-        </div>
-        
-        <div id="register-form" class="auth-form">
-            <div class="form-group">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-input" id="register-email" placeholder="Votre adresse email">
-                <div id="register-email-error" class="form-error">Veuillez entrer un email valide</div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Mot de passe</label>
-                <input type="password" class="form-input" id="register-password" placeholder="Créez un mot de passe sécurisé">
-                <div id="register-password-error" class="form-error">Le mot de passe doit contenir au moins 6 caractères</div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Confirmer le mot de passe</label>
-                <input type="password" class="form-input" id="register-confirm-password" placeholder="Confirmez votre mot de passe">
-                <div id="register-confirm-password-error" class="form-error">Les mots de passe ne correspondent pas</div>
-            </div>
-            
-            <div id="register-log" class="log-message" style="display:none;"></div>
-
-            <div class="form-footer">
-                <button class="button" id="registerBtn">
-                    <span class="btn-loader" style="display:none;"></span>
-                    <span class="btn-text">S'inscrire</span>
-                </button>
-                <p class="form-footer-text">
-                    Vous avez déjà un compte ? <a href="#" class="form-link" id="goto-login">Se connecter</a>
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <div id="loading" class="loading" style="display: none;">
-        <i class="fas fa-futbol loading-spinner"></i>
-        <div style="font-weight: bold; font-size: 24px; color: var(--primary-color);">GroupChat</div>
-        <div style="margin-top: 10px; color: #6b7280;">Chargement...</div>
-    </div>
-
-    <div class="connection-status" id="connection-status"></div>
-
-    <div class="header">
-        <div class="header-left">
-            <div id="header-menu-button" class="menu-button">
-                <i class="fas fa-bars"></i>
-            </div>
-            <div id="header-back-button" class="back-button" style="display:none;">
-                <i class="fas fa-chevron-left"></i>
-            </div>
-        </div>
-        <div id="header-title" class="header-title">Groupes</div>
-        <div id="header-action">
-            <div class="events-button" id="events-button">
-                <i class="fas fa-bell"></i>
-            </div>
-        </div>
-    </div>
-
-    <div class="content">
-        <div id="groups-section" class="section active">
-            <div class="search-container">
-                <input type="text" class="search-input" id="groups-search" placeholder="Rechercher un groupe">
-            </div>
-            
-            <div class="chat-list" id="groups-list">
-                <div class="empty-state">
-                    <i class="fas fa-users"></i>
-                    <div class="empty-state-title">Aucun groupe</div>
-                    <div class="empty-state-text">Vos groupes apparaîtront ici</div>
-                </div>
-            </div>
-            
-            <div class="fab" id="create-group-btn">
-                <i class="fas fa-plus"></i>
-            </div>
-        </div>
-        
-        <div id="events-section" class="section">
-            <div class="search-container">
-                <input type="text" class="search-input" id="events-search" placeholder="Rechercher un événement">
-            </div>
-            
-            <div id="events-list">
-                <div class="empty-state">
-                    <i class="fas fa-bell"></i>
-                    <div class="empty-state-title">Aucun événement</div>
-                    <div class="empty-state-text">Les événements apparaîtront ici</div>
-                </div>
-            </div>
-            
-            <div class="close-events-btn" id="close-events-btn">
-                <i class="fas fa-times"></i>
-            </div>
-            
-            <div class="fab" id="create-notification-btn" style="display: none;">
-                <i class="fas fa-bullhorn"></i>
-            </div>
-        </div>
-        
-        <div id="profile-section" class="section">
-            <div class="profile-header">
-                <div class="profile-pic">
-                    <i class="fas fa-user"></i>
-                    <div class="profile-pic-edit" id="edit-profile-pic">
-                        <i class="fas fa-pencil-alt"></i>
+<div class="verify-animation" id="verify-animation">
+<div class="football-bounce">
+<i class="fas fa-futbol"></i>
+</div>
+<div class="verify-text">Vérification en cours...</div>
+</div>
+<div class="side-menu" id="side-menu">
+<div class="side-menu-header">
+<div class="side-menu-close" id="side-menu-close">
+<i class="fas fa-times"></i>
+</div>
+<div class="side-menu-title">GroupChat</div>
+</div>
+<div class="side-menu-content">
+<div class="side-menu-item" id="menu-profile">
+<i class="fas fa-user"></i>
+<div class="side-menu-text">Profil</div>
+</div>
+<div class="side-menu-item" id="menu-join-us">
+<i class="fas fa-handshake"></i>
+<div class="side-menu-text">Nous rejoindre</div>
+</div>
+<div class="side-menu-item" id="menu-about">
+<i class="fas fa-info-circle"></i>
+<div class="side-menu-text">À propos</div>
+</div>
+</div>
+</div>
+<div class="side-menu-overlay" id="side-menu-overlay"></div>
+<div class="auth-screen" id="auth-screen" style="display: none;">
+<div class="auth-header">
+<div class="auth-logo">
+<i class="fas fa-users"></i>
+</div>
+<h1 class="auth-title">GroupChat</h1>
+<p class="auth-subtitle">Messagerie de groupe sécurisée</p>
+</div>
+<div class="auth-tabs">
+<div class="auth-tab active" id="login-tab">Connexion</div>
+<div class="auth-tab" id="register-tab">Inscription</div>
+</div>
+<div class="auth-form active" id="login-form">
+<div class="form-group">
+<label class="form-label">Email</label>
+<input class="form-input" id="login-email" placeholder="Votre email" type="email"/>
+<div class="form-error" id="login-email-error">Veuillez entrer un email valide</div>
+</div>
+<div class="form-group">
+<label class="form-label">Mot de passe</label>
+<input class="form-input" id="login-password" placeholder="Votre mot de passe" type="password"/>
+<div class="form-error" id="login-password-error">Le mot de passe est obligatoire</div>
+</div>
+<div class="log-message" id="login-log" style="display:none;"></div>
+<div class="form-footer">
+<button class="button" id="loginBtn">
+<span class="btn-loader" style="display:none;"></span>
+<span class="btn-text">Se connecter</span>
+</button>
+<p class="form-footer-text">
+                    Vous n'avez pas de compte ? <a class="form-link" href="#" id="goto-register">S'inscrire</a>
+</p>
+</div>
+</div>
+<div class="auth-form" id="register-form">
+<div class="form-group">
+<label class="form-label">Email</label>
+<input class="form-input" id="register-email" placeholder="Votre adresse email" type="email"/>
+<div class="form-error" id="register-email-error">Veuillez entrer un email valide</div>
+</div>
+<div class="form-group">
+<label class="form-label">Mot de passe</label>
+<input class="form-input" id="register-password" placeholder="Créez un mot de passe sécurisé" type="password"/>
+<div class="form-error" id="register-password-error">Le mot de passe doit contenir au moins 6 caractères</div>
+</div>
+<div class="form-group">
+<label class="form-label">Confirmer le mot de passe</label>
+<input class="form-input" id="register-confirm-password" placeholder="Confirmez votre mot de passe" type="password"/>
+<div class="form-error" id="register-confirm-password-error">Les mots de passe ne correspondent pas</div>
+</div>
+<div class="log-message" id="register-log" style="display:none;"></div>
+<div class="form-footer">
+<button class="button" id="registerBtn">
+<span class="btn-loader" style="display:none;"></span>
+<span class="btn-text">S'inscrire</span>
+</button>
+<p class="form-footer-text">
+                    Vous avez déjà un compte ? <a class="form-link" href="#" id="goto-login">Se connecter</a>
+</p>
+</div>
+</div>
+</div>
+<div class="loading" id="loading" style="display: none;">
+<i class="fas fa-futbol loading-spinner"></i>
+<div style="font-weight: bold; font-size: 24px; color: var(--primary-color);">GroupChat</div>
+<div style="margin-top: 10px; color: #6b7280;">Chargement...</div>
+</div>
+<div class="connection-status" id="connection-status"></div>
+<div class="header">
+<div class="header-left">
+<div class="menu-button" id="header-menu-button">
+<i class="fas fa-bars"></i>
+</div>
+<div class="back-button" id="header-back-button" style="display:none;">
+<i class="fas fa-chevron-left"></i>
+</div>
+</div>
+<div class="header-title" id="header-title">Groupes</div>
+<div id="header-action">
+<div class="events-button" id="events-button">
+<i class="fas fa-bell"></i>
+</div>
+</div>
+</div>
+<div class="content">
+<div class="section active" id="groups-section">
+<div class="search-container">
+<input class="search-input" id="groups-search" placeholder="Rechercher un groupe" type="text"/>
+</div>
+<div class="chat-list" id="groups-list">
+<div class="empty-state">
+<i class="fas fa-users"></i>
+<div class="empty-state-title">Aucun groupe</div>
+<div class="empty-state-text">Vos groupes apparaîtront ici</div>
+</div>
+</div>
+<div class="fab" id="create-group-btn">
+<i class="fas fa-plus"></i>
+</div>
+</div>
+<div class="section" id="events-section">
+<div class="search-container">
+<input class="search-input" id="events-search" placeholder="Rechercher un événement" type="text"/>
+</div>
+<div id="events-list">
+<div class="empty-state">
+<i class="fas fa-bell"></i>
+<div class="empty-state-title">Aucun événement</div>
+<div class="empty-state-text">Les événements apparaîtront ici</div>
+</div>
+</div>
+<div class="close-events-btn" id="close-events-btn">
+<i class="fas fa-times"></i>
+</div>
+<div class="fab" id="create-notification-btn" style="display: none;">
+<i class="fas fa-bullhorn"></i>
+</div>
+</div>
+<div class="section" id="profile-section">
+<div class="profile-header">
+<div class="profile-pic">
+<i class="fas fa-user"></i>
+<div class="profile-pic-edit" id="edit-profile-pic">
+<i class="fas fa-pencil-alt"></i>
+</div>
+</div>
+<div class="profile-info">
+<div class="profile-name" id="profile-name">
+<span id="profile-name-text">Utilisateur</span>
+<span class="admin-badge" id="admin-badge" style="display: none;">Admin</span>
+</div>
+<div class="profile-email" id="profile-email">user@example.com</div>
+<div class="profile-status">En ligne</div>
+<div class="profile-edit" id="edit-profile-btn">
+<i class="fas fa-edit"></i> Modifier le profil
                     </div>
-                </div>
-                <div class="profile-info">
-                    <div class="profile-name" id="profile-name">
-                        <span id="profile-name-text">Utilisateur</span>
-                        <span class="admin-badge" id="admin-badge" style="display: none;">Admin</span>
-                    </div>
-                    <div class="profile-email" id="profile-email">user@example.com</div>
-                    <div class="profile-status">En ligne</div>
-                    <div class="profile-edit" id="edit-profile-btn">
-                        <i class="fas fa-edit"></i> Modifier le profil
-                    </div>
-                </div>
-            </div>
-            
-            <div class="section-title">Paramètres</div>
-            
-            <div class="settings-container">
-                <div class="setting-item">
-                    <div class="setting-row">
-                        <div class="setting-icon">
-                            <i class="fas fa-moon" style="color: var(--primary-color);"></i>
-                        </div>
-                        <div class="setting-label">Mode sombre</div>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" id="dark-toggle" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                
-                <button id="logout-btn" class="button">Se déconnecter</button>
-                <button id="delete-account-btn" class="button danger" style="margin-top: 15px;">Supprimer mon compte</button>
-            </div>
-        </div>
-        
-        <div id="forecasts-section" class="section">
-            <div class="forecasts-title">Pronostics Sportifs</div>
-            <div class="forecasts-subtitle">Prédictions sans paris - Uniquement à titre informatif</div>
-            
-            <div class="forecasts-tabs">
-                <div class="forecast-tab active" data-tab="safes">Safes du jour</div>
-                <div class="forecast-tab" data-tab="exact">Scores exacts</div>
-                <div class="forecast-tab" data-tab="ai">Prédictions IA</div>
-            </div>
-            
-            <div class="forecasts-content active" id="safes-content">
-                <div class="forecasts-list" id="safes-list">
-                </div>
-            </div>
-            
-            <div class="forecasts-content" id="exact-content">
-                <div class="forecasts-list" id="exact-list">
-                </div>
-            </div>
-            
-            <div class="forecasts-content" id="ai-content">
-                <div class="forecasts-list" id="ai-list">
-                </div>
-            </div>
-        </div>
-        
-        <div id="join-us-section" class="section">
-            <div class="join-us-section">
-                <h2 class="section-title">Rejoignez-nous</h2>
-                <p style="padding: 0 16px; margin-bottom: 15px; color: var(--inactive-text);">
+</div>
+</div>
+<div class="section-title">Paramètres</div>
+<div class="settings-container">
+<div class="setting-item">
+<div class="setting-row">
+<div class="setting-icon">
+<i class="fas fa-moon" style="color: var(--primary-color);"></i>
+</div>
+<div class="setting-label">Mode sombre</div>
+</div>
+<label class="switch">
+<input checked="" id="dark-toggle" type="checkbox"/>
+<span class="slider"></span>
+</label>
+</div>
+<button class="button" id="logout-btn">Se déconnecter</button>
+<button class="button danger" id="delete-account-btn" style="margin-top: 15px;">Supprimer mon compte</button>
+</div>
+</div>
+<div class="section" id="forecasts-section">
+<div class="forecasts-title">Pronostics Sportifs</div>
+<div class="forecasts-subtitle">Prédictions sans paris - Uniquement à titre informatif</div>
+<div class="forecasts-tabs">
+<div class="forecast-tab active" data-tab="safes">Safes du jour</div>
+<div class="forecast-tab" data-tab="exact">Scores exacts</div>
+<div class="forecast-tab" data-tab="ai">Prédictions IA</div>
+</div>
+<div class="forecasts-content active" id="safes-content">
+<div class="forecasts-list" id="safes-list">
+</div>
+</div>
+<div class="forecasts-content" id="exact-content">
+<div class="forecasts-list" id="exact-list">
+</div>
+</div>
+<div class="forecasts-content" id="ai-content">
+<div class="forecasts-list" id="ai-list">
+</div>
+</div>
+</div>
+<div class="section" id="join-us-section">
+<div class="join-us-section">
+<h2 class="section-title">Rejoignez-nous</h2>
+<p style="padding: 0 16px; margin-bottom: 15px; color: var(--inactive-text);">
                     Suivez-nous sur nos réseaux sociaux pour rester informé des derniers pronostics et actualités sportives
                 </p>
-                
-                <div class="social-links">
-                    <a href="https://whatsapp.com/channel/abcdef123456" class="social-link social-whatsapp" target="_blank">
-                        <div class="social-icon">
-                            <i class="fab fa-whatsapp"></i>
-                        </div>
-                        <div class="social-info">
-                            <div class="social-title">WhatsApp</div>
-                            <div class="social-description">Rejoignez notre canal pour des pronostics exclusifs</div>
-                        </div>
-                        <div class="social-action">
+<div class="social-links">
+<a class="social-link social-whatsapp" href="https://whatsapp.com/channel/abcdef123456" target="_blank">
+<div class="social-icon">
+<i class="fab fa-whatsapp"></i>
+</div>
+<div class="social-info">
+<div class="social-title">WhatsApp</div>
+<div class="social-description">Rejoignez notre canal pour des pronostics exclusifs</div>
+</div>
+<div class="social-action">
                             Rejoindre
                         </div>
-                    </a>
-                    
-                    <a href="https://t.me/groupchat_pronostics" class="social-link social-telegram" target="_blank">
-                        <div class="social-icon">
-                            <i class="fab fa-telegram-plane"></i>
-                        </div>
-                        <div class="social-info">
-                            <div class="social-title">Telegram</div>
-                            <div class="social-description">Recevez des alertes et analyses en temps réel</div>
-                        </div>
-                        <div class="social-action">
+</a>
+<a class="social-link social-telegram" href="https://t.me/groupchat_pronostics" target="_blank">
+<div class="social-icon">
+<i class="fab fa-telegram-plane"></i>
+</div>
+<div class="social-info">
+<div class="social-title">Telegram</div>
+<div class="social-description">Recevez des alertes et analyses en temps réel</div>
+</div>
+<div class="social-action">
                             Rejoindre
                         </div>
-                    </a>
-                    
-                    <a href="https://youtube.com/@groupchat_tv" class="social-link social-youtube" target="_blank">
-                        <div class="social-icon">
-                            <i class="fab fa-youtube"></i>
-                        </div>
-                        <div class="social-info">
-                            <div class="social-title">YouTube</div>
-                            <div class="social-description">Vidéos d'analyse et de résumés de matchs</div>
-                        </div>
-                        <div class="social-action">
-                            S'abonner
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <div id="about-section" class="section">
-            <div class="about-container">
-                <div class="about-title">GroupChat</div>
-                <div class="about-text">Une application de messagerie de groupe simple et facile à utiliser qui vous permet de rester en contact avec vos amis et collègues.</div>
-                
-                <div class="about-divider"></div>
-                
-                <div class="about-text">
-                    <strong>Fonctionnalités :</strong>
-                    <ul style="padding-left: 20px; margin-top: 5px;">
-                        <li>Messagerie de groupe</li>
-                        <li>Création de groupes (admins seulement)</li>
-                        <li>Permissions d'écriture configurables</li>
-                        <li>Images de groupe personnalisables</li>
-                        <li>Suivi des événements</li>
-                        <li>Pronostics sportifs</li>
-                        <li>Mode sombre</li>
-                    </ul>
-                </div>
-                
-                <div class="about-divider"></div>
-                
-                <div class="terms-of-use">
-                    <h4>Conditions d'utilisation</h4>
-                    <p>En utilisant cette application, vous acceptez les conditions suivantes :</p>
-                    <p>1. <strong>Respect de la communauté</strong> - Les utilisateurs s'engagent à communiquer de manière respectueuse et à ne pas publier de contenu offensant, discriminatoire ou illégal.</p>
-                    <p>2. <strong>Confidentialité</strong> - Les informations personnelles partagées au sein des groupes doivent être traitées avec respect et ne doivent pas être divulguées à des tiers sans consentement.</p>
-                    <p>3. <strong>Pronostics sportifs</strong> - Les prédictions sportives sont fournies à titre informatif uniquement et ne constituent pas des conseils de paris. Aucune garantie de résultat n'est offerte.</p>
-                    <p>4. <strong>Responsabilité</strong> - Les administrateurs de l'application se réservent le droit de supprimer tout contenu inapproprié et de restreindre l'accès aux utilisateurs qui ne respectent pas ces conditions.</p>
-                </div>
-                
-                <div class="about-divider"></div>
-                
-                <div class="partners-section">
-                    <div class="partners-title">Nos partenaires</div>
-                    <div class="partners-list">
-                        <div class="partner">
-                            <div class="partner-icon google">
-                                <i class="fab fa-google"></i>
-                            </div>
-                            <div class="partner-name">Google</div>
-                        </div>
-                        <div class="partner">
-                            <div class="partner-icon firebase">
-                                <i class="fas fa-fire"></i>
-                            </div>
-                            <div class="partner-name">Firebase</div>
-                        </div>
-                        <div class="partner">
-                            <div class="partner-icon github">
-                                <i class="fab fa-github"></i>
-                            </div>
-                            <div class="partner-name">GitHub</div>
-                        </div>
-                        <div class="partner">
-                            <div class="partner-icon quora">
-                                <i class="fab fa-quora"></i>
-                            </div>
-                            <div class="partner-name">Quora</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="about-version">Version 1.4.0</div>
-            </div>
-        </div>
-    </div>
+</a>
 
-    <div id="chat-interface" class="chat-section">
-        <div class="chat-messages-container">
-            <div class="chat-messages" id="chat-messages">
-            </div>
-        </div>
-        <div class="chat-input-container" id="chat-input-container">
-            <div class="chat-input-wrapper">
-                <input type="text" id="chat-input" class="chat-input" placeholder="Écrire un message..." autocomplete="off">
-            </div>
-            <div class="send-button" id="send-button">
-                <i class="fas fa-paper-plane"></i>
-            </div>
-        </div>
-    </div>
-    
-    <div id="message-context-menu" class="message-context-menu" style="display: none;">
-        <div class="context-menu-item reply">
-            <div class="context-menu-icon"><i class="fas fa-reply"></i></div>
-            <div class="context-menu-text">Répondre</div>
-        </div>
-        <div class="context-menu-item copy">
-            <div class="context-menu-icon"><i class="fas fa-copy"></i></div>
-            <div class="context-menu-text">Copier</div>
-        </div>
-        <div class="context-menu-item delete">
-            <div class="context-menu-icon"><i class="fas fa-trash"></i></div>
-            <div class="context-menu-text">Supprimer</div>
-        </div>
-    </div>
-    
-    <div id="create-group-dialog" class="create-group-dialog">
-        <div class="create-group-header">
-            <div class="create-group-back" id="create-group-back">
-                <i class="fas fa-arrow-left"></i>
-            </div>
-            <div class="create-group-title">Nouveau groupe</div>
-        </div>
-        <div class="create-group-content">
-            <div class="group-form">
-                <div class="group-image-preview" id="new-group-image-preview">
-                    <i class="fas fa-users" style="color: white; font-size: 40px;"></i>
-                    <div class="group-image-overlay" id="new-group-image-upload">
-                        <i class="fas fa-camera"></i>
-                    </div>
-                </div>
-                <input type="file" id="new-group-image-input" accept="image/*">
-                
-                <div class="form-group">
-                    <label class="form-label">Nom du groupe</label>
-                    <input type="text" class="form-input" id="group-name" placeholder="Entrez le nom du groupe">
-                    <div id="group-name-error" class="form-error">Le nom du groupe est requis</div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Description (optionnelle)</label>
-                    <input type="text" class="form-input" id="group-description" placeholder="Décrivez le groupe">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Permissions de message</label>
-                    <div style="display: flex; align-items: center; margin-top: 8px;">
-                        <label class="switch">
-                            <input type="checkbox" id="group-public-messages" checked>
-                            <span class="slider"></span>
-                        </label>
-                        <span style="margin-left: 10px; font-size: 14px;">Permettre à tous les membres d'écrire</span>
-                    </div>
-                    <div style="font-size: 12px; color: var(--inactive-text); margin-top: 5px; margin-left: 60px;">
+</div>
+</div>
+</div>
+<div class="section" id="about-section">
+<div class="about-container">
+<div class="about-title">GroupChat</div>
+<div class="about-text">Une application de messagerie de groupe simple et facile à utiliser qui vous permet de rester en contact avec vos amis et collègues.</div>
+<div class="about-divider"></div>
+<div class="about-text">
+<strong>Fonctionnalités :</strong>
+<ul style="padding-left: 20px; margin-top: 5px;">
+<li>Messagerie de groupe</li>
+<li>Création de groupes (admins seulement)</li>
+<li>Permissions d'écriture configurables</li>
+<li>Images de groupe personnalisables</li>
+<li>Suivi des événements</li>
+<li>Pronostics sportifs</li>
+<li>Mode sombre</li>
+</ul>
+</div>
+<div class="about-divider"></div>
+<div class="terms-of-use">
+<h4>Conditions d'utilisation</h4>
+<p>En utilisant cette application, vous acceptez les conditions suivantes :</p>
+<p>1. <strong>Respect de la communauté</strong> - Les utilisateurs s'engagent à communiquer de manière respectueuse et à ne pas publier de contenu offensant, discriminatoire ou illégal.</p>
+<p>2. <strong>Confidentialité</strong> - Les informations personnelles partagées au sein des groupes doivent être traitées avec respect et ne doivent pas être divulguées à des tiers sans consentement.</p>
+<p>3. <strong>Pronostics sportifs</strong> - Les prédictions sportives sont fournies à titre informatif uniquement et ne constituent pas des conseils de paris. Aucune garantie de résultat n'est offerte.</p>
+<p>4. <strong>Responsabilité</strong> - Les administrateurs de l'application se réservent le droit de supprimer tout contenu inapproprié et de restreindre l'accès aux utilisateurs qui ne respectent pas ces conditions.</p>
+</div>
+<div class="about-divider"></div>
+<div class="partners-section">
+<div class="partners-title">Nos partenaires</div>
+<div class="partners-list">
+<div class="partner">
+<div class="partner-icon google">
+<i class="fab fa-google"></i>
+</div>
+<div class="partner-name">Google</div>
+</div>
+<div class="partner">
+<div class="partner-icon firebase">
+<i class="fas fa-fire"></i>
+</div>
+<div class="partner-name">Firebase</div>
+</div>
+<div class="partner">
+<div class="partner-icon github">
+<i class="fab fa-github"></i>
+</div>
+<div class="partner-name">GitHub</div>
+</div>
+<div class="partner">
+<div class="partner-icon quora">
+<i class="fab fa-quora"></i>
+</div>
+<div class="partner-name">Quora</div>
+</div>
+</div>
+</div>
+<div class="about-version">Version 1.4.0</div>
+</div>
+</div>
+</div>
+<div class="chat-section" id="chat-interface">
+<div class="chat-messages-container">
+<div class="chat-messages" id="chat-messages">
+</div>
+</div>
+<div class="chat-input-container" id="chat-input-container">
+<div class="chat-input-wrapper">
+<input autocomplete="off" class="chat-input" id="chat-input" placeholder="Écrire un message..." type="text"/>
+</div>
+<div class="send-button" id="send-button">
+<i class="fas fa-paper-plane"></i>
+</div>
+</div>
+</div>
+<div class="message-context-menu" id="message-context-menu" style="display: none;">
+<div class="context-menu-item reply">
+<div class="context-menu-icon"><i class="fas fa-reply"></i></div>
+<div class="context-menu-text">Répondre</div>
+</div>
+<div class="context-menu-item copy">
+<div class="context-menu-icon"><i class="fas fa-copy"></i></div>
+<div class="context-menu-text">Copier</div>
+</div>
+<div class="context-menu-item delete">
+<div class="context-menu-icon"><i class="fas fa-trash"></i></div>
+<div class="context-menu-text">Supprimer</div>
+</div>
+</div>
+<div class="create-group-dialog" id="create-group-dialog">
+<div class="create-group-header">
+<div class="create-group-back" id="create-group-back">
+<i class="fas fa-arrow-left"></i>
+</div>
+<div class="create-group-title">Nouveau groupe</div>
+</div>
+<div class="create-group-content">
+<div class="group-form">
+<div class="group-image-preview" id="new-group-image-preview">
+<i class="fas fa-users" style="color: white; font-size: 40px;"></i>
+<div class="group-image-overlay" id="new-group-image-upload">
+<i class="fas fa-camera"></i>
+</div>
+</div>
+<input accept="image/*" id="new-group-image-input" type="file"/>
+<div class="form-group">
+<label class="form-label">Nom du groupe</label>
+<input class="form-input" id="group-name" placeholder="Entrez le nom du groupe" type="text"/>
+<div class="form-error" id="group-name-error">Le nom du groupe est requis</div>
+</div>
+<div class="form-group">
+<label class="form-label">Description (optionnelle)</label>
+<input class="form-input" id="group-description" placeholder="Décrivez le groupe" type="text"/>
+</div>
+<div class="form-group">
+<label class="form-label">Permissions de message</label>
+<div style="display: flex; align-items: center; margin-top: 8px;">
+<label class="switch">
+<input checked="" id="group-public-messages" type="checkbox"/>
+<span class="slider"></span>
+</label>
+<span style="margin-left: 10px; font-size: 14px;">Permettre à tous les membres d'écrire</span>
+</div>
+<div style="font-size: 12px; color: var(--inactive-text); margin-top: 5px; margin-left: 60px;">
                         Si désactivé, seuls les administrateurs pourront écrire des messages
                     </div>
-                </div>
-                <button class="button" id="create-group-submit">
-                    <span class="btn-loader" style="display:none;"></span>
-                    <span class="btn-text">Créer le groupe</span>
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="edit-group-dialog" class="edit-dialog">
-        <div class="edit-header">
-            <div class="edit-back" id="edit-group-back">
-                <i class="fas fa-arrow-left"></i>
-            </div>
-            <div class="edit-title">Modifier le groupe</div>
-        </div>
-        <div class="edit-content">
-            <div class="group-image-preview" id="edit-group-image-preview">
-                <i class="fas fa-users" style="color: white; font-size: 40px;"></i>
-                <div class="group-image-overlay" id="edit-group-image-upload">
-                    <i class="fas fa-camera"></i>
-                </div>
-            </div>
-            <input type="file" id="edit-group-image-input" accept="image/*">
-            
-            <div class="form-group">
-                <label class="form-label">Nom du groupe</label>
-                <div class="editable-field">
-                    <input type="text" class="form-input editable-field-input" id="edit-group-name" placeholder="Entrez le nom du groupe">
-                    <button class="save-field-btn" id="save-group-name-btn">Enregistrer</button>
-                </div>
-                <div id="edit-group-name-error" class="field-error">Le nom du groupe est requis</div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Description</label>
-                <div class="editable-field">
-                    <input type="text" class="form-input editable-field-input" id="edit-group-description" placeholder="Décrivez le groupe">
-                    <button class="save-field-btn" id="save-group-description-btn">Enregistrer</button>
-                </div>
-                <div id="edit-group-description-error" class="field-error"></div>
-            </div>
-            
-            <div class="form-group" id="edit-group-permissions-container">
-                <label class="form-label">Permissions de message</label>
-                <div style="display: flex; align-items: center; margin-top: 8px;">
-                    <label class="switch">
-                        <input type="checkbox" id="edit-group-public-messages">
-                        <span class="slider"></span>
-                    </label>
-                    <span style="margin-left: 10px; font-size: 14px;">Permettre à tous les membres d'écrire</span>
-                    <button class="save-field-btn" id="save-group-permissions-btn" style="margin-left: auto;">Enregistrer</button>
-                </div>
-                <div style="font-size: 12px; color: var(--inactive-text); margin-top: 5px; margin-left: 60px;">
+</div>
+<button class="button" id="create-group-submit">
+<span class="btn-loader" style="display:none;"></span>
+<span class="btn-text">Créer le groupe</span>
+</button>
+</div>
+</div>
+</div>
+<div class="edit-dialog" id="edit-group-dialog">
+<div class="edit-header">
+<div class="edit-back" id="edit-group-back">
+<i class="fas fa-arrow-left"></i>
+</div>
+<div class="edit-title">Modifier le groupe</div>
+</div>
+<div class="edit-content">
+<div class="group-image-preview" id="edit-group-image-preview">
+<i class="fas fa-users" style="color: white; font-size: 40px;"></i>
+<div class="group-image-overlay" id="edit-group-image-upload">
+<i class="fas fa-camera"></i>
+</div>
+</div>
+<input accept="image/*" id="edit-group-image-input" type="file"/>
+<div class="form-group">
+<label class="form-label">Nom du groupe</label>
+<div class="editable-field">
+<input class="form-input editable-field-input" id="edit-group-name" placeholder="Entrez le nom du groupe" type="text"/>
+<button class="save-field-btn" id="save-group-name-btn">Enregistrer</button>
+</div>
+<div class="field-error" id="edit-group-name-error">Le nom du groupe est requis</div>
+</div>
+<div class="form-group">
+<label class="form-label">Description</label>
+<div class="editable-field">
+<input class="form-input editable-field-input" id="edit-group-description" placeholder="Décrivez le groupe" type="text"/>
+<button class="save-field-btn" id="save-group-description-btn">Enregistrer</button>
+</div>
+<div class="field-error" id="edit-group-description-error"></div>
+</div>
+<div class="form-group" id="edit-group-permissions-container">
+<label class="form-label">Permissions de message</label>
+<div style="display: flex; align-items: center; margin-top: 8px;">
+<label class="switch">
+<input id="edit-group-public-messages" type="checkbox"/>
+<span class="slider"></span>
+</label>
+<span style="margin-left: 10px; font-size: 14px;">Permettre à tous les membres d'écrire</span>
+<button class="save-field-btn" id="save-group-permissions-btn" style="margin-left: auto;">Enregistrer</button>
+</div>
+<div style="font-size: 12px; color: var(--inactive-text); margin-top: 5px; margin-left: 60px;">
                     Si désactivé, seuls les administrateurs pourront écrire des messages
                 </div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Image du groupe</label>
-                <button class="button" id="save-group-image-btn" style="margin-top: 10px;">
-                    <span class="btn-loader" style="display:none;"></span>
-                    <span class="btn-text">Enregistrer l'image</span>
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="admin-notif-dialog" class="admin-notif-dialog">
-        <div class="edit-header">
-            <div class="edit-back" id="admin-notif-back">
-                <i class="fas fa-arrow-left"></i>
-            </div>
-            <div class="edit-title">Nouvelle notification</div>
-        </div>
-        <div class="edit-content">
-            <div class="form-group">
-                <label class="form-label">Titre de la notification</label>
-                <input type="text" class="form-input" id="notif-title" placeholder="Titre de votre notification">
-                <div id="notif-title-error" class="field-error">Le titre est requis</div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Contenu</label>
-                <textarea class="form-input" id="notif-content" placeholder="Contenu de votre notification" rows="5" style="resize: none;"></textarea>
-                <div id="notif-content-error" class="field-error">Le contenu est requis</div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Type de notification</label>
-                <select class="form-input" id="notif-type">
-                    <option value="info">Information</option>
-                    <option value="alert">Alerte</option>
-                    <option value="update">Mise à jour</option>
-                </select>
-            </div>
-            
-            <button class="button" id="send-notification-btn">
-                <span class="btn-loader" style="display:none;"></span>
-                <span class="btn-text">Envoyer la notification</span>
-            </button>
-        </div>
-    </div>
-    
-    <div id="profile-edit-dialog" class="profile-edit-dialog">
-        <div class="edit-header">
-            <div class="edit-back" id="profile-edit-back">
-                <i class="fas fa-arrow-left"></i>
-            </div>
-            <div class="edit-title">Modifier le profil</div>
-        </div>
-        <div class="edit-content">
-            <div class="profile-image-upload">
-                <div class="profile-image-preview" id="profile-image-preview">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="profile-upload-btn" id="profile-upload-btn">
-                    <i class="fas fa-camera"></i>
-                </div>
-                <input type="file" id="profile-image-input" accept="image/*">
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Nom d'utilisateur</label>
-                <div class="editable-field">
-                    <input type="text" class="form-input editable-field-input" id="edit-display-name" placeholder="Entrez votre nom d'utilisateur">
-                    <button class="save-field-btn" id="save-display-name-btn">Enregistrer</button>
-                </div>
-                <div id="edit-display-name-error" class="field-error">Le nom d'utilisateur est requis</div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Photo de profil</label>
-                <button class="button" id="save-profile-image-btn" style="margin-top: 10px;">
-                    <span class="btn-loader" style="display:none;"></span>
-                    <span class="btn-text">Enregistrer la photo</span>
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="delete-confirmation" class="confirmation-dialog">
-        <div class="confirmation-title">Supprimer ce message ?</div>
-        <div class="confirmation-text">Cette action est irréversible et le message sera supprimé pour tout le monde.</div>
-        <div class="confirmation-buttons">
-            <div class="confirmation-button confirmation-cancel" id="delete-cancel">Annuler</div>
-            <div class="confirmation-button confirmation-delete" id="delete-confirm">Supprimer</div>
-        </div>
-    </div>
-    
-    <div id="delete-event-confirmation" class="confirmation-dialog">
-        <div class="confirmation-title">Supprimer cet événement ?</div>
-        <div class="confirmation-text">Cette action est irréversible et l'événement sera supprimé.</div>
-        <div class="confirmation-buttons">
-            <div class="confirmation-button confirmation-cancel" id="delete-event-cancel">Annuler</div>
-            <div class="confirmation-button confirmation-delete" id="delete-event-confirm">Supprimer</div>
-        </div>
-    </div>
-    
-    <div id="delete-account-confirmation" class="confirmation-dialog">
-        <div class="confirmation-title">Supprimer votre compte ?</div>
-        <div class="confirmation-text">ATTENTION : Cette action est définitive et irréversible. Toutes vos données seront supprimées.</div>
-        <div class="confirmation-buttons">
-            <div class="confirmation-button confirmation-cancel" id="delete-account-cancel">Annuler</div>
-            <div class="confirmation-button confirmation-delete" id="delete-account-confirm">Supprimer</div>
-        </div>
-    </div>
-
-    <div id="overlay" class="overlay"></div>
-
-    <div class="notification" id="notification"></div>
-
-    <div class="bottom-nav" id="bottom-nav">
-        <div class="nav-item active" data-section="groups" style="flex: 1;">
-            <i class="nav-icon fas fa-users"></i>
-            <span>Groupes</span>
-        </div>
-        <div class="nav-item" data-section="forecasts" style="flex: 1;">
-            <i class="nav-icon fas fa-futbol"></i>
-            <span>Pronostics</span>
-        </div>
-    </div>
-
-    <script type="module">
+</div>
+<div class="form-group">
+<label class="form-label">Image du groupe</label>
+<button class="button" id="save-group-image-btn" style="margin-top: 10px;">
+<span class="btn-loader" style="display:none;"></span>
+<span class="btn-text">Enregistrer l'image</span>
+</button>
+</div>
+</div>
+</div>
+<div class="admin-notif-dialog" id="admin-notif-dialog">
+<div class="edit-header">
+<div class="edit-back" id="admin-notif-back">
+<i class="fas fa-arrow-left"></i>
+</div>
+<div class="edit-title">Nouvelle notification</div>
+</div>
+<div class="edit-content">
+<div class="form-group">
+<label class="form-label">Titre de la notification</label>
+<input class="form-input" id="notif-title" placeholder="Titre de votre notification" type="text"/>
+<div class="field-error" id="notif-title-error">Le titre est requis</div>
+</div>
+<div class="form-group">
+<label class="form-label">Contenu</label>
+<textarea class="form-input" id="notif-content" placeholder="Contenu de votre notification" rows="5" style="resize: none;"></textarea>
+<div class="field-error" id="notif-content-error">Le contenu est requis</div>
+</div>
+<div class="form-group">
+<label class="form-label">Type de notification</label>
+<select class="form-input" id="notif-type">
+<option value="info">Information</option>
+<option value="alert">Alerte</option>
+<option value="update">Mise à jour</option>
+</select>
+</div>
+<button class="button" id="send-notification-btn">
+<span class="btn-loader" style="display:none;"></span>
+<span class="btn-text">Envoyer la notification</span>
+</button>
+</div>
+</div>
+<div class="profile-edit-dialog" id="profile-edit-dialog">
+<div class="edit-header">
+<div class="edit-back" id="profile-edit-back">
+<i class="fas fa-arrow-left"></i>
+</div>
+<div class="edit-title">Modifier le profil</div>
+</div>
+<div class="edit-content">
+<div class="profile-image-upload">
+<div class="profile-image-preview" id="profile-image-preview">
+<i class="fas fa-user"></i>
+</div>
+<div class="profile-upload-btn" id="profile-upload-btn">
+<i class="fas fa-camera"></i>
+</div>
+<input accept="image/*" id="profile-image-input" type="file"/>
+</div>
+<div class="form-group">
+<label class="form-label">Nom d'utilisateur</label>
+<div class="editable-field">
+<input class="form-input editable-field-input" id="edit-display-name" placeholder="Entrez votre nom d'utilisateur" type="text"/>
+<button class="save-field-btn" id="save-display-name-btn">Enregistrer</button>
+</div>
+<div class="field-error" id="edit-display-name-error">Le nom d'utilisateur est requis</div>
+</div>
+<div class="form-group">
+<label class="form-label">Photo de profil</label>
+<button class="button" id="save-profile-image-btn" style="margin-top: 10px;">
+<span class="btn-loader" style="display:none;"></span>
+<span class="btn-text">Enregistrer la photo</span>
+</button>
+</div>
+</div>
+</div>
+<div class="confirmation-dialog" id="delete-confirmation">
+<div class="confirmation-title">Supprimer ce message ?</div>
+<div class="confirmation-text">Cette action est irréversible et le message sera supprimé pour tout le monde.</div>
+<div class="confirmation-buttons">
+<div class="confirmation-button confirmation-cancel" id="delete-cancel">Annuler</div>
+<div class="confirmation-button confirmation-delete" id="delete-confirm">Supprimer</div>
+</div>
+</div>
+<div class="confirmation-dialog" id="delete-event-confirmation">
+<div class="confirmation-title">Supprimer cet événement ?</div>
+<div class="confirmation-text">Cette action est irréversible et l'événement sera supprimé.</div>
+<div class="confirmation-buttons">
+<div class="confirmation-button confirmation-cancel" id="delete-event-cancel">Annuler</div>
+<div class="confirmation-button confirmation-delete" id="delete-event-confirm">Supprimer</div>
+</div>
+</div>
+<div class="confirmation-dialog" id="delete-account-confirmation">
+<div class="confirmation-title">Supprimer votre compte ?</div>
+<div class="confirmation-text">ATTENTION : Cette action est définitive et irréversible. Toutes vos données seront supprimées.</div>
+<div class="confirmation-buttons">
+<div class="confirmation-button confirmation-cancel" id="delete-account-cancel">Annuler</div>
+<div class="confirmation-button confirmation-delete" id="delete-account-confirm">Supprimer</div>
+</div>
+</div>
+<div class="overlay" id="overlay"></div>
+<div class="notification" id="notification"></div>
+<div class="bottom-nav" id="bottom-nav">
+<div class="nav-item active" data-section="groups" style="flex: 1;">
+<i class="nav-icon fas fa-users"></i>
+<span>Groupes</span>
+</div>
+<div class="nav-item" data-section="forecasts" style="flex: 1;">
+<i class="nav-icon fas fa-futbol"></i>
+<span>Pronostics</span>
+</div>
+</div>
+<script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, addDoc, onSnapshot, where, deleteDoc, serverTimestamp, updateDoc, arrayUnion, arrayRemove, limit, Timestamp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
