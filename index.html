@@ -2013,21 +2013,10 @@
             <div class="side-menu-title">GroupChat</div>
         </div>
         <div class="side-menu-content">
-            <div class="side-menu-item" onclick="showSection('join-section')">
-                <div class="side-menu-text">Nous Rejoindre</div>
-            </div>
-
+            
             <div class="side-menu-item" id="menu-join">
-                <div class="side-menu-text">Nous rejoindre</div>
-            </div>
-            <div class="side-menu-item sub-item" style="padding-left: 40px;">
-                <div class="side-menu-text">Whatsapp</div>
-            </div>
-            <div class="side-menu-item sub-item" style="padding-left: 40px;">
-                <div class="side-menu-text">Telegram</div>
-            </div>
-            <div class="side-menu-item sub-item" style="padding-left: 40px;">
-                <div class="side-menu-text">YouTube</div>
+                <i class="fas fa-link"></i>
+                <div class="side-menu-text">Nous Rejoindre</div>
             </div>
 
             <div class="side-menu-item" id="menu-profile">
@@ -2138,21 +2127,6 @@
     </div>
 
     <div class="content">
-        <div id="join-section" class="section">
-            <div style="padding: 20px;">
-                <h2 style="font-size: 22px; font-weight: bold; margin-bottom: 20px;">Nous Rejoindre</h2>
-                <div style="background: white; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
-                    <div style="font-size: 18px; font-weight: 500;">YouTube</div>
-                </div>
-                <div style="background: white; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
-                    <div style="font-size: 18px; font-weight: 500;">WhatsApp</div>
-                </div>
-                <div style="background: white; border-radius: 10px; padding: 15px;">
-                    <div style="font-size: 18px; font-weight: 500;">Télégramme</div>
-                </div>
-            </div>
-        </div>
-
         <div id="groups-section" class="section active">
             <div class="search-container">
                 <input type="text" class="search-input" id="groups-search" placeholder="Rechercher un groupe">
@@ -2260,7 +2234,35 @@
                 </div>
             </div>
         </div>
-    </div>
+    
+        <div id="join-section" class="section">
+            <div class="auth-header">
+                <div class="auth-logo"><i class="fas fa-users"></i></div>
+                <h1 class="auth-title">Nous Rejoindre</h1>
+            </div>
+            <div style="padding: 0 20px;">
+                <div class="setting-item" style="background: #fff; border-radius: 10px; margin-bottom: 15px;">
+                    <div class="setting-row">
+                        <div class="setting-icon"><i class="fab fa-youtube" style="color: #FF0000;"></i></div>
+                        <div class="setting-label">YouTube</div>
+                    </div>
+                </div>
+                <div class="setting-item" style="background: #fff; border-radius: 10px; margin-bottom: 15px;">
+                    <div class="setting-row">
+                        <div class="setting-icon"><i class="fab fa-whatsapp" style="color: #25D366;"></i></div>
+                        <div class="setting-label">WhatsApp</div>
+                    </div>
+                </div>
+                <div class="setting-item" style="background: #fff; border-radius: 10px;">
+                    <div class="setting-row">
+                        <div class="setting-icon"><i class="fab fa-telegram-plane" style="color: #0088cc;"></i></div>
+                        <div class="setting-label">Télégramme</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
 
     <div id="chat-interface" class="chat-section">
         <div class="chat-messages-container">
