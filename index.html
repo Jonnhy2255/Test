@@ -5696,5 +5696,20 @@
             }
         });
     </script>
+
+<script>
+document.getElementById("menu-join").addEventListener("click", function () {
+    document.querySelectorAll(".section").forEach(section => section.classList.remove("active"));
+    document.getElementById("join-section").classList.add("active");
+
+    document.querySelectorAll(".side-menu-item").forEach(item => item.classList.remove("active"));
+    this.classList.add("active");
+
+    document.getElementById("header-title").textContent = "Nous Rejoindre";
+    document.getElementById("side-menu").classList.remove("active");
+    document.getElementById("side-menu-overlay").classList.remove("active");
+});
+</script>
+
 </body>
 </html>
