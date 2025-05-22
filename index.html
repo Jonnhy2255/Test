@@ -228,71 +228,6 @@
             display: block;
         }
         
-        .log-panel {
-            position: fixed;
-            top: 50px;
-            left: 0;
-            right: 0;
-            height: 200px;
-            background-color: var(--log-panel-bg);
-            border-bottom: 1px solid var(--log-panel-border);
-            z-index: 900;
-            overflow-y: auto;
-            padding: 10px;
-            display: none;
-            transform: translateY(-100%);
-            transition: transform 0.3s ease;
-        }
-        
-        .log-panel.active {
-            display: block;
-            transform: translateY(0);
-        }
-        
-        .log-entry {
-            padding: 5px 0;
-            border-bottom: 1px solid var(--border-color);
-            font-family: monospace;
-            font-size: 12px;
-            word-wrap: break-word;
-        }
-        
-        .log-entry a {
-            color: var(--link-color);
-            text-decoration: underline;
-            cursor: pointer;
-        }
-        
-        .log-entry a:hover {
-            color: var(--link-hover);
-        }
-        
-        .log-entry.info {
-            color: var(--log-info);
-        }
-        
-        .log-entry.error {
-            color: var(--log-error);
-        }
-        
-        .log-entry.warning {
-            color: var(--log-warning);
-        }
-        
-        .log-entry.success {
-            color: var(--log-success);
-        }
-        
-        .log-panel-close {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            padding: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            color: var(--text-color);
-        }
-        
         .header {
             background-color: var(--bg-color);
             border-bottom: 1px solid var(--border-color);
@@ -313,15 +248,11 @@
             align-items: center;
         }
         
-        .menu-button, .log-button, .back-button {
+        .menu-button, .back-button {
             padding: 10px;
             cursor: pointer;
             font-size: 18px;
             color: var(--primary-color);
-        }
-        
-        .log-button {
-            margin-left: 5px;
         }
         
         .header-title {
@@ -2203,103 +2134,6 @@
             font-weight: bold;
         }
         
-        .comments-section {
-            padding: 20px 15px;
-            margin-top: 20px;
-        }
-        
-        .comment-form {
-            margin-bottom: 20px;
-        }
-        
-        .comment-input-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .comment-input {
-            flex: 1;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            background-color: var(--input-bg);
-            font-size: 16px;
-            color: var(--text-color);
-        }
-        
-        .comment-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-        
-        .comment-submit {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 0 15px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .comment-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .comment-item {
-            background-color: var(--comment-bg);
-            border-radius: 10px;
-            padding: 15px;
-            border: 1px solid var(--comment-border);
-        }
-        
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-        
-        .comment-author {
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-        }
-        
-        .comment-time {
-            font-size: 12px;
-            color: var(--inactive-text);
-        }
-        
-        .comment-content {
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        .comment-actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 10px;
-            gap: 15px;
-        }
-        
-        .comment-action {
-            font-size: 12px;
-            color: var(--inactive-text);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-        }
-        
-        .no-comments {
-            text-align: center;
-            padding: 20px;
-            color: var(--inactive-text);
-        }
-        
         #delete-account-confirmation .confirmation-text {
             color: var(--danger-color);
             font-weight: bold;
@@ -2396,15 +2230,6 @@
     
     <div class="side-menu-overlay" id="side-menu-overlay"></div>
     
-    <div class="log-panel" id="log-panel">
-        <div class="log-panel-close" id="log-panel-close">
-            <i class="fas fa-times"></i>
-        </div>
-        <div id="log-container">
-            <div class="log-entry info">Initialisation de l'application...</div>
-        </div>
-    </div>
-    
     <div id="auth-screen" class="auth-screen" style="display: none;">
         <div class="auth-header">
             <div class="auth-logo">
@@ -2493,9 +2318,6 @@
             </div>
             <div id="header-back-button" class="back-button" style="display:none;">
                 <i class="fas fa-chevron-left"></i>
-            </div>
-            <div class="log-button" id="log-button">
-                <i class="fas fa-list-alt"></i>
             </div>
         </div>
         <div id="header-title" class="header-title">Groupes</div>
@@ -2613,26 +2435,6 @@
                 <div class="forecasts-list" id="ai-list">
                 </div>
             </div>
-            
-            <div class="comments-section">
-                <h3 class="section-title">Commentaires</h3>
-                
-                <div class="comment-form">
-                    <div class="comment-input-container">
-                        <input type="text" class="comment-input" id="comment-input" placeholder="Ajouter un commentaire...">
-                        <button class="comment-submit" id="comment-submit">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="comment-list" id="comment-list">
-                    <div class="no-comments">
-                        <i class="fas fa-comments" style="font-size: 30px; color: var(--inactive-text); margin-bottom: 10px;"></i>
-                        <p>Soyez le premier à commenter!</p>
-                    </div>
-                </div>
-            </div>
         </div>
         
         <div id="join-us-section" class="section">
@@ -2707,6 +2509,17 @@
                 
                 <div class="about-divider"></div>
                 
+                <div class="terms-of-use">
+                    <h4>Conditions d'utilisation</h4>
+                    <p>En utilisant cette application, vous acceptez les conditions suivantes :</p>
+                    <p>1. <strong>Respect de la communauté</strong> - Les utilisateurs s'engagent à communiquer de manière respectueuse et à ne pas publier de contenu offensant, discriminatoire ou illégal.</p>
+                    <p>2. <strong>Confidentialité</strong> - Les informations personnelles partagées au sein des groupes doivent être traitées avec respect et ne doivent pas être divulguées à des tiers sans consentement.</p>
+                    <p>3. <strong>Pronostics sportifs</strong> - Les prédictions sportives sont fournies à titre informatif uniquement et ne constituent pas des conseils de paris. Aucune garantie de résultat n'est offerte.</p>
+                    <p>4. <strong>Responsabilité</strong> - Les administrateurs de l'application se réservent le droit de supprimer tout contenu inapproprié et de restreindre l'accès aux utilisateurs qui ne respectent pas ces conditions.</p>
+                </div>
+                
+                <div class="about-divider"></div>
+                
                 <div class="partners-section">
                     <div class="partners-title">Nos partenaires</div>
                     <div class="partners-list">
@@ -2735,17 +2548,6 @@
                             <div class="partner-name">Quora</div>
                         </div>
                     </div>
-                </div>
-                
-                <div class="about-divider"></div>
-                
-                <div class="terms-of-use">
-                    <h4>Conditions d'utilisation</h4>
-                    <p>En utilisant cette application, vous acceptez les conditions suivantes :</p>
-                    <p>1. <strong>Respect de la communauté</strong> - Les utilisateurs s'engagent à communiquer de manière respectueuse et à ne pas publier de contenu offensant, discriminatoire ou illégal.</p>
-                    <p>2. <strong>Confidentialité</strong> - Les informations personnelles partagées au sein des groupes doivent être traitées avec respect et ne doivent pas être divulguées à des tiers sans consentement.</p>
-                    <p>3. <strong>Pronostics sportifs</strong> - Les prédictions sportives sont fournies à titre informatif uniquement et ne constituent pas des conseils de paris. Aucune garantie de résultat n'est offerte.</p>
-                    <p>4. <strong>Responsabilité</strong> - Les administrateurs de l'application se réservent le droit de supprimer tout contenu inapproprié et de restreindre l'accès aux utilisateurs qui ne respectent pas ces conditions.</p>
                 </div>
                 
                 <div class="about-version">Version 1.4.0</div>
@@ -3041,7 +2843,6 @@
         let currentMessageForAction = null;
         let eventsUnsubscribe = null;
         let forecastsUnsubscribe = null;
-        let commentsUnsubscribe = null;
         let groupImageFile = null;
         let profileImageFile = null;
         let editingGroupId = null;
@@ -3052,80 +2853,8 @@
         let groupNameChanged = false;
         let groupDescriptionChanged = false;
         let groupPermissionsChanged = false;
-        let appLogs = [];
         let currentEventForDeletion = null;
         let currentForecastTab = 'safes';
-
-        const originalConsoleLog = console.log;
-        const originalConsoleError = console.error;
-        const originalConsoleWarn = console.warn;
-        const originalConsoleInfo = console.info;
-        
-        console.log = function() {
-            addToLogPanel('info', arguments);
-            originalConsoleLog.apply(console, arguments);
-        };
-        
-        console.error = function() {
-            addToLogPanel('error', arguments);
-            originalConsoleError.apply(console, arguments);
-        };
-        
-        console.warn = function() {
-            addToLogPanel('warning', arguments);
-            originalConsoleWarn.apply(console, arguments);
-        };
-        
-        console.info = function() {
-            addToLogPanel('info', arguments);
-            originalConsoleInfo.apply(console, arguments);
-        };
-        
-        function addToLogPanel(type, args) {
-            try {
-                const logContainer = document.getElementById('log-container');
-                if (!logContainer) return;
-                
-                let logText = Array.from(args).map(arg => {
-                    if (typeof arg === 'object') {
-                        try {
-                            return JSON.stringify(arg);
-                        } catch (e) {
-                            return arg.toString();
-                        }
-                    }
-                    return arg;
-                }).join(' ');
-                
-                logText = makeLinksClickable(logText);
-                
-                const logEntry = document.createElement('div');
-                logEntry.className = `log-entry ${type}`;
-                logEntry.innerHTML = logText;
-                
-                const timestamp = new Date().toLocaleTimeString();
-                logEntry.innerHTML = `[${timestamp}] ${logEntry.innerHTML}`;
-                
-                logContainer.appendChild(logEntry);
-                
-                while (logContainer.children.length > 100) {
-                    logContainer.removeChild(logContainer.firstChild);
-                }
-                
-                logContainer.scrollTop = logContainer.scrollHeight;
-                
-                appLogs.push({type, text: logText, timestamp});
-            } catch (error) {
-                originalConsoleError.call(console, 'Erreur lors de l\'ajout au panneau de logs:', error);
-            }
-        }
-        
-        function makeLinksClickable(text) {
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
-            return text.replace(urlRegex, function(url) {
-                return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
-            });
-        }
         
         function setupDarkMode() {
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -3259,14 +2988,6 @@
                 document.getElementById('side-menu').classList.remove('active');
                 document.getElementById('side-menu-overlay').classList.remove('active');
                 showAboutSection();
-            });
-            
-            document.getElementById('log-button').addEventListener('click', function() {
-                document.getElementById('log-panel').classList.toggle('active');
-            });
-            
-            document.getElementById('log-panel-close').addEventListener('click', function() {
-                document.getElementById('log-panel').classList.remove('active');
             });
             
             document.getElementById('events-button').addEventListener('click', function() {
@@ -3429,13 +3150,6 @@
                 filterEvents(this.value);
             });
             
-            document.getElementById('comment-submit').addEventListener('click', submitComment);
-            document.getElementById('comment-input').addEventListener('keyup', function(e) {
-                if (e.key === 'Enter') {
-                    submitComment();
-                }
-            });
-            
             document.addEventListener('click', function(e) {
                 const groupsSearch = document.getElementById('groups-search');
                 const eventsSearch = document.getElementById('events-search');
@@ -3448,364 +3162,6 @@
                     eventsSearch.blur();
                 }
             });
-            
-            document.getElementById('log-container').addEventListener('click', function(e) {
-                if (e.target.tagName === 'A') {
-                    e.preventDefault();
-                    window.open(e.target.href, '_blank');
-                }
-            });
-        }
-        
-        async function submitComment() {
-            const commentInput = document.getElementById('comment-input');
-            const commentText = commentInput.value.trim();
-            
-            if (!commentText) return;
-            
-            try {
-                await addDoc(collection(db, "commentaires"), {
-                    content: commentText,
-                    userId: currentUser.uid,
-                    userName: currentUserData.displayName || currentUserData.email.split('@')[0],
-                    userIsAdmin: isAdmin,
-                    timestamp: serverTimestamp(),
-                    likes: 0
-                });
-                
-                commentInput.value = '';
-                showNotification('Commentaire publié', 'success');
-            } catch (error) {
-                showNotification('Erreur lors de la publication du commentaire', 'error');
-            }
-        }
-        
-        function loadComments() {
-            if (commentsUnsubscribe) {
-                commentsUnsubscribe();
-                commentsUnsubscribe = null;
-            }
-            
-            const commentsList = document.getElementById('comment-list');
-            if (!commentsList) return;
-            
-            try {
-                const commentsRef = collection(db, "commentaires");
-                const q = query(commentsRef, orderBy("timestamp", "desc"), limit(50));
-                
-                commentsUnsubscribe = onSnapshot(q, (snapshot) => {
-                    if (snapshot.empty) {
-                        commentsList.innerHTML = `
-                            <div class="no-comments">
-                                <i class="fas fa-comments" style="font-size: 30px; color: var(--inactive-text); margin-bottom: 10px;"></i>
-                                <p>Soyez le premier à commenter!</p>
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    commentsList.innerHTML = '';
-                    
-                    snapshot.forEach(doc => {
-                        const commentData = doc.data();
-                        const commentElement = createCommentElement(doc.id, commentData);
-                        commentsList.appendChild(commentElement);
-                    });
-                }, error => {
-                    commentsList.innerHTML = `
-                        <div class="no-comments">
-                            <i class="fas fa-exclamation-circle" style="font-size: 30px; color: var(--danger-color); margin-bottom: 10px;"></i>
-                            <p>Erreur lors du chargement des commentaires</p>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-            }
-        }
-        
-        function createCommentElement(commentId, commentData) {
-            const commentItem = document.createElement('div');
-            commentItem.className = 'comment-item';
-            commentItem.setAttribute('data-id', commentId);
-            
-            let formattedDate = '';
-            if (commentData.timestamp) {
-                if (commentData.timestamp.toDate) {
-                    const date = commentData.timestamp.toDate();
-                    formattedDate = formatRelativeDate(date);
-                } else if (commentData.timestamp instanceof Date) {
-                    formattedDate = formatRelativeDate(commentData.timestamp);
-                }
-            }
-            
-            const canDelete = isAdmin || commentData.userId === currentUser.uid;
-            
-            commentItem.innerHTML = `
-                <div class="comment-header">
-                    <div class="comment-author">
-                        ${commentData.userName}
-                        ${commentData.userIsAdmin ? '<span class="admin-badge">Admin</span>' : ''}
-                    </div>
-                    <div class="comment-time">${formattedDate}</div>
-                </div>
-                <div class="comment-content">${commentData.content}</div>
-                <div class="comment-actions">
-                    <div class="comment-action like-action">
-                        <i class="far fa-thumbs-up"></i>
-                        <span>${commentData.likes || 0}</span>
-                    </div>
-                    ${canDelete ? `
-                        <div class="comment-action delete-action" data-id="${commentId}">
-                            <i class="far fa-trash-alt"></i>
-                            <span>Supprimer</span>
-                        </div>
-                    ` : ''}
-                </div>
-            `;
-            
-            const likeBtn = commentItem.querySelector('.like-action');
-            if (likeBtn) {
-                likeBtn.addEventListener('click', function() {
-                    likeComment(commentId);
-                });
-            }
-            
-            const deleteBtn = commentItem.querySelector('.delete-action');
-            if (deleteBtn) {
-                deleteBtn.addEventListener('click', function() {
-                    const commentId = this.getAttribute('data-id');
-                    deleteComment(commentId);
-                });
-            }
-            
-            return commentItem;
-        }
-        
-        async function likeComment(commentId) {
-            try {
-                const commentRef = doc(db, "commentaires", commentId);
-                const commentSnap = await getDoc(commentRef);
-                
-                if (commentSnap.exists()) {
-                    const currentLikes = commentSnap.data().likes || 0;
-                    await updateDoc(commentRef, {
-                        likes: currentLikes + 1
-                    });
-                }
-            } catch (error) {
-                showNotification('Erreur lors du like', 'error');
-            }
-        }
-        
-        async function deleteComment(commentId) {
-            try {
-                await deleteDoc(doc(db, "commentaires", commentId));
-                showNotification('Commentaire supprimé', 'success');
-            } catch (error) {
-                showNotification('Erreur lors de la suppression', 'error');
-            }
-        }
-        
-        function formatRelativeDate(date) {
-            if (!date) return '';
-            
-            const now = new Date();
-            const diffMs = now - date;
-            const diffSec = Math.floor(diffMs / 1000);
-            const diffMin = Math.floor(diffSec / 60);
-            const diffHour = Math.floor(diffMin / 60);
-            const diffDay = Math.floor(diffHour / 24);
-            
-            if (diffSec < 60) {
-                return 'À l\'instant';
-            } else if (diffMin < 60) {
-                return `Il y a ${diffMin} min`;
-            } else if (diffHour < 24) {
-                return `Il y a ${diffHour}h`;
-            } else if (diffDay < 7) {
-                return `Il y a ${diffDay}j`;
-            } else {
-                return date.toLocaleDateString();
-            }
-        }
-        
-        function showAdminNotificationDialog() {
-            document.getElementById('notif-title').value = '';
-            document.getElementById('notif-content').value = '';
-            document.getElementById('notif-type').value = 'info';
-            
-            document.getElementById('notif-title-error').style.display = 'none';
-            document.getElementById('notif-content-error').style.display = 'none';
-            
-            document.getElementById('admin-notif-dialog').classList.add('active');
-            document.getElementById('notif-title').focus();
-        }
-        
-        function hideAdminNotificationDialog() {
-            document.getElementById('admin-notif-dialog').classList.remove('active');
-        }
-        
-        async function sendAdminNotification() {
-            const title = document.getElementById('notif-title').value.trim();
-            const content = document.getElementById('notif-content').value.trim();
-            const type = document.getElementById('notif-type').value;
-            
-            let isValid = true;
-            
-            if (!title) {
-                document.getElementById('notif-title-error').style.display = 'block';
-                isValid = false;
-            } else {
-                document.getElementById('notif-title-error').style.display = 'none';
-            }
-            
-            if (!content) {
-                document.getElementById('notif-content-error').style.display = 'block';
-                isValid = false;
-            } else {
-                document.getElementById('notif-content-error').style.display = 'none';
-            }
-            
-            if (!isValid) return;
-            
-            setButtonLoading('send-notification-btn', true);
-            
-            try {
-                await addDoc(collection(db, "events"), {
-                    type: 'admin-notification',
-                    title: title,
-                    content: content,
-                    notificationType: type,
-                    userId: currentUser.uid,
-                    timestamp: serverTimestamp()
-                });
-                
-                setButtonLoading('send-notification-btn', false);
-                
-                hideAdminNotificationDialog();
-                
-                showNotification('Notification envoyée avec succès', 'success');
-            } catch (error) {
-                showNotification("Erreur lors de l'envoi de la notification", "error");
-                setButtonLoading('send-notification-btn', false);
-            }
-        }
-        
-        function showDeleteEventConfirmation(eventId) {
-            currentEventForDeletion = eventId;
-            document.getElementById('delete-event-confirmation').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-        }
-        
-        function hideDeleteEventConfirmation() {
-            document.getElementById('delete-event-confirmation').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-            currentEventForDeletion = null;
-        }
-        
-        async function confirmDeleteEvent() {
-            if (!currentEventForDeletion) {
-                hideDeleteEventConfirmation();
-                return;
-            }
-            
-            try {
-                await deleteDoc(doc(db, "events", currentEventForDeletion));
-                showNotification('Événement supprimé', 'success');
-            } catch (error) {
-                showNotification("Erreur lors de la suppression de l'événement", "error");
-            } finally {
-                hideDeleteEventConfirmation();
-            }
-        }
-        
-        function showDeleteAccountConfirmation() {
-            document.getElementById('delete-account-confirmation').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-        }
-        
-        function hideDeleteAccountConfirmation() {
-            document.getElementById('delete-account-confirmation').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-        }
-        
-        async function deleteAccount() {
-            document.getElementById('loading').style.display = 'flex';
-            document.getElementById('loading').querySelector('div:nth-child(3)').innerText = 'Suppression du compte...';
-            
-            try {
-                Object.keys(chatUnsubscribers).forEach(groupId => {
-                    if (chatUnsubscribers[groupId]) {
-                        chatUnsubscribers[groupId]();
-                    }
-                });
-                chatUnsubscribers = {};
-                
-                if (eventsUnsubscribe) {
-                    eventsUnsubscribe();
-                    eventsUnsubscribe = null;
-                }
-                
-                if (forecastsUnsubscribe) {
-                    forecastsUnsubscribe();
-                    forecastsUnsubscribe = null;
-                }
-                
-                if (commentsUnsubscribe) {
-                    commentsUnsubscribe();
-                    commentsUnsubscribe = null;
-                }
-                
-                const userRef = doc(db, "Users", currentUser.uid);
-                await deleteDoc(userRef);
-                
-                const groupsRef = collection(db, "groups");
-                const groupsQuery = query(groupsRef, where("members", "array-contains", currentUser.uid));
-                const groupsSnapshot = await getDocs(groupsQuery);
-                
-                for (const groupDoc of groupsSnapshot.docs) {
-                    const groupData = groupDoc.data();
-                    
-                    await updateDoc(doc(db, "groups", groupDoc.id), {
-                        members: arrayRemove(currentUser.uid)
-                    });
-                    
-                    if (groupData.admins && groupData.admins.includes(currentUser.uid)) {
-                        await updateDoc(doc(db, "groups", groupDoc.id), {
-                            admins: arrayRemove(currentUser.uid)
-                        });
-                    }
-                }
-                
-                const commentsRef = collection(db, "commentaires");
-                const commentsQuery = query(commentsRef, where("userId", "==", currentUser.uid));
-                const commentsSnapshot = await getDocs(commentsQuery);
-                
-                for (const commentDoc of commentsSnapshot.docs) {
-                    await deleteDoc(doc(db, "commentaires", commentDoc.id));
-                }
-                
-                await deleteUser(currentUser);
-                
-                hideDeleteAccountConfirmation();
-                
-                isLoggedIn = false;
-                currentUser = null;
-                currentUserData = null;
-                isAdmin = false;
-                
-                const loadingText = document.getElementById('loading').querySelector('div:nth-child(3)');
-                loadingText.innerText = 'Compte supprimé avec succès';
-                
-                setTimeout(() => {
-                    showLoginScreen();
-                }, 2000);
-                
-            } catch (error) {
-                document.getElementById('loading').style.display = 'none';
-                showNotification('Erreur lors de la suppression du compte', 'error');
-                hideDeleteAccountConfirmation();
-            }
         }
         
         function switchForecastTab(tabId) {
@@ -3918,8 +3274,6 @@
             document.getElementById('events-button').addEventListener('click', showEventsSection);
             
             loadForecastsData(currentForecastTab);
-            
-            loadComments();
         }
         
         async function loadForecastsData(tabType) {
@@ -3992,46 +3346,10 @@
             }
         }
         
-        async function createDemoComments() {
+        async function initCollections() {
             try {
-                const commentsRef = collection(db, "commentaires");
-                const commentsSnap = await getDocs(commentsRef);
-                
-                if (!commentsSnap.empty) {
-                    return;
-                }
-                
-                const demoComments = [
-                    {
-                        content: "Les pronostics sur la Premier League sont vraiment précis cette saison !",
-                        userName: "FootballFan22",
-                        userId: "demo_user_1",
-                        userIsAdmin: false,
-                        timestamp: Timestamp.fromDate(new Date(Date.now() - 86400000 * 2)),
-                        likes: 5
-                    },
-                    {
-                        content: "J'ai suivi le pronostic PSG-Lyon et c'était exactement comme prédit. Merci pour ces analyses !",
-                        userName: "ParisSG_Fan",
-                        userId: "demo_user_2",
-                        userIsAdmin: false,
-                        timestamp: Timestamp.fromDate(new Date(Date.now() - 86400000)),
-                        likes: 3
-                    },
-                    {
-                        content: "Bonjour à tous ! Nous sommes ravis de vous présenter notre nouvelle section de pronostics. N'hésitez pas à nous faire vos retours !",
-                        userName: "Admin",
-                        userId: "admin_user",
-                        userIsAdmin: true,
-                        timestamp: Timestamp.fromDate(new Date(Date.now() - 86400000 * 5)),
-                        likes: 10
-                    }
-                ];
-                
-                for (const comment of demoComments) {
-                    await addDoc(commentsRef, comment);
-                }
-                
+                const forecastsRef = collection(db, "forecasts");
+                const forecastsSnap = await getDocs(forecastsRef);
             } catch (error) {
             }
         }
@@ -5566,21 +4884,6 @@
             }
         }
         
-        async function initCollections() {
-            try {
-                const forecastsRef = collection(db, "forecasts");
-                const forecastsSnap = await getDocs(forecastsRef);
-                
-                const commentsRef = collection(db, "commentaires");
-                const commentsSnap = await getDocs(commentsRef);
-                
-                if (commentsSnap.empty) {
-                    await createDemoComments();
-                }
-            } catch (error) {
-            }
-        }
-        
         function updateCreateButtonAppearance() {
             const createButton = document.getElementById('create-group-btn');
             if (!createButton) return;
@@ -5935,11 +5238,6 @@
                 if (forecastsUnsubscribe) {
                     forecastsUnsubscribe();
                     forecastsUnsubscribe = null;
-                }
-                
-                if (commentsUnsubscribe) {
-                    commentsUnsubscribe();
-                    commentsUnsubscribe = null;
                 }
                 
                 await signOut(auth);
@@ -6550,6 +5848,172 @@
                 showNotification("Erreur lors du chargement des groupes", "error");
             } finally {
                 isLoadingGroups = false;
+            }
+        }
+
+        function showDeleteEventConfirmation(eventId) {
+            currentEventForDeletion = eventId;
+            document.getElementById('delete-event-confirmation').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+        
+        function hideDeleteEventConfirmation() {
+            document.getElementById('delete-event-confirmation').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+            currentEventForDeletion = null;
+        }
+        
+        async function confirmDeleteEvent() {
+            if (!currentEventForDeletion) {
+                hideDeleteEventConfirmation();
+                return;
+            }
+            
+            try {
+                await deleteDoc(doc(db, "events", currentEventForDeletion));
+                showNotification('Événement supprimé', 'success');
+            } catch (error) {
+                showNotification("Erreur lors de la suppression de l'événement", "error");
+            } finally {
+                hideDeleteEventConfirmation();
+            }
+        }
+        
+        function showDeleteAccountConfirmation() {
+            document.getElementById('delete-account-confirmation').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+        
+        function hideDeleteAccountConfirmation() {
+            document.getElementById('delete-account-confirmation').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+        
+        async function deleteAccount() {
+            document.getElementById('loading').style.display = 'flex';
+            document.getElementById('loading').querySelector('div:nth-child(3)').innerText = 'Suppression du compte...';
+            
+            try {
+                Object.keys(chatUnsubscribers).forEach(groupId => {
+                    if (chatUnsubscribers[groupId]) {
+                        chatUnsubscribers[groupId]();
+                    }
+                });
+                chatUnsubscribers = {};
+                
+                if (eventsUnsubscribe) {
+                    eventsUnsubscribe();
+                    eventsUnsubscribe = null;
+                }
+                
+                if (forecastsUnsubscribe) {
+                    forecastsUnsubscribe();
+                    forecastsUnsubscribe = null;
+                }
+                
+                const userRef = doc(db, "Users", currentUser.uid);
+                await deleteDoc(userRef);
+                
+                const groupsRef = collection(db, "groups");
+                const groupsQuery = query(groupsRef, where("members", "array-contains", currentUser.uid));
+                const groupsSnapshot = await getDocs(groupsQuery);
+                
+                for (const groupDoc of groupsSnapshot.docs) {
+                    const groupData = groupDoc.data();
+                    
+                    await updateDoc(doc(db, "groups", groupDoc.id), {
+                        members: arrayRemove(currentUser.uid)
+                    });
+                    
+                    if (groupData.admins && groupData.admins.includes(currentUser.uid)) {
+                        await updateDoc(doc(db, "groups", groupDoc.id), {
+                            admins: arrayRemove(currentUser.uid)
+                        });
+                    }
+                }
+                
+                await deleteUser(currentUser);
+                
+                hideDeleteAccountConfirmation();
+                
+                isLoggedIn = false;
+                currentUser = null;
+                currentUserData = null;
+                isAdmin = false;
+                
+                const loadingText = document.getElementById('loading').querySelector('div:nth-child(3)');
+                loadingText.innerText = 'Compte supprimé avec succès';
+                
+                setTimeout(() => {
+                    showLoginScreen();
+                }, 2000);
+                
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                showNotification('Erreur lors de la suppression du compte', 'error');
+                hideDeleteAccountConfirmation();
+            }
+        }
+
+        function showAdminNotificationDialog() {
+            document.getElementById('notif-title').value = '';
+            document.getElementById('notif-content').value = '';
+            document.getElementById('notif-type').value = 'info';
+            
+            document.getElementById('notif-title-error').style.display = 'none';
+            document.getElementById('notif-content-error').style.display = 'none';
+            
+            document.getElementById('admin-notif-dialog').classList.add('active');
+            document.getElementById('notif-title').focus();
+        }
+        
+        function hideAdminNotificationDialog() {
+            document.getElementById('admin-notif-dialog').classList.remove('active');
+        }
+        
+        async function sendAdminNotification() {
+            const title = document.getElementById('notif-title').value.trim();
+            const content = document.getElementById('notif-content').value.trim();
+            const type = document.getElementById('notif-type').value;
+            
+            let isValid = true;
+            
+            if (!title) {
+                document.getElementById('notif-title-error').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('notif-title-error').style.display = 'none';
+            }
+            
+            if (!content) {
+                document.getElementById('notif-content-error').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('notif-content-error').style.display = 'none';
+            }
+            
+            if (!isValid) return;
+            
+            setButtonLoading('send-notification-btn', true);
+            
+            try {
+                await addDoc(collection(db, "events"), {
+                    type: 'admin-notification',
+                    title: title,
+                    content: content,
+                    notificationType: type,
+                    userId: currentUser.uid,
+                    timestamp: serverTimestamp()
+                });
+                
+                setButtonLoading('send-notification-btn', false);
+                
+                hideAdminNotificationDialog();
+                
+                showNotification('Notification envoyée avec succès', 'success');
+            } catch (error) {
+                showNotification("Erreur lors de l'envoi de la notification", "error");
+                setButtonLoading('send-notification-btn', false);
             }
         }
 
