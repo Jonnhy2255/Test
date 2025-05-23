@@ -49,8 +49,8 @@
             --log-panel-bg: #f8f9fa;
             --log-panel-border: #e0e0e0;
             --link-hover: #0056b3;
-            --admin-notif-bg: #e3f2fd;
-            --admin-notif-border: #bbdefb;
+            --admin-notif-bg: #f8f9fa;
+            --admin-notif-border: #e0e0e0;
             --forecast-win-bg: rgba(76, 175, 80, 0.2);
             --forecast-loss-bg: rgba(244, 67, 54, 0.2);
             --forecast-pending-bg: rgba(255, 193, 7, 0.2);
@@ -103,8 +103,8 @@
             --log-panel-bg: #222222;
             --log-panel-border: #3e3e3e;
             --link-hover: #64B5F6;
-            --admin-notif-bg: #1a3b53;
-            --admin-notif-border: #2a5a82;
+            --admin-notif-bg: #2a2a2a;
+            --admin-notif-border: #333333;
             --forecast-win-bg: rgba(76, 175, 80, 0.15);
             --forecast-loss-bg: rgba(244, 67, 54, 0.15);
             --forecast-pending-bg: rgba(255, 193, 7, 0.15);
@@ -138,9 +138,9 @@
         .side-menu {
             position: fixed;
             top: 0;
-            left: -280px;
+            left: -250px;
             height: 100%;
-            width: 280px;
+            width: 250px;
             background-color: var(--side-menu-bg);
             z-index: 1000;
             transition: left 0.3s ease;
@@ -1070,14 +1070,15 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             padding: 12px 20px;
-            border-radius: 8px;
+            border-radius: 15px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             font-weight: 500;
             z-index: 1000;
             opacity: 0;
             transition: transform 0.3s ease, opacity 0.3s ease;
-            max-width: 80%;
+            max-width: 90%;
             text-align: center;
+            line-height: 1.4;
         }
 
         .notification.show {
@@ -1086,39 +1087,18 @@
         }
 
         .notification.success {
-            border-left: 4px solid var(--success-color);
+            background-color: var(--bg-color);
+            color: var(--success-color);
         }
 
         .notification.error {
-            border-left: 4px solid var(--danger-color);
+            background-color: var(--bg-color);
+            color: var(--danger-color);
         }
 
         .notification.info {
-            border-left: 4px solid var(--primary-color);
-        }
-        
-        .connection-status {
-            position: fixed;
-            top: 50px;
-            left: 0;
-            right: 0;
-            padding: 5px;
-            background-color: var(--danger-color);
-            color: white;
-            text-align: center;
-            font-size: 12px;
-            z-index: 100;
-            transform: translateY(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .connection-status.offline {
-            transform: translateY(0);
-        }
-
-        .connection-status.reconnecting {
-            background-color: var(--log-warning);
-            transform: translateY(0);
+            background-color: var(--bg-color);
+            color: var(--primary-color);
         }
         
         .verify-animation {
@@ -1888,22 +1868,22 @@
         }
 
         .admin-notification {
-            background-color: var(--admin-notif-bg);
-            border: 1px solid var(--admin-notif-border);
-            border-radius: 10px;
-            margin-bottom: 15px;
-            padding: 0;
-            overflow: hidden;
+            background-color: var(--bg-color);
+            border-radius: 15px;
+            margin: 10px 15px 20px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .admin-notification-header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 8px 15px;
+            color: var(--text-color);
+            padding: 0 0 10px;
             font-weight: bold;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 10px;
         }
         
         .admin-notification-title {
@@ -1913,18 +1893,22 @@
         
         .admin-notification-title i {
             margin-right: 8px;
+            color: var(--primary-color);
         }
         
         .admin-notification-content {
-            padding: 12px 15px;
+            padding: 5px 0;
             line-height: 1.4;
         }
         
         .admin-notification-footer {
-            padding: 5px 15px 12px;
+            padding: 5px 0 0;
             font-size: 12px;
             color: var(--inactive-text);
             text-align: right;
+            border-top: 1px solid var(--border-color);
+            margin-top: 10px;
+            padding-top: 8px;
         }
         
         .event-actions {
@@ -2037,6 +2021,81 @@
         .social-button.youtube {
             color: var(--social-youtube);
         }
+
+        /* Style pour la section À propos */
+        .about-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-color);
+            z-index: 120;
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .about-dialog.active {
+            display: flex;
+        }
+        
+        .about-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .about-logo {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .about-logo i {
+            font-size: 60px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .about-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .about-version {
+            text-align: center;
+            font-size: 14px;
+            color: var(--inactive-text);
+            margin-bottom: 30px;
+        }
+        
+        .about-section {
+            margin-bottom: 25px;
+        }
+        
+        .about-section-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .about-section-content {
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        
+        .about-footer {
+            text-align: center;
+            padding: 20px 0;
+            font-size: 12px;
+            color: var(--inactive-text);
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
     </style>
 </head>
 <body>
@@ -2058,6 +2117,12 @@
             <div class="side-menu-item" id="menu-profile">
                 <i class="fas fa-user"></i>
                 <div class="side-menu-text">Profil</div>
+            </div>
+        </div>
+        <div class="side-menu-footer">
+            <div class="side-menu-item" id="menu-about">
+                <i class="fas fa-info-circle"></i>
+                <div class="side-menu-text">À propos</div>
             </div>
         </div>
     </div>
@@ -2142,8 +2207,6 @@
         <div style="font-weight: bold; font-size: 24px; color: var(--primary-color);">GroupChat</div>
         <div style="margin-top: 10px; color: #6b7280;">Chargement...</div>
     </div>
-
-    <div class="connection-status" id="connection-status"></div>
 
     <div class="header">
         <div class="header-left">
@@ -2495,6 +2558,51 @@
         </div>
     </div>
     
+    <div id="about-dialog" class="about-dialog">
+        <div class="edit-header">
+            <div class="edit-back" id="about-back">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <div class="edit-title">À propos</div>
+        </div>
+        <div class="about-content">
+            <div class="about-logo">
+                <i class="fas fa-users"></i>
+                <div class="about-title">GroupChat</div>
+                <div class="about-version">Version 1.1.0</div>
+            </div>
+            
+            <div class="about-section">
+                <div class="about-section-title">Description</div>
+                <div class="about-section-content">
+                    GroupChat est une application de messagerie sécurisée qui permet aux utilisateurs de créer et de participer à des discussions de groupe.
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <div class="about-section-title">Fonctionnalités</div>
+                <div class="about-section-content">
+                    • Messagerie de groupe en temps réel<br>
+                    • Partage de pronostics sportifs<br>
+                    • Mode sombre personnalisable<br>
+                    • Gestion simple des groupes<br>
+                    • Envoi de notifications pour les administrateurs
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <div class="about-section-title">Confidentialité</div>
+                <div class="about-section-content">
+                    GroupChat respecte votre vie privée. Vos données personnelles ne sont utilisées que pour le fonctionnement de l'application et ne sont jamais partagées avec des tiers.
+                </div>
+            </div>
+            
+            <div class="about-footer">
+                © 2023-2024 GroupChat. Tous droits réservés.
+            </div>
+        </div>
+    </div>
+    
     <div id="delete-confirmation" class="confirmation-dialog">
         <div class="confirmation-title">Supprimer ce message ?</div>
         <div class="confirmation-text">Cette action est irréversible et le message sera supprimé pour tout le monde.</div>
@@ -2606,39 +2714,30 @@
         }
         
         function setupConnectionMonitoring() {
-            const connectionStatus = document.getElementById('connection-status');
-            
             function updateConnectionStatus() {
                 if (navigator.onLine) {
-                    connectionStatus.textContent = '';
-                    connectionStatus.classList.remove('offline');
-                    connectionStatus.classList.remove('reconnecting');
                     isOnline = true;
-                    
                     processQueuedMessages();
                 } else {
-                    connectionStatus.textContent = 'Pas de connexion internet';
-                    connectionStatus.classList.add('offline');
                     isOnline = false;
+                    showNotification("Pas de connexion internet. Les messages seront envoyés lorsque vous serez connecté.", "error");
                 }
             }
             
             window.addEventListener('online', () => {
-                connectionStatus.textContent = 'Reconnexion en cours...';
-                connectionStatus.classList.remove('offline');
-                connectionStatus.classList.add('reconnecting');
+                showNotification("Connexion rétablie", "success");
+                isOnline = true;
                 
                 setTimeout(() => {
-                    updateConnectionStatus();
                     if (isLoggedIn && currentSection === 'groups') {
                         loadGroups();
                     }
-                }, 1500);
+                    processQueuedMessages();
+                }, 1000);
             });
             
             window.addEventListener('offline', () => {
                 updateConnectionStatus();
-                showNotification('Pas de connexion internet. Les messages seront envoyés lorsque vous serez connecté.', 'error');
             });
             
             updateConnectionStatus();
@@ -2708,6 +2807,14 @@
                 document.getElementById('side-menu-overlay').classList.remove('active');
                 showProfileSection();
             });
+            
+            document.getElementById('menu-about').addEventListener('click', function() {
+                document.getElementById('side-menu').classList.remove('active');
+                document.getElementById('side-menu-overlay').classList.remove('active');
+                showAboutDialog();
+            });
+            
+            document.getElementById('about-back').addEventListener('click', hideAboutDialog);
             
             document.getElementById('events-button').addEventListener('click', function() {
                 showEventsSection();
@@ -2919,6 +3026,14 @@
             
             // Ouvrir dans une nouvelle fenêtre/onglet avec les paramètres de sécurité appropriés
             window.open(url, '_blank', 'noopener,noreferrer');
+        }
+        
+        function showAboutDialog() {
+            document.getElementById('about-dialog').classList.add('active');
+        }
+        
+        function hideAboutDialog() {
+            document.getElementById('about-dialog').classList.remove('active');
         }
         
         function switchForecastTab(tabId) {
@@ -3943,7 +4058,7 @@
                 
                 hideDeleteConfirmation();
             } catch (error) {
-                showNotification('Erreur lors de la suppression', 'error');
+                showNotification("Erreur lors de la suppression", "error");
                 hideDeleteConfirmation();
             }
         }
