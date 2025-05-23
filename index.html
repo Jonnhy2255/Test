@@ -1995,6 +1995,48 @@
             color: var(--danger-color);
             font-weight: bold;
         }
+
+        /* Styles pour les boutons sociaux */
+        .social-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 0 15px;
+            gap: 10px;
+        }
+        
+        .social-button {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 10px;
+            border-radius: 10px;
+            background-color: var(--secondary-color);
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .social-button:active {
+            transform: scale(0.98);
+        }
+        
+        .social-button.whatsapp {
+            color: var(--social-whatsapp);
+        }
+        
+        .social-button.telegram {
+            color: var(--social-telegram);
+        }
+        
+        .social-button.youtube {
+            color: var(--social-youtube);
+        }
     </style>
 </head>
 <body>
@@ -2013,12 +2055,6 @@
             <div class="side-menu-title">GroupChat</div>
         </div>
         <div class="side-menu-content">
-            
-            <div class="side-menu-item" id="menu-join">
-                <i class="fas fa-link"></i>
-                <div class="side-menu-text">Nous Rejoindre</div>
-            </div>
-
             <div class="side-menu-item" id="menu-profile">
                 <i class="fas fa-user"></i>
                 <div class="side-menu-text">Profil</div>
@@ -2140,7 +2176,9 @@
                 </div>
             </div>
             
-            
+            <div class="fab" id="create-group-btn">
+                <i class="fas fa-plus"></i>
+            </div>
         </div>
         
         <div id="events-section" class="section">
@@ -2160,7 +2198,9 @@
                 <i class="fas fa-times"></i>
             </div>
             
-            
+            <div class="fab" id="create-notification-btn" style="display: none;">
+                <i class="fas fa-bullhorn"></i>
+            </div>
         </div>
         
         <div id="profile-section" class="section">
@@ -2200,6 +2240,20 @@
                     </label>
                 </div>
                 
+                <div class="section-title">Nous rejoindre</div>
+                
+                <div class="social-buttons">
+                    <div class="social-button whatsapp" id="whatsapp-btn">
+                        WhatsApp
+                    </div>
+                    <div class="social-button telegram" id="telegram-btn">
+                        Telegram
+                    </div>
+                    <div class="social-button youtube" id="youtube-btn">
+                        YouTube
+                    </div>
+                </div>
+                
                 <button id="logout-btn" class="button">Se déconnecter</button>
                 <button id="delete-account-btn" class="button danger" style="margin-top: 15px;">Supprimer mon compte</button>
             </div>
@@ -2230,35 +2284,7 @@
                 </div>
             </div>
         </div>
-    
-        <div id="join-section" class="section">
-            <div class="auth-header">
-                <div class="auth-logo"><i class="fas fa-users"></i></div>
-                <h1 class="auth-title">Nous Rejoindre</h1>
-            </div>
-            <div style="padding: 0 20px;">
-                <div class="setting-item" style="background: #fff; border-radius: 10px; margin-bottom: 15px;">
-                    <div class="setting-row">
-                        <div class="setting-icon" style="background-color: var(--social-youtube); color: white;"><i class="fab fa-youtube"></i></div>
-                        <div class="setting-label">YouTube</div>
-                    </div>
-                </div>
-                <div class="setting-item" style="background: #fff; border-radius: 10px; margin-bottom: 15px;">
-                    <div class="setting-row">
-                        <div class="setting-icon" style="background-color: var(--social-whatsapp); color: white;"><i class="fab fa-whatsapp"></i></div>
-                        <div class="setting-label">WhatsApp</div>
-                    </div>
-                </div>
-                <div class="setting-item" style="background: #fff; border-radius: 10px;">
-                    <div class="setting-row">
-                        <div class="setting-icon" style="background-color: var(--social-telegram); color: white;"><i class="fab fa-telegram-plane"></i></div>
-                        <div class="setting-label">Télégramme</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        </div>
+    </div>
 
     <div id="chat-interface" class="chat-section">
         <div class="chat-messages-container">
@@ -2855,6 +2881,44 @@
                     eventsSearch.blur();
                 }
             });
+            
+            // Gestionnaires d'événements pour les boutons de réseaux sociaux
+            document.getElementById('whatsapp-btn').addEventListener('click', function() {
+                openSocialLink('whatsapp');
+            });
+            
+            document.getElementById('telegram-btn').addEventListener('click', function() {
+                openSocialLink('telegram');
+            });
+            
+            document.getElementById('youtube-btn').addEventListener('click', function() {
+                openSocialLink('youtube');
+            });
+        }
+        
+        // Fonction pour ouvrir les liens sociaux en toute sécurité
+        function openSocialLink(platform) {
+            let url = '';
+            
+            switch(platform) {
+                case 'whatsapp':
+                    url = 'https://wa.me/';
+                    showNotification('Ouverture de WhatsApp', 'info');
+                    break;
+                case 'telegram':
+                    url = 'https://t.me/';
+                    showNotification('Ouverture de Telegram', 'info');
+                    break;
+                case 'youtube':
+                    url = 'https://www.youtube.com/';
+                    showNotification('Ouverture de YouTube', 'info');
+                    break;
+                default:
+                    return;
+            }
+            
+            // Ouvrir dans une nouvelle fenêtre/onglet avec les paramètres de sécurité appropriés
+            window.open(url, '_blank', 'noopener,noreferrer');
         }
         
         function switchForecastTab(tabId) {
@@ -5692,20 +5756,5 @@
             }
         });
     </script>
-
-<script>
-document.getElementById("menu-join").addEventListener("click", function () {
-    document.querySelectorAll(".section").forEach(section => section.classList.remove("active"));
-    document.getElementById("join-section").classList.add("active");
-
-    document.querySelectorAll(".side-menu-item").forEach(item => item.classList.remove("active"));
-    this.classList.add("active");
-
-    document.getElementById("header-title").textContent = "Nous Rejoindre";
-    document.getElementById("side-menu").classList.remove("active");
-    document.getElementById("side-menu-overlay").classList.remove("active");
-});
-</script>
-
 </body>
 </html>
