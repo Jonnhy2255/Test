@@ -63,6 +63,7 @@
             --partner-firebase: #FFCA28;
             --partner-github: #333333;
             --partner-quora: #B92B27;
+            --notification-dot: #FF4842;
         }
         
         .dark {
@@ -110,6 +111,7 @@
             --forecast-pending-bg: rgba(255, 193, 7, 0.15);
             --comment-bg: #2a2a2a;
             --comment-border: #333333;
+            --notification-dot: #FF4842;
         }
         
         * {
@@ -268,6 +270,22 @@
             padding: 10px;
             cursor: pointer;
             font-size: 18px;
+            position: relative;
+        }
+        
+        .notification-dot {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 8px;
+            height: 8px;
+            background-color: var(--notification-dot);
+            border-radius: 50%;
+            display: none;
+        }
+        
+        .notification-dot.active {
+            display: block;
         }
         
         .content {
@@ -305,6 +323,7 @@
             transition: color 0.2s ease;
             height: 100%;
             padding: 8px 0;
+            position: relative;
         }
         
         .nav-item.active {
@@ -666,14 +685,39 @@
             height: 60px;
         }
         
+        .message-container {
+            margin-bottom: 16px;
+            clear: both;
+            display: flex;
+            flex-direction: column;
+            max-width: 85%;
+        }
+        
+        .message-container.sent {
+            float: right;
+            margin-left: auto;
+            align-items: flex-end;
+        }
+        
+        .message-container.received {
+            float: left;
+            margin-right: auto;
+            align-items: flex-start;
+        }
+        
+        .message-sender {
+            font-size: 12px;
+            margin-bottom: 2px;
+            font-weight: bold;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+        
         .message {
-            max-width: 75%;
             padding: 10px 14px;
-            margin-bottom: 10px;
-            border-radius: 20px;
+            border-radius: 18px;
             position: relative;
             word-wrap: break-word;
-            clear: both;
             transition: background-color 0.2s ease, transform 0.3s ease;
             transform: translateX(0);
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
@@ -682,24 +726,18 @@
         
         .message-received {
             background-color: var(--chat-received-bg);
-            float: left;
-            margin-right: auto;
             border-bottom-left-radius: 4px;
         }
         
         .message-sent {
             background-color: var(--chat-sent-bg);
             color: var(--chat-sent-text);
-            float: right;
-            margin-left: auto;
             border-bottom-right-radius: 4px;
         }
         
         .message-time {
             font-size: 10px;
-            margin-top: 4px;
-            text-align: right;
-            clear: both;
+            margin-top: 2px;
             opacity: 0.7;
         }
         
@@ -1680,21 +1718,6 @@
             padding: 0 0 15px 0;
         }
         
-        .forecasts-title {
-            font-weight: bold;
-            font-size: 20px;
-            text-align: center;
-            margin-bottom: 5px;
-            color: var(--primary-color);
-        }
-        
-        .forecasts-subtitle {
-            text-align: center;
-            font-size: 14px;
-            color: var(--inactive-text);
-            margin-bottom: 15px;
-        }
-        
         .forecasts-tabs {
             display: flex;
             border-bottom: 1px solid var(--border-color);
@@ -2221,6 +2244,7 @@
         <div id="header-action">
             <div class="events-button" id="events-button">
                 <i class="fas fa-bell"></i>
+                <div class="notification-dot" id="events-notification-dot"></div>
             </div>
         </div>
     </div>
@@ -2323,9 +2347,6 @@
         </div>
         
         <div id="forecasts-section" class="section">
-            <div class="forecasts-title">Pronostics Sportifs</div>
-            <div class="forecasts-subtitle">Prédictions sans paris - Uniquement à titre informatif</div>
-            
             <div class="forecasts-tabs">
                 <div class="forecast-tab active" data-tab="safes">Safes du jour</div>
                 <div class="forecast-tab" data-tab="exact">Scores exacts</div>
@@ -2642,6 +2663,7 @@
         <div class="nav-item" data-section="forecasts" style="flex: 1;">
             <i class="nav-icon fas fa-futbol"></i>
             <span>Pronostics</span>
+            <div class="notification-dot" id="forecasts-notification-dot" style="display: none;"></div>
         </div>
     </div>
 
@@ -2694,6 +2716,8 @@
         let groupPermissionsChanged = false;
         let currentEventForDeletion = null;
         let currentForecastTab = 'safes';
+        let lastViewedEventTimestamp = null;
+        let hasNewEvents = false;
         
         function setupDarkMode() {
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -2818,6 +2842,9 @@
             
             document.getElementById('events-button').addEventListener('click', function() {
                 showEventsSection();
+                // Marquer les événements comme vus
+                updateLastViewedEventTimestamp();
+                hideEventNotificationDot();
             });
             
             document.getElementById('close-events-btn').addEventListener('click', function() {
@@ -2962,6 +2989,7 @@
             
             document.querySelector('.context-menu-item.delete').addEventListener('click', showDeleteConfirmation);
             document.querySelector('.context-menu-item.copy').addEventListener('click', copyMessageText);
+            document.querySelector('.context-menu-item.reply').addEventListener('click', replyToMessage);
             
             document.addEventListener('touchstart', handleGlobalTouchStart, { passive: true });
             document.addEventListener('touchend', handleGlobalTouchEnd, { passive: true });
@@ -3085,8 +3113,22 @@
             
             document.getElementById('header-title').textContent = 'Groupes';
             
-            document.getElementById('header-action').innerHTML = '<div class="events-button" id="events-button"><i class="fas fa-bell"></i></div>';
-            document.getElementById('events-button').addEventListener('click', showEventsSection);
+            document.getElementById('header-action').innerHTML = `
+                <div class="events-button" id="events-button">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-dot" id="events-notification-dot"></div>
+                </div>
+            `;
+            
+            if (hasNewEvents) {
+                document.getElementById('events-notification-dot').classList.add('active');
+            }
+            
+            document.getElementById('events-button').addEventListener('click', function() {
+                showEventsSection();
+                updateLastViewedEventTimestamp();
+                hideEventNotificationDot();
+            });
             
             loadGroups();
         }
@@ -3117,10 +3159,52 @@
             
             document.getElementById('header-title').textContent = 'Pronostics';
             
-            document.getElementById('header-action').innerHTML = '<div class="events-button" id="events-button"><i class="fas fa-bell"></i></div>';
-            document.getElementById('events-button').addEventListener('click', showEventsSection);
+            document.getElementById('header-action').innerHTML = `
+                <div class="events-button" id="events-button">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-dot" id="events-notification-dot"></div>
+                </div>
+            `;
+            
+            if (hasNewEvents) {
+                document.getElementById('events-notification-dot').classList.add('active');
+            }
+            
+            document.getElementById('events-button').addEventListener('click', function() {
+                showEventsSection();
+                updateLastViewedEventTimestamp();
+                hideEventNotificationDot();
+            });
             
             loadForecastsData(currentForecastTab);
+        }
+
+        // Fonction pour déterminer si une date est aujourd'hui ou demain
+        function isDateTodayOrTomorrow(date) {
+            if (!date) return false;
+
+            let forecastDate;
+            if (date.toDate) {
+                forecastDate = date.toDate();
+            } else if (date instanceof Date) {
+                forecastDate = date;
+            } else {
+                return false;
+            }
+
+            const today = new Date();
+            const tomorrow = new Date();
+            tomorrow.setDate(today.getDate() + 1);
+
+            // Comparer seulement année, mois, jour (pas l'heure)
+            return (
+                (forecastDate.getFullYear() === today.getFullYear() && 
+                 forecastDate.getMonth() === today.getMonth() && 
+                 forecastDate.getDate() === today.getDate()) ||
+                (forecastDate.getFullYear() === tomorrow.getFullYear() && 
+                 forecastDate.getMonth() === tomorrow.getMonth() && 
+                 forecastDate.getDate() === tomorrow.getDate())
+            );
         }
         
         async function loadForecastsData(tabType) {
@@ -3132,6 +3216,7 @@
                     await initCollections();
                 }
             } catch (error) {
+                console.error("Erreur initiale:", error);
             }
             
             if (forecastsUnsubscribe) {
@@ -3155,7 +3240,7 @@
                     forecastsRef, 
                     where("type", "==", tabType), 
                     orderBy("date", "desc"),
-                    limit(20)
+                    limit(50)
                 );
                 
                 forecastsUnsubscribe = onSnapshot(q, (snapshot) => {
@@ -3170,17 +3255,32 @@
                         return;
                     }
                     
+                    let hasMatchesToday = false;
                     listElement.innerHTML = '';
                     
                     const fragment = document.createDocumentFragment();
                     
                     snapshot.forEach((doc) => {
                         const forecastData = doc.data();
-                        const forecastElement = createForecastElement(forecastData, tabType);
-                        fragment.appendChild(forecastElement);
+                        // Vérifier si la date du pronostic est aujourd'hui ou demain
+                        if (isDateTodayOrTomorrow(forecastData.date)) {
+                            hasMatchesToday = true;
+                            const forecastElement = createForecastElement(forecastData, tabType);
+                            fragment.appendChild(forecastElement);
+                        }
                     });
                     
-                    listElement.appendChild(fragment);
+                    if (hasMatchesToday) {
+                        listElement.appendChild(fragment);
+                    } else {
+                        listElement.innerHTML = `
+                            <div class="no-forecasts">
+                                <i class="fas fa-calendar-day"></i>
+                                <div class="empty-state-title">Pas de matchs aujourd'hui</div>
+                                <div class="empty-state-text">Aucun pronostic disponible pour aujourd'hui ou demain</div>
+                            </div>
+                        `;
+                    }
                 });
             } catch (error) {
                 listElement.innerHTML = `
@@ -3931,16 +4031,16 @@
                 const messageId = messageElement.getAttribute('data-id');
                 const messageFrom = messageElement.getAttribute('data-from');
                 
-                if (messageFrom !== currentUser.uid) return;
-                
+                // Autoriser l'action sur tous les messages, pas seulement les siens
                 longPressTimer = setTimeout(() => {
                     try {
                         if (navigator.vibrate) {
                             navigator.vibrate(50);
                         }
                         
-                        showContextMenu(messageElement, messageId);
+                        showContextMenu(messageElement, messageId, messageFrom);
                     } catch (error) {
+                        console.error("Erreur au toucher long:", error);
                     }
                 }, longPressDuration);
             }
@@ -3974,12 +4074,20 @@
             return element;
         }
         
-        function showContextMenu(messageElement, messageId) {
+        function showContextMenu(messageElement, messageId, messageFrom) {
             if (!messageElement || !messageId) return;
             
             try {
                 const rect = messageElement.getBoundingClientRect();
                 const menu = document.getElementById('message-context-menu');
+                
+                // Ajuster l'affichage des options en fonction de qui a envoyé le message
+                const deleteOption = menu.querySelector('.context-menu-item.delete');
+                if (messageFrom !== currentUser.uid && !isAdmin) {
+                    deleteOption.style.display = 'none';
+                } else {
+                    deleteOption.style.display = 'flex';
+                }
                 
                 menu.style.top = `${rect.top}px`;
                 
@@ -3996,9 +4104,39 @@
                 
                 currentMessageForAction = {
                     element: messageElement,
-                    id: messageId
+                    id: messageId,
+                    from: messageFrom,
+                    text: messageElement.textContent.trim()
                 };
             } catch (error) {
+                console.error("Erreur d'affichage du menu contextuel:", error);
+            }
+        }
+        
+        function replyToMessage() {
+            if (!currentMessageForAction) {
+                hideContextMenu();
+                return;
+            }
+            
+            try {
+                const chatInput = document.getElementById('chat-input');
+                const senderName = currentMessageForAction.from === currentUser.uid ? 'Vous' : 
+                    document.querySelector(`.sender-${currentMessageForAction.from}`).textContent || 'Utilisateur';
+                
+                // Tronquer le texte si trop long
+                let shortText = currentMessageForAction.text;
+                if (shortText.length > 50) {
+                    shortText = shortText.substring(0, 47) + '...';
+                }
+                
+                chatInput.value = `[Réponse à ${senderName}: "${shortText}"] `;
+                chatInput.focus();
+                
+                hideContextMenu();
+            } catch (error) {
+                console.error("Erreur de réponse:", error);
+                hideContextMenu();
             }
         }
         
@@ -4010,6 +4148,7 @@
                 }
                 activeContextMenu = null;
             } catch (error) {
+                console.error("Erreur en masquant le menu contextuel:", error);
             }
         }
         
@@ -4071,7 +4210,7 @@
             
             try {
                 const messageElement = currentMessageForAction.element;
-                const messageText = messageElement.querySelector('div:not(.message-time):not(.message-sender)').textContent;
+                const messageText = messageElement.textContent;
                 
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(messageText).then(() => {
@@ -4272,6 +4411,7 @@
                 await addDoc(eventsRef, completeEventData);
                 
             } catch (error) {
+                console.error("Erreur d'événement:", error);
             }
         }
         
@@ -4680,6 +4820,9 @@
                 
                 isLoggedIn = true;
                 
+                // Charger la dernière date de vue des événements
+                await loadLastViewedEventTimestamp();
+                
             } catch (error) {
                 showNotification("Erreur lors de la connexion à l'application", "error");
                 
@@ -4690,7 +4833,57 @@
                 document.querySelector('.content').style.display = 'block';
             }
         }
+
+        async function loadLastViewedEventTimestamp() {
+            try {
+                const userRef = doc(db, "Users", currentUser.uid);
+                const userDoc = await getDoc(userRef);
+                
+                if (userDoc.exists() && userDoc.data().lastViewedEvent) {
+                    lastViewedEventTimestamp = userDoc.data().lastViewedEvent.toDate();
+                } else {
+                    // Si aucune date n'existe, utiliser la date actuelle
+                    lastViewedEventTimestamp = new Date();
+                    await updateDoc(userRef, {
+                        lastViewedEvent: serverTimestamp()
+                    });
+                }
+            } catch (error) {
+                console.error("Erreur chargement date événements:", error);
+                // En cas d'erreur, utiliser la date actuelle
+                lastViewedEventTimestamp = new Date();
+            }
+        }
+
+        async function updateLastViewedEventTimestamp() {
+            try {
+                const userRef = doc(db, "Users", currentUser.uid);
+                await updateDoc(userRef, {
+                    lastViewedEvent: serverTimestamp()
+                });
+                
+                lastViewedEventTimestamp = new Date();
+            } catch (error) {
+                console.error("Erreur MAJ date événements:", error);
+            }
+        }
         
+        function showEventNotificationDot() {
+            const notificationDot = document.getElementById('events-notification-dot');
+            if (notificationDot) {
+                notificationDot.classList.add('active');
+            }
+            hasNewEvents = true;
+        }
+        
+        function hideEventNotificationDot() {
+            const notificationDot = document.getElementById('events-notification-dot');
+            if (notificationDot) {
+                notificationDot.classList.remove('active');
+            }
+            hasNewEvents = false;
+        }
+
         async function loadInitialData() {
             try {
                 await loadGroups();
@@ -4730,7 +4923,12 @@
             
             try {
                 const eventsRef = collection(db, "events");
-                const q = query(eventsRef, orderBy("timestamp", "desc"), limit(100));
+                const q = query(
+                    eventsRef, 
+                    where("type", "==", "admin-notification"), // Uniquement les notifications admin
+                    orderBy("timestamp", "desc"), 
+                    limit(100)
+                );
                 
                 eventsUnsubscribe = onSnapshot(q, async (snapshot) => {
                     const eventsList = document.getElementById('events-list');
@@ -4748,6 +4946,24 @@
                         `;
                         isLoadingEvents = false;
                         return;
+                    }
+                    
+                    // Vérifier s'il y a de nouveaux événements
+                    let hasNewerEvents = false;
+                    if (lastViewedEventTimestamp) {
+                        snapshot.forEach(doc => {
+                            const eventData = doc.data();
+                            if (eventData.timestamp && eventData.timestamp.toDate) {
+                                const eventDate = eventData.timestamp.toDate();
+                                if (eventDate > lastViewedEventTimestamp) {
+                                    hasNewerEvents = true;
+                                }
+                            }
+                        });
+                    }
+                    
+                    if (hasNewerEvents && currentSection !== 'events') {
+                        showEventNotificationDot();
                     }
                     
                     const fragment = document.createDocumentFragment();
@@ -4805,6 +5021,7 @@
                 return createAdminNotificationElement(eventId, eventData);
             }
             
+            // Pour d'autres types d'événements (inutilisés actuellement)
             const eventItem = document.createElement('div');
             eventItem.className = `event-item ${eventData.type}`;
             eventItem.setAttribute('data-id', eventId);
@@ -4830,38 +5047,6 @@
                 } catch (error) {
                     userName = 'Utilisateur';
                 }
-            }
-            
-            switch (eventData.type) {
-                case 'group-create':
-                    iconClass = 'fas fa-plus-circle';
-                    headerText = 'Création de groupe';
-                    contentText = `${userName} a créé le groupe "${eventData.groupName}"${!eventData.allowPublicMessages ? ' (messages restreints)' : ''}`;
-                    break;
-                    
-                case 'message-delete':
-                    iconClass = 'fas fa-trash-alt';
-                    headerText = 'Suppression de message';
-                    contentText = `${userName} a supprimé un message dans "${eventData.groupName}"`;
-                    break;
-                    
-                case 'user-create':
-                    iconClass = 'fas fa-user-plus';
-                    headerText = 'Nouvel utilisateur';
-                    contentText = `${userName} a rejoint l'application${eventData.isAdmin ? ' en tant qu\'administrateur' : ''}`;
-                    break;
-                    
-                case 'user-join':
-                    iconClass = 'fas fa-sign-in-alt';
-                    headerText = 'Accès au groupe';
-                    contentText = `${userName} a été ajouté au groupe "${eventData.groupName}"`;
-                    break;
-                    
-                case 'permission-change':
-                    iconClass = 'fas fa-lock';
-                    headerText = 'Modification des permissions';
-                    contentText = `${userName} a ${eventData.allowPublicMessages ? 'activé' : 'restreint'} l'écriture dans "${eventData.groupName}"`;
-                    break;
             }
             
             let actionButtons = '';
@@ -4891,7 +5076,8 @@
                 const deleteBtn = eventItem.querySelector('.event-action-btn.delete');
                 if (deleteBtn) {
                     deleteBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();                        showDeleteEventConfirmation(eventId);
+                        e.stopPropagation();                        
+                        showDeleteEventConfirmation(eventId);
                     });
                 }
             }
@@ -5188,9 +5374,23 @@
             document.getElementById('header-title').innerText = 'Groupes';
             document.getElementById('header-menu-button').style.display = 'block';
             document.getElementById('header-back-button').style.display = 'none';
-            document.getElementById('header-action').innerHTML = '<div class="events-button" id="events-button"><i class="fas fa-bell"></i></div>';
             
-            document.getElementById('events-button').addEventListener('click', showEventsSection);
+            document.getElementById('header-action').innerHTML = `
+                <div class="events-button" id="events-button">
+                    <i class="fas fa-bell"></i>
+                    <div class="notification-dot" id="events-notification-dot"></div>
+                </div>
+            `;
+            
+            if (hasNewEvents) {
+                document.getElementById('events-notification-dot').classList.add('active');
+            }
+            
+            document.getElementById('events-button').addEventListener('click', function() {
+                showEventsSection();
+                updateLastViewedEventTimestamp();
+                hideEventNotificationDot();
+            });
             
             document.getElementById('groups-section').classList.add('active');
             currentSection = 'groups';
@@ -5293,13 +5493,12 @@
         
         function createMessageElement(messageId, messageData, fromMe) {
             try {
-                const messageDiv = document.createElement('div');
+                // Créer le conteneur parent pour le message et les métadonnées
+                const messageContainer = document.createElement('div');
+                messageContainer.className = fromMe ? 'message-container sent' : 'message-container received';
                 
-                if (fromMe) {
-                    messageDiv.className = 'message message-sent';
-                } else {
-                    messageDiv.className = 'message message-received';
-                    
+                // Ajouter le nom de l'expéditeur au-dessus du message (pas dans la bulle)
+                if (!fromMe) {
                     const senderName = document.createElement('div');
                     senderName.className = `message-sender sender-${messageData.senderId}`;
                     
@@ -5309,9 +5508,12 @@
                         senderName.textContent = "Utilisateur";
                     });
                     
-                    messageDiv.appendChild(senderName);
+                    messageContainer.appendChild(senderName);
                 }
                 
+                // Créer la bulle de message
+                const messageDiv = document.createElement('div');
+                messageDiv.className = fromMe ? 'message message-sent' : 'message message-received';
                 messageDiv.setAttribute('data-id', messageId);
                 messageDiv.setAttribute('data-from', messageData.senderId || 'unknown');
                 
@@ -5319,6 +5521,9 @@
                 messageText.textContent = messageData.text || "";
                 messageDiv.appendChild(messageText);
                 
+                messageContainer.appendChild(messageDiv);
+                
+                // Ajouter l'horodatage sous la bulle
                 const messageTime = document.createElement('div');
                 messageTime.className = 'message-time';
                 
@@ -5335,13 +5540,16 @@
                     messageTime.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                 }
                 
-                messageDiv.appendChild(messageTime);
+                messageContainer.appendChild(messageTime);
                 
-                return messageDiv;
+                return messageContainer;
             } catch (error) {
                 const errorDiv = document.createElement('div');
-                errorDiv.className = fromMe ? 'message message-sent' : 'message message-received';
-                errorDiv.textContent = "Erreur d'affichage du message";
+                errorDiv.className = 'message-container';
+                const errorMsg = document.createElement('div');
+                errorMsg.className = fromMe ? 'message message-sent' : 'message message-received';
+                errorMsg.textContent = "Erreur d'affichage du message";
+                errorDiv.appendChild(errorMsg);
                 return errorDiv;
             }
         }
@@ -5353,6 +5561,7 @@
                     chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
                 }
             } catch (error) {
+                console.error("Erreur défilement:", error);
             }
         }
         
@@ -5399,6 +5608,9 @@
             if (!messagesContainer) return;
             
             try {
+                const messageContainer = document.createElement('div');
+                messageContainer.className = 'message-container sent';
+                
                 const messageDiv = document.createElement('div');
                 messageDiv.className = 'message message-sent';
                 
@@ -5406,13 +5618,16 @@
                 messageText.textContent = text;
                 messageDiv.appendChild(messageText);
                 
+                messageContainer.appendChild(messageDiv);
+                
                 const messageTime = document.createElement('div');
                 messageTime.className = 'message-time';
                 messageTime.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                messageDiv.appendChild(messageTime);
+                messageContainer.appendChild(messageTime);
                 
-                messagesContainer.appendChild(messageDiv);
+                messagesContainer.appendChild(messageContainer);
             } catch (error) {
+                console.error("Erreur ajout message UI:", error);
             }
         }
         
@@ -5502,6 +5717,7 @@
                     return userData.displayName || userData.email.split('@')[0];
                 }
             } catch (error) {
+                console.error("Erreur nom utilisateur:", error);
             }
             
             return 'Utilisateur';
@@ -5575,6 +5791,7 @@
                             lastMessageTime = messageData.createdAt;
                         }
                     } catch (error) {
+                        console.error("Erreur derniers messages:", error);
                     }
                     
                     const groupItem = document.createElement('div');
@@ -5597,6 +5814,7 @@
                             }
                         }
                     } catch (error) {
+                        console.error("Erreur texte message:", error);
                     }
                     
                     let timeDisplay = '';
@@ -5868,6 +6086,7 @@
                 }
                 
             } catch (error) {
+                console.error("Erreur initiale:", error);
             }
         });
     </script>
