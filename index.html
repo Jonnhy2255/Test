@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GroupChat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
     <style>
         :root {
             --primary-color: #5D5CDE;
@@ -64,6 +65,12 @@
             --partner-github: #333333;
             --partner-quora: #B92B27;
             --notification-dot: #FF4842;
+            --clickable-hover: rgba(0, 0, 0, 0.05);
+            --clickable-hover-dark: rgba(255, 255, 255, 0.1);
+            --warning-bg: rgba(255, 152, 0, 0.1);
+            --warning-text: #FF9800;
+            --image-message-bg: rgba(93, 92, 222, 0.1);
+            --image-viewer-bg: rgba(0, 0, 0, 0.9);
         }
         
         .dark {
@@ -112,6 +119,12 @@
             --comment-bg: #2a2a2a;
             --comment-border: #333333;
             --notification-dot: #FF4842;
+            --clickable-hover: rgba(255, 255, 255, 0.1);
+            --clickable-hover-dark: rgba(255, 255, 255, 0.15);
+            --warning-bg: rgba(255, 152, 0, 0.15);
+            --warning-text: #FFA726;
+            --image-message-bg: rgba(93, 92, 222, 0.15);
+            --image-viewer-bg: rgba(0, 0, 0, 0.95);
         }
         
         * {
@@ -174,6 +187,12 @@
             color: var(--text-color);
             cursor: pointer;
             padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+        
+        .side-menu-close:hover {
+            background-color: var(--clickable-hover);
         }
         
         .side-menu-content {
@@ -255,6 +274,13 @@
             cursor: pointer;
             font-size: 18px;
             color: var(--primary-color);
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+        
+        .menu-button:active, .back-button:active,
+        .menu-button:hover, .back-button:hover {
+            background-color: var(--clickable-hover);
         }
         
         .header-title {
@@ -271,6 +297,12 @@
             cursor: pointer;
             font-size: 18px;
             position: relative;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+        
+        .events-button:active, .events-button:hover {
+            background-color: var(--clickable-hover);
         }
         
         .notification-dot {
@@ -320,10 +352,14 @@
             color: var(--inactive-text);
             font-size: 10px;
             cursor: pointer;
-            transition: color 0.2s ease;
+            transition: color 0.2s ease, background-color 0.2s ease;
             height: 100%;
             padding: 8px 0;
             position: relative;
+        }
+        
+        .nav-item:hover, .nav-item:active {
+            background-color: var(--clickable-hover);
         }
         
         .nav-item.active {
@@ -378,6 +414,11 @@
             font-size: 10px;
             cursor: pointer;
             box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease;
+        }
+        
+        .profile-pic-edit:hover, .profile-pic-edit:active {
+            transform: scale(1.1);
         }
         
         .group-pic {
@@ -414,6 +455,12 @@
             font-size: 10px;
             cursor: pointer;
             box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease;
+            z-index: 2;
+        }
+        
+        .group-pic-edit:hover, .group-pic-edit:active {
+            transform: scale(1.1);
         }
         
         .chat-item, .user-item, .event-item {
@@ -426,7 +473,8 @@
             transition: background-color 0.2s ease, transform 0.3s ease, opacity 0.4s ease;
         }
         
-        .chat-item:active, .user-item:active {
+        .chat-item:active, .user-item:active,
+        .chat-item:hover, .user-item:hover {
             background-color: var(--selection-color);
         }
         
@@ -541,6 +589,11 @@
             padding: 15px 0;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .setting-item:hover {
+            background-color: var(--clickable-hover);
         }
         
         .setting-icon {
@@ -575,7 +628,7 @@
             width: 100%;
             margin-top: 20px;
             cursor: pointer;
-            transition: transform 0.15s ease, opacity 0.2s ease;
+            transition: transform 0.15s ease, opacity 0.2s ease, background-color 0.2s ease;
             position: relative;
             overflow: hidden;
         }
@@ -583,6 +636,10 @@
         .button:active {
             transform: scale(0.98);
             opacity: 0.9;
+        }
+        
+        .button:hover {
+            background-color: #4a49c0;
         }
 
         .button:disabled {
@@ -594,6 +651,10 @@
         .button.danger {
             background-color: var(--danger-color);
             color: white;
+        }
+        
+        .button.danger:hover {
+            background-color: #e53935;
         }
         
         .switch {
@@ -775,15 +836,47 @@
             justify-content: center;
             border: none;
             cursor: pointer;
-            transition: transform 0.15s ease;
+            transition: transform 0.15s ease, background-color 0.2s ease;
         }
         
         .send-button:active {
             transform: scale(0.9);
         }
+        
+        .send-button:hover {
+            background-color: #4a49c0;
+        }
 
         .send-button:disabled {
             background-color: var(--border-color);
+            color: var(--inactive-text);
+            cursor: not-allowed;
+        }
+        
+        .image-button {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: transform 0.15s ease, background-color 0.2s ease;
+        }
+        
+        .image-button:active {
+            transform: scale(0.9);
+        }
+        
+        .image-button:hover {
+            background-color: var(--clickable-hover);
+        }
+
+        .image-button:disabled {
             color: var(--inactive-text);
             cursor: not-allowed;
         }
@@ -838,6 +931,13 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
+            padding: 5px 8px;
+            border-radius: 15px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .profile-edit:hover, .profile-edit:active {
+            background-color: var(--clickable-hover);
         }
         
         .auth-screen {
@@ -900,9 +1000,13 @@
             cursor: pointer;
             position: relative;
             color: var(--inactive-text);
-            transition: color 0.3s;
+            transition: color 0.3s, background-color 0.2s ease;
             text-decoration: none;
             border-bottom: none;
+        }
+        
+        .auth-tab:hover {
+            background-color: var(--clickable-hover);
         }
         
         .auth-tab.active {
@@ -1196,6 +1300,7 @@
             display: flex;
             align-items: center;
             cursor: pointer;
+            transition: background-color 0.2s ease;
         }
         
         .context-menu-item:last-child {
@@ -1280,7 +1385,13 @@
         .create-group-back {
             color: var(--primary-color);
             cursor: pointer;
-            padding: 5px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+        
+        .create-group-back:hover, .create-group-back:active {
+            background-color: var(--clickable-hover);
         }
         
         .create-group-content {
@@ -1330,7 +1441,13 @@
         .edit-back {
             color: var(--primary-color);
             cursor: pointer;
-            padding: 5px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+        
+        .edit-back:hover, .edit-back:active {
+            background-color: var(--clickable-hover);
         }
         
         .edit-content {
@@ -1419,7 +1536,10 @@
         
         .fab:active {
             transform: scale(0.95);
-            background-color: var(--primary-color);
+        }
+        
+        .fab:hover {
+            background-color: #4a49c0;
         }
 
         .fab.disabled {
@@ -1481,6 +1601,7 @@
             cursor: pointer;
             min-width: 100px;
             text-align: center;
+            transition: background-color 0.2s ease;
         }
         
         .confirmation-cancel {
@@ -1488,14 +1609,26 @@
             color: var(--text-color);
         }
         
+        .confirmation-cancel:hover {
+            background-color: #e0e0e0;
+        }
+        
         .confirmation-confirm {
             background-color: var(--primary-color);
             color: white;
         }
         
+        .confirmation-confirm:hover {
+            background-color: #4a49c0;
+        }
+        
         .confirmation-delete {
             background-color: var(--danger-color);
             color: white;
+        }
+        
+        .confirmation-delete:hover {
+            background-color: #e53935;
         }
         
         .overlay {
@@ -1533,6 +1666,7 @@
         .event-item {
             transition: none;
             cursor: default;
+            position: relative;
         }
 
         .event-header {
@@ -1660,6 +1794,12 @@
             justify-content: center;
             cursor: pointer;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+        
+        .profile-upload-btn:hover, .profile-upload-btn:active {
+            transform: scale(1.1);
+            background-color: #4a49c0;
         }
 
         input[type="file"] {
@@ -1697,6 +1837,11 @@
             margin-left: 10px;
             font-size: 12px;
             cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .save-field-btn:hover {
+            background-color: #4a49c0;
         }
         
         .save-field-btn:disabled {
@@ -1737,7 +1882,11 @@
             cursor: pointer;
             position: relative;
             color: var(--inactive-text);
-            transition: color 0.3s;
+            transition: color 0.3s, background-color 0.2s ease;
+        }
+        
+        .forecast-tab:hover {
+            background-color: var(--clickable-hover);
         }
         
         .forecast-tab.active {
@@ -1896,6 +2045,7 @@
             margin: 10px 15px 20px;
             padding: 15px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
         }
         
         .admin-notification-header {
@@ -1934,6 +2084,30 @@
             padding-top: 8px;
         }
         
+        /* Nouveau styles pour le bouton de fermeture d'événement */
+        .event-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .event-close-btn:hover, .event-close-btn:active {
+            background-color: var(--clickable-hover);
+            transform: scale(1.1);
+        }
+        
         .event-actions {
             display: flex;
             justify-content: flex-end;
@@ -1945,13 +2119,19 @@
             background-color: var(--secondary-color);
             color: var(--primary-color);
             border: none;
-            border-radius: 4px;
-            padding: 3px 8px;
+            border-radius: 8px;
+            padding: 5px 10px;
             font-size: 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 4px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        
+        .event-action-btn:hover, .event-action-btn:active {
+            background-color: var(--clickable-hover);
+            transform: translateY(-1px);
         }
         
         .event-action-btn.delete {
@@ -1990,6 +2170,13 @@
             font-weight: bold;
             font-size: 14px;
             border: 1px solid var(--border-color);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            cursor: pointer;
+        }
+        
+        .score-option:hover, .score-option:active {
+            transform: translateY(-1px);
+            background-color: var(--clickable-hover);
         }
 
         .score-option.active {
@@ -2022,7 +2209,7 @@
             border-radius: 10px;
             background-color: var(--secondary-color);
             text-align: center;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             cursor: pointer;
             font-weight: bold;
@@ -2031,6 +2218,12 @@
         
         .social-button:active {
             transform: scale(0.98);
+        }
+        
+        .social-button:hover {
+            background-color: var(--clickable-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
         
         .social-button.whatsapp {
@@ -2119,6 +2312,187 @@
             border-top: 1px solid var(--border-color);
             margin-top: auto;
         }
+        
+        /* Améliorations de l'UI pour les éléments interactifs */
+        .clickable {
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        
+        .clickable:hover, .clickable:active {
+            background-color: var(--clickable-hover);
+        }
+        
+        /* Style pour les boutons fixés au bas de l'écran */
+        @media (max-height: 640px) {
+            .fab {
+                bottom: 70px;
+            }
+        }
+        
+        /* Fix pour assurer que les boutons ne débordent pas sur mobile */
+        @media (max-width: 380px) {
+            .confirmation-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .confirmation-button {
+                width: 100%;
+            }
+        }
+
+        /* Classes pour améliorer la visibilité des zones cliquables */
+        .clickable-focus:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+        
+        /* Message avec image */
+        .message-with-image {
+            padding: 5px;
+            border-radius: 18px;
+            background-color: var(--image-message-bg);
+            max-width: 100%;
+        }
+        
+        .message-image {
+            width: 100%;
+            border-radius: 13px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .message-image:hover {
+            transform: scale(0.98);
+        }
+        
+        .message-text {
+            padding: 0 10px 5px;
+            word-break: break-word;
+        }
+        
+        /* Image viewer (pour afficher les images en plein écran) */
+        .image-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--image-viewer-bg);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .image-viewer.active {
+            display: flex;
+        }
+        
+        .viewer-image-container {
+            position: relative;
+            max-width: 90%;
+            max-height: 80vh;
+            margin: 0 auto;
+        }
+        
+        .viewer-image {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 5px;
+            object-fit: contain;
+        }
+        
+        .viewer-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .viewer-close:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        
+        /* Conditions d'utilisation */
+        .terms-dialog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-color);
+            z-index: 120;
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .terms-dialog.active {
+            display: flex;
+        }
+        
+        .terms-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .terms-header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .terms-title {
+            flex: 1;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            text-decoration: none;
+            border-bottom: none;
+        }
+        
+        .terms-back {
+            color: var(--primary-color);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+        
+        .terms-back:hover, .terms-back:active {
+            background-color: var(--clickable-hover);
+        }
+        
+        .warning-box {
+            background-color: var(--warning-bg);
+            border-left: 4px solid var(--warning-text);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+        
+        .warning-box i {
+            color: var(--warning-text);
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -2143,6 +2517,10 @@
             </div>
         </div>
         <div class="side-menu-footer">
+            <div class="side-menu-item" id="menu-terms">
+                <i class="fas fa-file-alt"></i>
+                <div class="side-menu-text">Conditions d'utilisation</div>
+            </div>
             <div class="side-menu-item" id="menu-about">
                 <i class="fas fa-info-circle"></i>
                 <div class="side-menu-text">À propos</div>
@@ -2155,7 +2533,7 @@
     <div id="auth-screen" class="auth-screen" style="display: none;">
         <div class="auth-header">
             <div class="auth-logo">
-                <i class="fas fa-users"></i>
+                <i class="fas fa-futbol"></i>
             </div>
             <h1 class="auth-title">GroupChat</h1>
             <p class="auth-subtitle">Messagerie de groupe sécurisée</p>
@@ -2169,20 +2547,20 @@
         <div id="login-form" class="auth-form active">
             <div class="form-group">
                 <label class="form-label">Email</label>
-                <input type="email" class="form-input" id="login-email" placeholder="Votre email">
+                <input type="email" class="form-input clickable-focus" id="login-email" placeholder="Votre email">
                 <div id="login-email-error" class="form-error">Veuillez entrer un email valide</div>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Mot de passe</label>
-                <input type="password" class="form-input" id="login-password" placeholder="Votre mot de passe">
+                <input type="password" class="form-input clickable-focus" id="login-password" placeholder="Votre mot de passe">
                 <div id="login-password-error" class="form-error">Le mot de passe est obligatoire</div>
             </div>
             
             <div id="login-log" class="log-message" style="display:none;"></div>
 
             <div class="form-footer">
-                <button class="button" id="loginBtn">
+                <button class="button clickable-focus" id="loginBtn">
                     <span class="btn-loader" style="display:none;"></span>
                     <span class="btn-text">Se connecter</span>
                 </button>
@@ -2195,26 +2573,26 @@
         <div id="register-form" class="auth-form">
             <div class="form-group">
                 <label class="form-label">Email</label>
-                <input type="email" class="form-input" id="register-email" placeholder="Votre adresse email">
+                <input type="email" class="form-input clickable-focus" id="register-email" placeholder="Votre adresse email">
                 <div id="register-email-error" class="form-error">Veuillez entrer un email valide</div>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Mot de passe</label>
-                <input type="password" class="form-input" id="register-password" placeholder="Créez un mot de passe sécurisé">
+                <input type="password" class="form-input clickable-focus" id="register-password" placeholder="Créez un mot de passe sécurisé">
                 <div id="register-password-error" class="form-error">Le mot de passe doit contenir au moins 6 caractères</div>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Confirmer le mot de passe</label>
-                <input type="password" class="form-input" id="register-confirm-password" placeholder="Confirmez votre mot de passe">
+                <input type="password" class="form-input clickable-focus" id="register-confirm-password" placeholder="Confirmez votre mot de passe">
                 <div id="register-confirm-password-error" class="form-error">Les mots de passe ne correspondent pas</div>
             </div>
             
             <div id="register-log" class="log-message" style="display:none;"></div>
 
             <div class="form-footer">
-                <button class="button" id="registerBtn">
+                <button class="button clickable-focus" id="registerBtn">
                     <span class="btn-loader" style="display:none;"></span>
                     <span class="btn-text">S'inscrire</span>
                 </button>
@@ -2252,7 +2630,7 @@
     <div class="content">
         <div id="groups-section" class="section active">
             <div class="search-container">
-                <input type="text" class="search-input" id="groups-search" placeholder="Rechercher un groupe">
+                <input type="text" class="search-input clickable-focus" id="groups-search" placeholder="Rechercher un groupe">
             </div>
             
             <div class="chat-list" id="groups-list">
@@ -2270,7 +2648,7 @@
         
         <div id="events-section" class="section">
             <div class="search-container">
-                <input type="text" class="search-input" id="events-search" placeholder="Rechercher un événement">
+                <input type="text" class="search-input clickable-focus" id="events-search" placeholder="Rechercher un événement">
             </div>
             
             <div id="events-list">
@@ -2281,11 +2659,11 @@
                 </div>
             </div>
             
-            <div class="close-events-btn" id="close-events-btn">
-                <i class="fas fa-times"></i>
+            <div class="fab" id="close-events-btn" style="background-color: #f44336;">
+                <i class="fas fa-arrow-left"></i>
             </div>
             
-            <div class="fab" id="create-notification-btn" style="display: none;">
+            <div class="fab" id="create-notification-btn" style="display: none; bottom: 150px;">
                 <i class="fas fa-bullhorn"></i>
             </div>
         </div>
@@ -2341,8 +2719,8 @@
                     </div>
                 </div>
                 
-                <button id="logout-btn" class="button">Se déconnecter</button>
-                <button id="delete-account-btn" class="button danger" style="margin-top: 15px;">Supprimer mon compte</button>
+                <button id="logout-btn" class="button clickable-focus">Se déconnecter</button>
+                <button id="delete-account-btn" class="button danger clickable-focus" style="margin-top: 15px;">Supprimer mon compte</button>
             </div>
         </div>
         
@@ -2376,13 +2754,17 @@
             </div>
         </div>
         <div class="chat-input-container" id="chat-input-container">
+            <div class="image-button" id="image-button">
+                <i class="fas fa-image"></i>
+            </div>
             <div class="chat-input-wrapper">
-                <input type="text" id="chat-input" class="chat-input" placeholder="Écrire un message..." autocomplete="off">
+                <input type="text" id="chat-input" class="chat-input clickable-focus" placeholder="Écrire un message..." autocomplete="off">
             </div>
             <div class="send-button" id="send-button">
                 <i class="fas fa-paper-plane"></i>
             </div>
         </div>
+        <input type="file" id="chat-image-input" accept="image/*">
     </div>
     
     <div id="message-context-menu" class="message-context-menu" style="display: none;">
@@ -2419,12 +2801,12 @@
                 
                 <div class="form-group">
                     <label class="form-label">Nom du groupe</label>
-                    <input type="text" class="form-input" id="group-name" placeholder="Entrez le nom du groupe">
+                    <input type="text" class="form-input clickable-focus" id="group-name" placeholder="Entrez le nom du groupe">
                     <div id="group-name-error" class="form-error">Le nom du groupe est requis</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Description (optionnelle)</label>
-                    <input type="text" class="form-input" id="group-description" placeholder="Décrivez le groupe">
+                    <input type="text" class="form-input clickable-focus" id="group-description" placeholder="Décrivez le groupe">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Permissions de message</label>
@@ -2439,7 +2821,7 @@
                         Si désactivé, seuls les administrateurs pourront écrire des messages
                     </div>
                 </div>
-                <button class="button" id="create-group-submit">
+                <button class="button clickable-focus" id="create-group-submit">
                     <span class="btn-loader" style="display:none;"></span>
                     <span class="btn-text">Créer le groupe</span>
                 </button>
@@ -2466,7 +2848,7 @@
             <div class="form-group">
                 <label class="form-label">Nom du groupe</label>
                 <div class="editable-field">
-                    <input type="text" class="form-input editable-field-input" id="edit-group-name" placeholder="Entrez le nom du groupe">
+                    <input type="text" class="form-input editable-field-input clickable-focus" id="edit-group-name" placeholder="Entrez le nom du groupe">
                     <button class="save-field-btn" id="save-group-name-btn">Enregistrer</button>
                 </div>
                 <div id="edit-group-name-error" class="field-error">Le nom du groupe est requis</div>
@@ -2475,7 +2857,7 @@
             <div class="form-group">
                 <label class="form-label">Description</label>
                 <div class="editable-field">
-                    <input type="text" class="form-input editable-field-input" id="edit-group-description" placeholder="Décrivez le groupe">
+                    <input type="text" class="form-input editable-field-input clickable-focus" id="edit-group-description" placeholder="Décrivez le groupe">
                     <button class="save-field-btn" id="save-group-description-btn">Enregistrer</button>
                 </div>
                 <div id="edit-group-description-error" class="field-error"></div>
@@ -2498,7 +2880,7 @@
             
             <div class="form-group">
                 <label class="form-label">Image du groupe</label>
-                <button class="button" id="save-group-image-btn" style="margin-top: 10px;">
+                <button class="button clickable-focus" id="save-group-image-btn" style="margin-top: 10px;">
                     <span class="btn-loader" style="display:none;"></span>
                     <span class="btn-text">Enregistrer l'image</span>
                 </button>
@@ -2516,26 +2898,26 @@
         <div class="edit-content">
             <div class="form-group">
                 <label class="form-label">Titre de la notification</label>
-                <input type="text" class="form-input" id="notif-title" placeholder="Titre de votre notification">
+                <input type="text" class="form-input clickable-focus" id="notif-title" placeholder="Titre de votre notification">
                 <div id="notif-title-error" class="field-error">Le titre est requis</div>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Contenu</label>
-                <textarea class="form-input" id="notif-content" placeholder="Contenu de votre notification" rows="5" style="resize: none;"></textarea>
+                <textarea class="form-input clickable-focus" id="notif-content" placeholder="Contenu de votre notification" rows="5" style="resize: none;"></textarea>
                 <div id="notif-content-error" class="field-error">Le contenu est requis</div>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Type de notification</label>
-                <select class="form-input" id="notif-type">
+                <select class="form-input clickable-focus" id="notif-type">
                     <option value="info">Information</option>
                     <option value="alert">Alerte</option>
                     <option value="update">Mise à jour</option>
                 </select>
             </div>
             
-            <button class="button" id="send-notification-btn">
+            <button class="button clickable-focus" id="send-notification-btn">
                 <span class="btn-loader" style="display:none;"></span>
                 <span class="btn-text">Envoyer la notification</span>
             </button>
@@ -2563,7 +2945,7 @@
             <div class="form-group">
                 <label class="form-label">Nom d'utilisateur</label>
                 <div class="editable-field">
-                    <input type="text" class="form-input editable-field-input" id="edit-display-name" placeholder="Entrez votre nom d'utilisateur">
+                    <input type="text" class="form-input editable-field-input clickable-focus" id="edit-display-name" placeholder="Entrez votre nom d'utilisateur">
                     <button class="save-field-btn" id="save-display-name-btn">Enregistrer</button>
                 </div>
                 <div id="edit-display-name-error" class="field-error">Le nom d'utilisateur est requis</div>
@@ -2571,7 +2953,7 @@
             
             <div class="form-group">
                 <label class="form-label">Photo de profil</label>
-                <button class="button" id="save-profile-image-btn" style="margin-top: 10px;">
+                <button class="button clickable-focus" id="save-profile-image-btn" style="margin-top: 10px;">
                     <span class="btn-loader" style="display:none;"></span>
                     <span class="btn-text">Enregistrer la photo</span>
                 </button>
@@ -2624,6 +3006,60 @@
         </div>
     </div>
     
+    <div id="terms-dialog" class="terms-dialog">
+        <div class="terms-header">
+            <div class="terms-back" id="terms-back">
+                <i class="fas fa-arrow-left"></i>
+            </div>
+            <div class="terms-title">Conditions d'utilisation</div>
+        </div>
+        <div class="terms-content">
+            <div class="about-section">
+                <div class="about-section-title">Conditions générales</div>
+                <div class="about-section-content">
+                    En utilisant l'application GroupChat, vous acceptez de respecter les présentes conditions d'utilisation. L'accès et l'utilisation de cette application sont soumis à votre acceptation et au respect des présentes conditions.
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <i class="fas fa-exclamation-triangle"></i> <strong>AVERTISSEMENT :</strong> Les pronostics sont fournis à titre informatif uniquement. La vente ou revente de ces pronostics est strictement interdite et passible de bannissement à vie et de poursuites judiciaires.
+            </div>
+            
+            <div class="about-section">
+                <div class="about-section-title">Utilisation des pronostics</div>
+                <div class="about-section-content">
+                    Les pronostics sportifs fournis dans cette application sont destinés uniquement à des fins d'information et de divertissement. Ils ne constituent en aucun cas une incitation au jeu ou un conseil d'investissement.<br><br>
+                    
+                    Il est strictement interdit de:<br>
+                    • Revendre ou commercialiser ces pronostics<br>
+                    • Partager ces informations en dehors de la plateforme<br>
+                    • Utiliser ces informations à des fins commerciales<br><br>
+                    
+                    Tout utilisateur enfreignant ces règles s'expose à une suspension immédiate de son compte et à d'éventuelles poursuites judiciaires.
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <div class="about-section-title">Utilisation de l'application</div>
+                <div class="about-section-content">
+                    Vous vous engagez à utiliser l'application de manière légale et responsable. Il est interdit de:<br>
+                    • Publier du contenu illégal, diffamatoire, harcelant ou menaçant<br>
+                    • Usurper l'identité d'une autre personne<br>
+                    • Tenter d'accéder sans autorisation à des parties de l'application qui vous sont interdites<br>
+                    • Perturber le fonctionnement normal de l'application<br>
+                    • Publier des messages à caractère commercial non sollicités
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <div class="about-section-title">Responsabilité</div>
+                <div class="about-section-content">
+                    GroupChat n'est pas responsable des pertes financières ou autres dommages qui pourraient résulter de l'utilisation des pronostics ou des informations disponibles sur l'application. Les utilisateurs sont seuls responsables de leurs décisions et de leurs actions.
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div id="delete-confirmation" class="confirmation-dialog">
         <div class="confirmation-title">Supprimer ce message ?</div>
         <div class="confirmation-text">Cette action est irréversible et le message sera supprimé pour tout le monde.</div>
@@ -2651,9 +3087,27 @@
         </div>
     </div>
 
+    <div id="logout-confirmation" class="confirmation-dialog">
+        <div class="confirmation-title">Se déconnecter ?</div>
+        <div class="confirmation-text">Voulez-vous vraiment vous déconnecter de GroupChat ?</div>
+        <div class="confirmation-buttons">
+            <div class="confirmation-button confirmation-cancel" id="logout-cancel">Annuler</div>
+            <div class="confirmation-button confirmation-confirm" id="logout-confirm">Déconnecter</div>
+        </div>
+    </div>
+
     <div id="overlay" class="overlay"></div>
 
     <div class="notification" id="notification"></div>
+    
+    <div id="image-viewer" class="image-viewer">
+        <div class="viewer-image-container">
+            <img src="" alt="Image" class="viewer-image" id="viewer-image">
+        </div>
+        <div class="viewer-close" id="viewer-close">
+            <i class="fas fa-times"></i>
+        </div>
+    </div>
 
     <div class="bottom-nav" id="bottom-nav">
         <div class="nav-item active" data-section="groups" style="flex: 1;">
@@ -2718,6 +3172,7 @@
         let currentForecastTab = 'safes';
         let lastViewedEventTimestamp = null;
         let hasNewEvents = false;
+        let chatImageFile = null;
         
         function setupDarkMode() {
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -2777,7 +3232,8 @@
                 try {
                     await sendMessageToFirestore(
                         message.groupId, 
-                        message.text
+                        message.text,
+                        message.imageData
                     );
                 } catch (error) {
                     messageQueue.push(message);
@@ -2832,6 +3288,14 @@
                 showProfileSection();
             });
             
+            document.getElementById('menu-terms').addEventListener('click', function() {
+                document.getElementById('side-menu').classList.remove('active');
+                document.getElementById('side-menu-overlay').classList.remove('active');
+                showTermsDialog();
+            });
+            
+            document.getElementById('terms-back').addEventListener('click', hideTermsDialog);
+            
             document.getElementById('menu-about').addEventListener('click', function() {
                 document.getElementById('side-menu').classList.remove('active');
                 document.getElementById('side-menu-overlay').classList.remove('active');
@@ -2882,7 +3346,10 @@
                 localStorage.setItem('groupChatDarkMode', this.checked ? 'true' : 'false');
             });
             
-            document.getElementById('logout-btn').addEventListener('click', logoutUser);
+            document.getElementById('logout-btn').addEventListener('click', showLogoutConfirmation);
+            document.getElementById('logout-cancel').addEventListener('click', hideLogoutConfirmation);
+            document.getElementById('logout-confirm').addEventListener('click', logoutUser);
+            
             document.getElementById('delete-account-btn').addEventListener('click', showDeleteAccountConfirmation);
             
             document.getElementById('delete-account-cancel').addEventListener('click', hideDeleteAccountConfirmation);
@@ -2913,6 +3380,16 @@
             });
             
             document.getElementById('send-button').addEventListener('click', sendMessage);
+            
+            // Ajout des gestionnaires pour l'envoi d'image
+            document.getElementById('image-button').addEventListener('click', function() {
+                document.getElementById('chat-image-input').click();
+            });
+            
+            document.getElementById('chat-image-input').addEventListener('change', handleChatImageSelect);
+            
+            // Gestionnaire pour le visualiseur d'image
+            document.getElementById('viewer-close').addEventListener('click', closeImageViewer);
             
             document.getElementById('header-back-button').addEventListener('click', closeChat);
             
@@ -3056,12 +3533,78 @@
             window.open(url, '_blank', 'noopener,noreferrer');
         }
         
+        function showTermsDialog() {
+            document.getElementById('terms-dialog').classList.add('active');
+        }
+        
+        function hideTermsDialog() {
+            document.getElementById('terms-dialog').classList.remove('active');
+        }
+        
         function showAboutDialog() {
             document.getElementById('about-dialog').classList.add('active');
         }
         
         function hideAboutDialog() {
             document.getElementById('about-dialog').classList.remove('active');
+        }
+        
+        // Fonctions pour le visualiseur d'images
+        function showImageViewer(imageUrl) {
+            const viewer = document.getElementById('image-viewer');
+            const viewerImage = document.getElementById('viewer-image');
+            viewerImage.src = imageUrl;
+            viewer.classList.add('active');
+        }
+        
+        function closeImageViewer() {
+            const viewer = document.getElementById('image-viewer');
+            viewer.classList.remove('active');
+            setTimeout(() => {
+                document.getElementById('viewer-image').src = '';
+            }, 300);
+        }
+        
+        // Fonction pour traiter les images du chat
+        async function handleChatImageSelect(e) {
+            const file = e.target.files[0];
+            if (!file || !file.type.match('image.*')) {
+                showNotification('Veuillez sélectionner une image valide', 'error');
+                return;
+            }
+            
+            try {
+                if (file.size > 5 * 1024 * 1024) { // 5 MB max
+                    showNotification('L\'image est trop volumineuse (max 5 Mo)', 'error');
+                    return;
+                }
+                
+                showNotification('Préparation de l\'image...', 'info');
+                
+                const base64Image = await encodeImageToBase64(file);
+                chatImageFile = base64Image;
+                
+                // Optionnel : afficher un aperçu
+                const inputField = document.getElementById('chat-input');
+                if (inputField) {
+                    inputField.placeholder = 'Ajoutez un commentaire à l\'image (optionnel)';
+                    inputField.focus();
+                }
+                
+                const imageButton = document.getElementById('image-button');
+                if (imageButton) {
+                    imageButton.style.color = 'var(--success-color)';
+                }
+                
+                showNotification('Image prête à être envoyée', 'success');
+            } catch (error) {
+                console.error('Erreur lors du traitement de l\'image:', error);
+                showNotification('Erreur lors du traitement de l\'image', 'error');
+                chatImageFile = null;
+            }
+            
+            // Réinitialiser l'input pour permettre de sélectionner à nouveau la même image
+            document.getElementById('chat-image-input').value = '';
         }
         
         function switchForecastTab(tabId) {
@@ -3977,15 +4520,15 @@
         }
         
         function filterEvents(searchText) {
-            const eventItems = document.querySelectorAll('.event-item');
+            const eventItems = document.querySelectorAll('.event-item, .admin-notification');
             const lowerSearchText = searchText.toLowerCase();
             
             eventItems.forEach(item => {
-                const eventContent = item.querySelector('.event-content')?.textContent.toLowerCase() || '';
-                const eventHeader = item.querySelector('.event-header')?.textContent.toLowerCase() || '';
+                const eventContent = item.querySelector('.event-content, .admin-notification-content')?.textContent.toLowerCase() || '';
+                const eventHeader = item.querySelector('.event-header, .admin-notification-title')?.textContent.toLowerCase() || '';
                 
                 if (eventContent.includes(lowerSearchText) || eventHeader.includes(lowerSearchText)) {
-                    item.style.display = 'flex';
+                    item.style.display = item.classList.contains('event-item') ? 'flex' : 'block';
                 } else {
                     item.style.display = 'none';
                 }
@@ -4912,6 +5455,7 @@
             }
         }
         
+        // Correction du problème d'abonnement aux événements
         async function listenToEvents() {
             if (eventsUnsubscribe) {
                 eventsUnsubscribe();
@@ -4923,9 +5467,9 @@
             
             try {
                 const eventsRef = collection(db, "events");
+                // On récupère tous les événements (pas seulement admin-notification)
                 const q = query(
                     eventsRef, 
-                    where("type", "==", "admin-notification"), // Uniquement les notifications admin
                     orderBy("timestamp", "desc"), 
                     limit(100)
                 );
@@ -4969,13 +5513,28 @@
                     const fragment = document.createDocumentFragment();
                     
                     try {
-                        for (const eventDoc of snapshot.docs) {
-                            const eventData = eventDoc.data();
-                            const eventElement = await createEventElement(eventDoc.id, eventData);
-                            fragment.appendChild(eventElement);
-                        }
+                        // Filtrer pour n'afficher que les notifications admin
+                        const adminNotifications = snapshot.docs.filter(doc => 
+                            doc.data().type === 'admin-notification'
+                        );
                         
-                        eventsList.appendChild(fragment);
+                        if (adminNotifications.length === 0) {
+                            eventsList.innerHTML = `
+                                <div class="empty-state">
+                                    <i class="fas fa-bell"></i>
+                                    <div class="empty-state-title">Aucune notification</div>
+                                    <div class="empty-state-text">Les notifications apparaîtront ici</div>
+                                </div>
+                            `;
+                        } else {
+                            for (const eventDoc of adminNotifications) {
+                                const eventData = eventDoc.data();
+                                const eventElement = await createEventElement(eventDoc.id, eventData);
+                                fragment.appendChild(eventElement);
+                            }
+                            
+                            eventsList.appendChild(fragment);
+                        }
                     } catch (error) {
                         eventsList.innerHTML = `
                             <div class="empty-state">
@@ -5016,6 +5575,7 @@
             }
         }
         
+        // Nouveau bouton de fermeture de notification
         async function createEventElement(eventId, eventData) {
             if (eventData.type === 'admin-notification') {
                 return createAdminNotificationElement(eventId, eventData);
@@ -5114,6 +5674,7 @@
                 }
             }
             
+            // Création de l'élément avec le nouveau bouton de fermeture
             notificationElement.innerHTML = `
                 <div class="admin-notification-header">
                     <div class="admin-notification-title">
@@ -5126,18 +5687,23 @@
                 <div class="admin-notification-footer">
                     ${formattedDate}
                 </div>
+                <div class="event-close-btn" data-id="${eventId}">
+                    <i class="fas fa-times"></i>
+                </div>
             `;
             
-            if (isAdmin) {
-                const header = notificationElement.querySelector('.admin-notification-header');
-                const deleteBtn = document.createElement('div');
-                deleteBtn.innerHTML = '<i class="fas fa-times"></i>';
-                deleteBtn.style.cursor = 'pointer';
-                deleteBtn.addEventListener('click', (e) => {
+            // Gestion du clic sur le bouton de fermeture
+            const closeBtn = notificationElement.querySelector('.event-close-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    showDeleteEventConfirmation(eventId);
+                    if (isAdmin) {
+                        showDeleteEventConfirmation(eventId);
+                    } else {
+                        // Pour les utilisateurs non-admin, on cache simplement la notification dans l'UI
+                        notificationElement.style.display = 'none';
+                    }
                 });
-                header.appendChild(deleteBtn);
             }
             
             return notificationElement;
@@ -5226,7 +5792,18 @@
             }
         }
         
+        function showLogoutConfirmation() {
+            document.getElementById('logout-confirmation').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+        
+        function hideLogoutConfirmation() {
+            document.getElementById('logout-confirmation').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+        
         async function logoutUser() {
+            hideLogoutConfirmation();
             document.getElementById('loading').style.display = 'flex';
             document.getElementById('loading').querySelector('div:nth-child(3)').innerText = 'Déconnexion...';
             
@@ -5257,6 +5834,39 @@
                 currentGroup = '';
                 currentGroupId = null;
                 currentGroupData = null;
+                chatImageFile = null;
+                
+                // Réinitialisation des champs de formulaire
+                document.getElementById('login-email').value = '';
+                document.getElementById('login-password').value = '';
+                document.getElementById('register-email').value = '';
+                document.getElementById('register-password').value = '';
+                document.getElementById('register-confirm-password').value = '';
+                
+                // Cacher les messages d'erreur
+                document.getElementById('login-email-error').style.display = 'none';
+                document.getElementById('login-password-error').style.display = 'none';
+                document.getElementById('register-email-error').style.display = 'none';
+                document.getElementById('register-password-error').style.display = 'none';
+                document.getElementById('register-confirm-password-error').style.display = 'none';
+                
+                // Cacher les logs
+                hideLog('login-log');
+                hideLog('register-log');
+                
+                // S'assurer que les boutons de connexion et d'inscription sont réinitialisés
+                const loginBtn = document.getElementById('loginBtn');
+                const registerBtn = document.getElementById('registerBtn');
+                if (loginBtn) {
+                    loginBtn.classList.remove('loading');
+                    loginBtn.querySelector('.btn-loader').style.display = 'none';
+                    loginBtn.querySelector('.btn-text').style.visibility = 'visible';
+                }
+                if (registerBtn) {
+                    registerBtn.classList.remove('loading');
+                    registerBtn.querySelector('.btn-loader').style.display = 'none';
+                    registerBtn.querySelector('.btn-text').style.visibility = 'visible';
+                }
                 
                 showLoginScreen();
             } catch (error) {
@@ -5301,13 +5911,23 @@
             
             if (isGroupAdmin) {
                 document.getElementById('header-action').innerHTML = `
-                    <span class="notification-icon" id="edit-group-btn">
+                    <span class="notification-icon" id="edit-group-btn" style="padding: 8px; border-radius: 50%; cursor: pointer; transition: background-color 0.2s ease;">
                         <i class="fas fa-cog"></i>
                     </span>
                 `;
                 
-                document.getElementById('edit-group-btn').addEventListener('click', () => {
+                const editBtn = document.getElementById('edit-group-btn');
+                editBtn.addEventListener('click', () => {
                     showEditGroupDialog(currentGroupId, currentGroupData);
+                });
+                
+                // Ajouter une indication visuelle au survol
+                editBtn.addEventListener('mouseover', () => {
+                    editBtn.style.backgroundColor = 'var(--clickable-hover)';
+                });
+                
+                editBtn.addEventListener('mouseout', () => {
+                    editBtn.style.backgroundColor = '';
                 });
             } else {
                 document.getElementById('header-action').innerHTML = '';
@@ -5319,6 +5939,11 @@
             
             document.getElementById('chat-interface').style.display = 'block';
             
+            // Réinitialiser l'état de l'image
+            chatImageFile = null;
+            document.getElementById('image-button').style.color = 'var(--primary-color)';
+            document.getElementById('chat-input').placeholder = 'Écrire un message...';
+            
             checkSendPermissions();
             
             loadGroupMessages(groupId);
@@ -5327,9 +5952,10 @@
         function checkSendPermissions() {
             const chatInput = document.getElementById('chat-input');
             const sendButton = document.getElementById('send-button');
+            const imageButton = document.getElementById('image-button');
             const chatInputContainer = document.getElementById('chat-input-container');
             
-            if (!chatInput || !sendButton || !chatInputContainer) return;
+            if (!chatInput || !sendButton || !imageButton || !chatInputContainer) return;
             
             let canSend = true;
             let restrictionReason = '';
@@ -5345,6 +5971,8 @@
                 chatInput.disabled = true;
                 chatInput.placeholder = "Vous ne pouvez pas écrire dans ce groupe";
                 sendButton.disabled = true;
+                imageButton.disabled = true;
+                imageButton.style.color = 'var(--inactive-text)';
                 
                 if (!document.querySelector('.restricted-message')) {
                     const restrictedMsg = document.createElement('div');
@@ -5356,6 +5984,8 @@
                 chatInput.disabled = false;
                 chatInput.placeholder = "Écrire un message...";
                 sendButton.disabled = false;
+                imageButton.disabled = false;
+                imageButton.style.color = 'var(--primary-color)';
                 
                 const restrictedMsg = document.querySelector('.restricted-message');
                 if (restrictedMsg) {
@@ -5398,6 +6028,7 @@
             currentGroup = '';
             currentGroupId = null;
             currentGroupData = null;
+            chatImageFile = null;
         }
         
         function unsubscribeFromCurrentChat() {
@@ -5511,15 +6142,42 @@
                     messageContainer.appendChild(senderName);
                 }
                 
+                // Déterminer si c'est un message avec image
+                const hasImage = messageData.imageData && typeof messageData.imageData === 'string';
+                
                 // Créer la bulle de message
                 const messageDiv = document.createElement('div');
-                messageDiv.className = fromMe ? 'message message-sent' : 'message message-received';
+                
+                if (hasImage) {
+                    messageDiv.className = 'message message-with-image';
+                    
+                    const imageElement = document.createElement('img');
+                    imageElement.className = 'message-image';
+                    imageElement.src = messageData.imageData;
+                    imageElement.alt = 'Image';
+                    imageElement.loading = 'lazy';
+                    
+                    // Ajouter le gestionnaire pour ouvrir l'image en grand
+                    imageElement.addEventListener('click', () => {
+                        showImageViewer(messageData.imageData);
+                    });
+                    
+                    messageDiv.appendChild(imageElement);
+                    
+                    if (messageData.text && messageData.text.trim() !== '') {
+                        const textDiv = document.createElement('div');
+                        textDiv.className = 'message-text';
+                        textDiv.textContent = messageData.text;
+                        messageDiv.appendChild(textDiv);
+                    }
+                } else {
+                    // Message texte standard
+                    messageDiv.className = fromMe ? 'message message-sent' : 'message message-received';
+                    messageDiv.textContent = messageData.text || "";
+                }
+                
                 messageDiv.setAttribute('data-id', messageId);
                 messageDiv.setAttribute('data-from', messageData.senderId || 'unknown');
-                
-                const messageText = document.createElement('div');
-                messageText.textContent = messageData.text || "";
-                messageDiv.appendChild(messageText);
                 
                 messageContainer.appendChild(messageDiv);
                 
@@ -5571,7 +6229,11 @@
             
             const message = input.value.trim();
             
-            if (message === '' || !currentGroupId) return;
+            if ((!message || message === '') && !chatImageFile) {
+                return; // Ne pas envoyer de message vide sans image
+            }
+            
+            if (!currentGroupId) return;
             
             if (currentGroupData && currentGroupData.allowPublicMessages === false) {
                 if (!currentGroupData.admins || !currentGroupData.admins.includes(currentUser.uid)) {
@@ -5583,23 +6245,41 @@
             input.value = '';
             
             try {
-                addPendingMessageToUI(message);
+                const hasImage = chatImageFile !== null;
+                
+                // Ajout d'un message avec image à l'UI
+                if (hasImage) {
+                    addPendingImageMessageToUI(chatImageFile, message);
+                } else {
+                    addPendingMessageToUI(message);
+                }
                 
                 scrollToBottom();
                 
+                // Réinitialiser l'état de l'image
+                const imageButton = document.getElementById('image-button');
+                if (imageButton) {
+                    imageButton.style.color = 'var(--primary-color)';
+                }
+                document.getElementById('chat-input').placeholder = 'Écrire un message...';
+                
                 if (isOnline) {
-                    await sendMessageToFirestore(currentGroupId, message);
+                    await sendMessageToFirestore(currentGroupId, message, chatImageFile);
+                    chatImageFile = null; // Réinitialiser après l'envoi
                 } else {
                     messageQueue.push({
                         groupId: currentGroupId,
-                        text: message
+                        text: message,
+                        imageData: chatImageFile
                     });
                     
                     showNotification("Vous êtes hors ligne. Le message sera envoyé lorsque vous serez connecté.", "info");
+                    chatImageFile = null;
                 }
                 
             } catch (error) {
                 showNotification("Erreur lors de l'envoi du message", "error");
+                chatImageFile = null;
             }
         }
         
@@ -5631,23 +6311,70 @@
             }
         }
         
-        async function sendMessageToFirestore(groupId, text) {
-            if (!groupId || !text) return;
+        function addPendingImageMessageToUI(imageData, text) {
+            const messagesContainer = document.getElementById('chat-messages');
+            if (!messagesContainer) return;
+            
+            try {
+                const messageContainer = document.createElement('div');
+                messageContainer.className = 'message-container sent';
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message message-with-image';
+                
+                const imageElement = document.createElement('img');
+                imageElement.className = 'message-image';
+                imageElement.src = imageData;
+                imageElement.alt = 'Image';
+                messageDiv.appendChild(imageElement);
+                
+                if (text && text.trim() !== '') {
+                    const textDiv = document.createElement('div');
+                    textDiv.className = 'message-text';
+                    textDiv.textContent = text;
+                    messageDiv.appendChild(textDiv);
+                }
+                
+                messageContainer.appendChild(messageDiv);
+                
+                const messageTime = document.createElement('div');
+                messageTime.className = 'message-time';
+                messageTime.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                messageContainer.appendChild(messageTime);
+                
+                messagesContainer.appendChild(messageContainer);
+                
+                // Ajouter le gestionnaire d'événements pour ouvrir l'image
+                imageElement.addEventListener('click', () => {
+                    showImageViewer(imageData);
+                });
+            } catch (error) {
+                console.error("Erreur ajout message image UI:", error);
+            }
+        }
+        
+        async function sendMessageToFirestore(groupId, text, imageData = null) {
+            if (!groupId) return;
             
             try {
                 const groupRef = doc(db, "groups", groupId);
                 const messagesRef = collection(db, "groups", groupId, "messages");
                 
                 const messageData = {
-                    text: text,
+                    text: text || "",
                     senderId: currentUser.uid,
                     createdAt: serverTimestamp()
                 };
                 
+                // Ajouter l'image si présente
+                if (imageData) {
+                    messageData.imageData = imageData;
+                }
+                
                 const docRef = await addDoc(messagesRef, messageData);
                 
                 await updateDoc(groupRef, {
-                    lastMessage: text,
+                    lastMessage: imageData ? (text ? "📷 " + text : "📷 Image") : text,
                     lastMessageTime: serverTimestamp(),
                     lastSenderId: currentUser.uid
                 });
@@ -5723,6 +6450,7 @@
             return 'Utilisateur';
         }
         
+        // Correction du problème pour les utilisateurs non-admins qui cliquent sur l'icône de groupe
         async function loadGroups() {
             const groupsList = document.getElementById('groups-list');
             if (!groupsList) return;
@@ -5787,6 +6515,12 @@
                             const lastMessageDoc = messagesSnapshot.docs[0];
                             const messageData = lastMessageDoc.data();
                             lastMessage = messageData.text || "Image";
+                            
+                            // Si le message a une image, ajouter une icône
+                            if (messageData.imageData) {
+                                lastMessage = messageData.text ? `📷 ${messageData.text}` : "📷 Image";
+                            }
+                            
                             lastSenderId = messageData.senderId;
                             lastMessageTime = messageData.createdAt;
                         }
@@ -5829,47 +6563,53 @@
                         }
                     }
                     
-                    let groupImageHTML = '';
+                    // Création des éléments DOM pour une structure plus propre
+                    const groupPic = document.createElement('div');
+                    groupPic.className = 'group-pic';
+                    
                     if (groupData.imageURL) {
-                        groupImageHTML = `<img src="${groupData.imageURL}" alt="${groupData.name}">`;
+                        groupPic.innerHTML = `<img src="${groupData.imageURL}" alt="${groupData.name}">`;
                     } else {
-                        groupImageHTML = `<i class="fas fa-users" style="color: white;"></i>`;
+                        groupPic.innerHTML = `<i class="fas fa-users" style="color: white;"></i>`;
                     }
                     
+                    // Ajouter le bouton d'édition seulement pour les admins
                     if (isGroupAdmin) {
-                        groupImageHTML += `
-                            <div class="group-pic-edit" data-group-id="${groupDoc.id}">
-                                <i class="fas fa-pencil-alt"></i>
-                            </div>
-                        `;
+                        const editButton = document.createElement('div');
+                        editButton.className = 'group-pic-edit';
+                        editButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
+                        
+                        // Gestion distincte du clic sur l'icône d'édition
+                        editButton.addEventListener('click', (e) => {
+                            e.stopPropagation(); // Crucial pour éviter la propagation du clic
+                            showEditGroupDialog(groupDoc.id, groupData);
+                        });
+                        
+                        groupPic.appendChild(editButton);
                     }
                     
-                    groupItem.innerHTML = `
-                        <div class="group-pic">
-                            ${groupImageHTML}
-                        </div>
-                        <div class="item-content">
-                            <div style="display: flex; justify-content: space-between;">
-                                <div class="item-title">
-                                    ${groupData.name}
-                                    ${isRestricted ? '<span class="restricted-badge">Restreint</span>' : ''}
-                                </div>
-                                <div class="item-time">${timeDisplay || ''}</div>
+                    const itemContent = document.createElement('div');
+                    itemContent.className = 'item-content';
+                    
+                    itemContent.innerHTML = `
+                        <div style="display: flex; justify-content: space-between;">
+                            <div class="item-title">
+                                ${groupData.name}
+                                ${isRestricted ? '<span class="restricted-badge">Restreint</span>' : ''}
                             </div>
-                            <div class="item-subtitle">${lastMessageText}</div>
+                            <div class="item-time">${timeDisplay || ''}</div>
                         </div>
+                        <div class="item-subtitle">${lastMessageText}</div>
                     `;
                     
-                    groupItem.addEventListener('click', function(e) {
-                        if (e.target.closest('.group-pic-edit')) {
-                            e.stopPropagation();
-                            showEditGroupDialog(groupDoc.id, groupData);
-                            return;
-                        }
-                        
-                        const groupId = this.getAttribute('data-id');
-                        const groupName = this.getAttribute('data-group');
-                        openGroup(groupName, groupId);
+                    groupItem.appendChild(groupPic);
+                    groupItem.appendChild(itemContent);
+                    
+                    // Gestion du clic sur l'élément de groupe (pas sur le bouton d'édition)
+                    groupItem.addEventListener('click', () => {
+                        // Simplement ouvrir le groupe, le handler spécifique pour le bouton d'édition
+                        // interceptera ses propres clics
+                        openGroup(groupData.name, groupDoc.id);
                     });
                     
                     fragment.appendChild(groupItem);
@@ -5911,10 +6651,7 @@
             
             try {
                 await deleteDoc(doc(db, "events", currentEventForDeletion));
-                showNotification('Événement supprimé', 'success');
-            } catch (error) {
-                showNotification("Erreur lors de la suppression de l'événement", "error");
-            } finally {
+                showNotification('Événement supprimé', 'success');            } finally {
                 hideDeleteEventConfirmation();
             }
         }
@@ -6055,6 +6792,19 @@
                 showNotification("Erreur lors de l'envoi de la notification", "error");
                 setButtonLoading('send-notification-btn', false);
             }
+        }
+
+        // Enregistrement du service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(function(registration) {
+                        console.log('Service Worker enregistré avec succès:', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('Échec de l\'enregistrement du Service Worker:', error);
+                    });
+            });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
