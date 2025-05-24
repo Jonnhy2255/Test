@@ -16,7 +16,7 @@
             --chat-sent-bg: #5D5CDE;
             --chat-sent-text: #ffffff;
             --chat-received-bg: #f0f2f5;
-            --selection-color: rgba(93, 92, 222, 0.2);
+            --selection-color: rgba(93, 92, 222, 0.3);
             --action-menu-bg: rgba(0, 0, 0, 0.9);
             --action-menu-text: #ffffff;
             --highlight-color: #FFEB3B;
@@ -65,12 +65,11 @@
             --partner-github: #333333;
             --partner-quora: #B92B27;
             --notification-dot: #FF4842;
-            --clickable-hover: rgba(0, 0, 0, 0.05);
-            --clickable-hover-dark: rgba(255, 255, 255, 0.1);
             --warning-bg: rgba(255, 152, 0, 0.1);
             --warning-text: #FF9800;
             --image-message-bg: rgba(93, 92, 222, 0.1);
             --image-viewer-bg: rgba(0, 0, 0, 0.9);
+            --selected-message-border: rgba(93, 92, 222, 0.7);
         }
         
         .dark {
@@ -81,7 +80,7 @@
             --chat-received-bg: #2c2c2c;
             --chat-sent-bg: #5D5CDE;
             --chat-sent-text: #ffffff;
-            --selection-color: rgba(93, 92, 222, 0.3);
+            --selection-color: rgba(93, 92, 222, 0.4);
             --action-menu-bg: rgba(60, 60, 60, 0.95);
             --highlight-color: #FFEB3B;
             --blocked-color: #ff6b6b;
@@ -119,12 +118,11 @@
             --comment-bg: #2a2a2a;
             --comment-border: #333333;
             --notification-dot: #FF4842;
-            --clickable-hover: rgba(255, 255, 255, 0.1);
-            --clickable-hover-dark: rgba(255, 255, 255, 0.15);
             --warning-bg: rgba(255, 152, 0, 0.15);
             --warning-text: #FFA726;
             --image-message-bg: rgba(93, 92, 222, 0.15);
             --image-viewer-bg: rgba(0, 0, 0, 0.95);
+            --selected-message-border: rgba(93, 92, 222, 0.8);
         }
         
         * {
@@ -188,11 +186,6 @@
             cursor: pointer;
             padding: 5px;
             border-radius: 50%;
-            transition: background-color 0.2s ease;
-        }
-        
-        .side-menu-close:hover {
-            background-color: var(--clickable-hover);
         }
         
         .side-menu-content {
@@ -206,11 +199,6 @@
             align-items: center;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        
-        .side-menu-item:hover {
-            background-color: var(--side-menu-hover);
         }
         
         .side-menu-item.active {
@@ -275,12 +263,6 @@
             font-size: 18px;
             color: var(--primary-color);
             border-radius: 50%;
-            transition: background-color 0.2s ease;
-        }
-        
-        .menu-button:active, .back-button:active,
-        .menu-button:hover, .back-button:hover {
-            background-color: var(--clickable-hover);
         }
         
         .header-title {
@@ -298,11 +280,6 @@
             font-size: 18px;
             position: relative;
             border-radius: 50%;
-            transition: background-color 0.2s ease;
-        }
-        
-        .events-button:active, .events-button:hover {
-            background-color: var(--clickable-hover);
         }
         
         .notification-dot {
@@ -352,14 +329,9 @@
             color: var(--inactive-text);
             font-size: 10px;
             cursor: pointer;
-            transition: color 0.2s ease, background-color 0.2s ease;
             height: 100%;
             padding: 8px 0;
             position: relative;
-        }
-        
-        .nav-item:hover, .nav-item:active {
-            background-color: var(--clickable-hover);
         }
         
         .nav-item.active {
@@ -470,12 +442,7 @@
             align-items: center;
             cursor: pointer;
             position: relative;
-            transition: background-color 0.2s ease, transform 0.3s ease, opacity 0.4s ease;
-        }
-        
-        .chat-item:active, .user-item:active,
-        .chat-item:hover, .user-item:hover {
-            background-color: var(--selection-color);
+            transition: transform 0.3s ease, opacity 0.4s ease;
         }
         
         .chat-item.selected, .user-item.selected {
@@ -589,11 +556,6 @@
             padding: 15px 0;
             border-bottom: 1px solid var(--border-color);
             cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        
-        .setting-item:hover {
-            background-color: var(--clickable-hover);
         }
         
         .setting-icon {
@@ -795,6 +757,11 @@
             color: var(--chat-sent-text);
             border-bottom-right-radius: 4px;
         }
+
+        /* Amélioration du marquage visuel des messages sélectionnés */
+        .message.selected {
+            box-shadow: 0 0 0 2px var(--selected-message-border);
+        }
         
         .message-time {
             font-size: 10px;
@@ -871,10 +838,6 @@
         .image-button:active {
             transform: scale(0.9);
         }
-        
-        .image-button:hover {
-            background-color: var(--clickable-hover);
-        }
 
         .image-button:disabled {
             color: var(--inactive-text);
@@ -933,11 +896,6 @@
             gap: 5px;
             padding: 5px 8px;
             border-radius: 15px;
-            transition: background-color 0.2s ease;
-        }
-        
-        .profile-edit:hover, .profile-edit:active {
-            background-color: var(--clickable-hover);
         }
         
         .auth-screen {
@@ -1003,10 +961,6 @@
             transition: color 0.3s, background-color 0.2s ease;
             text-decoration: none;
             border-bottom: none;
-        }
-        
-        .auth-tab:hover {
-            background-color: var(--clickable-hover);
         }
         
         .auth-tab.active {
@@ -1300,15 +1254,10 @@
             display: flex;
             align-items: center;
             cursor: pointer;
-            transition: background-color 0.2s ease;
         }
         
         .context-menu-item:last-child {
             border-bottom: none;
-        }
-        
-        .context-menu-item:hover, .context-menu-item:active {
-            background-color: var(--selection-color);
         }
         
         .context-menu-icon {
@@ -1387,11 +1336,6 @@
             cursor: pointer;
             padding: 8px;
             border-radius: 50%;
-            transition: background-color 0.2s ease;
-        }
-        
-        .create-group-back:hover, .create-group-back:active {
-            background-color: var(--clickable-hover);
         }
         
         .create-group-content {
@@ -1443,11 +1387,6 @@
             cursor: pointer;
             padding: 8px;
             border-radius: 50%;
-            transition: background-color 0.2s ease;
-        }
-        
-        .edit-back:hover, .edit-back:active {
-            background-color: var(--clickable-hover);
         }
         
         .edit-content {
@@ -1509,11 +1448,6 @@
             cursor: pointer;
             width: 100%;
             margin-bottom: 20px;
-            transition: background-color 0.2s ease;
-        }
-        
-        .image-upload-btn:hover {
-            background-color: var(--selection-color);
         }
         
         .fab {
@@ -1601,7 +1535,6 @@
             cursor: pointer;
             min-width: 100px;
             text-align: center;
-            transition: background-color 0.2s ease;
         }
         
         .confirmation-cancel {
@@ -1609,26 +1542,14 @@
             color: var(--text-color);
         }
         
-        .confirmation-cancel:hover {
-            background-color: #e0e0e0;
-        }
-        
         .confirmation-confirm {
             background-color: var(--primary-color);
             color: white;
         }
         
-        .confirmation-confirm:hover {
-            background-color: #4a49c0;
-        }
-        
         .confirmation-delete {
             background-color: var(--danger-color);
             color: white;
-        }
-        
-        .confirmation-delete:hover {
-            background-color: #e53935;
         }
         
         .overlay {
@@ -1725,7 +1646,7 @@
             text-align: center;
             padding: 10px;
             margin: 10px 0;
-            background-color: rgba(255, 193, 7, 0.2);
+            background-color: rgba(255, 193, 7, 0.1);
             border-radius: 10px;
             font-size: 14px;
             color: var(--text-color);
@@ -1883,10 +1804,6 @@
             position: relative;
             color: var(--inactive-text);
             transition: color 0.3s, background-color 0.2s ease;
-        }
-        
-        .forecast-tab:hover {
-            background-color: var(--clickable-hover);
         }
         
         .forecast-tab.active {
@@ -2084,7 +2001,6 @@
             padding-top: 8px;
         }
         
-        /* Nouveau styles pour le bouton de fermeture d'événement */
         .event-close-btn {
             position: absolute;
             top: 10px;
@@ -2099,12 +2015,11 @@
             justify-content: center;
             cursor: pointer;
             font-size: 14px;
-            transition: background-color 0.2s ease, transform 0.2s ease;
+            transition: transform 0.2s ease;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
         .event-close-btn:hover, .event-close-btn:active {
-            background-color: var(--clickable-hover);
             transform: scale(1.1);
         }
         
@@ -2126,11 +2041,10 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            transition: background-color 0.2s ease, transform 0.1s ease;
+            transition: transform 0.1s ease;
         }
         
         .event-action-btn:hover, .event-action-btn:active {
-            background-color: var(--clickable-hover);
             transform: translateY(-1px);
         }
         
@@ -2170,13 +2084,12 @@
             font-weight: bold;
             font-size: 14px;
             border: 1px solid var(--border-color);
-            transition: background-color 0.2s ease, transform 0.1s ease;
+            transition: transform 0.1s ease;
             cursor: pointer;
         }
         
         .score-option:hover, .score-option:active {
             transform: translateY(-1px);
-            background-color: var(--clickable-hover);
         }
 
         .score-option.active {
@@ -2190,7 +2103,6 @@
             font-weight: bold;
         }
 
-        /* Styles pour les boutons sociaux */
         .social-buttons {
             display: flex;
             justify-content: space-between;
@@ -2209,7 +2121,7 @@
             border-radius: 10px;
             background-color: var(--secondary-color);
             text-align: center;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             cursor: pointer;
             font-weight: bold;
@@ -2221,7 +2133,6 @@
         }
         
         .social-button:hover {
-            background-color: var(--clickable-hover);
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
@@ -2238,7 +2149,6 @@
             color: var(--social-youtube);
         }
 
-        /* Style pour la section À propos */
         .about-dialog {
             position: fixed;
             top: 0;
@@ -2313,24 +2223,12 @@
             margin-top: auto;
         }
         
-        /* Améliorations de l'UI pour les éléments interactifs */
-        .clickable {
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-        }
-        
-        .clickable:hover, .clickable:active {
-            background-color: var(--clickable-hover);
-        }
-        
-        /* Style pour les boutons fixés au bas de l'écran */
         @media (max-height: 640px) {
             .fab {
                 bottom: 70px;
             }
         }
         
-        /* Fix pour assurer que les boutons ne débordent pas sur mobile */
         @media (max-width: 380px) {
             .confirmation-buttons {
                 flex-direction: column;
@@ -2341,14 +2239,12 @@
                 width: 100%;
             }
         }
-
-        /* Classes pour améliorer la visibilité des zones cliquables */
+        
         .clickable-focus:focus-visible {
             outline: 2px solid var(--primary-color);
             outline-offset: 2px;
         }
         
-        /* Message avec image */
         .message-with-image {
             padding: 5px;
             border-radius: 18px;
@@ -2373,7 +2269,6 @@
             word-break: break-word;
         }
         
-        /* Image viewer (pour afficher les images en plein écran) */
         .image-viewer {
             position: fixed;
             top: 0;
@@ -2428,7 +2323,6 @@
             background-color: rgba(0, 0, 0, 0.7);
         }
         
-        /* Conditions d'utilisation */
         .terms-dialog {
             position: fixed;
             top: 0;
@@ -2473,11 +2367,6 @@
             cursor: pointer;
             padding: 8px;
             border-radius: 50%;
-            transition: background-color 0.2s ease;
-        }
-        
-        .terms-back:hover, .terms-back:active {
-            background-color: var(--clickable-hover);
         }
         
         .warning-box {
@@ -2970,7 +2859,7 @@
         </div>
         <div class="about-content">
             <div class="about-logo">
-                <i class="fas fa-users"></i>
+                <i class="fas fa-futbol"></i>
                 <div class="about-title">GroupChat</div>
                 <div class="about-version">Version 1.1.0</div>
             </div>
@@ -2990,6 +2879,13 @@
                     • Mode sombre personnalisable<br>
                     • Gestion simple des groupes<br>
                     • Envoi de notifications pour les administrateurs
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <div class="about-section-title">À propos de l'application</div>
+                <div class="about-section-content">
+                    Le logo de l'application est le ballon de football visible sur la page de chargement. L'application a été créée par Pronosoft AI.
                 </div>
             </div>
             
@@ -3028,7 +2924,9 @@
             <div class="about-section">
                 <div class="about-section-title">Utilisation des pronostics</div>
                 <div class="about-section-content">
-                    Les pronostics sportifs fournis dans cette application sont destinés uniquement à des fins d'information et de divertissement. Ils ne constituent en aucun cas une incitation au jeu ou un conseil d'investissement.<br><br>
+                    Les pronostics sportifs fournis dans cette application sont destinés uniquement à des fins d'information et de divertissement. Ils peuvent être utilisés pour effectuer des paris réels, mais il est recommandé de le faire avec responsabilité.<br><br>
+                    
+                    Nous ne sommes pas responsables de leurs pertes éventuelles. Les pronostics ne constituent en aucun cas une incitation au jeu ou un conseil d'investissement.<br><br>
                     
                     Il est strictement interdit de:<br>
                     • Revendre ou commercialiser ces pronostics<br>
@@ -3318,14 +3216,24 @@
             });
             
             document.getElementById('bottom-nav').addEventListener('click', function(e) {
-                const rect = this.getBoundingClientRect();
-                const clickX = e.clientX - rect.left;
-                const midPoint = rect.width / 2;
+                const navItems = this.querySelectorAll('.nav-item');
                 
-                if (clickX < midPoint) {
-                    showGroupsSection();
-                } else {
-                    showForecastsSection();
+                for (let i = 0; i < navItems.length; i++) {
+                    const item = navItems[i];
+                    const rect = item.getBoundingClientRect();
+                    
+                    if (e.clientX >= rect.left && e.clientX <= rect.right &&
+                        e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                        
+                        const section = item.getAttribute('data-section');
+                        if (section === 'groups') {
+                            showGroupsSection();
+                        } else if (section === 'forecasts') {
+                            showForecastsSection();
+                        }
+                        
+                        break;
+                    }
                 }
             });
             
@@ -4645,6 +4553,9 @@
                 menu.style.display = 'block';
                 activeContextMenu = menu;
                 
+                // Appliquer la classe selected au message
+                messageElement.classList.add('selected');
+                
                 currentMessageForAction = {
                     element: messageElement,
                     id: messageId,
@@ -4690,6 +4601,11 @@
                     menu.style.display = 'none';
                 }
                 activeContextMenu = null;
+                
+                // Retirer la classe selected du message actuel
+                if (currentMessageForAction && currentMessageForAction.element) {
+                    currentMessageForAction.element.classList.remove('selected');
+                }
             } catch (error) {
                 console.error("Erreur en masquant le menu contextuel:", error);
             }
@@ -5911,7 +5827,7 @@
             
             if (isGroupAdmin) {
                 document.getElementById('header-action').innerHTML = `
-                    <span class="notification-icon" id="edit-group-btn" style="padding: 8px; border-radius: 50%; cursor: pointer; transition: background-color 0.2s ease;">
+                    <span class="notification-icon" id="edit-group-btn" style="padding: 8px; border-radius: 50%; cursor: pointer;">
                         <i class="fas fa-cog"></i>
                     </span>
                 `;
@@ -5919,15 +5835,6 @@
                 const editBtn = document.getElementById('edit-group-btn');
                 editBtn.addEventListener('click', () => {
                     showEditGroupDialog(currentGroupId, currentGroupData);
-                });
-                
-                // Ajouter une indication visuelle au survol
-                editBtn.addEventListener('mouseover', () => {
-                    editBtn.style.backgroundColor = 'var(--clickable-hover)';
-                });
-                
-                editBtn.addEventListener('mouseout', () => {
-                    editBtn.style.backgroundColor = '';
                 });
             } else {
                 document.getElementById('header-action').innerHTML = '';
@@ -6749,7 +6656,7 @@
         }
         
         async function sendAdminNotification() {
-            const title = document.getElementById('notif-title').value.trim();
+                        const title = document.getElementById('notif-title').value.trim();
             const content = document.getElementById('notif-content').value.trim();
             const type = document.getElementById('notif-type').value;
             
@@ -6842,3 +6749,4 @@
     </script>
 </body>
 </html>
+
