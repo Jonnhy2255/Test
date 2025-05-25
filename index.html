@@ -197,13 +197,11 @@
             padding: 15px 20px;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid var(--border-color);
             cursor: pointer;
         }
         
         .side-menu-item.active {
             background-color: var(--side-menu-active);
-            border-left: 4px solid var(--primary-color);
         }
         
         .side-menu-item i {
@@ -219,7 +217,6 @@
         
         .side-menu-footer {
             margin-top: auto;
-            border-top: 1px solid var(--border-color);
         }
         
         .side-menu-overlay {
@@ -250,6 +247,11 @@
             align-items: center;
             padding: 0 15px;
             z-index: 10;
+            transition: height 0.3s ease;
+        }
+        
+        .header.search-active {
+            height: 100px;
         }
         
         .header-left {
@@ -257,7 +259,7 @@
             align-items: center;
         }
         
-        .menu-button, .back-button {
+        .menu-button, .back-button, .search-button {
             padding: 10px;
             cursor: pointer;
             font-size: 18px;
@@ -369,6 +371,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            pointer-events: none;
         }
         
         .profile-pic-edit {
@@ -410,6 +413,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            pointer-events: none;
         }
         
         .group-pic-edit {
@@ -495,11 +499,20 @@
         }
         
         .search-container {
-            padding: 10px 16px;
-            position: sticky;
-            top: 0;
+            padding: 10px 15px;
             background-color: var(--bg-color);
-            z-index: 5;
+            position: relative;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-container.active {
+            max-height: 50px;
+            opacity: 1;
         }
         
         .search-input {
@@ -510,6 +523,14 @@
             background-color: var(--secondary-color);
             font-size: 16px;
             color: var(--text-color);
+            outline: none;
+        }
+        
+        .search-close {
+            padding: 8px;
+            margin-left: 8px;
+            color: var(--primary-color);
+            cursor: pointer;
         }
         
         .loading {
@@ -786,9 +807,6 @@
             font-size: 16px;
             color: var(--text-color);
             font-weight: 500;
-        }
-        
-        .chat-input:focus {
             outline: none;
         }
         
@@ -1026,10 +1044,10 @@
             font-size: 16px;
             color: var(--text-color);
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            outline: none;
         }
         
         .form-input:focus {
-            outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(93, 92, 222, 0.25);
         }
@@ -1412,6 +1430,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            pointer-events: none;
         }
         
         .group-image-overlay {
@@ -1694,6 +1713,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            pointer-events: none;
         }
         
         .profile-image-preview i {
@@ -2240,11 +2260,6 @@
             }
         }
         
-        .clickable-focus:focus-visible {
-            outline: 2px solid var(--primary-color);
-            outline-offset: 2px;
-        }
-        
         .message-with-image {
             padding: 5px;
             border-radius: 18px;
@@ -2258,6 +2273,7 @@
             margin-bottom: 5px;
             cursor: pointer;
             transition: transform 0.2s ease;
+            pointer-events: none;
         }
         
         .message-image:hover {
@@ -2300,6 +2316,7 @@
             max-height: 80vh;
             border-radius: 5px;
             object-fit: contain;
+            pointer-events: none;
         }
         
         .viewer-close {
@@ -2436,20 +2453,20 @@
         <div id="login-form" class="auth-form active">
             <div class="form-group">
                 <label class="form-label">Email</label>
-                <input type="email" class="form-input clickable-focus" id="login-email" placeholder="Votre email">
+                <input type="email" class="form-input" id="login-email" placeholder="Votre email">
                 <div id="login-email-error" class="form-error">Veuillez entrer un email valide</div>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Mot de passe</label>
-                <input type="password" class="form-input clickable-focus" id="login-password" placeholder="Votre mot de passe">
+                <input type="password" class="form-input" id="login-password" placeholder="Votre mot de passe">
                 <div id="login-password-error" class="form-error">Le mot de passe est obligatoire</div>
             </div>
             
             <div id="login-log" class="log-message" style="display:none;"></div>
 
             <div class="form-footer">
-                <button class="button clickable-focus" id="loginBtn">
+                <button class="button" id="loginBtn">
                     <span class="btn-loader" style="display:none;"></span>
                     <span class="btn-text">Se connecter</span>
                 </button>
@@ -2462,26 +2479,26 @@
         <div id="register-form" class="auth-form">
             <div class="form-group">
                 <label class="form-label">Email</label>
-                <input type="email" class="form-input clickable-focus" id="register-email" placeholder="Votre adresse email">
+                <input type="email" class="form-input" id="register-email" placeholder="Votre adresse email">
                 <div id="register-email-error" class="form-error">Veuillez entrer un email valide</div>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Mot de passe</label>
-                <input type="password" class="form-input clickable-focus" id="register-password" placeholder="Créez un mot de passe sécurisé">
+                <input type="password" class="form-input" id="register-password" placeholder="Créez un mot de passe sécurisé">
                 <div id="register-password-error" class="form-error">Le mot de passe doit contenir au moins 6 caractères</div>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Confirmer le mot de passe</label>
-                <input type="password" class="form-input clickable-focus" id="register-confirm-password" placeholder="Confirmez votre mot de passe">
+                <input type="password" class="form-input" id="register-confirm-password" placeholder="Confirmez votre mot de passe">
                 <div id="register-confirm-password-error" class="form-error">Les mots de passe ne correspondent pas</div>
             </div>
             
             <div id="register-log" class="log-message" style="display:none;"></div>
 
             <div class="form-footer">
-                <button class="button clickable-focus" id="registerBtn">
+                <button class="button" id="registerBtn">
                     <span class="btn-loader" style="display:none;"></span>
                     <span class="btn-text">S'inscrire</span>
                 </button>
@@ -2509,19 +2526,25 @@
         </div>
         <div id="header-title" class="header-title">Groupes</div>
         <div id="header-action">
+            <div class="search-button" id="search-button">
+                <i class="fas fa-search"></i>
+            </div>
             <div class="events-button" id="events-button">
                 <i class="fas fa-bell"></i>
                 <div class="notification-dot" id="events-notification-dot"></div>
+            </div>
+        </div>
+        
+        <div class="search-container" id="search-container">
+            <input type="text" class="search-input" id="search-input" placeholder="Rechercher...">
+            <div class="search-close" id="search-close">
+                <i class="fas fa-times"></i>
             </div>
         </div>
     </div>
 
     <div class="content">
         <div id="groups-section" class="section active">
-            <div class="search-container">
-                <input type="text" class="search-input clickable-focus" id="groups-search" placeholder="Rechercher un groupe">
-            </div>
-            
             <div class="chat-list" id="groups-list">
                 <div class="empty-state">
                     <i class="fas fa-users"></i>
@@ -2536,10 +2559,6 @@
         </div>
         
         <div id="events-section" class="section">
-            <div class="search-container">
-                <input type="text" class="search-input clickable-focus" id="events-search" placeholder="Rechercher un événement">
-            </div>
-            
             <div id="events-list">
                 <div class="empty-state">
                     <i class="fas fa-bell"></i>
@@ -2608,8 +2627,8 @@
                     </div>
                 </div>
                 
-                <button id="logout-btn" class="button clickable-focus">Se déconnecter</button>
-                <button id="delete-account-btn" class="button danger clickable-focus" style="margin-top: 15px;">Supprimer mon compte</button>
+                <button id="logout-btn" class="button">Se déconnecter</button>
+                <button id="delete-account-btn" class="button danger" style="margin-top: 15px;">Supprimer mon compte</button>
             </div>
         </div>
         
@@ -2647,7 +2666,7 @@
                 <i class="fas fa-image"></i>
             </div>
             <div class="chat-input-wrapper">
-                <input type="text" id="chat-input" class="chat-input clickable-focus" placeholder="Écrire un message..." autocomplete="off">
+                <input type="text" id="chat-input" class="chat-input" placeholder="Écrire un message..." autocomplete="off">
             </div>
             <div class="send-button" id="send-button">
                 <i class="fas fa-paper-plane"></i>
@@ -2690,12 +2709,12 @@
                 
                 <div class="form-group">
                     <label class="form-label">Nom du groupe</label>
-                    <input type="text" class="form-input clickable-focus" id="group-name" placeholder="Entrez le nom du groupe">
+                    <input type="text" class="form-input" id="group-name" placeholder="Entrez le nom du groupe">
                     <div id="group-name-error" class="form-error">Le nom du groupe est requis</div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Description (optionnelle)</label>
-                    <input type="text" class="form-input clickable-focus" id="group-description" placeholder="Décrivez le groupe">
+                    <input type="text" class="form-input" id="group-description" placeholder="Décrivez le groupe">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Permissions de message</label>
@@ -2710,7 +2729,7 @@
                         Si désactivé, seuls les administrateurs pourront écrire des messages
                     </div>
                 </div>
-                <button class="button clickable-focus" id="create-group-submit">
+                <button class="button" id="create-group-submit">
                     <span class="btn-loader" style="display:none;"></span>
                     <span class="btn-text">Créer le groupe</span>
                 </button>
@@ -2737,7 +2756,7 @@
             <div class="form-group">
                 <label class="form-label">Nom du groupe</label>
                 <div class="editable-field">
-                    <input type="text" class="form-input editable-field-input clickable-focus" id="edit-group-name" placeholder="Entrez le nom du groupe">
+                    <input type="text" class="form-input editable-field-input" id="edit-group-name" placeholder="Entrez le nom du groupe">
                     <button class="save-field-btn" id="save-group-name-btn">Enregistrer</button>
                 </div>
                 <div id="edit-group-name-error" class="field-error">Le nom du groupe est requis</div>
@@ -2746,7 +2765,7 @@
             <div class="form-group">
                 <label class="form-label">Description</label>
                 <div class="editable-field">
-                    <input type="text" class="form-input editable-field-input clickable-focus" id="edit-group-description" placeholder="Décrivez le groupe">
+                    <input type="text" class="form-input editable-field-input" id="edit-group-description" placeholder="Décrivez le groupe">
                     <button class="save-field-btn" id="save-group-description-btn">Enregistrer</button>
                 </div>
                 <div id="edit-group-description-error" class="field-error"></div>
@@ -2769,7 +2788,7 @@
             
             <div class="form-group">
                 <label class="form-label">Image du groupe</label>
-                <button class="button clickable-focus" id="save-group-image-btn" style="margin-top: 10px;">
+                <button class="button" id="save-group-image-btn" style="margin-top: 10px;">
                     <span class="btn-loader" style="display:none;"></span>
                     <span class="btn-text">Enregistrer l'image</span>
                 </button>
@@ -2787,26 +2806,26 @@
         <div class="edit-content">
             <div class="form-group">
                 <label class="form-label">Titre de la notification</label>
-                <input type="text" class="form-input clickable-focus" id="notif-title" placeholder="Titre de votre notification">
+                <input type="text" class="form-input" id="notif-title" placeholder="Titre de votre notification">
                 <div id="notif-title-error" class="field-error">Le titre est requis</div>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Contenu</label>
-                <textarea class="form-input clickable-focus" id="notif-content" placeholder="Contenu de votre notification" rows="5" style="resize: none;"></textarea>
+                <textarea class="form-input" id="notif-content" placeholder="Contenu de votre notification" rows="5" style="resize: none;"></textarea>
                 <div id="notif-content-error" class="field-error">Le contenu est requis</div>
             </div>
             
             <div class="form-group">
                 <label class="form-label">Type de notification</label>
-                <select class="form-input clickable-focus" id="notif-type">
+                <select class="form-input" id="notif-type">
                     <option value="info">Information</option>
                     <option value="alert">Alerte</option>
                     <option value="update">Mise à jour</option>
                 </select>
             </div>
             
-            <button class="button clickable-focus" id="send-notification-btn">
+            <button class="button" id="send-notification-btn">
                 <span class="btn-loader" style="display:none;"></span>
                 <span class="btn-text">Envoyer la notification</span>
             </button>
@@ -2834,7 +2853,7 @@
             <div class="form-group">
                 <label class="form-label">Nom d'utilisateur</label>
                 <div class="editable-field">
-                    <input type="text" class="form-input editable-field-input clickable-focus" id="edit-display-name" placeholder="Entrez votre nom d'utilisateur">
+                    <input type="text" class="form-input editable-field-input" id="edit-display-name" placeholder="Entrez votre nom d'utilisateur">
                     <button class="save-field-btn" id="save-display-name-btn">Enregistrer</button>
                 </div>
                 <div id="edit-display-name-error" class="field-error">Le nom d'utilisateur est requis</div>
@@ -2842,7 +2861,7 @@
             
             <div class="form-group">
                 <label class="form-label">Photo de profil</label>
-                <button class="button clickable-focus" id="save-profile-image-btn" style="margin-top: 10px;">
+                <button class="button" id="save-profile-image-btn" style="margin-top: 10px;">
                     <span class="btn-loader" style="display:none;"></span>
                     <span class="btn-text">Enregistrer la photo</span>
                 </button>
@@ -3071,6 +3090,8 @@
         let lastViewedEventTimestamp = null;
         let hasNewEvents = false;
         let chatImageFile = null;
+        let isSearchActive = false;
+        let currentSearchContext = '';
         
         function setupDarkMode() {
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -3201,6 +3222,20 @@
             });
             
             document.getElementById('about-back').addEventListener('click', hideAboutDialog);
+            
+            // Gestionnaire pour le bouton de recherche
+            document.getElementById('search-button').addEventListener('click', function() {
+                toggleSearchBar();
+            });
+            
+            document.getElementById('search-close').addEventListener('click', function() {
+                hideSearchBar();
+            });
+            
+            // Gestionnaire pour le champ de recherche
+            document.getElementById('search-input').addEventListener('input', function() {
+                handleSearch(this.value);
+            });
             
             document.getElementById('events-button').addEventListener('click', function() {
                 showEventsSection();
@@ -3380,27 +3415,6 @@
             document.addEventListener('touchend', handleGlobalTouchEnd, { passive: true });
             document.addEventListener('touchmove', handleGlobalTouchMove, { passive: true });
             document.addEventListener('touchcancel', handleGlobalTouchCancel, { passive: true });
-
-            document.getElementById('groups-search').addEventListener('input', function() {
-                filterGroups(this.value);
-            });
-
-            document.getElementById('events-search').addEventListener('input', function() {
-                filterEvents(this.value);
-            });
-            
-            document.addEventListener('click', function(e) {
-                const groupsSearch = document.getElementById('groups-search');
-                const eventsSearch = document.getElementById('events-search');
-                
-                if (groupsSearch && !groupsSearch.contains(e.target)) {
-                    groupsSearch.blur();
-                }
-                
-                if (eventsSearch && !eventsSearch.contains(e.target)) {
-                    eventsSearch.blur();
-                }
-            });
             
             // Gestionnaires d'événements pour les boutons de réseaux sociaux
             document.getElementById('whatsapp-btn').addEventListener('click', function() {
@@ -3414,6 +3428,58 @@
             document.getElementById('youtube-btn').addEventListener('click', function() {
                 openSocialLink('youtube');
             });
+        }
+        
+        // Fonction pour gérer la barre de recherche
+        function toggleSearchBar() {
+            const searchContainer = document.getElementById('search-container');
+            const searchInput = document.getElementById('search-input');
+            const header = document.querySelector('.header');
+            
+            if (isSearchActive) {
+                hideSearchBar();
+            } else {
+                searchContainer.classList.add('active');
+                header.classList.add('search-active');
+                searchInput.focus();
+                isSearchActive = true;
+                
+                // Déterminer le contexte de recherche en fonction de la section active
+                currentSearchContext = currentSection;
+                
+                // Adapter le placeholder selon le contexte
+                if (currentSearchContext === 'groups') {
+                    searchInput.placeholder = 'Rechercher un groupe...';
+                } else if (currentSearchContext === 'events') {
+                    searchInput.placeholder = 'Rechercher un événement...';
+                } else if (currentSearchContext === 'forecasts') {
+                    searchInput.placeholder = 'Rechercher un pronostic...';
+                }
+            }
+        }
+        
+        function hideSearchBar() {
+            const searchContainer = document.getElementById('search-container');
+            const searchInput = document.getElementById('search-input');
+            const header = document.querySelector('.header');
+            
+            searchContainer.classList.remove('active');
+            header.classList.remove('search-active');
+            searchInput.value = '';
+            isSearchActive = false;
+            
+            // Réinitialiser les filtres
+            handleSearch('');
+        }
+        
+        // Fonction pour gérer les recherches selon le contexte
+        function handleSearch(query) {
+            if (currentSearchContext === 'groups') {
+                filterGroups(query);
+            } else if (currentSearchContext === 'events') {
+                filterEvents(query);
+            }
+            // Ajouter d'autres contextes de recherche au besoin
         }
         
         // Fonction pour ouvrir les liens sociaux en toute sécurité
@@ -3543,6 +3609,8 @@
                 return;
             }
             
+            hideSearchBar();
+            
             document.querySelectorAll('.nav-item').forEach(item => {
                 if (item.getAttribute('data-section') === 'groups') {
                     item.classList.add('active');
@@ -3565,6 +3633,9 @@
             document.getElementById('header-title').textContent = 'Groupes';
             
             document.getElementById('header-action').innerHTML = `
+                <div class="search-button" id="search-button">
+                    <i class="fas fa-search"></i>
+                </div>
                 <div class="events-button" id="events-button">
                     <i class="fas fa-bell"></i>
                     <div class="notification-dot" id="events-notification-dot"></div>
@@ -3575,6 +3646,8 @@
                 document.getElementById('events-notification-dot').classList.add('active');
             }
             
+            // Réattacher les gestionnaires d'événements
+            document.getElementById('search-button').addEventListener('click', toggleSearchBar);
             document.getElementById('events-button').addEventListener('click', function() {
                 showEventsSection();
                 updateLastViewedEventTimestamp();
@@ -3588,6 +3661,8 @@
             if (document.getElementById('chat-interface').style.display === 'block') {
                 closeChat();
             }
+            
+            hideSearchBar();
             
             document.querySelectorAll('.nav-item').forEach(item => {
                 if (item.getAttribute('data-section') === 'forecasts') {
@@ -3611,6 +3686,9 @@
             document.getElementById('header-title').textContent = 'Pronostics';
             
             document.getElementById('header-action').innerHTML = `
+                <div class="search-button" id="search-button">
+                    <i class="fas fa-search"></i>
+                </div>
                 <div class="events-button" id="events-button">
                     <i class="fas fa-bell"></i>
                     <div class="notification-dot" id="events-notification-dot"></div>
@@ -3621,6 +3699,8 @@
                 document.getElementById('events-notification-dot').classList.add('active');
             }
             
+            // Réattacher les gestionnaires d'événements
+            document.getElementById('search-button').addEventListener('click', toggleSearchBar);
             document.getElementById('events-button').addEventListener('click', function() {
                 showEventsSection();
                 updateLastViewedEventTimestamp();
@@ -3921,6 +4001,8 @@
                 closeChat();
             }
             
+            hideSearchBar();
+            
             currentSection = 'events';
             
             document.querySelectorAll('.section').forEach(section => {
@@ -3934,7 +4016,14 @@
             document.getElementById('header-menu-button').style.display = 'block';
             document.getElementById('header-back-button').style.display = 'none';
             
-            document.getElementById('header-action').innerHTML = '';
+            document.getElementById('header-action').innerHTML = `
+                <div class="search-button" id="search-button">
+                    <i class="fas fa-search"></i>
+                </div>
+            `;
+            
+            // Réattacher le gestionnaire d'événement pour la recherche
+            document.getElementById('search-button').addEventListener('click', toggleSearchBar);
             
             const createNotifBtn = document.getElementById('create-notification-btn');
             if (createNotifBtn) {
@@ -3952,6 +4041,8 @@
             if (document.getElementById('chat-interface').style.display === 'block') {
                 closeChat();
             }
+            
+            hideSearchBar();
             
             currentSection = 'profile';
             
@@ -5794,6 +5885,8 @@
         async function openGroup(groupName, groupId) {
             if (!groupName || !groupId) return;
             
+            hideSearchBar();
+            
             unsubscribeFromCurrentChat();
             
             currentGroup = groupName;
@@ -5913,6 +6006,9 @@
             document.getElementById('header-back-button').style.display = 'none';
             
             document.getElementById('header-action').innerHTML = `
+                <div class="search-button" id="search-button">
+                    <i class="fas fa-search"></i>
+                </div>
                 <div class="events-button" id="events-button">
                     <i class="fas fa-bell"></i>
                     <div class="notification-dot" id="events-notification-dot"></div>
@@ -5923,6 +6019,8 @@
                 document.getElementById('events-notification-dot').classList.add('active');
             }
             
+            // Réattacher les gestionnaires d'événements
+            document.getElementById('search-button').addEventListener('click', toggleSearchBar);
             document.getElementById('events-button').addEventListener('click', function() {
                 showEventsSection();
                 updateLastViewedEventTimestamp();
@@ -6544,7 +6642,7 @@
             document.getElementById('overlay').classList.add('active');
         }
         
-        function hideDeleteEventConfirmation() {
+                function hideDeleteEventConfirmation() {
             document.getElementById('delete-event-confirmation').classList.remove('active');
             document.getElementById('overlay').classList.remove('active');
             currentEventForDeletion = null;
@@ -6558,7 +6656,8 @@
             
             try {
                 await deleteDoc(doc(db, "events", currentEventForDeletion));
-                showNotification('Événement supprimé', 'success');            } finally {
+                showNotification('Événement supprimé', 'success');            
+            } finally {
                 hideDeleteEventConfirmation();
             }
         }
@@ -6656,7 +6755,7 @@
         }
         
         async function sendAdminNotification() {
-                        const title = document.getElementById('notif-title').value.trim();
+            const title = document.getElementById('notif-title').value.trim();
             const content = document.getElementById('notif-content').value.trim();
             const type = document.getElementById('notif-type').value;
             
