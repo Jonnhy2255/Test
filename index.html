@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GroupChat</title>
+    <title>Pari Alliance</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <link rel="manifest" href="manifest.json">
     <style>
@@ -75,6 +75,11 @@
             --reply-preview-bg: rgba(93, 92, 222, 0.1);
             --reply-preview-border: var(--primary-color);
             --reply-preview-text: var(--text-color);
+            --deleted-message-bg: rgba(0, 0, 0, 0.05);
+            --deleted-message-text: #888888;
+            --action-bar-bg: var(--bg-color);
+            --action-bar-text: var(--text-color);
+            --action-bar-border: var(--border-color);
         }
         
         .dark {
@@ -133,6 +138,11 @@
             --reply-preview-bg: rgba(93, 92, 222, 0.15);
             --reply-preview-border: var(--primary-color);
             --reply-preview-text: var(--text-color);
+            --deleted-message-bg: rgba(255, 255, 255, 0.05);
+            --deleted-message-text: #888888;
+            --action-bar-bg: #222222;
+            --action-bar-text: #ffffff;
+            --action-bar-border: #3e3e3e;
         }
         
         * {
@@ -379,6 +389,62 @@
         .header.search-active #header-action {
             opacity: 0;
             pointer-events: none;
+        }
+        
+        /* Nouveau: Barre d'actions de message */
+        .message-actions-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background-color: var(--action-bar-bg);
+            border-bottom: 1px solid var(--action-bar-border);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-5px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 20;
+        }
+        
+        .message-actions-container.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        
+        .message-actions-title {
+            flex: 1;
+            font-weight: 500;
+            color: var(--action-bar-text);
+        }
+        
+        .message-action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .message-action-btn {
+            padding: 8px;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+        
+        .message-action-btn:active {
+            background-color: var(--secondary-color);
+        }
+        
+        .message-action-btn.delete {
+            color: var(--danger-color);
         }
         
         .content {
@@ -833,6 +899,13 @@
             box-shadow: 0 0 0 2px var(--selected-message-border);
         }
         
+        /* Style pour les messages supprimés */
+        .message.deleted {
+            background-color: var(--deleted-message-bg);
+            color: var(--deleted-message-text);
+            font-style: italic;
+        }
+        
         .message-time {
             font-size: 10px;
             margin-top: 2px;
@@ -845,22 +918,25 @@
             position: relative;
         }
         
+        /* Amélioration du style de la zone de saisie */
         .chat-input {
             width: 100%;
-            padding: 8px 16px;
+            padding: 10px 16px;
             border-radius: 20px;
             border: none;
             background-color: var(--secondary-color);
             font-size: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             color: var(--text-color);
-            font-weight: 500;
+            font-weight: 400;
             outline: none;
             min-height: 40px;
             max-height: 100px;
             overflow-y: auto;
-            line-height: 1.5;
+            line-height: 1.4;
             -webkit-user-select: text;
             user-select: text;
+            vertical-align: middle;
         }
         
         .send-button {
@@ -2640,7 +2716,7 @@
             <div class="side-menu-close" id="side-menu-close">
                 <i class="fas fa-times"></i>
             </div>
-            <div class="side-menu-title">GroupChat</div>
+            <div class="side-menu-title">Pari Alliance</div>
         </div>
         <div class="side-menu-content">
             <div class="side-menu-item" id="menu-profile">
@@ -2667,7 +2743,7 @@
             <div class="auth-logo">
                 <i class="fas fa-futbol"></i>
             </div>
-            <h1 class="auth-title">GroupChat</h1>
+            <h1 class="auth-title">Pari Alliance</h1>
             <p class="auth-subtitle">Messagerie de groupe sécurisée</p>
         </div>
         
@@ -2737,7 +2813,7 @@
 
     <div id="loading" class="loading" style="display: none;">
         <i class="fas fa-futbol loading-spinner"></i>
-        <div style="font-weight: bold; font-size: 24px; color: var(--primary-color);">GroupChat</div>
+        <div style="font-weight: bold; font-size: 24px; color: var(--primary-color);">Pari Alliance</div>
         <div style="margin-top: 10px; color: #6b7280;">Chargement...</div>
     </div>
 
@@ -2765,6 +2841,25 @@
             <input type="text" class="search-input" id="search-input" placeholder="Rechercher...">
             <div class="search-close" id="search-close">
                 <i class="fas fa-times"></i>
+            </div>
+        </div>
+        
+        <!-- Nouvelle barre d'actions pour les messages sélectionnés -->
+        <div class="message-actions-container" id="message-actions-container">
+            <div class="message-actions-title">1 message sélectionné</div>
+            <div class="message-action-buttons">
+                <div class="message-action-btn reply" id="action-reply-btn">
+                    <i class="fas fa-reply"></i>
+                </div>
+                <div class="message-action-btn copy" id="action-copy-btn">
+                    <i class="fas fa-copy"></i>
+                </div>
+                <div class="message-action-btn delete" id="action-delete-btn">
+                    <i class="fas fa-trash"></i>
+                </div>
+                <div class="message-action-btn cancel" id="action-cancel-btn">
+                    <i class="fas fa-times"></i>
+                </div>
             </div>
         </div>
     </div>
@@ -3113,14 +3208,14 @@
         <div class="about-content">
             <div class="about-logo">
                 <i class="fas fa-futbol"></i>
-                <div class="about-title">GroupChat</div>
+                <div class="about-title">Pari Alliance</div>
                 <div class="about-version">Version 1.1.0</div>
             </div>
             
             <div class="about-section">
                 <div class="about-section-title">Description</div>
                 <div class="about-section-content">
-                    GroupChat est une application de messagerie sécurisée qui permet aux utilisateurs de créer et de participer à des discussions de groupe.
+                    Pari Alliance est une application de messagerie sécurisée qui permet aux utilisateurs de créer et de participer à des discussions de groupe.
                 </div>
             </div>
             
@@ -3145,12 +3240,12 @@
             <div class="about-section">
                 <div class="about-section-title">Confidentialité</div>
                 <div class="about-section-content">
-                    GroupChat respecte votre vie privée. Vos données personnelles ne sont utilisées que pour le fonctionnement de l'application et ne sont jamais partagées avec des tiers.
+                    Pari Alliance respecte votre vie privée. Vos données personnelles ne sont utilisées que pour le fonctionnement de l'application et ne sont jamais partagées avec des tiers.
                 </div>
             </div>
             
             <div class="about-footer">
-                © 2023-2024 GroupChat. Tous droits réservés.
+                © 2023-2024 Pari Alliance. Tous droits réservés.
             </div>
         </div>
     </div>
@@ -3166,7 +3261,7 @@
             <div class="about-section">
                 <div class="about-section-title">Conditions générales</div>
                 <div class="about-section-content">
-                    En utilisant l'application GroupChat, vous acceptez de respecter les présentes conditions d'utilisation. L'accès et l'utilisation de cette application sont soumis à votre acceptation et au respect des présentes conditions.
+                    En utilisant l'application Pari Alliance, vous acceptez de respecter les présentes conditions d'utilisation. L'accès et l'utilisation de cette application sont soumis à votre acceptation et au respect des présentes conditions.
                 </div>
             </div>
             
@@ -3205,7 +3300,7 @@
             <div class="about-section">
                 <div class="about-section-title">Responsabilité</div>
                 <div class="about-section-content">
-                    GroupChat n'est pas responsable des pertes financières ou autres dommages qui pourraient résulter de l'utilisation des pronostics ou des informations disponibles sur l'application. Les utilisateurs sont seuls responsables de leurs décisions et de leurs actions.
+                    Pari Alliance n'est pas responsable des pertes financières ou autres dommages qui pourraient résulter de l'utilisation des pronostics ou des informations disponibles sur l'application. Les utilisateurs sont seuls responsables de leurs décisions et de leurs actions.
                 </div>
             </div>
         </div>
@@ -3213,7 +3308,7 @@
     
     <div id="delete-confirmation" class="confirmation-dialog">
         <div class="confirmation-title">Supprimer ce message ?</div>
-        <div class="confirmation-text">Cette action est irréversible et le message sera supprimé pour tout le monde.</div>
+        <div class="confirmation-text">Cette action est irréversible et le message sera supprimé pour vous uniquement.</div>
         <div class="confirmation-buttons">
             <div class="confirmation-button confirmation-cancel" id="delete-cancel">Annuler</div>
             <div class="confirmation-button confirmation-delete" id="delete-confirm">Supprimer</div>
@@ -3240,7 +3335,7 @@
 
     <div id="logout-confirmation" class="confirmation-dialog">
         <div class="confirmation-title">Se déconnecter ?</div>
-        <div class="confirmation-text">Voulez-vous vraiment vous déconnecter de GroupChat ?</div>
+        <div class="confirmation-text">Voulez-vous vraiment vous déconnecter de Pari Alliance ?</div>
         <div class="confirmation-buttons">
             <div class="confirmation-button confirmation-cancel" id="logout-cancel">Annuler</div>
             <div class="confirmation-button confirmation-confirm" id="logout-confirm">Déconnecter</div>
@@ -3328,6 +3423,7 @@
         let currentSearchContext = '';
         let replyingToMessage = null;
         let autoResizeTextarea = null;
+        let isMessageActionsVisible = false;
         
         function setupDarkMode() {
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -3564,7 +3660,7 @@
                     document.documentElement.classList.remove('dark');
                 }
                 
-                localStorage.setItem('groupChatDarkMode', this.checked ? 'true' : 'false');
+                localStorage.setItem('parisAllianceDarkMode', this.checked ? 'true' : 'false');
             });
             
             document.getElementById('logout-btn').addEventListener('click', showLogoutConfirmation);
@@ -3697,6 +3793,31 @@
             document.querySelector('.context-menu-item.copy').addEventListener('click', copyMessageText);
             document.querySelector('.context-menu-item.reply').addEventListener('click', replyToMessage);
             
+            // Boutons de la barre d'actions de message
+            document.getElementById('action-reply-btn').addEventListener('click', function() {
+                if (currentMessageForAction) {
+                    replyToMessage();
+                    hideMessageActionsBar();
+                }
+            });
+            
+            document.getElementById('action-copy-btn').addEventListener('click', function() {
+                if (currentMessageForAction) {
+                    copyMessageText();
+                    hideMessageActionsBar();
+                }
+            });
+            
+            document.getElementById('action-delete-btn').addEventListener('click', function() {
+                if (currentMessageForAction) {
+                    showDeleteConfirmation();
+                }
+            });
+            
+            document.getElementById('action-cancel-btn').addEventListener('click', function() {
+                hideMessageActionsBar();
+            });
+            
             // Désactiver le menu contextuel du navigateur sur les images
             document.addEventListener('contextmenu', function(e) {
                 if (e.target.tagName === 'IMG') {
@@ -3742,6 +3863,64 @@
             if (autoResizeTextarea) {
                 autoResizeTextarea();
             }
+        }
+        
+        // Fonction pour afficher la barre d'actions de message
+        function showMessageActionsBar(messageElement) {
+            if (!messageElement) return;
+            
+            const messageId = messageElement.getAttribute('data-id');
+            const messageFrom = messageElement.getAttribute('data-from');
+            
+            // Stocker les infos du message pour les actions
+            currentMessageForAction = {
+                element: messageElement,
+                id: messageId,
+                from: messageFrom,
+                text: messageElement.textContent.trim()
+            };
+            
+            // Ajuster l'affichage des options en fonction de qui a envoyé le message
+            const deleteBtn = document.getElementById('action-delete-btn');
+            if (messageFrom !== currentUser.uid && !isAdmin) {
+                deleteBtn.style.display = 'none';
+            } else {
+                deleteBtn.style.display = 'flex';
+            }
+            
+            // Sélectionner visuellement le message
+            messageElement.classList.add('selected');
+            
+            // Afficher la barre d'actions
+            const actionsBar = document.getElementById('message-actions-container');
+            actionsBar.classList.add('active');
+            
+            // Masquer les éléments du header normal
+            document.querySelector('.header-left').style.opacity = '0';
+            document.querySelector('.header-title').style.opacity = '0';
+            document.getElementById('header-action').style.opacity = '0';
+            
+            isMessageActionsVisible = true;
+        }
+        
+        // Fonction pour masquer la barre d'actions de message
+        function hideMessageActionsBar() {
+            // Masquer la barre d'actions
+            const actionsBar = document.getElementById('message-actions-container');
+            actionsBar.classList.remove('active');
+            
+            // Réafficher les éléments du header normal
+            document.querySelector('.header-left').style.opacity = '1';
+            document.querySelector('.header-title').style.opacity = '1';
+            document.getElementById('header-action').style.opacity = '1';
+            
+            // Désélectionner le message
+            if (currentMessageForAction && currentMessageForAction.element) {
+                currentMessageForAction.element.classList.remove('selected');
+            }
+            
+            currentMessageForAction = null;
+            isMessageActionsVisible = false;
         }
         
         // Fonction pour créer l'effet de ripple sur les boutons
@@ -3952,6 +4131,7 @@
             }
             
             hideSearchBar();
+            hideMessageActionsBar();
             
             document.querySelectorAll('.nav-item').forEach(item => {
                 if (item.getAttribute('data-section') === 'groups') {
@@ -4005,6 +4185,7 @@
             }
             
             hideSearchBar();
+            hideMessageActionsBar();
             
             document.querySelectorAll('.nav-item').forEach(item => {
                 if (item.getAttribute('data-section') === 'forecasts') {
@@ -4344,6 +4525,7 @@
             }
             
             hideSearchBar();
+            hideMessageActionsBar();
             
             currentSection = 'events';
             
@@ -4385,6 +4567,7 @@
             }
             
             hideSearchBar();
+            hideMessageActionsBar();
             
             currentSection = 'profile';
             
@@ -4922,7 +5105,7 @@
                             navigator.vibrate(50);
                         }
                         
-                        showContextMenu(messageElement, messageId, messageFrom);
+                        showMessageActionsBar(messageElement);
                     } catch (error) {
                         console.error("Erreur au toucher long:", error);
                     }
@@ -5068,7 +5251,11 @@
         }
         
         function showDeleteConfirmation() {
-            hideContextMenu();
+            if (isMessageActionsVisible) {
+                hideMessageActionsBar();
+            } else {
+                hideContextMenu();
+            }
             document.getElementById('delete-confirmation').classList.add('active');
             document.getElementById('overlay').classList.add('active');
         }
@@ -5087,31 +5274,51 @@
             
             const messageId = currentMessageForAction.id;
             const messageElement = currentMessageForAction.element;
+            const messageFrom = currentMessageForAction.from;
             
             try {
-                messageElement.classList.add('deleting');
+                // Vérifier si l'utilisateur a le droit de supprimer ce message
+                if (messageFrom !== currentUser.uid && !isAdmin) {
+                    showNotification("Vous ne pouvez pas supprimer les messages des autres utilisateurs", "error");
+                    hideDeleteConfirmation();
+                    return;
+                }
                 
-                setTimeout(async () => {
-                    try {
-                        const messageRef = doc(db, "groups", currentGroupId, "messages", messageId);
-                        await deleteDoc(messageRef);
-                        
-                        await addEventLog({
-                            type: 'message-delete',
-                            groupId: currentGroupId,
-                            groupName: currentGroup,
-                            userId: currentUser.uid,
-                            timestamp: new Date()
-                        });
-                        
-                        showNotification('Message supprimé', 'success');
-                    } catch (error) {
-                        messageElement.classList.remove('deleting');
-                    }
-                }, 100);
+                // Pour les admins ou propriétaires du message, modifier le message pour indiquer qu'il a été supprimé
+                const messageRef = doc(db, "groups", currentGroupId, "messages", messageId);
+                
+                // Vérifier si le message existe toujours
+                const messageDoc = await getDoc(messageRef);
+                if (!messageDoc.exists()) {
+                    showNotification("Ce message a déjà été supprimé", "info");
+                    hideDeleteConfirmation();
+                    return;
+                }
+                
+                // Modifier le message pour indiquer qu'il a été supprimé
+                await updateDoc(messageRef, {
+                    text: "Ce message a été supprimé",
+                    deleted: true,
+                    deletedBy: currentUser.uid,
+                    deletedAt: serverTimestamp()
+                });
+                
+                // Si le message avait une image, supprimer la référence
+                if (messageDoc.data().imageData) {
+                    await updateDoc(messageRef, {
+                        imageData: null
+                    });
+                }
+                
+                // Mettre à jour l'interface utilisateur
+                messageElement.classList.add('deleted');
+                messageElement.textContent = "Ce message a été supprimé";
                 
                 hideDeleteConfirmation();
+                showNotification('Message supprimé', 'success');
+                
             } catch (error) {
+                console.error("Erreur lors de la suppression:", error);
                 showNotification("Erreur lors de la suppression", "error");
                 hideDeleteConfirmation();
             }
@@ -5119,7 +5326,11 @@
         
         function copyMessageText() {
             if (!currentMessageForAction) {
-                hideContextMenu();
+                if (isMessageActionsVisible) {
+                    hideMessageActionsBar();
+                } else {
+                    hideContextMenu();
+                }
                 return;
             }
             
@@ -5155,7 +5366,11 @@
             } catch (error) {
                 showNotification('Erreur lors de la copie du texte', 'error');
             } finally {
-                hideContextMenu();
+                if (isMessageActionsVisible) {
+                    hideMessageActionsBar();
+                } else {
+                    hideContextMenu();
+                }
             }
         }
         
@@ -6492,9 +6707,7 @@
                                     
                                     // Ajouter un séparateur de date
                                     const separator = createDateSeparator(messageDate);
-                                    fragment.appendChild(separator);
-                                    
-                                    currentDate = messageDay;
+                                    fragment.appendChild(separator);                                    currentDate = messageDay;
                                 }
                                 
                                 const fromMe = messageData.senderId === currentUser.uid;
@@ -6612,7 +6825,11 @@
                 // Créer la bulle de message
                 const messageDiv = document.createElement('div');
                 
-                if (hasImage) {
+                // Vérifier si le message a été supprimé
+                if (messageData.deleted) {
+                    messageDiv.className = fromMe ? 'message message-sent deleted' : 'message message-received deleted';
+                    messageDiv.textContent = "Ce message a été supprimé";
+                } else if (hasImage) {
                     messageDiv.className = 'message message-with-image';
                     
                     const imageElement = document.createElement('img');
@@ -6685,7 +6902,7 @@
                     chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
                 }
             } catch (error) {
-                                console.error("Erreur défilement:", error);
+                console.error("Erreur défilement:", error);
             }
         }
         
@@ -7278,7 +7495,7 @@
                 
                 setupAuthObserver();
                 
-                const savedDarkMode = localStorage.getItem('groupChatDarkMode');
+                const savedDarkMode = localStorage.getItem('parisAllianceDarkMode');
                 if (savedDarkMode !== null) {
                     const isDarkMode = savedDarkMode === 'true';
                     document.getElementById('dark-toggle').checked = isDarkMode;
@@ -7301,4 +7518,6 @@
     </script>
 </body>
 </html>
+
+                
 
