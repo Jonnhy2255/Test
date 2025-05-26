@@ -70,6 +70,11 @@
             --image-message-bg: rgba(93, 92, 222, 0.1);
             --image-viewer-bg: rgba(0, 0, 0, 0.9);
             --selected-message-border: rgba(93, 92, 222, 0.7);
+            --date-separator-bg: rgba(0, 0, 0, 0.05);
+            --date-separator-text: var(--inactive-text);
+            --reply-preview-bg: rgba(93, 92, 222, 0.1);
+            --reply-preview-border: var(--primary-color);
+            --reply-preview-text: var(--text-color);
         }
         
         .dark {
@@ -123,6 +128,11 @@
             --image-message-bg: rgba(93, 92, 222, 0.15);
             --image-viewer-bg: rgba(0, 0, 0, 0.95);
             --selected-message-border: rgba(93, 92, 222, 0.8);
+            --date-separator-bg: rgba(255, 255, 255, 0.1);
+            --date-separator-text: #aaaaaa;
+            --reply-preview-bg: rgba(93, 92, 222, 0.15);
+            --reply-preview-border: var(--primary-color);
+            --reply-preview-text: var(--text-color);
         }
         
         * {
@@ -762,8 +772,10 @@
             padding: 10px;
             background-color: var(--bg-color);
             border-top: 1px solid var(--border-color);
-            align-items: center;
-            height: 60px;
+            align-items: flex-end;
+            min-height: 60px;
+            max-height: 150px;
+            transition: min-height 0.2s ease;
         }
         
         .message-container {
@@ -830,13 +842,11 @@
         .chat-input-wrapper {
             flex: 1;
             margin: 0 10px;
-            height: 40px;
             position: relative;
         }
         
         .chat-input {
             width: 100%;
-            height: 100%;
             padding: 8px 16px;
             border-radius: 20px;
             border: none;
@@ -845,6 +855,12 @@
             color: var(--text-color);
             font-weight: 500;
             outline: none;
+            min-height: 40px;
+            max-height: 100px;
+            overflow-y: auto;
+            line-height: 1.5;
+            -webkit-user-select: text;
+            user-select: text;
         }
         
         .send-button {
@@ -1217,7 +1233,7 @@
             position: fixed;
             bottom: 80px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateY(100px);
             opacity: 0;
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -1229,11 +1245,14 @@
             max-width: 90%;
             text-align: center;
             line-height: 1.4;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
         }
 
         .notification.show {
             opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
         }
 
         .notification.success {
@@ -2310,6 +2329,10 @@
             cursor: pointer;
             transition: transform 0.2s ease;
             pointer-events: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
         }
         
         .message-image:hover {
@@ -2353,6 +2376,9 @@
             border-radius: 5px;
             object-fit: contain;
             pointer-events: none;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
         
         .viewer-close {
@@ -2504,6 +2530,101 @@
             }
         }
 
+        /* Nouvelles fonctionnalités */
+        /* Séparateurs de date dans les messages */
+        .date-separator {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+            user-select: none;
+        }
+
+        .date-separator:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 1px;
+            background-color: var(--border-color);
+            z-index: 1;
+        }
+
+        .date-separator-text {
+            display: inline-block;
+            position: relative;
+            z-index: 2;
+            background-color: var(--date-separator-bg);
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: var(--date-separator-text);
+            font-weight: 500;
+        }
+
+        /* Système de réponse amélioré */
+        .reply-preview {
+            background-color: var(--reply-preview-bg);
+            border-left: 3px solid var(--reply-preview-border);
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            font-size: 14px;
+            position: relative;
+            display: none;
+        }
+
+        .reply-preview.active {
+            display: block;
+        }
+
+        .reply-preview-header {
+            font-weight: bold;
+            margin-bottom: 3px;
+            color: var(--primary-color);
+        }
+
+        .reply-preview-content {
+            color: var(--reply-preview-text);
+            opacity: 0.9;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        .reply-preview-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.1);
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .chat-input-wrapper.with-reply {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Adaptations pour le mode réponse */
+        .chat-input-container.with-reply {
+            min-height: 100px;
+        }
+        
+        /* Styling text input that can expand */
+        .chat-input {
+            resize: none;
+            overflow-y: auto;
+            transition: height 0.2s ease;
+        }
         </style>
 </head>
 <body>
@@ -2770,8 +2891,16 @@
             <div class="image-button" id="image-button">
                 <i class="fas fa-image"></i>
             </div>
-            <div class="chat-input-wrapper">
-                <input type="text" id="chat-input" class="chat-input" placeholder="Écrire un message..." autocomplete="off">
+            <div class="chat-input-wrapper" id="chat-input-wrapper">
+                <!-- Aperçu de la réponse sera ajouté ici dynamiquement -->
+                <div class="reply-preview" id="reply-preview">
+                    <div class="reply-preview-close" id="reply-close">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="reply-preview-header">Réponse à <span id="reply-name">Utilisateur</span></div>
+                    <div class="reply-preview-content" id="reply-content">Message original</div>
+                </div>
+                <textarea id="chat-input" class="chat-input" placeholder="Écrire un message..." autocomplete="off" rows="1"></textarea>
             </div>
             <div class="send-button" id="send-button">
                 <i class="fas fa-paper-plane"></i>
@@ -3124,7 +3253,7 @@
     
     <div id="image-viewer" class="image-viewer">
         <div class="viewer-image-container">
-            <img src="" alt="Image" class="viewer-image" id="viewer-image">
+            <img src="" alt="Image" class="viewer-image" id="viewer-image" oncontextmenu="return false">
         </div>
         <div class="viewer-close" id="viewer-close">
             <i class="fas fa-times"></i>
@@ -3197,6 +3326,8 @@
         let chatImageFile = null;
         let isSearchActive = false;
         let currentSearchContext = '';
+        let replyingToMessage = null;
+        let autoResizeTextarea = null;
         
         function setupDarkMode() {
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -3275,18 +3406,61 @@
             const notification = document.getElementById('notification');
             if (!notification) return;
             
-            notification.textContent = message;
-            notification.className = 'notification ' + type;
+            // D'abord, assurez-vous que toute notification précédente est complètement masquée
+            notification.classList.remove('show');
             
-            // Show the notification without the transform that slides it up from below
-            notification.classList.add('show');
-            
+            // Attendre un court délai pour éviter les conflits d'animation
             setTimeout(() => {
-                notification.classList.remove('show');
+                notification.textContent = message;
+                notification.className = 'notification ' + type;
+                notification.classList.add('show');
+                
+                // Supprimer la classe après un délai
                 setTimeout(() => {
-                    notification.className = 'notification';
-                }, 300);
-            }, 3000);
+                    notification.classList.remove('show');
+                    
+                    // Après la fin de l'animation, nettoyer complètement l'élément
+                    setTimeout(() => {
+                        notification.className = 'notification';
+                        notification.textContent = '';
+                    }, 300);
+                }, 3000);
+            }, 100);
+        }
+        
+        // Fonction pour redimensionner automatiquement le champ de texte
+        function setupTextareaAutoResize() {
+            const textarea = document.getElementById('chat-input');
+            if (!textarea) return;
+            
+            // Fonction pour ajuster la hauteur
+            const adjustHeight = () => {
+                // Réinitialiser la hauteur pour obtenir la hauteur du contenu
+                textarea.style.height = 'auto';
+                
+                // Calculer la nouvelle hauteur (avec une limite max)
+                const newHeight = Math.min(textarea.scrollHeight, 100);
+                textarea.style.height = `${newHeight}px`;
+                
+                // Ajuster la hauteur du conteneur si nécessaire
+                const container = document.getElementById('chat-input-container');
+                if (container) {
+                    if (replyingToMessage) {
+                        container.style.minHeight = `${60 + newHeight}px`;
+                    } else {
+                        container.style.minHeight = `${newHeight + 20}px`;
+                    }
+                }
+            };
+            
+            // Initialiser la hauteur
+            adjustHeight();
+            
+            // Ajouter des événements pour ajuster la hauteur lorsque le contenu change
+            textarea.addEventListener('input', adjustHeight);
+            
+            // Stocker la fonction pour pouvoir la réutiliser
+            autoResizeTextarea = adjustHeight;
         }
         
         function setupUIEvents() {
@@ -3420,10 +3594,18 @@
                 document.getElementById('save-display-name-btn').disabled = this.value.trim() === '';
             });
             
-            document.getElementById('chat-input').addEventListener('keyup', function(e) {
-                if (e.key === 'Enter') {
+            // Configurer le champ de texte extensible
+            const chatInput = document.getElementById('chat-input');
+            chatInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
                     sendMessage();
                 }
+            });
+            
+            // Gestionnaire pour fermer l'aperçu de réponse
+            document.getElementById('reply-close').addEventListener('click', function() {
+                cancelReply();
             });
             
             document.getElementById('send-button').addEventListener('click', sendMessage);
@@ -3515,6 +3697,14 @@
             document.querySelector('.context-menu-item.copy').addEventListener('click', copyMessageText);
             document.querySelector('.context-menu-item.reply').addEventListener('click', replyToMessage);
             
+            // Désactiver le menu contextuel du navigateur sur les images
+            document.addEventListener('contextmenu', function(e) {
+                if (e.target.tagName === 'IMG') {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
             document.addEventListener('touchstart', handleGlobalTouchStart, { passive: true });
             document.addEventListener('touchend', handleGlobalTouchEnd, { passive: true });
             document.addEventListener('touchmove', handleGlobalTouchMove, { passive: true });
@@ -3538,6 +3728,20 @@
             touchableElements.forEach(element => {
                 element.addEventListener('touchstart', createRippleEffect);
             });
+        }
+        
+        function cancelReply() {
+            replyingToMessage = null;
+            const replyPreview = document.getElementById('reply-preview');
+            replyPreview.classList.remove('active');
+            
+            const chatInputContainer = document.getElementById('chat-input-container');
+            chatInputContainer.classList.remove('with-reply');
+            
+            // Réajuster la hauteur du textarea
+            if (autoResizeTextarea) {
+                autoResizeTextarea();
+            }
         }
         
         // Fonction pour créer l'effet de ripple sur les boutons
@@ -4813,8 +5017,31 @@
                     shortText = shortText.substring(0, 47) + '...';
                 }
                 
-                chatInput.value = `[Réponse à ${senderName}: "${shortText}"] `;
+                // Configurer l'aperçu de réponse
+                const replyPreview = document.getElementById('reply-preview');
+                const replyName = document.getElementById('reply-name');
+                const replyContent = document.getElementById('reply-content');
+                
+                replyName.textContent = senderName;
+                replyContent.textContent = shortText;
+                replyPreview.classList.add('active');
+                
+                // Activer le mode réponse
+                replyingToMessage = {
+                    id: currentMessageForAction.id,
+                    sender: senderName,
+                    text: shortText
+                };
+                
+                // Ajuster le conteneur d'entrée
+                const chatInputContainer = document.getElementById('chat-input-container');
+                chatInputContainer.classList.add('with-reply');
+                
                 chatInput.focus();
+                
+                if (autoResizeTextarea) {
+                    autoResizeTextarea();
+                }
                 
                 hideContextMenu();
             } catch (error) {
@@ -5582,6 +5809,9 @@
                 
                 await initCollections();
                 
+                // Configurer le champ de texte extensible
+                setupTextareaAutoResize();
+                
             } catch (error) {
                 showNotification("Erreur lors du chargement des données", "error");
             }
@@ -5980,6 +6210,7 @@
                 currentGroupId = null;
                 currentGroupData = null;
                 chatImageFile = null;
+                replyingToMessage = null;
                 
                 // Réinitialisation des champs de formulaire
                 document.getElementById('login-email').value = '';
@@ -6077,10 +6308,13 @@
             
             document.getElementById('chat-interface').style.display = 'block';
             
-            // Réinitialiser l'état de l'image
+            // Réinitialiser l'état de l'image et de la réponse
             chatImageFile = null;
             document.getElementById('image-button').style.color = 'var(--primary-color)';
             document.getElementById('chat-input').placeholder = 'Écrire un message...';
+            
+            // Réinitialiser la réponse
+            cancelReply();
             
             checkSendPermissions();
             
@@ -6129,6 +6363,11 @@
                 if (restrictedMsg) {
                     restrictedMsg.remove();
                 }
+                
+                // Réinitialiser le champ de texte extensible
+                if (autoResizeTextarea) {
+                    autoResizeTextarea();
+                }
             }
         }
         
@@ -6172,6 +6411,13 @@
             currentGroupId = null;
             currentGroupData = null;
             chatImageFile = null;
+            replyingToMessage = null;
+            
+            // Réinitialiser le champ de réponse
+            const replyPreview = document.getElementById('reply-preview');
+            if (replyPreview) {
+                replyPreview.classList.remove('active');
+            }
         }
         
         function unsubscribeFromCurrentChat() {
@@ -6218,19 +6464,60 @@
                     const fragment = document.createDocumentFragment();
                     
                     try {
+                        // Grouper les messages par date
+                        let currentDate = null;
+                        let messageBatch = [];
+                        
                         snapshot.forEach(doc => {
                             const messageData = doc.data();
                             const messageId = doc.id;
                             
-                            const fromMe = messageData.senderId === currentUser.uid;
-                            
-                            const messageElement = createMessageElement(
-                                messageId, 
-                                messageData, 
-                                fromMe
-                            );
-                            
-                            fragment.appendChild(messageElement);
+                            if (messageData.createdAt) {
+                                const messageDate = messageData.createdAt.toDate ? 
+                                    messageData.createdAt.toDate() : 
+                                    new Date(messageData.createdAt);
+                                
+                                const messageDay = new Date(
+                                    messageDate.getFullYear(),
+                                    messageDate.getMonth(),
+                                    messageDate.getDate()
+                                ).toISOString();
+                                
+                                if (messageDay !== currentDate) {
+                                    // Ajouter tous les messages précédents au fragment
+                                    messageBatch.forEach(msg => {
+                                        fragment.appendChild(msg.element);
+                                    });
+                                    messageBatch = [];
+                                    
+                                    // Ajouter un séparateur de date
+                                    const separator = createDateSeparator(messageDate);
+                                    fragment.appendChild(separator);
+                                    
+                                    currentDate = messageDay;
+                                }
+                                
+                                const fromMe = messageData.senderId === currentUser.uid;
+                                const messageElement = createMessageElement(messageId, messageData, fromMe);
+                                
+                                messageBatch.push({
+                                    date: messageDate,
+                                    element: messageElement
+                                });
+                            } else {
+                                // Message sans date, on l'ajoute simplement
+                                const fromMe = messageData.senderId === currentUser.uid;
+                                const messageElement = createMessageElement(messageId, messageData, fromMe);
+                                messageBatch.push({
+                                    date: new Date(),
+                                    element: messageElement
+                                });
+                            }
+                        });
+                        
+                        // Ajouter les derniers messages en attente
+                        messageBatch.forEach(msg => {
+                            fragment.appendChild(msg.element);
                         });
                         
                         messagesContainer.appendChild(fragment);
@@ -6263,6 +6550,40 @@
                     </div>
                 `;
             }
+        }
+        
+        function createDateSeparator(date) {
+            const now = new Date();
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            const isToday = date.getDate() === now.getDate() && 
+                           date.getMonth() === now.getMonth() && 
+                           date.getFullYear() === now.getFullYear();
+            
+            const isYesterday = date.getDate() === yesterday.getDate() && 
+                               date.getMonth() === yesterday.getMonth() && 
+                               date.getFullYear() === yesterday.getFullYear();
+            
+            let dateText = '';
+            
+            if (isToday) {
+                dateText = "Aujourd'hui";
+            } else if (isYesterday) {
+                dateText = "Hier";
+            } else {
+                dateText = date.toLocaleDateString('fr-FR', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+            
+            const separator = document.createElement('div');
+            separator.className = 'date-separator';
+            separator.innerHTML = `<span class="date-separator-text">${dateText}</span>`;
+            
+            return separator;
         }
         
         function createMessageElement(messageId, messageData, fromMe) {
@@ -6299,9 +6620,11 @@
                     imageElement.src = messageData.imageData;
                     imageElement.alt = 'Image';
                     imageElement.loading = 'lazy';
+                    imageElement.setAttribute('oncontextmenu', 'return false');
                     
                     // Ajouter le gestionnaire pour ouvrir l'image en grand
-                    imageElement.addEventListener('click', () => {
+                    imageElement.addEventListener('click', (e) => {
+                        e.preventDefault();
                         showImageViewer(messageData.imageData);
                     });
                     
@@ -6362,7 +6685,7 @@
                     chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
                 }
             } catch (error) {
-                console.error("Erreur défilement:", error);
+                                console.error("Erreur défilement:", error);
             }
         }
         
@@ -6387,14 +6710,30 @@
             
             input.value = '';
             
+            // Réinitialiser la hauteur du textarea
+            if (autoResizeTextarea) {
+                setTimeout(() => {
+                    autoResizeTextarea();
+                }, 10);
+            }
+            
             try {
                 const hasImage = chatImageFile !== null;
+                const hasReply = replyingToMessage !== null;
+                
+                // Préparer le texte avec la référence de réponse si nécessaire
+                let finalText = message;
+                if (hasReply) {
+                    finalText = `[Réponse à ${replyingToMessage.sender}: "${replyingToMessage.text}"] ${message}`;
+                    // Réinitialiser l'état de réponse
+                    cancelReply();
+                }
                 
                 // Ajout d'un message avec image à l'UI
                 if (hasImage) {
-                    addPendingImageMessageToUI(chatImageFile, message);
+                    addPendingImageMessageToUI(chatImageFile, finalText);
                 } else {
-                    addPendingMessageToUI(message);
+                    addPendingMessageToUI(finalText);
                 }
                 
                 scrollToBottom();
@@ -6407,12 +6746,12 @@
                 document.getElementById('chat-input').placeholder = 'Écrire un message...';
                 
                 if (isOnline) {
-                    await sendMessageToFirestore(currentGroupId, message, chatImageFile);
+                    await sendMessageToFirestore(currentGroupId, finalText, chatImageFile);
                     chatImageFile = null; // Réinitialiser après l'envoi
                 } else {
                     messageQueue.push({
                         groupId: currentGroupId,
-                        text: message,
+                        text: finalText,
                         imageData: chatImageFile
                     });
                     
@@ -6469,6 +6808,7 @@
                 imageElement.className = 'message-image';
                 imageElement.src = imageData;
                 imageElement.alt = 'Image';
+                imageElement.setAttribute('oncontextmenu', 'return false');
                 messageDiv.appendChild(imageElement);
                 
                 if (text && text.trim() !== '') {
@@ -6586,7 +6926,8 @@
                     const userData = userSnap.data();
                     return userData.displayName || userData.email.split('@')[0];
                 }
-            } catch (error) {                console.error("Erreur nom utilisateur:", error);
+            } catch (error) {                
+                console.error("Erreur nom utilisateur:", error);
             }
             
             return 'Utilisateur';
@@ -6710,7 +7051,7 @@
             document.getElementById('admin-notif-dialog').classList.remove('active');
         }
         
-                async function sendAdminNotification() {
+        async function sendAdminNotification() {
             const title = document.getElementById('notif-title').value.trim();
             const content = document.getElementById('notif-content').value.trim();
             const type = document.getElementById('notif-type').value;
