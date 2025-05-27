@@ -2970,7 +2970,11 @@
         <div id="header-action">
             <div class="search-button" id="search-button">
                 <i class="fas fa-search"></i>
-            </div>
+            
+    <div class="header-icon" onclick="showResetDbDialog()" title="Réinitialiser la base de données">
+        <i class="fas fa-database"></i>
+    </div>
+</div>
             <div class="events-button" id="events-button">
                 <i class="fas fa-bell"></i>
                 <div class="notification-dot" id="events-notification-dot"></div>
@@ -7823,6 +7827,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+</script>
+
+
+<script>
+function showResetDbDialog() {
+    document.getElementById("reset-db-confirmation").classList.add("active");
+}
 </script>
 
 </body>
