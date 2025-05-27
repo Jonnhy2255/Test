@@ -2970,11 +2970,7 @@
         <div id="header-action">
             <div class="search-button" id="search-button">
                 <i class="fas fa-search"></i>
-            
-    <div class="header-icon" onclick="showResetDbDialog()" title="Réinitialiser la base de données">
-        <i class="fas fa-database"></i>
-    </div>
-</div>
+            </div>
             <div class="events-button" id="events-button">
                 <i class="fas fa-bell"></i>
                 <div class="notification-dot" id="events-notification-dot"></div>
@@ -7745,96 +7741,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
     </script>
-
-<script>
-function resetDatabase() {
-    const user = firebase.auth().currentUser;
-    if (!user) {
-        showNotification("Vous devez être connecté pour effectuer cette action.", "error");
-        return;
-    }
-
-    const db = firebase.firestore();
-    const groupsRef = db.collection("groups");
-
-    // Afficher le chargement
-    showNotification("Réinitialisation de la base de données...", "info");
-
-    // Étape 1 : Supprimer tous les groupes existants
-    groupsRef.get().then(snapshot => {
-        const batch = db.batch();
-        snapshot.forEach(doc => {
-            batch.delete(doc.ref);
-        });
-        return batch.commit();
-    }).then(() => {
-        // Étape 2 : Créer un groupe par défaut
-        const newGroupRef = groupsRef.doc(); // ID auto
-        const now = firebase.firestore.FieldValue.serverTimestamp();
-        const groupData = {
-            name: "Groupe Général",
-            description: "Groupe réinitialisé par l'administrateur",
-            createdBy: user.uid,
-            createdAt: now,
-            members: [user.uid],
-            lastMessageTime: now,
-            allowPublicMessages: true,
-            admins: [user.uid],
-            imageURL: null
-        };
-        return newGroupRef.set(groupData).then(() => newGroupRef.id);
-    }).then(newGroupId => {
-        const messagesRef = db.collection("groupMessages").doc(newGroupId).collection("messages");
-        return messagesRef.add({
-            content: "Bienvenue dans le nouveau groupe général !",
-            senderId: "system",
-            senderName: "Système",
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            system: true
-        }).then(() => newGroupId);
-    }).then(newGroupId => {
-        // Étape 3 : Enregistrer l’événement de création
-        const eventsRef = db.collection("events");
-        return eventsRef.add({
-            type: "group-create",
-            groupId: newGroupId,
-            groupName: "Groupe Général",
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            triggeredBy: user.uid
-        });
-    }).then(() => {
-        document.getElementById("reset-db-confirmation").classList.remove("active");
-        showNotification("Base de données réinitialisée avec succès.", "success");
-    }).catch(error => {
-        console.error("Erreur lors de la réinitialisation :", error);
-        showNotification("Échec de la réinitialisation : " + error.message, "error");
-    });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    const cancelBtn = document.getElementById("reset-db-cancel");
-    const confirmBtn = document.getElementById("reset-db-confirm");
-
-    if (cancelBtn) {
-        cancelBtn.addEventListener("click", () => {
-            document.getElementById("reset-db-confirmation").classList.remove("active");
-        });
-    }
-
-    if (confirmBtn) {
-        confirmBtn.addEventListener("click", () => {
-            resetDatabase();
-        });
-    }
-});
-</script>
-
-
-<script>
-function showResetDbDialog() {
-    document.getElementById("reset-db-confirmation").classList.add("active");
-}
-</script>
-
 </body>
 </html>
