@@ -7160,57 +7160,53 @@ async function sendAdminNotification() {
 
 function openChat(groupId, groupName, groupData) {
     if (!groupId || !groupName) return;
-
+    
     currentGroupId = groupId;
     currentGroup = groupName;
     currentGroupData = groupData;
-
+    
     document.getElementById('chat-interface').style.display = 'block';
     document.getElementById('header-menu-button').style.display = 'none';
     document.getElementById('header-back-button').style.display = 'block';
-
-    // Masquer la barre d'onglets inférieure
-    document.getElementById('bottom-nav').style.display = 'none';
-    document.querySelector('.content').classList.add('no-bottom-nav');
-
+    
     if (groupData && groupData.allowPublicMessages === false) {
         document.getElementById('header-title').innerHTML = `${groupName} <span class="restricted-badge">Restreint</span>`;
     } else {
         document.getElementById('header-title').textContent = groupName;
     }
-
+    
     document.getElementById('header-action').innerHTML = `
         <div class="info-button" id="group-info-button">
             <i class="fas fa-info-circle"></i>
         </div>
     `;
-
+    
     document.getElementById('group-info-button').addEventListener('click', showGroupInfoDialog);
-
+    
     document.getElementById('chat-messages').innerHTML = `
         <div style="text-align: center; padding: 20px;">
             <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary-color);"></i>
             <div style="margin-top: 10px; font-weight: bold;">Chargement des messages...</div>
         </div>
     `;
-
+    
     document.getElementById('chat-input').value = '';
     document.getElementById('chat-input').focus();
-
+    
     // Clear previous state
     replyingToMessage = null;
     chatImageFile = null;
-
+    
     // Reset reply UI
     document.getElementById('reply-preview').classList.remove('active');
     document.getElementById('chat-input-container').classList.remove('with-reply');
-
+    
     // Reset image button color
     document.getElementById('image-button').style.color = 'var(--primary-color)';
-
+    
     checkSendPermissions();
     listenToGroupMessages();
-
+    
     // Add state to history for back button handling
     history.pushState({ page: 'chat' }, '');
 }
@@ -7745,5 +7741,89 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
     </script>
+
+<script>
+function resetDatabase() {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        showNotification("Vous devez être connecté pour effectuer cette action.", "error");
+        return;
+    }
+
+    const db = firebase.firestore();
+    const groupsRef = db.collection("groups");
+
+    // Afficher le chargement
+    showNotification("Réinitialisation de la base de données...", "info");
+
+    // Étape 1 : Supprimer tous les groupes existants
+    groupsRef.get().then(snapshot => {
+        const batch = db.batch();
+        snapshot.forEach(doc => {
+            batch.delete(doc.ref);
+        });
+        return batch.commit();
+    }).then(() => {
+        // Étape 2 : Créer un groupe par défaut
+        const newGroupRef = groupsRef.doc(); // ID auto
+        const now = firebase.firestore.FieldValue.serverTimestamp();
+        const groupData = {
+            name: "Groupe Général",
+            description: "Groupe réinitialisé par l'administrateur",
+            createdBy: user.uid,
+            createdAt: now,
+            members: [user.uid],
+            lastMessageTime: now,
+            allowPublicMessages: true,
+            admins: [user.uid],
+            imageURL: null
+        };
+        return newGroupRef.set(groupData).then(() => newGroupRef.id);
+    }).then(newGroupId => {
+        const messagesRef = db.collection("groupMessages").doc(newGroupId).collection("messages");
+        return messagesRef.add({
+            content: "Bienvenue dans le nouveau groupe général !",
+            senderId: "system",
+            senderName: "Système",
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            system: true
+        }).then(() => newGroupId);
+    }).then(newGroupId => {
+        // Étape 3 : Enregistrer l’événement de création
+        const eventsRef = db.collection("events");
+        return eventsRef.add({
+            type: "group-create",
+            groupId: newGroupId,
+            groupName: "Groupe Général",
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            triggeredBy: user.uid
+        });
+    }).then(() => {
+        document.getElementById("reset-db-confirmation").classList.remove("active");
+        showNotification("Base de données réinitialisée avec succès.", "success");
+    }).catch(error => {
+        console.error("Erreur lors de la réinitialisation :", error);
+        showNotification("Échec de la réinitialisation : " + error.message, "error");
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const cancelBtn = document.getElementById("reset-db-cancel");
+    const confirmBtn = document.getElementById("reset-db-confirm");
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener("click", () => {
+            document.getElementById("reset-db-confirmation").classList.remove("active");
+        });
+    }
+
+    if (confirmBtn) {
+        confirmBtn.addEventListener("click", () => {
+            resetDatabase();
+        });
+    }
+});
+</script>
+
 </body>
 </html>
