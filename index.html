@@ -649,55 +649,6 @@
             transform: scale(1.1);
         }
         
-        /* Selection mode styles */
-        .selection-toolbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 50px;
-            background-color: var(--action-bar-bg);
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            z-index: 25;
-            transform: translateY(-100%);
-            transition: transform 0.3s ease;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .selection-toolbar.active {
-            transform: translateY(0);
-        }
-        
-        .selection-info {
-            flex: 1;
-            font-weight: bold;
-            color: var(--text-color);
-        }
-        
-        .selection-actions {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .selection-btn {
-            padding: 8px;
-            color: var(--primary-color);
-            cursor: pointer;
-            font-size: 18px;
-            border-radius: 50%;
-            transition: background-color 0.2s ease;
-        }
-        
-        .selection-btn.delete {
-            color: var(--danger-color);
-        }
-        
-        .selection-btn:active {
-            background-color: var(--secondary-color);
-        }
-        
         .content {
             position: fixed;
             top: 50px;
@@ -707,11 +658,6 @@
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
             background-color: var(--bg-color);
-            transition: top 0.3s ease;
-        }
-        
-        .content.selection-mode {
-            top: 100px;
         }
         
         .content.no-bottom-nav {
@@ -802,144 +748,6 @@
         
         .profile-pic-edit:hover, .profile-pic-edit:active {
             transform: scale(1.1);
-        }
-        
-        .group-pic {
-            width: 50px;
-            height: 50px;
-            background-color: var(--group-icon-bg);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .group-pic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            pointer-events: none;
-        }
-        
-        .group-pic-edit {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            background-color: var(--primary-color);
-            color: white;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            cursor: pointer;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-            transition: transform 0.2s ease;
-            z-index: 2;
-        }
-        
-        .group-pic-edit:hover, .group-pic-edit:active {
-            transform: scale(1.1);
-        }
-        
-        .chat-item, .user-item, .event-item {
-            display: flex;
-            padding: 12px 16px;
-            border-bottom: none;
-            align-items: center;
-            cursor: pointer;
-            position: relative;
-            transition: transform 0.3s ease, opacity 0.4s ease;
-        }
-        
-        .chat-item.selected, .user-item.selected {
-            background-color: var(--selection-color);
-        }
-        
-        .item-content {
-            flex: 1;
-        }
-        
-        .item-title {
-            font-weight: bold;
-            margin-bottom: 2px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .item-subtitle {
-            color: #6b7280;
-            font-size: 14px;
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .item-time {
-            color: #6b7280;
-            font-size: 12px;
-        }
-        
-        .item-meta {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 5px;
-        }
-        
-        .admin-badge {
-            display: inline-block;
-            background-color: var(--admin-badge-bg);
-            color: var(--admin-badge-text);
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            margin-left: 6px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .restricted-badge {
-            display: inline-block;
-            background-color: var(--restricted-badge-bg);
-            color: var(--restricted-badge-text);
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            margin-left: 6px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        
-        .new-badge {
-            display: inline-block;
-            background-color: var(--new-badge-bg);
-            color: var(--new-badge-text);
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 10px;
-            margin-left: 6px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        
-        .unread-badge {
-            display: inline-block;
-            background-color: var(--unread-badge-bg);
-            color: var(--unread-badge-text);
-            font-size: 12px;
-            padding: 2px 8px;
-            border-radius: 50%;
-            font-weight: bold;
-            min-width: 20px;
-            text-align: center;
         }
         
         .loading {
@@ -1092,244 +900,6 @@
         
         input:checked + .slider:before {
             transform: translateX(24px);
-        }
-        
-        .chat-section {
-            display: none;
-            position: fixed;
-            top: 50px;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: var(--bg-color);
-            z-index: 5;
-            transition: top 0.3s ease;
-        }
-        
-        .chat-section.selection-mode {
-            top: 100px;
-        }
-        
-        .chat-messages-container {
-            position: absolute;
-            top: 0;
-            bottom: 60px;
-            left: 0;
-            right: 0;
-            overflow-y: auto;
-            background-color: var(--secondary-color);
-            -webkit-overflow-scrolling: touch;
-            padding: 15px;
-        }
-        
-        .chat-messages {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            min-height: 100%;
-            justify-content: flex-end;
-        }
-        
-        .chat-input-container {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            padding: 10px;
-            background-color: var(--bg-color);
-            border-top: none;
-            align-items: flex-end;
-            min-height: 60px;
-            max-height: 150px;
-            transition: min-height 0.2s ease;
-        }
-        
-        .message-container {
-            margin-bottom: 16px;
-            clear: both;
-            display: flex;
-            flex-direction: column;
-            max-width: 85%;
-            position: relative;
-        }
-        
-        .message-container.sent {
-            float: right;
-            margin-left: auto;
-            align-items: flex-end;
-        }
-        
-        .message-container.received {
-            float: left;
-            margin-right: auto;
-            align-items: flex-start;
-        }
-        
-        .message-container.selectable {
-            cursor: pointer;
-        }
-        
-        .message-container.selected::before {
-            content: '';
-            position: absolute;
-            top: -5px;
-            left: -10px;
-            right: -10px;
-            bottom: -5px;
-            background-color: var(--selection-color);
-            border-radius: 15px;
-            z-index: -1;
-        }
-        
-        .message-container.selected .message-checkbox {
-            display: block;
-        }
-        
-        .message-checkbox {
-            position: absolute;
-            top: 5px;
-            left: -25px;
-            width: 16px;
-            height: 16px;
-            background-color: var(--primary-color);
-            border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 10px;
-            z-index: 10;
-        }
-        
-        .message-container.sent .message-checkbox {
-            left: auto;
-            right: -25px;
-        }
-        
-        .message-sender {
-            font-size: 12px;
-            margin-bottom: 2px;
-            font-weight: bold;
-            color: var(--text-color);
-            opacity: 0.8;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .message {
-            padding: 10px 14px;
-            border-radius: 18px;
-            position: relative;
-            word-wrap: break-word;
-            transition: background-color 0.2s ease, transform 0.3s ease;
-            transform: translateX(0);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            font-weight: 500;
-        }
-        
-        .message-received {
-            background-color: var(--chat-received-bg);
-            border-bottom-left-radius: 4px;
-        }
-        
-        .message-sent {
-            background: var(--chat-sent-bg);
-            color: var(--chat-sent-text);
-            border-bottom-right-radius: 4px;
-        }
-        
-        .message.deleted {
-            background-color: var(--deleted-message-bg);
-            color: var(--deleted-message-text);
-            font-style: italic;
-        }
-        
-        .message-time {
-            font-size: 10px;
-            margin-top: 2px;
-            opacity: 0.7;
-        }
-        
-        .chat-input-wrapper {
-            flex: 1;
-            margin: 0 10px;
-            position: relative;
-        }
-        
-        .chat-input {
-            width: 100%;
-            padding: 10px 16px;
-            border-radius: 20px;
-            border: none;
-            background-color: var(--secondary-color);
-            font-size: 16px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            color: var(--text-color);
-            font-weight: 400;
-            outline: none;
-            min-height: 40px;
-            max-height: 100px;
-            overflow-y: auto;
-            line-height: 1.4;
-            -webkit-user-select: text;
-            user-select: text;
-            vertical-align: middle;
-            resize: none;
-            transition: height 0.2s ease;
-        }
-        
-        .send-button {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            cursor: pointer;
-            transition: transform 0.15s ease, background-color 0.2s ease;
-        }
-        
-        .send-button:active {
-            transform: scale(0.9);
-        }
-        
-        .send-button:hover {
-            background-color: #4a49c0;
-        }
-
-        .send-button:disabled {
-            background-color: var(--border-color);
-            color: var(--inactive-text);
-            cursor: not-allowed;
-        }
-        
-        .image-button {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background-color: var(--secondary-color);
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            cursor: pointer;
-            margin-right: 10px;
-            transition: transform 0.15s ease, background-color 0.2s ease;
-        }
-        
-        .image-button:active {
-            transform: scale(0.9);
-        }
-
-        .image-button:disabled {
-            color: var(--inactive-text);
-            cursor: not-allowed;
         }
         
         .profile-header {
@@ -1721,223 +1291,6 @@
             text-align: center;
         }
         
-        @keyframes deleteMessage {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            20% {
-                opacity: 0.8;
-                transform: scale(0.95);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0.5);
-                height: 0;
-                margin: 0;
-                padding: 0;
-            }
-        }
-        
-        .message.deleting {
-            animation: deleteMessage 0.3s ease forwards;
-            pointer-events: none;
-        }
-        
-        .create-group-dialog {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--bg-color);
-            z-index: 100;
-            display: none;
-            flex-direction: column;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .create-group-dialog.active {
-            display: flex;
-        }
-        
-        .create-group-header {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: none;
-        }
-        
-        .create-group-title {
-            flex: 1;
-            text-align: center;
-            font-weight: bold;
-            font-size: 18px;
-            text-decoration: none;
-            border-bottom: none;
-        }
-        
-        .create-group-back {
-            color: var(--primary-color);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-        }
-        
-        .create-group-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        .group-form {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .edit-dialog {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--bg-color);
-            z-index: 120;
-            display: none;
-            flex-direction: column;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .edit-dialog.active {
-            display: flex;
-        }
-        
-        .edit-header {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: none;
-        }
-        
-        .edit-title {
-            flex: 1;
-            text-align: center;
-            font-weight: bold;
-            font-size: 18px;
-            text-decoration: none;
-            border-bottom: none;
-        }
-        
-        .edit-back {
-            color: var(--primary-color);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-        }
-        
-        .edit-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        .group-image-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background-color: var(--group-icon-bg);
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .group-image-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            pointer-events: none;
-        }
-        
-        .group-image-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-            cursor: pointer;
-        }
-        
-        .group-image-preview:hover .group-image-overlay {
-            opacity: 1;
-        }
-        
-        .group-image-overlay i {
-            color: white;
-            font-size: 20px;
-        }
-        
-        .image-upload-btn {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            border: 1px dashed var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        
-        .fab {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            z-index: 50;
-            cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-        }
-        
-        .fab:active {
-            transform: scale(0.95);
-        }
-        
-        .fab:hover {
-            background-color: #4a49c0;
-        }
-
-        .fab.disabled {
-            background-color: var(--border-color);
-            color: var(--inactive-text);
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .fab.disabled:active {
-            transform: none;
-        }
-        
-        .fab i {
-            font-size: 24px;
-        }
-        
         .confirmation-dialog {
             position: fixed;
             top: 50%;
@@ -2052,6 +1405,42 @@
             font-size: 12px;
             color: var(--inactive-text);
             margin-top: 5px;
+        }
+        
+        .admin-badge {
+            display: inline-block;
+            background-color: var(--admin-badge-bg);
+            color: var(--admin-badge-text);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .restricted-badge {
+            display: inline-block;
+            background-color: var(--restricted-badge-bg);
+            color: var(--restricted-badge-text);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .new-badge {
+            display: inline-block;
+            background-color: var(--new-badge-bg);
+            color: var(--new-badge-text);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+            font-weight: bold;
+            text-transform: uppercase;
         }
         
         .admin-count-badge {
@@ -2232,7 +1621,11 @@
             padding: 0 0 15px 0;
         }
         
-        .forecasts-tabs {
+        .ai-forecasts-section {
+            padding: 0 0 15px 0;
+        }
+        
+        .forecasts-tabs, .ai-forecasts-tabs {
             display: flex;
             border-bottom: none;
             margin-bottom: 15px;
@@ -2242,7 +1635,7 @@
             z-index: 5;
         }
         
-        .forecast-tab {
+        .forecast-tab, .ai-forecast-tab {
             flex: 1;
             text-align: center;
             padding: 12px 0;
@@ -2254,11 +1647,11 @@
             transition: color 0.3s, background-color 0.2s ease;
         }
         
-        .forecast-tab.active {
+        .forecast-tab.active, .ai-forecast-tab.active {
             color: var(--primary-color);
         }
         
-        .forecast-tab.active::after {
+        .forecast-tab.active::after, .ai-forecast-tab.active::after {
             content: '';
             position: absolute;
             bottom: -1px;
@@ -2270,17 +1663,17 @@
             animation: slideIn 0.3s ease;
         }
         
-        .forecasts-content {
+        .forecasts-content, .ai-forecasts-content {
             display: none;
             padding: 0 15px;
         }
         
-        .forecasts-content.active {
+        .forecasts-content.active, .ai-forecasts-content.active {
             display: block;
             animation: fadeIn 0.5s ease;
         }
         
-        .forecasts-list {
+        .forecasts-list, .ai-forecasts-list {
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -2670,114 +2063,53 @@
             border-top: none;
             margin-top: auto;
         }
-        
-        @media (max-height: 640px) {
-            .fab {
-                bottom: 70px;
-            }
-        }
-        
-        @media (max-width: 380px) {
-            .confirmation-buttons {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .confirmation-button {
-                width: 100%;
-            }
-        }
-        
-        .message-with-image {
-            padding: 5px;
-            border-radius: 18px;
-            background-color: var(--image-message-bg);
-            max-width: 100%;
-        }
-        
-        .message-image {
-            width: 100%;
-            max-width: 250px;
-            max-height: 250px;
-            border-radius: 13px;
-            margin-bottom: 5px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            pointer-events: auto;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-            touch-action: manipulation;
-            object-fit: contain;
-        }
-        
-        .message-image:hover {
-            transform: scale(0.98);
-        }
-        
-        .message-text {
-            padding: 0 10px 5px;
-            word-break: break-word;
-        }
-        
-        .image-viewer {
+
+        .edit-dialog {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: var(--image-viewer-bg);
-            z-index: 1000;
+            background-color: var(--bg-color);
+            z-index: 120;
             display: none;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
             animation: fadeIn 0.3s ease;
         }
         
-        .image-viewer.active {
+        .edit-dialog.active {
             display: flex;
         }
         
-        .viewer-image-container {
-            position: relative;
-            max-width: 90%;
-            max-height: 80vh;
-            margin: 0 auto;
-        }
-        
-        .viewer-image {
-            max-width: 100%;
-            max-height: 80vh;
-            border-radius: 5px;
-            object-fit: contain;
-            pointer-events: none;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-        
-        .viewer-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            font-size: 20px;
+        .edit-header {
             display: flex;
             align-items: center;
-            justify-content: center;
+            padding: 15px;
+            border-bottom: none;
+        }
+        
+        .edit-title {
+            flex: 1;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            text-decoration: none;
+            border-bottom: none;
+        }
+        
+        .edit-back {
+            color: var(--primary-color);
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            padding: 8px;
+            border-radius: 50%;
         }
         
-        .viewer-close:hover {
-            background-color: rgba(0, 0, 0, 0.7);
+        .edit-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
         }
-        
+
         .terms-dialog {
             position: fixed;
             top: 0;
@@ -2905,308 +2237,6 @@
                 opacity: 0;
             }
         }
-
-        /* Date separators in messages */
-        .date-separator {
-            text-align: center;
-            margin: 20px 0;
-            position: relative;
-            user-select: none;
-        }
-
-        .date-separator:before {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 50%;
-            height: 1px;
-            background-color: var(--border-color);
-            z-index: 1;
-        }
-
-        .date-separator-text {
-            display: inline-block;
-            position: relative;
-            z-index: 2;
-            background-color: var(--date-separator-bg);
-            padding: 3px 10px;
-            border-radius: 10px;
-            font-size: 12px;
-            color: var(--date-separator-text);
-            font-weight: 500;
-        }
-
-        /* Reply system */
-        .reply-preview {
-            background-color: var(--reply-preview-bg);
-            border-left: 3px solid var(--reply-preview-border);
-            padding: 8px 12px;
-            margin-bottom: 8px;
-            border-radius: 5px;
-            font-size: 14px;
-            position: relative;
-            display: none;
-        }
-
-        .reply-preview.active {
-            display: block;
-        }
-
-        .reply-preview-header {
-            font-weight: bold;
-            margin-bottom: 3px;
-            color: var(--primary-color);
-        }
-
-        .reply-preview-content {
-            color: var(--reply-preview-text);
-            opacity: 0.9;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%;
-        }
-
-        .reply-preview-close {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background-color: rgba(0, 0, 0, 0.1);
-            color: var(--text-color);
-            cursor: pointer;
-            font-size: 10px;
-        }
-
-        .chat-input-wrapper.with-reply {
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Adaptations for reply mode */
-        .chat-input-container.with-reply {
-            min-height: 100px;
-        }
-        
-        /* Expandable text input styling */
-        .chat-input {
-            resize: none;
-            overflow-y: auto;
-            transition: height 0.2s ease;
-        }
-
-        /* Improved message quote styling */
-        .message-quote {
-            margin-bottom: 8px;
-            background-color: var(--reply-quote-bg);
-            border-left: 3px solid var(--reply-quote-border);
-            border-radius: 8px;
-            padding: 8px 10px;
-            font-size: 13px;
-            position: relative;
-        }
-        
-        .message-quote-sender {
-            font-weight: bold;
-            margin-bottom: 3px;
-            color: var(--primary-color);
-            font-size: 12px;
-        }
-        
-        .message-quote-content {
-            color: var(--text-color);
-            opacity: 0.85;
-            font-style: italic;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Group info dialog */
-        .group-info-dialog {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--group-info-bg);
-            z-index: 120;
-            display: none;
-            flex-direction: column;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .group-info-dialog.active {
-            display: flex;
-        }
-        
-        .group-info-header {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: none;
-        }
-        
-        .group-info-title {
-            flex: 1;
-            text-align: center;
-            font-weight: bold;
-            font-size: 18px;
-            text-decoration: none;
-            border-bottom: none;
-        }
-        
-        .group-info-back {
-            color: var(--primary-color);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-        }
-        
-        .group-info-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        .group-info-section {
-            margin-bottom: 20px;
-        }
-        
-        .group-info-section-title {
-            font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
-        
-        .group-info-detail {
-            background-color: var(--secondary-color);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .group-info-label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-        
-        .group-info-value {
-            color: var(--text-color);
-            line-height: 1.4;
-        }
-        
-        .group-info-images {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .group-info-image {
-            width: 100%;
-            padding-bottom: 100%;
-            border-radius: 8px;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-        
-        .group-info-image img {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.2s ease;
-        }
-        
-        .group-info-image:hover img {
-            transform: scale(1.05);
-        }
-        
-        .group-info-image-empty {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--border-color);
-            opacity: 0.5;
-            font-size: 14px;
-            text-align: center;
-            padding: 10px;
-            height: 100%;
-        }
-        
-        .download-button {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--download-btn-bg);
-            color: var(--download-btn-text);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s ease;
-        }
-        
-        .download-button:hover {
-            transform: scale(1.1);
-        }
-        
-        /* Ajout des styles pour la section des utilisateurs */
-        #users-section {
-            padding: 10px 0;
-        }
-        
-        .users-list {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .user-item {
-            background-color: var(--user-item-bg);
-            transition: background-color 0.2s ease;
-        }
-        
-        .user-item:hover, .user-item:active {
-            background-color: var(--selection-color);
-        }
-        
-        .user-pic {
-            width: 50px;
-            height: 50px;
-            background-color: var(--secondary-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            overflow: hidden;
-        }
-        
-        .user-pic i {
-            font-size: 20px;
-            color: var(--primary-color);
-        }
-        
-        .user-pic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
         
         /* Interface Theme Selector */
         .theme-selector {
@@ -3306,26 +2336,6 @@
             margin-bottom: 10px;
             font-size: 16px;
             color: var(--primary-color);
-        }
-
-        .discussion-type-badge {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            font-size: 9px;
-            padding: 2px 6px;
-            border-radius: 8px;
-            margin-left: 6px;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .discussion-type-badge.group {
-            background-color: var(--success-color);
-        }
-
-        .discussion-type-badge.direct {
-            background-color: #007aff;
         }
 
         /* Subscription Section Styles */
@@ -3613,6 +2623,23 @@
         .video-close:hover {
             background-color: rgba(0, 0, 0, 0.8);
         }
+        
+        @media (max-height: 640px) {
+            .fab {
+                bottom: 70px;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .confirmation-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .confirmation-button {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -3683,7 +2710,7 @@
                 <i class="fas fa-futbol"></i>
             </div>
             <h1 class="auth-title">Pari Alliance</h1>
-            <p class="auth-subtitle">Messagerie de groupe sécurisée</p>
+            <p class="auth-subtitle">Pronostics sportifs avancés</p>
         </div>
         
         <div class="auth-tabs">
@@ -3765,7 +2792,7 @@
                 <i class="fas fa-chevron-left"></i>
             </div>
         </div>
-        <div id="header-title" class="header-title">Discussions</div>
+        <div id="header-title" class="header-title">Prédictions IA</div>
         <div id="header-action">
             <div class="search-button" id="search-button">
                 <i class="fas fa-search"></i>
@@ -3784,39 +2811,21 @@
         </div>
     </div>
 
-    <!-- Selection Toolbar -->
-    <div class="selection-toolbar" id="selection-toolbar">
-        <div class="selection-info" id="selection-info">
-            0 message sélectionné
-        </div>
-        <div class="selection-actions">
-            <div class="selection-btn copy" id="selection-copy-btn">
-                <i class="fas fa-copy"></i>
-            </div>
-            <div class="selection-btn reply" id="selection-reply-btn">
-                <i class="fas fa-reply"></i>
-            </div>
-            <div class="selection-btn delete" id="selection-delete-btn">
-                <i class="fas fa-trash"></i>
-            </div>
-            <div class="selection-btn cancel" id="selection-cancel-btn">
-                <i class="fas fa-times"></i>
-            </div>
-        </div>
-    </div>
-
     <div class="content">
-        <div id="discussions-section" class="section active">
-            <div class="chat-list" id="discussions-list">
-                <div class="empty-state">
-                    <i class="fas fa-comments"></i>
-                    <div class="empty-state-title">Aucune discussion</div>
-                    <div class="empty-state-text">Vos discussions apparaîtront ici</div>
+        <div id="ai-forecasts-section" class="section active">
+            <div class="ai-forecasts-tabs">
+                <div class="ai-forecast-tab active" data-tab="combines">Combinés</div>
+                <div class="ai-forecast-tab" data-tab="safes">Sûrs</div>
+            </div>
+            
+            <div class="ai-forecasts-content active" id="combines-content">
+                <div class="ai-forecasts-list" id="combines-list">
                 </div>
             </div>
             
-            <div class="fab" id="create-group-btn">
-                <i class="fas fa-plus"></i>
+            <div class="ai-forecasts-content" id="safes-content">
+                <div class="ai-forecasts-list" id="safes-list">
+                </div>
             </div>
         </div>
         
@@ -3838,12 +2847,9 @@
             </div>
         </div>
         
-        <div id="users-section" class="section">
-            <div class="users-list" id="users-list">
-                <div class="empty-state">
-                    <i class="fas fa-address-book"></i>
-                    <div class="empty-state-title">Aucun utilisateur</div>
-                    <div class="empty-state-text">Les utilisateurs apparaîtront ici</div>
+        <div id="forecasts-section" class="section">
+            <div class="forecasts-content active">
+                <div class="forecasts-list" id="simple-forecasts-list">
                 </div>
             </div>
         </div>
@@ -4043,201 +3049,6 @@
                 <button id="delete-account-btn" class="button danger" style="margin-top: 15px;">Supprimer mon compte</button>
             </div>
         </div>
-        
-        <div id="forecasts-section" class="section">
-            <div class="forecasts-tabs">
-                <div class="forecast-tab active" data-tab="safes">Safes du jour</div>
-                <div class="forecast-tab" data-tab="exact">Scores exacts</div>
-                <div class="forecast-tab" data-tab="ai">Prédictions IA</div>
-            </div>
-            
-            <div class="forecasts-content active" id="safes-content">
-                <div class="forecasts-list" id="safes-list">
-                </div>
-            </div>
-            
-            <div class="forecasts-content" id="exact-content">
-                <div class="forecasts-list" id="exact-list">
-                </div>
-            </div>
-            
-            <div class="forecasts-content" id="ai-content">
-                <div class="forecasts-list" id="ai-list">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="chat-interface" class="chat-section">
-        <div class="chat-messages-container">
-            <div class="chat-messages" id="chat-messages">
-            </div>
-        </div>
-        <div class="chat-input-container" id="chat-input-container">
-            <div class="image-button" id="image-button">
-                <i class="fas fa-image"></i>
-            </div>
-            <div class="chat-input-wrapper" id="chat-input-wrapper">
-                <!-- Reply preview dynamically added here -->
-                <div class="reply-preview" id="reply-preview">
-                    <div class="reply-preview-close" id="reply-close">
-                        <i class="fas fa-times"></i>
-                    </div>
-                    <div class="reply-preview-header">Réponse à <span id="reply-name">Utilisateur</span></div>
-                    <div class="reply-preview-content" id="reply-content">Message original</div>
-                </div>
-                <textarea id="chat-input" class="chat-input" placeholder="Écrire un message..." autocomplete="off" rows="1"></textarea>
-            </div>
-            <div class="send-button" id="send-button">
-                <i class="fas fa-paper-plane"></i>
-            </div>
-        </div>
-        <input type="file" id="chat-image-input" accept="image/*">
-    </div>
-    
-    <div id="create-group-dialog" class="create-group-dialog">
-        <div class="create-group-header">
-            <div class="create-group-back" id="create-group-back">
-                <i class="fas fa-arrow-left"></i>
-            </div>
-            <div class="create-group-title">Nouveau groupe</div>
-        </div>
-        <div class="create-group-content">
-            <div class="group-form">
-                <div class="group-image-preview" id="new-group-image-preview">
-                    <i class="fas fa-users" style="color: white; font-size: 40px;"></i>
-                    <div class="group-image-overlay" id="new-group-image-upload">
-                        <i class="fas fa-camera"></i>
-                    </div>
-                </div>
-                <input type="file" id="new-group-image-input" accept="image/*">
-                
-                <div class="form-group">
-                    <label class="form-label">Nom du groupe</label>
-                    <input type="text" class="form-input" id="group-name" placeholder="Entrez le nom du groupe">
-                    <div id="group-name-error" class="form-error">Le nom du groupe est requis</div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Description (optionnelle)</label>
-                    <input type="text" class="form-input" id="group-description" placeholder="Décrivez le groupe">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Permissions de message</label>
-                    <div style="display: flex; align-items: center; margin-top: 8px;">
-                        <label class="switch">
-                            <input type="checkbox" id="group-public-messages" checked>
-                            <span class="slider"></span>
-                        </label>
-                        <span style="margin-left: 10px; font-size: 14px;">Permettre à tous les membres d'écrire</span>
-                    </div>
-                    <div style="font-size: 12px; color: var(--inactive-text); margin-top: 5px; margin-left: 60px;">
-                        Si désactivé, seuls les administrateurs pourront écrire des messages
-                    </div>
-                </div>
-                <button class="button" id="create-group-submit">
-                    <span class="btn-loader" style="display:none;"></span>
-                    <span class="btn-text">Créer le groupe</span>
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="edit-group-dialog" class="edit-dialog">
-        <div class="edit-header">
-            <div class="edit-back" id="edit-group-back">
-                <i class="fas fa-arrow-left"></i>
-            </div>
-            <div class="edit-title">Modifier le groupe</div>
-        </div>
-        <div class="edit-content">
-            <div class="group-image-preview" id="edit-group-image-preview">
-                <i class="fas fa-users" style="color: white; font-size: 40px;"></i>
-                <div class="group-image-overlay" id="edit-group-image-upload">
-                    <i class="fas fa-camera"></i>
-                </div>
-            </div>
-            <input type="file" id="edit-group-image-input" accept="image/*">
-            
-            <div class="form-group">
-                <label class="form-label">Nom du groupe</label>
-                <div class="editable-field">
-                    <input type="text" class="form-input editable-field-input" id="edit-group-name" placeholder="Entrez le nom du groupe">
-                    <button class="save-field-btn" id="save-group-name-btn">Enregistrer</button>
-                </div>
-                <div id="edit-group-name-error" class="field-error">Le nom du groupe est requis</div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Description</label>
-                <div class="editable-field">
-                    <input type="text" class="form-input editable-field-input" id="edit-group-description" placeholder="Décrivez le groupe">
-                    <button class="save-field-btn" id="save-group-description-btn">Enregistrer</button>
-                </div>
-                <div id="edit-group-description-error" class="field-error"></div>
-            </div>
-            
-            <div class="form-group" id="edit-group-permissions-container">
-                <label class="form-label">Permissions de message</label>
-                <div style="display: flex; align-items: center; margin-top: 8px;">
-                    <label class="switch">
-                        <input type="checkbox" id="edit-group-public-messages">
-                        <span class="slider"></span>
-                    </label>
-                    <span style="margin-left: 10px; font-size: 14px;">Permettre à tous les membres d'écrire</span>
-                    <button class="save-field-btn" id="save-group-permissions-btn" style="margin-left: auto;">Enregistrer</button>
-                </div>
-                <div style="font-size: 12px; color: var(--inactive-text); margin-top: 5px; margin-left: 60px;">
-                    Si désactivé, seuls les administrateurs pourront écrire des messages
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">Image du groupe</label>
-                <button class="button" id="save-group-image-btn" style="margin-top: 10px;">
-                    <span class="btn-loader" style="display:none;"></span>
-                    <span class="btn-text">Enregistrer l'image</span>
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Group Info Dialog -->
-    <div id="group-info-dialog" class="group-info-dialog">
-        <div class="group-info-header">
-            <div class="group-info-back" id="group-info-back">
-                <i class="fas fa-arrow-left"></i>
-            </div>
-            <div class="group-info-title">Informations du groupe</div>
-        </div>
-        <div class="group-info-content">
-            <div class="group-info-section">
-                <div class="group-image-preview" id="info-group-image-preview" style="width: 120px; height: 120px; margin-bottom: 20px;">
-                    <i class="fas fa-users" style="color: white; font-size: 40px;"></i>
-                </div>
-                
-                <div class="group-info-detail">
-                    <div class="group-info-label">Nom</div>
-                    <div class="group-info-value" id="info-group-name">Nom du groupe</div>
-                </div>
-                
-                <div class="group-info-detail">
-                    <div class="group-info-label">Description</div>
-                    <div class="group-info-value" id="info-group-description">Description du groupe</div>
-                </div>
-                
-                <div class="group-info-detail">
-                    <div class="group-info-label">Type</div>
-                    <div class="group-info-value" id="info-group-type">Public</div>
-                </div>
-            </div>
-            
-            <div class="group-info-section">
-                <div class="group-info-section-title">Images partagées</div>
-                <div class="group-info-images" id="info-group-images">
-                    <div class="group-info-image-empty">Aucune image partagée</div>
-                </div>
-            </div>
-        </div>
     </div>
     
     <div id="admin-notif-dialog" class="admin-notif-dialog">
@@ -4324,33 +3135,33 @@
             <div class="about-logo">
                 <i class="fas fa-futbol"></i>
                 <div class="about-title">Pari Alliance</div>
-                <div class="about-version">Version 1.3.0</div>
+                <div class="about-version">Version 2.0.0</div>
             </div>
             
             <div class="about-section">
                 <div class="about-section-title">Description</div>
                 <div class="about-section-content">
-                    Pari Alliance est une application de messagerie sécurisée qui permet aux utilisateurs de créer et de participer à des discussions de groupe.
+                    Pari Alliance est une application de prédictions sportives basée sur l'intelligence artificielle qui fournit des pronostics précis et fiables.
                 </div>
             </div>
             
             <div class="about-section">
                 <div class="about-section-title">Fonctionnalités</div>
                 <div class="about-section-content">
-                    • Messagerie de groupe en temps réel<br>
-                    • Partage de pronostics sportifs<br>
+                    • Prédictions IA avancées<br>
+                    • Combinés intelligents<br>
+                    • Pronostics sûrs<br>
+                    • Analyses simples<br>
                     • Mode sombre personnalisable<br>
                     • Thèmes de couleurs multiples<br>
-                    • Gestion simple des groupes<br>
-                    • Messages directs entre utilisateurs<br>
-                    • Envoi de notifications pour les administrateurs
+                    • Plans d'abonnement flexibles
                 </div>
             </div>
             
             <div class="about-section">
                 <div class="about-section-title">À propos de l'application</div>
                 <div class="about-section-content">
-                    Le logo de l'application est constitué deux mains qui se soutiennent et en arrière-plan ballon de football. L'application a été créée par Pronosoft AI.
+                    Le logo de l'application représente un ballon de football symbolisant notre expertise dans le domaine sportif. L'application a été créée par Pronosoft AI.
                 </div>
             </div>
             
@@ -4423,24 +3234,6 @@
         </div>
     </div>
     
-    <div id="delete-confirmation" class="confirmation-dialog">
-        <div class="confirmation-title">Supprimer les messages sélectionnés ?</div>
-        <div class="confirmation-text">Cette action est irréversible et les messages seront définitivement supprimés.</div>
-        <div class="confirmation-buttons">
-            <div class="confirmation-button confirmation-cancel" id="delete-cancel">Annuler</div>
-            <div class="confirmation-button confirmation-delete" id="delete-confirm">Supprimer</div>
-        </div>
-    </div>
-    
-    <div id="delete-event-confirmation" class="confirmation-dialog">
-        <div class="confirmation-title">Supprimer cet événement ?</div>
-        <div class="confirmation-text">Cette action est irréversible et l'événement sera supprimé.</div>
-        <div class="confirmation-buttons">
-            <div class="confirmation-button confirmation-cancel" id="delete-event-cancel">Annuler</div>
-            <div class="confirmation-button confirmation-delete" id="delete-event-confirm">Supprimer</div>
-        </div>
-    </div>
-    
     <div id="delete-account-confirmation" class="confirmation-dialog">
         <div class="confirmation-title">Supprimer votre compte ?</div>
         <div class="confirmation-text">ATTENTION : Cette action est définitive et irréversible. Toutes vos données seront supprimées.</div>
@@ -4471,18 +3264,6 @@
     <div id="overlay" class="overlay"></div>
 
     <div class="notification" id="notification"></div>
-    
-    <div id="image-viewer" class="image-viewer">
-        <div class="viewer-image-container">
-            <img src="" alt="Image" class="viewer-image" id="viewer-image" oncontextmenu="return false">
-        </div>
-        <div class="viewer-close" id="viewer-close">
-            <i class="fas fa-times"></i>
-        </div>
-        <div class="download-button" id="download-image-btn">
-            <i class="fas fa-download"></i>
-        </div>
-    </div>
 
     <div id="video-modal" class="video-modal">
         <div class="video-container">
@@ -4497,19 +3278,13 @@
     </div>
 
     <div class="bottom-nav" id="bottom-nav">
-        <div class="nav-item active" data-section="discussions" style="flex: 1;">
-            <i class="nav-icon fas fa-comments"></i>
-            <span>Discussions</span>
-        </div>
-        <div class="nav-item" data-section="users" style="flex: 1;">
-            <i class="nav-icon fas fa-address-book"></i>
-            <span>Utilisateurs</span>
-            <div class="notification-dot" id="users-notification-dot" style="display: none;"></div>
+        <div class="nav-item active" data-section="ai-forecasts" style="flex: 1;">
+            <i class="nav-icon fas fa-brain"></i>
+            <span>Prédictions IA</span>
         </div>
         <div class="nav-item" data-section="forecasts" style="flex: 1;">
             <i class="nav-icon fas fa-futbol"></i>
-            <span>Pronostics</span>
-            <div class="notification-dot" id="forecasts-notification-dot" style="display: none;"></div>
+            <span>Simples</span>
         </div>
     </div>
 
@@ -4615,53 +3390,24 @@
         let currentUser = null;
         let currentUserData = null;
         let isAdmin = false;
-        let currentGroup = '';
-        let currentGroupId = null;
-        let currentGroupData = null;
-        let currentSection = 'discussions';
+        let currentSection = 'ai-forecasts';
         let isOnline = navigator.onLine;
-        let messageQueue = [];
-        let chatUnsubscribers = {};
         let eventsUnsubscribe = null;
-        let forecastsUnsubscribe = null;
-        let usersUnsubscribe = null;
-        let groupImageFile = null;
         let profileImageFile = null;
-        let editingGroupId = null;
         let profileUpdating = false;
-        let isLoadingGroups = false;
         let isLoadingEvents = false;
-        let isLoadingUsers = false;
         let profileNameChanged = false;
-        let groupNameChanged = false;
-        let groupDescriptionChanged = false;
-        let groupPermissionsChanged = false;
         let currentEventForDeletion = null;
-        let currentForecastTab = 'safes';
+        let currentForecastTab = 'combines';
         let lastViewedEventTimestamp = null;
         let hasNewEvents = false;
-        let chatImageFile = null;
         let isSearchActive = false;
         let currentSearchContext = '';
-        let replyingToMessage = null;
-        let autoResizeTextarea = null;
-        let groupImageCache = {};
-        let currentDownloadImage = '';
+        let selectedTheme = localStorage.getItem('parisAllianceTheme') || 'default';
         let forecastsCache = {};
         let usersCache = {};
-        let currentChatPartner = null;
-        let processingMessage = false;
-        let selectedTheme = localStorage.getItem('parisAllianceTheme') || 'default';
-        let directChatsCache = {};
-        let allDiscussions = [];
-        let unreadCounts = {};
         let userSatsBalance = 0;
         let currentPlanType = '';
-        let discussionsLoaded = false;
-
-        // New selection system variables
-        let isSelectionMode = false;
-        let selectedMessages = new Set();
 
         // Function to get current date in YYYY-MM-DD format
         function getCurrentDateString() {
@@ -4704,9 +3450,9 @@
         // Function to process and categorize forecasts with new structure
         function processForecastData(data) {
             const processed = {
+                combines: [],
                 safes: [],
-                exact: [],
-                ai: []
+                simple: []
             };
 
             if (!data || !Array.isArray(data)) {
@@ -4728,12 +3474,15 @@
                 };
 
                 // Add to appropriate category based on type
-                if (forecast.type === 'safes') {
+                if (forecast.type === 'combines') {
+                    processed.combines.push(processedForecast);
+                } else if (forecast.type === 'safes') {
                     processed.safes.push(processedForecast);
-                } else if (forecast.type === 'exact') {
-                    processed.exact.push(processedForecast);
-                } else if (forecast.type === 'ai') {
-                    processed.ai.push(processedForecast);
+                } else if (forecast.type === 'simple') {
+                    processed.simple.push(processedForecast);
+                } else {
+                    // Default mapping for compatibility
+                    processed.simple.push(processedForecast);
                 }
             });
 
@@ -4791,10 +3540,9 @@
             function updateConnectionStatus() {
                 if (navigator.onLine) {
                     isOnline = true;
-                    processQueuedMessages();
                 } else {
                     isOnline = false;
-                    showNotification("Pas de connexion internet. Les messages seront envoyés lorsque vous serez connecté.", "error");
+                    showNotification("Pas de connexion internet.", "error");
                 }
             }
             
@@ -4803,10 +3551,9 @@
                 isOnline = true;
                 
                 setTimeout(() => {
-                    if (isLoggedIn && currentSection === 'discussions') {
-                        loadDiscussions();
+                    if (isLoggedIn && (currentSection === 'ai-forecasts' || currentSection === 'forecasts')) {
+                        loadForecastsData(currentForecastTab);
                     }
-                    processQueuedMessages();
                 }, 1000);
             });
             
@@ -4815,36 +3562,6 @@
             });
             
             updateConnectionStatus();
-        }
-        
-        async function processQueuedMessages() {
-            if (messageQueue.length === 0) return;
-            
-            const processedMessages = [...messageQueue];
-            messageQueue = [];
-            
-            for (const message of processedMessages) {
-                try {
-                    if (message.direct) {
-                        await sendDirectMessage(message.chatId, message.text, message.imageData, message.replyTo);
-                    } else {
-                        await sendMessageToFirestore(
-                            message.groupId, 
-                            message.text,
-                            message.imageData,
-                            message.replyTo
-                        );
-                    }
-                } catch (error) {
-                    messageQueue.push(message);
-                }
-            }
-            
-            if (messageQueue.length > 0) {
-                showNotification(`${messageQueue.length} message(s) n'ont pas pu être envoyés`, 'error');
-            } else if (processedMessages.length > 0) {
-                showNotification('Tous les messages ont été envoyés', 'success');
-            }
         }
         
         function showNotification(message, type = 'info') {
@@ -4992,368 +3709,6 @@
             videoPlayer.src = '';
         }
         
-        function setupTextareaAutoResize() {
-            const textarea = document.getElementById('chat-input');
-            if (!textarea) return;
-            
-            const adjustHeight = () => {
-                textarea.style.height = 'auto';
-                
-                const newHeight = Math.min(textarea.scrollHeight, 100);
-                textarea.style.height = `${newHeight}px`;
-                
-                const container = document.getElementById('chat-input-container');
-                if (container) {
-                    if (replyingToMessage) {
-                        container.style.minHeight = `${60 + newHeight}px`;
-                    } else {
-                        container.style.minHeight = `${newHeight + 20}px`;
-                    }
-                }
-            };
-            
-            adjustHeight();
-            
-            textarea.addEventListener('input', adjustHeight);
-            
-            autoResizeTextarea = adjustHeight;
-        }
-
-        // New Selection System Functions
-        function enterSelectionMode() {
-            if (isSelectionMode) return;
-            
-            isSelectionMode = true;
-            selectedMessages.clear();
-            
-            const toolbar = document.getElementById('selection-toolbar');
-            const content = document.querySelector('.content');
-            const chatInterface = document.getElementById('chat-interface');
-            
-            toolbar.classList.add('active');
-            content.classList.add('selection-mode');
-            if (chatInterface.style.display === 'block') {
-                chatInterface.classList.add('selection-mode');
-            }
-            
-            // Make all messages selectable
-            const messageContainers = document.querySelectorAll('.message-container');
-            messageContainers.forEach(container => {
-                container.classList.add('selectable');
-                
-                // Add click event for selection
-                container.addEventListener('click', handleMessageSelection);
-                
-                // Add selection checkbox
-                const checkbox = document.createElement('div');
-                checkbox.className = 'message-checkbox';
-                checkbox.innerHTML = '<i class="fas fa-check"></i>';
-                container.appendChild(checkbox);
-            });
-            
-            updateSelectionInfo();
-            
-            // Add select button to header in chat mode
-            if (currentSection === 'chat') {
-                const headerAction = document.getElementById('header-action');
-                if (headerAction) {
-                    const selectBtn = document.createElement('div');
-                    selectBtn.className = 'select-button';
-                    selectBtn.id = 'selection-exit-btn';
-                    selectBtn.innerHTML = '<i class="fas fa-times"></i>';
-                    selectBtn.addEventListener('click', exitSelectionMode);
-                    headerAction.appendChild(selectBtn);
-                }
-            }
-            
-            history.pushState({ page: 'selection-mode' }, '');
-        }
-        
-        function exitSelectionMode() {
-            if (!isSelectionMode) return;
-            
-            isSelectionMode = false;
-            selectedMessages.clear();
-            
-            const toolbar = document.getElementById('selection-toolbar');
-            const content = document.querySelector('.content');
-            const chatInterface = document.getElementById('chat-interface');
-            
-            toolbar.classList.remove('active');
-            content.classList.remove('selection-mode');
-            if (chatInterface) {
-                chatInterface.classList.remove('selection-mode');
-            }
-            
-            // Remove selection from all messages
-            const messageContainers = document.querySelectorAll('.message-container');
-            messageContainers.forEach(container => {
-                container.classList.remove('selectable', 'selected');
-                container.removeEventListener('click', handleMessageSelection);
-                
-                // Remove selection checkbox
-                const checkbox = container.querySelector('.message-checkbox');
-                if (checkbox) {
-                    checkbox.remove();
-                }
-            });
-            
-            // Remove select button from header
-            const selectBtn = document.getElementById('selection-exit-btn');
-            if (selectBtn) {
-                selectBtn.remove();
-            }
-        }
-        
-        function handleMessageSelection(event) {
-            if (!isSelectionMode) return;
-            
-            event.preventDefault();
-            event.stopPropagation();
-            
-            const messageContainer = event.currentTarget;
-            const messageId = messageContainer.getAttribute('data-id');
-            
-            if (!messageId) return;
-            
-            if (selectedMessages.has(messageId)) {
-                selectedMessages.delete(messageId);
-                messageContainer.classList.remove('selected');
-            } else {
-                selectedMessages.add(messageId);
-                messageContainer.classList.add('selected');
-            }
-            
-            updateSelectionInfo();
-            
-            // Auto-exit if no messages selected
-            if (selectedMessages.size === 0) {
-                exitSelectionMode();
-            }
-        }
-        
-        function updateSelectionInfo() {
-            const selectionInfo = document.getElementById('selection-info');
-            if (selectionInfo) {
-                const count = selectedMessages.size;
-                selectionInfo.textContent = count === 1 ? 
-                    '1 message sélectionné' : 
-                    `${count} messages sélectionnés`;
-            }
-            
-            // Update action buttons state
-            const hasSelection = selectedMessages.size > 0;
-            const copyBtn = document.getElementById('selection-copy-btn');
-            const replyBtn = document.getElementById('selection-reply-btn');
-            const deleteBtn = document.getElementById('selection-delete-btn');
-            
-            if (copyBtn) copyBtn.style.opacity = hasSelection ? '1' : '0.5';
-            if (replyBtn) replyBtn.style.opacity = (hasSelection && selectedMessages.size === 1) ? '1' : '0.5';
-            if (deleteBtn) deleteBtn.style.opacity = hasSelection ? '1' : '0.5';
-        }
-        
-        function copySelectedMessages() {
-            if (selectedMessages.size === 0) return;
-            
-            const messageContainers = document.querySelectorAll('.message-container');
-            const messagesToCopy = [];
-            
-            messageContainers.forEach(container => {
-                const messageId = container.getAttribute('data-id');
-                if (selectedMessages.has(messageId)) {
-                    const messageElement = container.querySelector('.message');
-                    if (messageElement) {
-                        let messageText = messageElement.textContent.trim();
-                        
-                        // Get sender name if it's a received message
-                        const senderElement = container.querySelector('.message-sender');
-                        if (senderElement) {
-                            messageText = `${senderElement.textContent}: ${messageText}`;
-                        }
-                        
-                        messagesToCopy.push(messageText);
-                    }
-                }
-            });
-            
-            if (messagesToCopy.length > 0) {
-                const textToCopy = messagesToCopy.join('\n\n');
-                
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(textToCopy).then(() => {
-                        showNotification(`${messagesToCopy.length} message(s) copié(s)`, 'success');
-                        exitSelectionMode();
-                    }).catch(() => {
-                        showNotification('Impossible de copier les messages', 'error');
-                    });
-                } else {
-                    // Fallback
-                    const textArea = document.createElement('textarea');
-                    textArea.value = textToCopy;
-                    document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
-                    
-                    try {
-                        document.execCommand('copy');
-                        showNotification(`${messagesToCopy.length} message(s) copié(s)`, 'success');
-                        exitSelectionMode();
-                    } catch (err) {
-                        showNotification('Impossible de copier les messages', 'error');
-                    }
-                    
-                    document.body.removeChild(textArea);
-                }
-            }
-        }
-        
-        function replyToSelectedMessage() {
-            if (selectedMessages.size !== 1) return;
-            
-            const messageId = Array.from(selectedMessages)[0];
-            const messageContainer = document.querySelector(`[data-id="${messageId}"]`);
-            
-            if (!messageContainer) return;
-            
-            const messageElement = messageContainer.querySelector('.message');
-            const senderElement = messageContainer.querySelector('.message-sender');
-            const messageFrom = messageContainer.getAttribute('data-from');
-            
-            if (!messageElement) return;
-            
-            replyingToMessage = {
-                id: messageId,
-                from: messageFrom,
-                text: messageElement.textContent.trim()
-            };
-            
-            // Get sender name for reply preview
-            let senderName = 'Utilisateur';
-            if (messageFrom === currentUser.uid) {
-                senderName = 'Vous';
-            } else if (currentChatPartner) {
-                senderName = currentChatPartner.displayName || 'Utilisateur';
-            } else if (senderElement) {
-                senderName = senderElement.textContent;
-            }
-            
-            // Show reply preview
-            const replyPreview = document.getElementById('reply-preview');
-            const replyName = document.getElementById('reply-name');
-            const replyContent = document.getElementById('reply-content');
-            
-            replyName.textContent = senderName;
-            replyContent.textContent = replyingToMessage.text || 'Message';
-            
-            replyPreview.classList.add('active');
-            
-            const chatInputContainer = document.getElementById('chat-input-container');
-            chatInputContainer.classList.add('with-reply');
-            
-            if (autoResizeTextarea) {
-                autoResizeTextarea();
-            }
-            
-            // Focus on input
-            const chatInput = document.getElementById('chat-input');
-            if (chatInput) {
-                chatInput.focus();
-            }
-            
-            exitSelectionMode();
-        }
-        
-        function deleteSelectedMessages() {
-            if (selectedMessages.size === 0) return;
-            
-            // Check permissions
-            const messageContainers = document.querySelectorAll('.message-container');
-            let canDeleteAll = true;
-            
-            messageContainers.forEach(container => {
-                const messageId = container.getAttribute('data-id');
-                if (selectedMessages.has(messageId)) {
-                    const messageFrom = container.getAttribute('data-from');
-                    if (messageFrom !== currentUser.uid && !isAdmin) {
-                        canDeleteAll = false;
-                    }
-                }
-            });
-            
-            if (!canDeleteAll) {
-                showNotification('Vous ne pouvez supprimer que vos propres messages', 'error');
-                return;
-            }
-            
-            showDeleteConfirmation();
-        }
-        
-        function showDeleteConfirmation() {
-            document.getElementById('delete-confirmation').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-            history.pushState({ page: 'delete-confirmation' }, '');
-        }
-        
-        function hideDeleteConfirmation() {
-            document.getElementById('delete-confirmation').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-        }
-        
-        async function confirmDeleteSelectedMessages() {
-            hideDeleteConfirmation();
-            
-            if (selectedMessages.size === 0) return;
-            
-            const messageContainers = document.querySelectorAll('.message-container');
-            const deletePromises = [];
-            
-            messageContainers.forEach(container => {
-                const messageId = container.getAttribute('data-id');
-                if (selectedMessages.has(messageId)) {
-                    container.classList.add('deleting');
-                    
-                    let messageRef;
-                    if (currentChatPartner) {
-                        const user1 = currentUser.uid;
-                        const user2 = currentChatPartner.id;
-                        const chatId = [user1, user2].sort().join('_');
-                        messageRef = doc(db, "conversations", chatId, "messages", messageId);
-                    } else {
-                        messageRef = doc(db, "conversations", currentGroupId, "messages", messageId);
-                    }
-                    
-                    deletePromises.push(deleteDoc(messageRef));
-                }
-            });
-            
-            try {
-                await Promise.all(deletePromises);
-                showNotification(`${selectedMessages.size} message(s) supprimé(s)`, 'success');
-                exitSelectionMode();
-            } catch (error) {
-                console.error('Erreur lors de la suppression des messages:', error);
-                
-                // Remove deleting animation on error
-                messageContainers.forEach(container => {
-                    const messageId = container.getAttribute('data-id');
-                    if (selectedMessages.has(messageId)) {
-                        container.classList.remove('deleting');
-                    }
-                });
-                
-                let errorMessage = 'Erreur lors de la suppression des messages';
-                
-                if (error.code === 'permission-denied') {
-                    errorMessage = 'Vous n\'avez pas les permissions pour supprimer ces messages';
-                } else if (error.code === 'unavailable') {
-                    errorMessage = 'Service temporairement indisponible';
-                }
-                
-                showNotification(errorMessage, 'error');
-                addDebugLog(`Erreur suppression messages: ${error.code} - ${error.message}`, 'error');
-            }
-        }
-        
         function setupUIEvents() {
             // Debug panel setup
             document.getElementById('debug-toggle-btn').addEventListener('click', function() {
@@ -5371,12 +3726,6 @@
                 debugPanelVisible = false;
                 document.getElementById('debug-log-panel').classList.remove('active');
             });
-
-            // Selection system events
-            document.getElementById('selection-copy-btn').addEventListener('click', copySelectedMessages);
-            document.getElementById('selection-reply-btn').addEventListener('click', replyToSelectedMessage);
-            document.getElementById('selection-delete-btn').addEventListener('click', deleteSelectedMessages);
-            document.getElementById('selection-cancel-btn').addEventListener('click', exitSelectionMode);
 
             document.getElementById('header-menu-button').addEventListener('click', function() {
                 document.getElementById('side-menu').classList.add('active');
@@ -5453,29 +3802,27 @@
             
             document.getElementById('close-events-btn').addEventListener('click', function() {
                 if (currentSection === 'events') {
-                    showDiscussionsSection();
+                    showAIForecastsSection();
                 }
             });
 
             document.getElementById('close-subscription-btn').addEventListener('click', function() {
                 if (currentSection === 'subscription') {
-                    showDiscussionsSection();
+                    showAIForecastsSection();
                 }
             });
 
             document.getElementById('close-tutorials-btn').addEventListener('click', function() {
                 if (currentSection === 'tutorials') {
-                    showDiscussionsSection();
+                    showAIForecastsSection();
                 }
             });
             
             document.getElementById('close-interface-btn').addEventListener('click', function() {
                 if (currentSection === 'interface') {
-                    showDiscussionsSection();
+                    showAIForecastsSection();
                 }
             });
-            
-            document.getElementById('group-info-back').addEventListener('click', hideGroupInfoDialog);
             
             document.getElementById('bottom-nav').addEventListener('click', function(e) {
                 const navItems = this.querySelectorAll('.nav-item');
@@ -5488,12 +3835,10 @@
                         e.clientY >= rect.top && e.clientY <= rect.bottom) {
                         
                         const section = item.getAttribute('data-section');
-                        if (section === 'discussions') {
-                            showDiscussionsSection();
+                        if (section === 'ai-forecasts') {
+                            showAIForecastsSection();
                         } else if (section === 'forecasts') {
                             showForecastsSection();
-                        } else if (section === 'users') {
-                            showUsersSection();
                         }
                         
                         break;
@@ -5527,10 +3872,10 @@
                 subscribeToPlan(planType);
             });
             
-            document.querySelectorAll('.forecast-tab').forEach(tab => {
+            document.querySelectorAll('.ai-forecast-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     const tabId = this.getAttribute('data-tab');
-                    switchForecastTab(tabId);
+                    switchAIForecastTab(tabId);
                 });
             });
             
@@ -5604,38 +3949,6 @@
                 document.getElementById('save-display-name-btn').disabled = this.value.trim() === '';
             });
             
-            const chatInput = document.getElementById('chat-input');
-            chatInput.addEventListener('keyup', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-            
-            document.getElementById('reply-close').addEventListener('click', function() {
-                cancelReply();
-            });
-            
-            document.getElementById('send-button').addEventListener('click', sendMessage);
-            
-            document.getElementById('image-button').addEventListener('click', function() {
-                document.getElementById('chat-image-input').click();
-            });
-            
-            document.getElementById('chat-image-input').addEventListener('change', handleChatImageSelect);
-            
-            document.getElementById('viewer-close').addEventListener('click', closeImageViewer);
-            document.getElementById('download-image-btn').addEventListener('click', downloadCurrentImage);
-            
-            document.getElementById('header-back-button').addEventListener('click', closeChat);
-            
-            document.getElementById('create-group-btn').addEventListener('click', function() {
-                showCreateGroupDialog();
-            });
-            
-            document.getElementById('create-group-back').addEventListener('click', hideCreateGroupDialog);
-            document.getElementById('create-group-submit').addEventListener('click', createNewGroup);
-            
             document.getElementById('create-notification-btn').addEventListener('click', function() {
                 if (isAdmin) {
                     showAdminNotificationDialog();
@@ -5646,46 +3959,6 @@
             
             document.getElementById('admin-notif-back').addEventListener('click', hideAdminNotificationDialog);
             document.getElementById('send-notification-btn').addEventListener('click', sendAdminNotification);
-            
-            document.getElementById('new-group-image-upload').addEventListener('click', function() {
-                document.getElementById('new-group-image-input').click();
-            });
-            
-            document.getElementById('new-group-image-input').addEventListener('change', handleNewGroupImageSelect);
-            
-            document.getElementById('edit-group-back').addEventListener('click', hideEditGroupDialog);
-            
-            document.getElementById('edit-group-image-upload').addEventListener('click', function() {
-                document.getElementById('edit-group-image-input').click();
-            });
-            
-            document.getElementById('edit-group-image-input').addEventListener('change', handleEditGroupImageSelect);
-            
-            document.getElementById('save-group-name-btn').addEventListener('click', updateGroupName);
-            document.getElementById('save-group-description-btn').addEventListener('click', updateGroupDescription);
-            document.getElementById('save-group-permissions-btn').addEventListener('click', updateGroupPermissions);
-            document.getElementById('save-group-image-btn').addEventListener('click', updateGroupImage);
-            
-            document.getElementById('edit-group-name').addEventListener('input', function() {
-                groupNameChanged = true;
-                document.getElementById('save-group-name-btn').disabled = this.value.trim() === '';
-            });
-            
-            document.getElementById('edit-group-description').addEventListener('input', function() {
-                groupDescriptionChanged = true;
-                document.getElementById('save-group-description-btn').disabled = false;
-            });
-            
-            document.getElementById('edit-group-public-messages').addEventListener('change', function() {
-                groupPermissionsChanged = true;
-                document.getElementById('save-group-permissions-btn').disabled = false;
-            });
-            
-            document.getElementById('delete-cancel').addEventListener('click', hideDeleteConfirmation);
-            document.getElementById('delete-confirm').addEventListener('click', confirmDeleteSelectedMessages);
-            
-            document.getElementById('delete-event-cancel').addEventListener('click', hideDeleteEventConfirmation);
-            document.getElementById('delete-event-confirm').addEventListener('click', confirmDeleteEvent);
             
             document.addEventListener('contextmenu', function(e) {
                 if (e.target.tagName === 'IMG') {
@@ -5722,12 +3995,6 @@
         function handleBackButton(event) {
             event.preventDefault();
             
-            if (isSelectionMode) {
-                exitSelectionMode();
-                history.pushState({ page: 'main' }, '');
-                return;
-            }
-            
             if (document.querySelector('.confirmation-dialog.active')) {
                 document.querySelectorAll('.confirmation-dialog.active').forEach(dialog => {
                     const cancelBtn = dialog.querySelector('.confirmation-cancel');
@@ -5756,14 +4023,8 @@
                 return;
             }
             
-            if (document.getElementById('chat-interface').style.display === 'block') {
-                closeChat();
-                history.pushState({ page: 'main' }, '');
-                return;
-            }
-            
-            if (currentSection !== 'discussions') {
-                showDiscussionsSection();
+            if (currentSection !== 'ai-forecasts') {
+                showAIForecastsSection();
                 history.pushState({ page: 'main' }, '');
                 return;
             }
@@ -5772,10 +4033,7 @@
                 { id: 'about-dialog', backBtn: 'about-back' },
                 { id: 'terms-dialog', backBtn: 'terms-back' },
                 { id: 'profile-edit-dialog', backBtn: 'profile-edit-back' },
-                { id: 'edit-group-dialog', backBtn: 'edit-group-back' },
-                { id: 'create-group-dialog', backBtn: 'create-group-back' },
-                { id: 'admin-notif-dialog', backBtn: 'admin-notif-back' },
-                { id: 'group-info-dialog', backBtn: 'group-info-back' }
+                { id: 'admin-notif-dialog', backBtn: 'admin-notif-back' }
             ];
             
             for (const dialog of dialogs) {
@@ -5786,56 +4044,17 @@
                 }
             }
             
-            if (document.getElementById('image-viewer').classList.contains('active')) {
-                closeImageViewer();
-                history.pushState({ page: 'main' }, '');
-                return;
-            }
-            
-            if (currentSection === 'discussions') {
+            if (currentSection === 'ai-forecasts') {
                 history.pushState({ page: 'main' }, '');
             }
         }
         
         function handleGlobalTouchStart(e) {
-            if (!isSelectionMode && currentSection === 'chat') {
-                const messageContainer = e.target.closest('.message-container');
-                if (messageContainer) {
-                    // Long press to enter selection mode
-                    const longPressTimer = setTimeout(() => {
-                        enterSelectionMode();
-                        handleMessageSelection({ 
-                            currentTarget: messageContainer, 
-                            preventDefault: () => {}, 
-                            stopPropagation: () => {} 
-                        });
-                    }, 800);
-                    
-                    // Store timer on element
-                    messageContainer._longPressTimer = longPressTimer;
-                }
-            }
+            // Touch handlers for forecast items if needed
         }
         
         function handleGlobalTouchEnd(e) {
-            const messageContainer = e.target.closest('.message-container');
-            if (messageContainer && messageContainer._longPressTimer) {
-                clearTimeout(messageContainer._longPressTimer);
-                delete messageContainer._longPressTimer;
-            }
-        }
-        
-        function cancelReply() {
-            replyingToMessage = null;
-            const replyPreview = document.getElementById('reply-preview');
-            replyPreview.classList.remove('active');
-            
-            const chatInputContainer = document.getElementById('chat-input-container');
-            chatInputContainer.classList.remove('with-reply');
-            
-            if (autoResizeTextarea) {
-                autoResizeTextarea();
-            }
+            // Touch handlers for forecast items if needed
         }
         
         function createRippleEffect(e) {
@@ -5877,12 +4096,10 @@
                 
                 currentSearchContext = currentSection;
                 
-                if (currentSearchContext === 'discussions') {
-                    searchInput.placeholder = 'Rechercher une discussion...';
+                if (currentSearchContext === 'ai-forecasts') {
+                    searchInput.placeholder = 'Rechercher une prédiction...';
                 } else if (currentSearchContext === 'events') {
                     searchInput.placeholder = 'Rechercher un événement...';
-                } else if (currentSearchContext === 'users') {
-                    searchInput.placeholder = 'Rechercher un utilisateur...';
                 } else if (currentSearchContext === 'forecasts') {
                     searchInput.placeholder = 'Rechercher un pronostic...';
                 }
@@ -5908,13 +4125,23 @@
         }
         
         function handleSearch(query) {
-            if (currentSearchContext === 'discussions') {
-                filterDiscussions(query);
+            if (currentSearchContext === 'ai-forecasts') {
+                filterForecasts(query);
             } else if (currentSearchContext === 'events') {
                 filterEvents(query);
-            } else if (currentSearchContext === 'users') {
-                filterUsers(query);
+            } else if (currentSearchContext === 'forecasts') {
+                filterForecasts(query);
             }
+        }
+
+        function filterForecasts(query) {
+            // Implement forecast filtering logic here
+            // This would filter the displayed forecasts based on the search query
+        }
+
+        function filterEvents(query) {
+            // Implement events filtering logic here
+            // This would filter the displayed events based on the search query
         }
         
         function openSocialLink(platform) {
@@ -5960,7 +4187,6 @@
 
         function showSubscriptionSection() {
             hideSearchBar();
-            exitSelectionMode();
             
             currentSection = 'subscription';
             
@@ -5978,7 +4204,7 @@
             document.getElementById('header-action').innerHTML = '';
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showDiscussionsSection();
+                showAIForecastsSection();
             });
 
             document.getElementById('bottom-nav').style.display = 'none';
@@ -5991,7 +4217,6 @@
 
         function showTutorialsSection() {
             hideSearchBar();
-            exitSelectionMode();
             
             currentSection = 'tutorials';
             
@@ -6009,7 +4234,7 @@
             document.getElementById('header-action').innerHTML = '';
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showDiscussionsSection();
+                showAIForecastsSection();
             });
 
             document.getElementById('bottom-nav').style.display = 'none';
@@ -6018,239 +4243,10 @@
             history.pushState({ page: 'tutorials' }, '');
         }
         
-        function showGroupInfoDialog() {
-            if (!currentGroupData) return;
-            
-            const dialog = document.getElementById('group-info-dialog');
-            const imagePreview = document.getElementById('info-group-image-preview');
-            const nameElement = document.getElementById('info-group-name');
-            const descriptionElement = document.getElementById('info-group-description');
-            const typeElement = document.getElementById('info-group-type');
-            const imagesContainer = document.getElementById('info-group-images');
-            
-            nameElement.textContent = currentGroupData.name || 'Sans nom';
-            descriptionElement.textContent = currentGroupData.description || 'Sans description';
-            typeElement.textContent = currentGroupData.allowPublicMessages !== false ? 
-                'Public (Tous peuvent écrire)' : 'Restreint (Écriture limitée aux administrateurs)';
-            
-            if (currentGroupData.imageURL) {
-                imagePreview.innerHTML = `<img src="${currentGroupData.imageURL}" alt="${currentGroupData.name}">`;
-            } else {
-                imagePreview.innerHTML = `<i class="fas fa-users" style="color: white; font-size: 40px;"></i>`;
-            }
-            
-            imagesContainer.innerHTML = '<div class="group-info-image-empty">Chargement des images...</div>';
-            
-            loadGroupImages();
-            
-            dialog.classList.add('active');
-            history.pushState({ page: 'group-info' }, '');
-        }
-        
-        function hideGroupInfoDialog() {
-            document.getElementById('group-info-dialog').classList.remove('active');
-        }
-        
-        async function loadGroupImages() {
-            if (!currentGroupId) return;
-            
-            const imagesContainer = document.getElementById('info-group-images');
-            
-            try {
-                if (groupImageCache[currentGroupId] && groupImageCache[currentGroupId].length > 0) {
-                    displayGroupImages(groupImageCache[currentGroupId]);
-                    return;
-                }
-                
-                const messagesRef = collection(db, "conversations", currentGroupId, "messages");
-                const q = query(messagesRef, where("imageData", "!=", null));
-                const querySnapshot = await getDocs(q);
-                
-                if (querySnapshot.empty) {
-                    imagesContainer.innerHTML = '<div class="group-info-image-empty">Aucune image partagée</div>';
-                    return;
-                }
-                
-                const images = [];
-                querySnapshot.forEach(doc => {
-                    const messageData = doc.data();
-                    if (messageData.imageData) {
-                        images.push({
-                            url: messageData.imageData,
-                            id: doc.id,
-                            timestamp: messageData.createdAt
-                        });
-                    }
-                });
-                
-                images.sort((a, b) => {
-                    if (a.timestamp && b.timestamp) {
-                        return b.timestamp.seconds - a.timestamp.seconds;
-                    }
-                    return 0;
-                });
-                
-                groupImageCache[currentGroupId] = images;
-                
-                displayGroupImages(images);
-                
-            } catch (error) {
-                const errorMsg = handleFirestoreError(error, 'chargement des images du groupe');
-                imagesContainer.innerHTML = '<div class="group-info-image-empty">Erreur lors du chargement des images</div>';
-            }
-        }
-        
-        function displayGroupImages(images) {
-            const imagesContainer = document.getElementById('info-group-images');
-            
-            if (!images || images.length === 0) {
-                imagesContainer.innerHTML = '<div class="group-info-image-empty">Aucune image partagée</div>';
-                return;
-            }
-            
-            imagesContainer.innerHTML = '';
-            
-            const imagesToShow = images.slice(0, 9);
-            
-            imagesToShow.forEach(image => {
-                const imageElement = document.createElement('div');
-                imageElement.className = 'group-info-image';
-                imageElement.innerHTML = `<img src="${image.url}" alt="Image partagée">`;
-                
-                imageElement.addEventListener('click', () => {
-                    showImageViewer(image.url);
-                });
-                
-                imagesContainer.appendChild(imageElement);
-            });
-        }
-        
-        function showImageViewer(imageUrl) {
-            const viewer = document.getElementById('image-viewer');
-            const viewerImage = document.getElementById('viewer-image');
-            viewerImage.src = imageUrl;
-            viewer.classList.add('active');
-            
-            currentDownloadImage = imageUrl;
-            
-            history.pushState({ page: 'image-viewer' }, '');
-        }
-        
-        function closeImageViewer() {
-            const viewer = document.getElementById('image-viewer');
-            viewer.classList.remove('active');
-            setTimeout(() => {
-                document.getElementById('viewer-image').src = '';
-                currentDownloadImage = '';
-            }, 300);
-        }
-        
-        function downloadCurrentImage() {
-            if (!currentDownloadImage) return;
-            
-            try {
-                const a = document.createElement('a');
-                a.href = currentDownloadImage;
-                a.download = 'image_' + new Date().getTime() + '.jpg';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                
-                showNotification('Téléchargement démarré', 'success');
-            } catch (error) {
-                showNotification('Erreur lors du téléchargement de l\'image', 'error');
-            }
-        }
-        
-        async function handleChatImageSelect(e) {
-            const file = e.target.files[0];
-            if (!file || !file.type.match('image.*')) {
-                showNotification('Veuillez sélectionner une image valide', 'error');
-                return;
-            }
-            
-            try {
-                if (file.size > 5 * 1024 * 1024) {
-                    showNotification('L\'image est trop volumineuse (max 5 Mo)', 'error');
-                    return;
-                }
-                
-                showNotification('Préparation de l\'image...', 'info');
-                
-                const optimizedImage = await optimizeImage(file, 800);
-                const base64Image = await encodeImageToBase64(optimizedImage);
-                chatImageFile = base64Image;
-                
-                const inputField = document.getElementById('chat-input');
-                if (inputField) {
-                    inputField.placeholder = 'Ajoutez un commentaire à l\'image (optionnel)';
-                    inputField.focus();
-                }
-                
-                const imageButton = document.getElementById('image-button');
-                if (imageButton) {
-                    imageButton.style.color = 'var(--success-color)';
-                }
-                
-                showNotification('Image prête à être envoyée', 'success');
-            } catch (error) {
-                console.error('Erreur lors du traitement de l\'image:', error);
-                showNotification('Erreur lors du traitement de l\'image', 'error');
-                chatImageFile = null;
-            }
-            
-            document.getElementById('chat-image-input').value = '';
-        }
-        
-        function optimizeImage(file, maxDimension) {
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                img.onload = function() {
-                    let width = img.width;
-                    let height = img.height;
-                    
-                    if (width > maxDimension || height > maxDimension) {
-                        if (width > height) {
-                            height = Math.round(height * (maxDimension / width));
-                            width = maxDimension;
-                        } else {
-                            width = Math.round(width * (maxDimension / height));
-                            height = maxDimension;
-                        }
-                    }
-                    
-                    const canvas = document.createElement('canvas');
-                    canvas.width = width;
-                    canvas.height = height;
-                    
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    
-                    canvas.toBlob(
-                        blob => {
-                            if (blob) {
-                                resolve(blob);
-                            } else {
-                                reject(new Error('Échec de la conversion en Blob'));
-                            }
-                        }, 
-                        file.type, 
-                        0.8
-                    );
-                };
-                
-                img.onerror = function() {
-                    reject(new Error('Échec du chargement de l\'image'));
-                };
-                
-                img.src = URL.createObjectURL(file);
-            });
-        }
-        
-        function switchForecastTab(tabId) {
+        function switchAIForecastTab(tabId) {
             currentForecastTab = tabId;
             
-            document.querySelectorAll('.forecast-tab').forEach(tab => {
+            document.querySelectorAll('.ai-forecast-tab').forEach(tab => {
                 if (tab.getAttribute('data-tab') === tabId) {
                     tab.classList.add('active');
                 } else {
@@ -6258,7 +4254,7 @@
                 }
             });
             
-            document.querySelectorAll('.forecasts-content').forEach(content => {
+            document.querySelectorAll('.ai-forecasts-content').forEach(content => {
                 if (content.id === `${tabId}-content`) {
                     content.classList.add('active');
                 } else {
@@ -6269,17 +4265,11 @@
             loadForecastsData(tabId);
         }
         
-        function showDiscussionsSection() {
-            if (document.getElementById('chat-interface').style.display === 'block') {
-                closeChat();
-                return;
-            }
-            
+        function showAIForecastsSection() {
             hideSearchBar();
-            exitSelectionMode();
             
             document.querySelectorAll('.nav-item').forEach(item => {
-                if (item.getAttribute('data-section') === 'discussions') {
+                if (item.getAttribute('data-section') === 'ai-forecasts') {
                     item.classList.add('active');
                 } else {
                     item.classList.remove('active');
@@ -6289,15 +4279,15 @@
             document.getElementById('header-menu-button').style.display = 'block';
             document.getElementById('header-back-button').style.display = 'none';
             
-            currentSection = 'discussions';
+            currentSection = 'ai-forecasts';
             
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
             
-            document.getElementById('discussions-section').classList.add('active');
+            document.getElementById('ai-forecasts-section').classList.add('active');
             
-            document.getElementById('header-title').textContent = 'Discussions';
+            document.getElementById('header-title').textContent = 'Prédictions IA';
             
             document.getElementById('header-action').innerHTML = `
                 <div class="search-button" id="search-button">
@@ -6323,73 +4313,11 @@
             document.getElementById('bottom-nav').style.display = 'flex';
             document.querySelector('.content').classList.remove('no-bottom-nav');
             
-            // Charger les discussions seulement si elles n'ont pas déjà été chargées
-            if (!discussionsLoaded) {
-                loadDiscussions();
-            }
-        }
-        
-        function showUsersSection() {
-            if (document.getElementById('chat-interface').style.display === 'block') {
-                closeChat();
-            }
-            
-            hideSearchBar();
-            exitSelectionMode();
-            
-            document.querySelectorAll('.nav-item').forEach(item => {
-                if (item.getAttribute('data-section') === 'users') {
-                    item.classList.add('active');
-                } else {
-                    item.classList.remove('active');
-                }
-            });
-            
-            document.getElementById('header-menu-button').style.display = 'block';
-            document.getElementById('header-back-button').style.display = 'none';
-            
-            currentSection = 'users';
-            
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            document.getElementById('users-section').classList.add('active');
-            
-            document.getElementById('header-title').textContent = 'Utilisateurs';
-            
-            document.getElementById('header-action').innerHTML = `
-                <div class="search-button" id="search-button">
-                    <i class="fas fa-search"></i>
-                </div>
-                <div class="events-button" id="events-button">
-                    <i class="fas fa-bell"></i>
-                    <div class="notification-dot" id="events-notification-dot"></div>
-                </div>
-            `;
-            
-            if (hasNewEvents) {
-                document.getElementById('events-notification-dot').classList.add('active');
-            }
-            
-            document.getElementById('search-button').addEventListener('click', toggleSearchBar);
-            document.getElementById('events-button').addEventListener('click', function() {
-                showEventsSection();
-                updateLastViewedEventTimestamp();
-                hideEventNotificationDot();
-            });
-
-            document.getElementById('bottom-nav').style.display = 'flex';
-            document.querySelector('.content').classList.remove('no-bottom-nav');
-            
-            loadUsers();
-            
-            history.pushState({ page: 'users' }, '');
+            loadForecastsData(currentForecastTab);
         }
         
         function showInterfaceSection() {
             hideSearchBar();
-            exitSelectionMode();
             
             currentSection = 'interface';
             
@@ -6407,7 +4335,7 @@
             document.getElementById('header-action').innerHTML = '';
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showDiscussionsSection();
+                showAIForecastsSection();
             });
 
             document.getElementById('bottom-nav').style.display = 'none';
@@ -6418,39 +4346,19 @@
             history.pushState({ page: 'interface' }, '');
         }
         
-        function isDateTodayOrTomorrow(date) {
-            if (!date) return false;
-
-            let forecastDate;
-            if (date.toDate) {
-                forecastDate = date.toDate();
-            } else if (date instanceof Date) {
-                forecastDate = date;
-            } else {
-                return false;
-            }
-
-            const today = new Date();
-            const tomorrow = new Date();
-            tomorrow.setDate(today.getDate() + 1);
-
-            return (
-                (forecastDate.getFullYear() === today.getFullYear() && 
-                 forecastDate.getMonth() === today.getMonth() && 
-                 forecastDate.getDate() === today.getDate()) ||
-                (forecastDate.getFullYear() === tomorrow.getFullYear() && 
-                 forecastDate.getMonth() === tomorrow.getMonth() && 
-                 forecastDate.getDate() === tomorrow.getDate())
-            );
-        }
-        
         async function loadForecastsData(tabType) {
             if (forecastsCache[tabType]) {
                 displayForecastsFromCache(tabType);
                 return;
             }
             
-            const listElement = document.getElementById(`${tabType}-list`);
+            let listElement;
+            if (currentSection === 'ai-forecasts') {
+                listElement = document.getElementById(`${tabType}-list`);
+            } else {
+                listElement = document.getElementById('simple-forecasts-list');
+            }
+            
             if (!listElement) return;
             
             listElement.innerHTML = `
@@ -6483,7 +4391,11 @@
                     forecastsCache[type] = processedData[type];
                 });
                 
-                displayForecastsFromCache(tabType);
+                if (currentSection === 'ai-forecasts') {
+                    displayForecastsFromCache(tabType);
+                } else {
+                    displayForecastsFromCache('simple');
+                }
                 
             } catch (error) {
                 addDebugLog(`Erreur chargement pronostics: ${error.message}`, 'error');
@@ -6498,7 +4410,13 @@
         }
         
         function displayForecastsFromCache(tabType) {
-            const listElement = document.getElementById(`${tabType}-list`);
+            let listElement;
+            if (currentSection === 'ai-forecasts') {
+                listElement = document.getElementById(`${tabType}-list`);
+            } else {
+                listElement = document.getElementById('simple-forecasts-list');
+            }
+            
             if (!listElement || !forecastsCache[tabType]) return;
             
             listElement.innerHTML = '';
@@ -6559,7 +4477,64 @@
             
             let mainContent = '';
             
-            if (type === 'safes') {
+            if (type === 'combines') {
+                mainContent = `
+                    <div class="forecast-header">
+                        <div>${forecastData.league || 'Compétition'}</div>
+                        <div class="forecast-status ${statusClass}">${statusText}</div>
+                    </div>
+                    <div class="forecast-match">
+                        <div class="forecast-team">
+                            <div class="forecast-team-logo">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="forecast-team-name">${forecastData.HomeTeam || 'Équipe 1'}</div>
+                        </div>
+                        <div class="forecast-score">VS</div>
+                        <div class="forecast-team">
+                            <div class="forecast-team-logo">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="forecast-team-name">${forecastData.AwayTeam || 'Équipe 2'}</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; font-weight: bold; margin: 10px 0;">
+                        Combiné IA: ${forecastData.prediction || 'N/A'}
+                    </div>
+                    <div style="font-size: 13px; margin-top: 10px; font-style: italic;">
+                        "Combiné intelligent basé sur l'analyse de données avancées"
+                    </div>
+                `;
+            } else if (type === 'safes') {
+                mainContent = `
+                    <div class="forecast-header">
+                        <div>${forecastData.league || 'Compétition'}</div>
+                        <div class="forecast-status ${statusClass}">${statusText}</div>
+                    </div>
+                    <div class="forecast-match">
+                        <div class="forecast-team">
+                            <div class="forecast-team-logo">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="forecast-team-name">${forecastData.HomeTeam || 'Équipe 1'}</div>
+                        </div>
+                        <div class="forecast-score">VS</div>
+                        <div class="forecast-team">
+                            <div class="forecast-team-logo">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="forecast-team-name">${forecastData.AwayTeam || 'Équipe 2'}</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; font-weight: bold; margin: 10px 0;">
+                        Pronostic Sûr: ${forecastData.prediction || 'N/A'}
+                    </div>
+                    <div style="font-size: 13px; margin-top: 10px; font-style: italic;">
+                        "Pronostic à haute probabilité de réussite"
+                    </div>
+                `;
+            } else {
+                // Simple forecasts
                 mainContent = `
                     <div class="forecast-header">
                         <div>${forecastData.league || 'Compétition'}</div>
@@ -6584,62 +4559,6 @@
                         Pronostic: ${forecastData.prediction || 'N/A'}
                     </div>
                 `;
-            } else if (type === 'exact') {
-                mainContent = `
-                    <div class="forecast-header">
-                        <div>${forecastData.league || 'Compétition'}</div>
-                        <div class="forecast-status ${statusClass}">${statusText}</div>
-                    </div>
-                    <div class="forecast-match">
-                        <div class="forecast-team">
-                            <div class="forecast-team-logo">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <div class="forecast-team-name">${forecastData.HomeTeam || 'Équipe 1'}</div>
-                        </div>
-                        <div class="forecast-score">VS</div>
-                        <div class="forecast-team">
-                            <div class="forecast-team-logo">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <div class="forecast-team-name">${forecastData.AwayTeam || 'Équipe 2'}</div>
-                        </div>
-                    </div>
-                    <div style="text-align: center; margin: 10px 0;">
-                        <div style="font-weight: bold; margin-bottom: 5px;">Score exact recommandé:</div>
-                        <div class="score-options">
-                            <div class="score-option active">${forecastData.prediction || 'N/A'}</div>
-                        </div>
-                    </div>
-                `;
-            } else if (type === 'ai') {
-                mainContent = `
-                    <div class="forecast-header">
-                        <div>${forecastData.league || 'Compétition'}</div>
-                        <div class="forecast-status ${statusClass}">${statusText}</div>
-                    </div>
-                    <div class="forecast-match">
-                        <div class="forecast-team">
-                            <div class="forecast-team-logo">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <div class="forecast-team-name">${forecastData.HomeTeam || 'Équipe 1'}</div>
-                        </div>
-                        <div class="forecast-score">VS</div>
-                        <div class="forecast-team">
-                            <div class="forecast-team-logo">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <div class="forecast-team-name">${forecastData.AwayTeam || 'Équipe 2'}</div>
-                        </div>
-                    </div>
-                    <div style="text-align: center; font-weight: bold; margin: 10px 0;">
-                        Prédiction IA: ${forecastData.prediction || 'N/A'}
-                    </div>
-                    <div style="font-size: 13px; margin-top: 10px; font-style: italic;">
-                        "Analyse basée sur les performances récentes et les statistiques avancées"
-                    </div>
-                `;
             }
             
             const confidence = forecastData.confidence || 75;
@@ -6662,12 +4581,7 @@
         }
         
         function showForecastsSection() {
-            if (document.getElementById('chat-interface').style.display === 'block') {
-                closeChat();
-            }
-            
             hideSearchBar();
-            exitSelectionMode();
             
             document.querySelectorAll('.nav-item').forEach(item => {
                 if (item.getAttribute('data-section') === 'forecasts') {
@@ -6688,7 +4602,7 @@
             
             document.getElementById('forecasts-section').classList.add('active');
             
-            document.getElementById('header-title').textContent = 'Pronostics';
+            document.getElementById('header-title').textContent = 'Simples';
             
             document.getElementById('header-action').innerHTML = `
                 <div class="search-button" id="search-button">
@@ -6714,16 +4628,11 @@
             document.getElementById('bottom-nav').style.display = 'flex';
             document.querySelector('.content').classList.remove('no-bottom-nav');
             
-            loadForecastsData(currentForecastTab);
+            loadForecastsData('simple');
         }
         
         function showEventsSection() {
-            if (document.getElementById('chat-interface').style.display === 'block') {
-                closeChat();
-            }
-            
             hideSearchBar();
-            exitSelectionMode();
             
             currentSection = 'events';
             
@@ -6764,12 +4673,7 @@
         }
         
         function showProfileSection() {
-            if (document.getElementById('chat-interface').style.display === 'block') {
-                closeChat();
-            }
-            
             hideSearchBar();
-            exitSelectionMode();
             
             currentSection = 'profile';
             
@@ -6787,13 +4691,211 @@
             document.getElementById('header-action').innerHTML = '';
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showDiscussionsSection();
+                showAIForecastsSection();
             });
 
             document.getElementById('bottom-nav').style.display = 'none';
             document.querySelector('.content').classList.add('no-bottom-nav');
             
             history.pushState({ page: 'profile' }, '');
+        }
+
+        function listenToEvents() {
+            if (eventsUnsubscribe) {
+                eventsUnsubscribe();
+            }
+            
+            try {
+                const eventsRef = collection(db, "Events");
+                const q = query(eventsRef, orderBy("createdAt", "desc"), limit(50));
+                
+                const unsubscribe = onSnapshot(q, (snapshot) => {
+                    const eventsList = document.getElementById('events-list');
+                    
+                    if (snapshot.empty) {
+                        eventsList.innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-bell"></i>
+                                <div class="empty-state-title">Aucun événement</div>
+                                <div class="empty-state-text">Les événements apparaîtront ici</div>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    const events = [];
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        events.push({
+                            id: doc.id,
+                            ...data
+                        });
+                    });
+                    
+                    displayEvents(events);
+                    
+                    // Check for new events
+                    const latestEventTimestamp = events[0]?.createdAt;
+                    if (lastViewedEventTimestamp && latestEventTimestamp && 
+                        latestEventTimestamp.seconds > lastViewedEventTimestamp) {
+                        hasNewEvents = true;
+                        showEventNotificationDot();
+                    }
+                    
+                }, (error) => {
+                    const errorMsg = handleFirestoreError(error, 'écoute des événements');
+                    document.getElementById('events-list').innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div class="empty-state-title">Erreur</div>
+                            <div class="empty-state-text">Impossible de charger les événements</div>
+                        </div>
+                    `;
+                });
+                
+                eventsUnsubscribe = unsubscribe;
+                
+            } catch (error) {
+                handleFirestoreError(error, 'configuration de l\'écoute des événements');
+            }
+        }
+
+        function displayEvents(events) {
+            const eventsList = document.getElementById('events-list');
+            eventsList.innerHTML = '';
+            
+            const fragment = document.createDocumentFragment();
+            
+            events.forEach(event => {
+                const eventElement = createEventElement(event);
+                fragment.appendChild(eventElement);
+            });
+            
+            eventsList.appendChild(fragment);
+        }
+
+        function createEventElement(eventData) {
+            const eventDiv = document.createElement('div');
+            eventDiv.className = 'admin-notification';
+            
+            const eventTime = eventData.createdAt ? 
+                eventData.createdAt.toDate().toLocaleString('fr-FR') : 
+                'Date inconnue';
+            
+            eventDiv.innerHTML = `
+                <div class="admin-notification-header">
+                    <div class="admin-notification-title">
+                        <i class="fas fa-bullhorn"></i>
+                        ${eventData.title || 'Notification'}
+                    </div>
+                </div>
+                <div class="admin-notification-content">
+                    ${eventData.content || 'Contenu non disponible'}
+                </div>
+                <div class="admin-notification-footer">
+                    ${eventTime}
+                </div>
+                ${isAdmin ? `
+                    <div class="event-close-btn" onclick="deleteEvent('${eventData.id}')">
+                        <i class="fas fa-times"></i>
+                    </div>
+                ` : ''}
+            `;
+            
+            return eventDiv;
+        }
+
+        function updateLastViewedEventTimestamp() {
+            lastViewedEventTimestamp = Math.floor(Date.now() / 1000);
+            localStorage.setItem('parisAllianceLastViewedEvent', lastViewedEventTimestamp.toString());
+        }
+
+        function hideEventNotificationDot() {
+            hasNewEvents = false;
+            const dot = document.getElementById('events-notification-dot');
+            if (dot) {
+                dot.classList.remove('active');
+            }
+        }
+
+        function showEventNotificationDot() {
+            const dot = document.getElementById('events-notification-dot');
+            if (dot) {
+                dot.classList.add('active');
+            }
+        }
+
+        async function deleteEvent(eventId) {
+            if (!isAdmin) {
+                showNotification('Seuls les administrateurs peuvent supprimer les événements', 'error');
+                return;
+            }
+            
+            try {
+                await deleteDoc(doc(db, "Events", eventId));
+                showNotification('Événement supprimé', 'success');
+            } catch (error) {
+                console.error('Erreur lors de la suppression de l\'événement:', error);
+                showNotification('Erreur lors de la suppression de l\'événement', 'error');
+            }
+        }
+
+        function showAdminNotificationDialog() {
+            document.getElementById('admin-notif-dialog').classList.add('active');
+            history.pushState({ page: 'admin-notification' }, '');
+        }
+
+        function hideAdminNotificationDialog() {
+            document.getElementById('admin-notif-dialog').classList.remove('active');
+        }
+
+        async function sendAdminNotification() {
+            const title = document.getElementById('notif-title').value.trim();
+            const content = document.getElementById('notif-content').value.trim();
+            const type = document.getElementById('notif-type').value;
+            
+            if (!title) {
+                document.getElementById('notif-title-error').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('notif-title-error').style.display = 'none';
+            }
+            
+            if (!content) {
+                document.getElementById('notif-content-error').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('notif-content-error').style.display = 'none';
+            }
+            
+            setButtonLoading('send-notification-btn', true);
+            
+            try {
+                const eventData = {
+                    title: title,
+                    content: content,
+                    type: type,
+                    createdAt: serverTimestamp(),
+                    from: currentUser.uid,
+                    fromName: currentUserData?.displayName || 'Administrateur'
+                };
+                
+                await addDoc(collection(db, "Events"), eventData);
+                
+                showNotification('Notification envoyée avec succès', 'success');
+                hideAdminNotificationDialog();
+                
+                // Clear form
+                document.getElementById('notif-title').value = '';
+                document.getElementById('notif-content').value = '';
+                document.getElementById('notif-type').value = 'info';
+                
+            } catch (error) {
+                console.error('Erreur lors de l\'envoi de la notification:', error);
+                showNotification('Erreur lors de l\'envoi de la notification', 'error');
+            } finally {
+                setButtonLoading('send-notification-btn', false);
+            }
         }
         
         async function updateDisplayName() {
@@ -6978,26 +5080,9 @@
             hideLogoutConfirmation();
             
             try {
-                Object.values(chatUnsubscribers).forEach(unsubscribe => {
-                    if (typeof unsubscribe === 'function') {
-                        unsubscribe();
-                    }
-                });
-                chatUnsubscribers = {};
-                
                 if (eventsUnsubscribe) {
                     eventsUnsubscribe();
                     eventsUnsubscribe = null;
-                }
-                
-                if (forecastsUnsubscribe) {
-                    forecastsUnsubscribe();
-                    forecastsUnsubscribe = null;
-                }
-                
-                if (usersUnsubscribe) {
-                    usersUnsubscribe();
-                    usersUnsubscribe = null;
                 }
                 
                 await signOut(auth);
@@ -7006,7 +5091,6 @@
                 currentUser = null;
                 currentUserData = null;
                 isAdmin = false;
-                discussionsLoaded = false;
                 
                 showNotification('Déconnexion réussie', 'success');
                 
@@ -7067,751 +5151,36 @@
                 }
             }
         }
-        
-        async function sendMessage() {
-            const input = document.getElementById('chat-input');
-            const text = input.value.trim();
-            
-            if (!text && !chatImageFile) return;
-            
-            if (processingMessage) return;
-            processingMessage = true;
-            
-            const sendButton = document.getElementById('send-button');
-            const imageButton = document.getElementById('image-button');
-            
-            sendButton.disabled = true;
-            imageButton.disabled = true;
-            
-            try {
-                if (currentChatPartner) {
-                    await sendDirectMessage(
-                        [currentUser.uid, currentChatPartner.id].sort().join('_'), 
-                        text, 
-                        chatImageFile,
-                        replyingToMessage
-                    );
-                } else if (currentGroupId) {
-                    await sendMessageToFirestore(currentGroupId, text, chatImageFile, replyingToMessage);
-                }
-                
-                input.value = '';
-                cancelReply();
-                
-                if (chatImageFile) {
-                    chatImageFile = null;
-                    imageButton.style.color = 'var(--primary-color)';
-                    input.placeholder = 'Écrire un message...';
-                }
-                
-                if (autoResizeTextarea) {
-                    autoResizeTextarea();
-                }
-                
-            } catch (error) {
-                console.error('Erreur lors de l\'envoi du message:', error);
-                showNotification('Erreur lors de l\'envoi du message', 'error');
-            } finally {
-                sendButton.disabled = false;
-                imageButton.disabled = false;
-                processingMessage = false;
-            }
-        }
-        
-        async function sendDirectMessage(chatId, text, imageData = null, replyTo = null) {
-            if (!currentUser || !currentChatPartner) return;
-            
-            if (!isOnline) {
-                messageQueue.push({
-                    direct: true,
-                    chatId: chatId,
-                    text: text,
-                    imageData: imageData,
-                    replyTo: replyTo
-                });
-                showNotification('Message mis en file d\'attente (hors ligne)', 'info');
-                return;
-            }
-            
-            try {
-                const messageData = {
-                    text: text,
-                    from: currentUser.uid,
-                    createdAt: serverTimestamp(),
-                    fromName: currentUserData?.displayName || 'Utilisateur'
-                };
-                
-                if (imageData) {
-                    messageData.imageData = imageData;
-                }
-                
-                if (replyTo) {
-                    messageData.replyTo = {
-                        id: replyTo.id,
-                        from: replyTo.from,
-                        text: replyTo.text
-                    };
-                }
-                
-                const messagesRef = collection(db, "conversations", chatId, "messages");
-                await addDoc(messagesRef, messageData);
-                
-                const conversationRef = doc(db, "conversations", chatId);
-                const conversationData = {
-                    lastMessage: text || 'Image',
-                    lastMessageTime: serverTimestamp(),
-                    lastMessageFrom: currentUser.uid,
-                    participants: [currentUser.uid, currentChatPartner.id],
-                    type: 'direct'
-                };
-                
-                await setDoc(conversationRef, conversationData, { merge: true });
-                
-            } catch (error) {
-                throw error;
-            }
-        }
-        
-        async function sendMessageToFirestore(groupId, text, imageData = null, replyTo = null) {
-            if (!currentUser) return;
-            
-            if (!isOnline) {
-                messageQueue.push({
-                    groupId: groupId,
-                    text: text,
-                    imageData: imageData,
-                    replyTo: replyTo
-                });
-                showNotification('Message mis en file d\'attente (hors ligne)', 'info');
-                return;
-            }
-            
-            try {
-                const messageData = {
-                    text: text,
-                    from: currentUser.uid,
-                    createdAt: serverTimestamp(),
-                    fromName: currentUserData?.displayName || 'Utilisateur'
-                };
-                
-                if (imageData) {
-                    messageData.imageData = imageData;
-                }
-                
-                if (replyTo) {
-                    messageData.replyTo = {
-                        id: replyTo.id,
-                        from: replyTo.from,
-                        text: replyTo.text
-                    };
-                }
-                
-                const messagesRef = collection(db, "conversations", groupId, "messages");
-                await addDoc(messagesRef, messageData);
-                
-                const groupRef = doc(db, "Groups", groupId);
-                await updateDoc(groupRef, {
-                    lastMessage: text || 'Image',
-                    lastMessageTime: serverTimestamp(),
-                    lastMessageFrom: currentUser.uid
-                });
-                
-            } catch (error) {
-                throw error;
-            }
-        }
-        
-        function encodeImageToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    resolve(e.target.result);
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-        
-        function openChat(groupId, groupData, isDirectChat = false) {
-            currentGroupId = groupId;
-            currentGroupData = groupData;
-            
-            if (isDirectChat) {
-                currentChatPartner = groupData;
-                currentGroupData = null;
-            } else {
-                currentChatPartner = null;
-            }
-            
-            exitSelectionMode();
-            
-            currentSection = 'chat';
-            
-            document.getElementById('chat-interface').style.display = 'block';
-            
-            let headerTitle = '';
-            if (isDirectChat) {
-                headerTitle = groupData.displayName || 'Discussion privée';
-            } else {
-                headerTitle = groupData.name || 'Groupe';
-            }
-            
-            document.getElementById('header-title').textContent = headerTitle;
-            
-            document.getElementById('header-menu-button').style.display = 'none';
-            document.getElementById('header-back-button').style.display = 'block';
-            
-            let headerActions = '';
-            if (!isDirectChat) {
-                headerActions = `<div class="info-button" id="chat-info-button">
-                    <i class="fas fa-info-circle"></i>
-                </div>`;
-            }
-            
-            document.getElementById('header-action').innerHTML = headerActions;
-            
-            if (!isDirectChat) {
-                const infoButton = document.getElementById('chat-info-button');
-                if (infoButton) {
-                    infoButton.addEventListener('click', showGroupInfoDialog);
-                }
-            }
-            
-            const messagesContainer = document.getElementById('chat-messages');
-            messagesContainer.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary-color);"></i>
-                    <div style="margin-top: 10px;">Chargement des messages...</div>
-                </div>
-            `;
-            
-            setupTextareaAutoResize();
-            
-            listenToMessages(groupId);
-            
-            history.pushState({ page: 'chat', groupId: groupId }, '');
-        }
-        
-        function closeChat() {
-            currentGroupId = null;
-            currentGroupData = null;
-            currentChatPartner = null;
-            
-            exitSelectionMode();
-            
-            document.getElementById('chat-interface').style.display = 'none';
-            
-            const chatId = currentGroupId || (currentChatPartner ? [currentUser.uid, currentChatPartner.id].sort().join('_') : null);
-            if (chatId && chatUnsubscribers[chatId]) {
-                chatUnsubscribers[chatId]();
-                delete chatUnsubscribers[chatId];
-            }
-            
-            cancelReply();
-            
-            if (chatImageFile) {
-                chatImageFile = null;
-                const imageButton = document.getElementById('image-button');
-                if (imageButton) {
-                    imageButton.style.color = 'var(--primary-color)';
-                }
-                const chatInput = document.getElementById('chat-input');
-                if (chatInput) {
-                    chatInput.placeholder = 'Écrire un message...';
-                }
-            }
-            
-            showDiscussionsSection();
-        }
-        
-        function listenToMessages(chatId) {
-            if (chatUnsubscribers[chatId]) {
-                chatUnsubscribers[chatId]();
-            }
-            
-            try {
-                const messagesRef = collection(db, "conversations", chatId, "messages");
-                const q = query(messagesRef, orderBy("createdAt", "asc"));
-                
-                const unsubscribe = onSnapshot(q, (snapshot) => {
-                    const messagesContainer = document.getElementById('chat-messages');
-                    
-                    if (snapshot.empty) {
-                        messagesContainer.innerHTML = `
-                            <div style="text-align: center; padding: 40px; color: var(--inactive-text);">
-                                <i class="fas fa-comments" style="font-size: 50px; margin-bottom: 15px; color: var(--border-color);"></i>
-                                <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">Aucun message</div>
-                                <div style="font-size: 14px;">Commencez la conversation en envoyant le premier message</div>
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    const messages = [];
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        messages.push({
-                            id: doc.id,
-                            ...data
-                        });
-                    });
-                    
-                    displayMessages(messages);
-                }, (error) => {
-                    const errorMsg = handleFirestoreError(error, 'écoute des messages');
-                    document.getElementById('chat-messages').innerHTML = `
-                        <div style="text-align: center; padding: 40px; color: var(--danger-color);">
-                            <i class="fas fa-exclamation-triangle" style="font-size: 30px; margin-bottom: 15px;"></i>
-                            <div>Erreur lors du chargement des messages</div>
-                        </div>
-                    `;
-                });
-                
-                chatUnsubscribers[chatId] = unsubscribe;
-                
-            } catch (error) {
-                handleFirestoreError(error, 'configuration de l\'écoute des messages');
-            }
-        }
-        
-        function displayMessages(messages) {
-            const messagesContainer = document.getElementById('chat-messages');
-            messagesContainer.innerHTML = '';
-            
-            const fragment = document.createDocumentFragment();
-            let lastDate = null;
-            let lastSender = null;
-            
-            messages.forEach((messageData, index) => {
-                const messageDate = messageData.createdAt ? 
-                    messageData.createdAt.toDate() : new Date();
-                const currentDate = messageDate.toDateString();
-                
-                if (currentDate !== lastDate) {
-                    const dateSeparator = createDateSeparator(messageDate);
-                    fragment.appendChild(dateSeparator);
-                    lastDate = currentDate;
-                    lastSender = null;
-                }
-                
-                const messageElement = createMessageElement(messageData, lastSender !== messageData.from);
-                messageElement.setAttribute('data-id', messageData.id);
-                messageElement.setAttribute('data-from', messageData.from);
-                
-                fragment.appendChild(messageElement);
-                lastSender = messageData.from;
-            });
-            
-            messagesContainer.appendChild(fragment);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-        
-        function createDateSeparator(date) {
-            const separator = document.createElement('div');
-            separator.className = 'date-separator';
-            
-            const today = new Date();
-            const yesterday = new Date();
-            yesterday.setDate(today.getDate() - 1);
-            
-            let dateText = '';
-            if (date.toDateString() === today.toDateString()) {
-                dateText = 'Aujourd\'hui';
-            } else if (date.toDateString() === yesterday.toDateString()) {
-                dateText = 'Hier';
-            } else {
-                dateText = date.toLocaleDateString('fr-FR', {
-                    weekday: 'long',
-                    day: 'numeric',
-                    month: 'long'
-                });
-            }
-            
-            separator.innerHTML = `<div class="date-separator-text">${dateText}</div>`;
-            return separator;
-        }
-        
-        function createMessageElement(messageData, showSender = true) {
-            const messageContainer = document.createElement('div');
-            const isSent = messageData.from === currentUser.uid;
-            
-            messageContainer.className = `message-container ${isSent ? 'sent' : 'received'}`;
-            
-            let senderInfo = '';
-            if (!isSent && showSender && (currentGroupData || currentChatPartner)) {
-                const senderName = messageData.fromName || 'Utilisateur';
-                const adminInfo = isUserAdmin(messageData.from) ? '<span class="admin-badge">Admin</span>' : '';
-                senderInfo = `<div class="message-sender">${senderName}${adminInfo}</div>`;
-            }
-            
-            let replyInfo = '';
-            if (messageData.replyTo) {
-                const replyName = messageData.replyTo.from === currentUser.uid ? 'Vous' : 
-                    (messageData.replyTo.fromName || 'Utilisateur');
-                replyInfo = `
-                    <div class="message-quote">
-                        <div class="message-quote-sender">${replyName}</div>
-                        <div class="message-quote-content">${messageData.replyTo.text || 'Message'}</div>
-                    </div>
-                `;
-            }
-            
-            let messageContent = '';
-            if (messageData.imageData) {
-                if (messageData.text) {
-                    messageContent = `
-                        <div class="message-with-image ${isSent ? 'message-sent' : 'message-received'}">
-                            <img src="${messageData.imageData}" alt="Image" class="message-image">
-                            <div class="message-text">${messageData.text}</div>
-                        </div>
-                    `;
-                } else {
-                    messageContent = `
-                        <div class="message-with-image ${isSent ? 'message-sent' : 'message-received'}">
-                            <img src="${messageData.imageData}" alt="Image" class="message-image">
-                        </div>
-                    `;
-                }
-            } else {
-                messageContent = `
-                    <div class="message ${isSent ? 'message-sent' : 'message-received'}">
-                        ${messageData.text || ''}
-                    </div>
-                `;
-            }
-            
-            const messageTime = messageData.createdAt ? 
-                messageData.createdAt.toDate().toLocaleTimeString('fr-FR', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }) : '';
-            
-            const timeInfo = messageTime ? 
-                `<div class="message-time">${messageTime}</div>` : '';
-            
-            messageContainer.innerHTML = `
-                ${senderInfo}
-                ${replyInfo}
-                ${messageContent}
-                ${timeInfo}
-            `;
-            
-            const messageImage = messageContainer.querySelector('.message-image');
-            if (messageImage) {
-                messageImage.addEventListener('click', () => {
-                    showImageViewer(messageData.imageData);
-                });
-            }
-            
-            return messageContainer;
-        }
-        
-        function isUserAdmin(userId) {
-            // Pour l'instant, on vérifie si c'est le compte le plus ancien
-            return userId === getOldestUserId();
-        }
-        
-        function getOldestUserId() {
-            // Cette fonction devrait retourner l'ID de l'utilisateur le plus ancien
-            // Pour l'instant, on utilise une logique simple basée sur l'ordre d'inscription
-            if (usersCache && Object.keys(usersCache).length > 0) {
-                const sortedUsers = Object.entries(usersCache).sort((a, b) => {
-                    const aTime = a[1].createdAt?.seconds || 0;
-                    const bTime = b[1].createdAt?.seconds || 0;
-                    return aTime - bTime;
-                });
-                return sortedUsers[0]?.[0];
-            }
-            return null;
-        }
-        
-        async function loadDiscussions() {
-            if (isLoadingGroups || discussionsLoaded) return;
-            isLoadingGroups = true;
-            
-            const discussionsList = document.getElementById('discussions-list');
-            discussionsList.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary-color);"></i>
-                    <div style="margin-top: 10px; font-weight: bold;">Chargement des discussions...</div>
-                </div>
-            `;
-            
-            try {
-                // Charger les groupes auxquels l'utilisateur appartient
-                const groupsQuery = query(
-                    collection(db, "Groups"),
-                    where("members", "array-contains", currentUser.uid)
-                );
-                const groupsSnapshot = await getDocs(groupsQuery);
-                
-                const groupDiscussions = [];
-                groupsSnapshot.forEach(doc => {
-                    const groupData = doc.data();
-                    groupDiscussions.push({
-                        id: doc.id,
-                        type: 'group',
-                        data: groupData
-                    });
-                });
-                
-                // Charger les conversations directes
-                const directConversationsQuery = query(
-                    collection(db, "conversations"),
-                    where("participants", "array-contains", currentUser.uid),
-                    where("type", "==", "direct")
-                );
-                const directSnapshot = await getDocs(directConversationsQuery);
-                
-                const directDiscussions = [];
-                directSnapshot.forEach(doc => {
-                    const conversationData = doc.data();
-                    const otherUserId = conversationData.participants.find(id => id !== currentUser.uid);
-                    if (otherUserId && usersCache[otherUserId]) {
-                        directDiscussions.push({
-                            id: doc.id,
-                            type: 'direct',
-                            data: {
-                                ...usersCache[otherUserId],
-                                id: otherUserId,
-                                lastMessage: conversationData.lastMessage,
-                                lastMessageTime: conversationData.lastMessageTime,
-                                lastMessageFrom: conversationData.lastMessageFrom
-                            }
-                        });
-                    }
-                });
-                
-                allDiscussions = [...groupDiscussions, ...directDiscussions];
-                
-                // Trier par dernier message
-                allDiscussions.sort((a, b) => {
-                    const aTime = a.data.lastMessageTime?.seconds || 0;
-                    const bTime = b.data.lastMessageTime?.seconds || 0;
-                    return bTime - aTime;
-                });
-                
-                displayDiscussions(allDiscussions);
-                discussionsLoaded = true;
-                
-            } catch (error) {
-                const errorMsg = handleFirestoreError(error, 'chargement des discussions');
-                discussionsList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <div class="empty-state-title">Erreur</div>
-                        <div class="empty-state-text">Impossible de charger les discussions</div>
-                    </div>
-                `;
-            } finally {
-                isLoadingGroups = false;
-            }
-        }
-        
-        function displayDiscussions(discussions) {
-            const discussionsList = document.getElementById('discussions-list');
-            
-            if (discussions.length === 0) {
-                discussionsList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-comments"></i>
-                        <div class="empty-state-title">Aucune discussion</div>
-                        <div class="empty-state-text">Créez un groupe ou commencez une discussion privée</div>
-                    </div>
-                `;
-                return;
-            }
-            
-            discussionsList.innerHTML = '';
-            const fragment = document.createDocumentFragment();
-            
-            discussions.forEach(discussion => {
-                const discussionElement = createDiscussionElement(discussion);
-                fragment.appendChild(discussionElement);
-            });
-            
-            discussionsList.appendChild(fragment);
-        }
-        
-        function createDiscussionElement(discussion) {
-            const { id, type, data } = discussion;
-            
-            const discussionElement = document.createElement('div');
-            discussionElement.className = 'chat-item';
-            
-            let avatarHtml = '';
-            let titleHtml = '';
-            let subtitleHtml = '';
-            let badgeHtml = '';
-            let timeHtml = '';
-            
-            if (type === 'group') {
-                avatarHtml = data.imageURL ? 
-                    `<div class="group-pic"><img src="${data.imageURL}" alt="${data.name}"></div>` :
-                    `<div class="group-pic"><i class="fas fa-users"></i></div>`;
-                
-                titleHtml = data.name || 'Groupe sans nom';
-                subtitleHtml = data.lastMessage || 'Aucun message';
-                badgeHtml = '<span class="discussion-type-badge group">Groupe</span>';
-                
-                if (data.allowPublicMessages === false) {
-                    badgeHtml += '<span class="restricted-badge">Restreint</span>';
-                }
-            } else {
-                avatarHtml = data.photoURL ? 
-                    `<div class="profile-pic"><img src="${data.photoURL}" alt="${data.displayName}"></div>` :
-                    `<div class="profile-pic"><i class="fas fa-user"></i></div>`;
-                
-                titleHtml = data.displayName || 'Utilisateur';
-                subtitleHtml = data.lastMessage || 'Aucun message';
-                badgeHtml = '<span class="discussion-type-badge direct">Direct</span>';
-                
-                if (isUserAdmin(data.id)) {
-                    badgeHtml += '<span class="admin-badge">Admin</span>';
-                }
-            }
-            
-            if (data.lastMessageTime) {
-                const messageDate = data.lastMessageTime.toDate();
-                const now = new Date();
-                const diffHours = (now - messageDate) / (1000 * 60 * 60);
-                
-                if (diffHours < 24) {
-                    timeHtml = messageDate.toLocaleTimeString('fr-FR', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                } else {
-                    timeHtml = messageDate.toLocaleDateString('fr-FR', {
-                        day: 'numeric',
-                        month: 'short'
-                    });
-                }
-            }
-            
-            // Calculer le nombre de messages non lus
-            const unreadCount = unreadCounts[id] || 0;
-            const unreadBadge = unreadCount > 0 ? 
-                `<div class="unread-badge">${unreadCount > 99 ? '99+' : unreadCount}</div>` : '';
-            
-            discussionElement.innerHTML = `
-                ${avatarHtml}
-                <div class="item-content">
-                    <div class="item-title">
-                        ${titleHtml}
-                        ${badgeHtml}
-                    </div>
-                    <div class="item-subtitle">${subtitleHtml}</div>
-                </div>
-                <div class="item-meta">
-                    <div class="item-time">${timeHtml}</div>
-                    ${unreadBadge}
-                </div>
-            `;
-            
-            discussionElement.addEventListener('click', () => {
-                if (type === 'group') {
-                    openChat(id, data, false);
-                } else {
-                    openChat(id, data, true);
-                }
-                
-                // Réinitialiser le compteur de messages non lus
-                if (unreadCounts[id]) {
-                    delete unreadCounts[id];
-                    updateUnreadBadges();
-                }
-            });
-            
-            return discussionElement;
-        }
-        
-        function updateUnreadBadges() {
-            // Cette fonction met à jour les badges de messages non lus
-            // Pour l'instant, on fait une implémentation simple
-            const totalUnread = Object.values(unreadCounts).reduce((sum, count) => sum + count, 0);
-            
-            // Mettre à jour le badge de notification sur l'onglet discussions si nécessaire
-            // (pas implémenté dans cette version)
-        }
-        
-        function filterDiscussions(query) {
-            if (!query.trim()) {
-                displayDiscussions(allDiscussions);
-                return;
-            }
-            
-            const filtered = allDiscussions.filter(discussion => {
-                const searchTerm = query.toLowerCase();
-                const name = discussion.type === 'group' ? 
-                    (discussion.data.name || '') : 
-                    (discussion.data.displayName || '');
-                return name.toLowerCase().includes(searchTerm);
-            });
-            
-            displayDiscussions(filtered);
-        }
-        
+
         async function loadUsers() {
-            if (isLoadingUsers) return;
-            isLoadingUsers = true;
-            
-            const usersList = document.getElementById('users-list');
-            usersList.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary-color);"></i>
-                    <div style="margin-top: 10px; font-weight: bold;">Chargement des utilisateurs...</div>
-                </div>
-            `;
-            
-            if (usersUnsubscribe) {
-                usersUnsubscribe();
-            }
-            
             try {
                 const usersRef = collection(db, "Users");
                 const q = query(usersRef, orderBy("createdAt", "asc"));
                 
-                const unsubscribe = onSnapshot(q, (snapshot) => {
-                    usersCache = {};
-                    const users = [];
-                    
-                    snapshot.forEach(doc => {
-                        const userData = doc.data();
-                        usersCache[doc.id] = userData;
-                        users.push({
-                            id: doc.id,
-                            ...userData
-                        });
+                const snapshot = await getDocs(q);
+                usersCache = {};
+                const users = [];
+                
+                snapshot.forEach(doc => {
+                    const userData = doc.data();
+                    usersCache[doc.id] = userData;
+                    users.push({
+                        id: doc.id,
+                        ...userData
                     });
-                    
-                    // Déterminer qui est admin (compte le plus ancien)
-                    if (users.length > 0) {
-                        const oldestUser = users[0];
-                        if (oldestUser.id === currentUser.uid) {
-                            isAdmin = true;
-                            updateAdminStatus();
-                        }
-                    }
-                    
-                    displayUsers(users);
-                }, (error) => {
-                    const errorMsg = handleFirestoreError(error, 'chargement des utilisateurs');
-                    usersList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <div class="empty-state-title">Erreur</div>
-                            <div class="empty-state-text">Impossible de charger les utilisateurs</div>
-                        </div>
-                    `;
                 });
                 
-                usersUnsubscribe = unsubscribe;
+                // Déterminer qui est admin (compte le plus ancien)
+                if (users.length > 0) {
+                    const oldestUser = users[0];
+                    if (oldestUser.id === currentUser.uid) {
+                        isAdmin = true;
+                        updateAdminStatus();
+                    }
+                }
                 
             } catch (error) {
-                handleFirestoreError(error, 'configuration de l\'écoute des utilisateurs');
-            } finally {
-                isLoadingUsers = false;
+                handleFirestoreError(error, 'chargement des utilisateurs');
             }
         }
         
@@ -7828,120 +5197,6 @@
             
             // Mettre à jour le badge admin dans le profil
             updateProfileInfo();
-        }
-        
-        function displayUsers(users) {
-            const usersList = document.getElementById('users-list');
-            
-            if (users.length === 0) {
-                usersList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-address-book"></i>
-                        <div class="empty-state-title">Aucun utilisateur</div>
-                        <div class="empty-state-text">Aucun utilisateur inscrit</div>
-                    </div>
-                `;
-                return;
-            }
-            
-            usersList.innerHTML = '';
-            const fragment = document.createDocumentFragment();
-            
-            users.forEach(user => {
-                const userElement = createUserElement(user);
-                fragment.appendChild(userElement);
-            });
-            
-            usersList.appendChild(fragment);
-        }
-        
-        function createUserElement(user) {
-            const userElement = document.createElement('div');
-            userElement.className = 'user-item';
-            
-            const avatarHtml = user.photoURL ? 
-                `<div class="user-pic"><img src="${user.photoURL}" alt="${user.displayName}"></div>` :
-                `<div class="user-pic"><i class="fas fa-user"></i></div>`;
-            
-            const isCurrentUser = user.id === currentUser.uid;
-            const userIsAdmin = isUserAdmin(user.id);
-            
-            let badgeHtml = '';
-            if (isCurrentUser) {
-                badgeHtml = '<span class="new-badge">Vous</span>';
-            }
-            if (userIsAdmin) {
-                badgeHtml += '<span class="admin-badge">Admin</span>';
-            }
-            
-            const joinDate = user.createdAt ? 
-                user.createdAt.toDate().toLocaleDateString('fr-FR', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric'
-                }) : 'Date inconnue';
-            
-            userElement.innerHTML = `
-                ${avatarHtml}
-                <div class="item-content">
-                    <div class="item-title">
-                        ${user.displayName || 'Utilisateur'}
-                        ${badgeHtml}
-                    </div>
-                    <div class="item-subtitle">Inscrit le ${joinDate}</div>
-                </div>
-                <div class="item-meta">
-                    <div class="item-time"></div>
-                </div>
-            `;
-            
-            if (!isCurrentUser) {
-                userElement.addEventListener('click', () => {
-                    startDirectConversation(user);
-                });
-            }
-            
-            return userElement;
-        }
-        
-        async function startDirectConversation(otherUser) {
-            try {
-                const chatId = [currentUser.uid, otherUser.id].sort().join('_');
-                
-                // Créer ou obtenir la conversation directe
-                const conversationRef = doc(db, "conversations", chatId);
-                const conversationData = {
-                    participants: [currentUser.uid, otherUser.id],
-                    type: 'direct',
-                    createdAt: serverTimestamp()
-                };
-                
-                await setDoc(conversationRef, conversationData, { merge: true });
-                
-                // Ouvrir le chat
-                openChat(chatId, otherUser, true);
-                
-            } catch (error) {
-                console.error('Erreur lors de la création de la conversation:', error);
-                showNotification('Erreur lors de la création de la conversation', 'error');
-            }
-        }
-        
-        function filterUsers(query) {
-            if (!query.trim()) {
-                displayUsers(Object.entries(usersCache).map(([id, data]) => ({ id, ...data })));
-                return;
-            }
-            
-            const searchTerm = query.toLowerCase();
-            const filtered = Object.entries(usersCache)
-                .map(([id, data]) => ({ id, ...data }))
-                .filter(user => {
-                    const name = user.displayName || '';
-                    return name.toLowerCase().includes(searchTerm);
-                });
-            
-            displayUsers(filtered);
         }
         
         function setButtonLoading(buttonId, loading) {
@@ -7961,6 +5216,9 @@
                 button.disabled = false;
             }
         }
+
+        // Make deleteEvent globally accessible
+        window.deleteEvent = deleteEvent;
         
         // Initialize app
         function initApp() {
@@ -7970,6 +5228,12 @@
             setupTheme();
             setupConnectionMonitoring();
             setupUIEvents();
+            
+            // Load last viewed event timestamp
+            const lastViewed = localStorage.getItem('parisAllianceLastViewedEvent');
+            if (lastViewed) {
+                lastViewedEventTimestamp = parseInt(lastViewed);
+            }
             
             onAuthStateChanged(auth, async (user) => {
                 document.getElementById('verify-animation').style.display = 'none';
@@ -8000,12 +5264,12 @@
                         }
                         
                         updateProfileInfo();
-                        loadUsers(); // Charger les utilisateurs pour déterminer qui est admin
+                        await loadUsers(); // Charger les utilisateurs pour déterminer qui est admin
                         
                         document.getElementById('auth-screen').style.display = 'none';
                         document.getElementById('loading').style.display = 'none';
                         
-                        showDiscussionsSection();
+                        showAIForecastsSection();
                         
                     } catch (error) {
                         addDebugLog(`Erreur lors de la récupération des données utilisateur: ${error.message}`, 'error');
