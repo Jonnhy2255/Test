@@ -2748,6 +2748,8 @@
             font-size: 14px;
             line-height: 1.5;
             margin-bottom: 15px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .tutorial-duration {
@@ -3088,14 +3090,6 @@
                     <div class="empty-state-text">Les événements apparaîtront ici</div>
                 </div>
             </div>
-            
-            <div class="fab" id="close-events-btn" style="background-color: #f44336;">
-                <i class="fas fa-arrow-left"></i>
-            </div>
-            
-            <div class="fab" id="create-notification-btn" style="display: none; bottom: 150px;">
-                <i class="fas fa-bullhorn"></i>
-            </div>
         </div>
         
         <div id="forecasts-section" class="section">
@@ -3106,103 +3100,99 @@
         </div>
         
         <div id="subscription-section" class="section">
-            <div class="current-plan">
-                <div class="current-plan-title">Plan Actuel</div>
-                <div class="current-plan-info">Plan Gratuit</div>
-                <div class="sats-balance">
-                    <i class="fab fa-bitcoin"></i>
-                    <span id="user-sats-balance">0</span> sats
+            <div style="height: 100%; overflow-y: auto;">
+                <div class="current-plan">
+                    <div class="current-plan-title">Plan Actuel</div>
+                    <div class="current-plan-info">Plan Gratuit</div>
+                    <div class="sats-balance">
+                        <i class="fab fa-bitcoin"></i>
+                        <span id="user-sats-balance">0</span> sats
+                    </div>
+                    <div style="font-size: 14px; color: var(--inactive-text);">
+                        Rechargez vos sats pour accéder aux plans premium
+                    </div>
                 </div>
-                <div style="font-size: 14px; color: var(--inactive-text);">
-                    Rechargez vos sats pour accéder aux plans premium
-                </div>
-            </div>
 
-            <div class="plan-item popular">
-                <div class="plan-title">
-                    <i class="fas fa-calendar-day"></i>
-                    Plan Quotidien
+                <div class="plan-item popular">
+                    <div class="plan-title">
+                        <i class="fas fa-calendar-day"></i>
+                        Plan Quotidien
+                    </div>
+                    <div class="plan-price">
+                        <i class="fab fa-bitcoin"></i>
+                        10 <span class="plan-duration">sats/jour</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li>Accès aux pronostics du jour</li>
+                        <li>Notifications en temps réel</li>
+                        <li>Support prioritaire</li>
+                    </ul>
+                    <button class="plan-button" id="daily-plan-btn">
+                        S'abonner au plan quotidien
+                    </button>
                 </div>
-                <div class="plan-price">
-                    <i class="fab fa-bitcoin"></i>
-                    10 <span class="plan-duration">sats/jour</span>
-                </div>
-                <ul class="plan-features">
-                    <li>Accès aux pronostics du jour</li>
-                    <li>Notifications en temps réel</li>
-                    <li>Support prioritaire</li>
-                </ul>
-                <button class="plan-button" id="daily-plan-btn">
-                    S'abonner au plan quotidien
-                </button>
-            </div>
 
-            <div class="plan-item">
-                <div class="plan-title">
-                    <i class="fas fa-calendar-week"></i>
-                    Plan Hebdomadaire
+                <div class="plan-item">
+                    <div class="plan-title">
+                        <i class="fas fa-calendar-week"></i>
+                        Plan Hebdomadaire
+                    </div>
+                    <div class="plan-price">
+                        <i class="fab fa-bitcoin"></i>
+                        60 <span class="plan-duration">sats/semaine</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li>Tous les avantages du plan quotidien</li>
+                        <li>Économisez 10 sats par semaine</li>
+                        <li>Accès aux analyses avancées</li>
+                        <li>Historique complet des pronostics</li>
+                    </ul>
+                    <button class="plan-button" id="weekly-plan-btn">
+                        S'abonner au plan hebdomadaire
+                    </button>
                 </div>
-                <div class="plan-price">
-                    <i class="fab fa-bitcoin"></i>
-                    60 <span class="plan-duration">sats/semaine</span>
-                </div>
-                <ul class="plan-features">
-                    <li>Tous les avantages du plan quotidien</li>
-                    <li>Économisez 10 sats par semaine</li>
-                    <li>Accès aux analyses avancées</li>
-                    <li>Historique complet des pronostics</li>
-                </ul>
-                <button class="plan-button" id="weekly-plan-btn">
-                    S'abonner au plan hebdomadaire
-                </button>
-            </div>
-
-            <div class="fab" id="close-subscription-btn" style="background-color: #f44336;">
-                <i class="fas fa-arrow-left"></i>
             </div>
         </div>
 
         <div id="tutorials-section" class="section">
-            <div class="tutorial-item">
-                <div class="tutorial-thumbnail" data-video="free-sats">
-                    <div class="tutorial-play-button">
-                        <i class="fas fa-play"></i>
+            <div style="height: 100%; overflow-y: auto;">
+                <div class="tutorial-item">
+                    <div class="tutorial-thumbnail" data-video="free-sats">
+                        <div class="tutorial-play-button">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="tutorial-badge">Gratuit</div>
                     </div>
-                    <div class="tutorial-badge">Gratuit</div>
+                    <div class="tutorial-content">
+                        <div class="tutorial-title">Comment obtenir des sats gratuitement</div>
+                        <div class="tutorial-description">
+                            Découvrez toutes les méthodes pour gagner des satoshis gratuitement et recharger votre compte sans dépenser d'argent. Ce tutoriel vous guide à travers différentes plateformes et techniques pour accumuler des sats.
+                        </div>
+                        <div class="tutorial-duration">
+                            <i class="far fa-clock"></i>
+                            5 minutes
+                        </div>
+                    </div>
                 </div>
-                <div class="tutorial-content">
-                    <div class="tutorial-title">Comment obtenir des sats gratuitement</div>
-                    <div class="tutorial-description">
-                        Découvrez toutes les méthodes pour gagner des satoshis gratuitement et recharger votre compte sans dépenser d'argent.
-                    </div>
-                    <div class="tutorial-duration">
-                        <i class="far fa-clock"></i>
-                        5 minutes
-                    </div>
-                </div>
-            </div>
 
-            <div class="tutorial-item">
-                <div class="tutorial-thumbnail" data-video="buy-plan">
-                    <div class="tutorial-play-button">
-                        <i class="fas fa-play"></i>
+                <div class="tutorial-item">
+                    <div class="tutorial-thumbnail" data-video="buy-plan">
+                        <div class="tutorial-play-button">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="tutorial-badge">Premium</div>
                     </div>
-                    <div class="tutorial-badge">Premium</div>
+                    <div class="tutorial-content">
+                        <div class="tutorial-title">Comment acheter un plan d'abonnement</div>
+                        <div class="tutorial-description">
+                            Guide complet pour souscrire à un plan premium et profiter de tous les avantages de Pari Alliance. Apprenez à gérer votre abonnement et optimiser votre utilisation de la plateforme.
+                        </div>
+                        <div class="tutorial-duration">
+                            <i class="far fa-clock"></i>
+                            3 minutes
+                        </div>
+                    </div>
                 </div>
-                <div class="tutorial-content">
-                    <div class="tutorial-title">Comment acheter un plan d'abonnement</div>
-                    <div class="tutorial-description">
-                        Guide complet pour souscrire à un plan premium et profiter de tous les avantages de Pari Alliance.
-                    </div>
-                    <div class="tutorial-duration">
-                        <i class="far fa-clock"></i>
-                        3 minutes
-                    </div>
-                </div>
-            </div>
-
-            <div class="fab" id="close-tutorials-btn" style="background-color: #f44336;">
-                <i class="fas fa-arrow-left"></i>
             </div>
         </div>
         
@@ -3253,10 +3243,6 @@
                         </label>
                     </div>
                 </div>
-            </div>
-            
-            <div class="fab" id="close-interface-btn" style="background-color: #f44336;">
-                <i class="fas fa-arrow-left"></i>
             </div>
         </div>
         
@@ -4193,30 +4179,6 @@
                 hideEventNotificationDot();
             });
             
-            document.getElementById('close-events-btn').addEventListener('click', function() {
-                if (currentSection === 'events') {
-                    showAIForecastsSection();
-                }
-            });
-
-            document.getElementById('close-subscription-btn').addEventListener('click', function() {
-                if (currentSection === 'subscription') {
-                    showAIForecastsSection();
-                }
-            });
-
-            document.getElementById('close-tutorials-btn').addEventListener('click', function() {
-                if (currentSection === 'tutorials') {
-                    showAIForecastsSection();
-                }
-            });
-            
-            document.getElementById('close-interface-btn').addEventListener('click', function() {
-                if (currentSection === 'interface') {
-                    showAIForecastsSection();
-                }
-            });
-            
             document.getElementById('bottom-nav').addEventListener('click', function(e) {
                 const navItems = this.querySelectorAll('.nav-item');
                 
@@ -4340,14 +4302,6 @@
             document.getElementById('edit-display-name').addEventListener('input', function() {
                 profileNameChanged = true;
                 document.getElementById('save-display-name-btn').disabled = this.value.trim() === '';
-            });
-            
-            document.getElementById('create-notification-btn').addEventListener('click', function() {
-                if (isAdmin) {
-                    showAdminNotificationDialog();
-                } else {
-                    showNotification("Seuls les administrateurs peuvent envoyer des notifications", "error");
-                }
             });
             
             document.getElementById('admin-notif-back').addEventListener('click', hideAdminNotificationDialog);
@@ -4863,45 +4817,31 @@
             let probabilitiesContent = '';
             
             if (type === 'combines' || type === 'sures') {
-                // Combinés
+                // Combinés - Afficher TOUS les matchs sur la première face
                 frontContent = `
                     <div class="forecast-header">
                         <div>${forecastData.name || 'Combiné'}</div>
                         <div class="forecast-status ${statusClass}">${statusText}</div>
                     </div>
-                    <div style="text-align: center; font-weight: bold; margin: 20px 0; font-size: 18px; color: var(--primary-color);">
-                        ${type === 'sures' ? 'Combiné Sûr' : 'Combiné IA'}
-                    </div>
                     <div class="combined-matches">
-                        <div class="combined-matches-title">Matchs inclus (${forecastData.matches ? forecastData.matches.length : 0})</div>
-                        ${forecastData.matches ? forecastData.matches.slice(0, 2).map(match => 
+                        <div class="combined-matches-title">${type === 'sures' ? 'Combiné Sûr' : 'Combiné IA'} (${forecastData.matches ? forecastData.matches.length : 0} matchs)</div>
+                        ${forecastData.matches ? forecastData.matches.map(match => 
                             `<div class="match-detail">
                                 <div class="match-name">${match.match}</div>
                                 <div class="match-prediction">${match.prediction}</div>
                             </div>`
                         ).join('') : ''}
-                        ${forecastData.matches && forecastData.matches.length > 2 ? 
-                            `<div style="text-align: center; margin-top: 10px; font-size: 12px; opacity: 0.7;">+${forecastData.matches.length - 2} autres matchs</div>` : ''}
                     </div>
                 `;
 
+                // 2ème face - Juste la description, pas les matchs
                 detailsContent = `
                     <div class="forecast-description">
-                        <strong>Description complète:</strong><br>
-                        ${forecastData.description || 'Aucune description disponible'}
-                    </div>
-                    ${forecastData.matches ? `
-                        <div class="combined-matches">
-                            <div class="combined-matches-title">Tous les matchs du combiné</div>
-                            ${forecastData.matches.map(match => `
-                                <div class="match-detail">
-                                    <div class="match-name">${match.match}</div>
-                                    <div class="match-prediction">${match.prediction}</div>
-                                    <div class="match-confidence">Confiance: ${match.individual_confidence}%</div>
-                                </div>
-                            `).join('')}
+                        <h3 style="color: var(--primary-color); margin-bottom: 15px;">Description complète</h3>
+                        <div style="background-color: rgba(0,0,0,0.05); padding: 15px; border-radius: 10px; line-height: 1.5;">
+                            ${forecastData.description || 'Aucune description disponible pour ce combiné.'}
                         </div>
-                    ` : ''}
+                    </div>
                     ${forecastData.estimated_odds ? `
                         <div class="estimated-odds">
                             Cote estimée: ${forecastData.estimated_odds}
@@ -5110,8 +5050,8 @@
             
             document.getElementById('header-title').textContent = 'Événements';
             
-            document.getElementById('header-menu-button').style.display = 'block';
-            document.getElementById('header-back-button').style.display = 'none';
+            document.getElementById('header-menu-button').style.display = 'none';
+            document.getElementById('header-back-button').style.display = 'block';
             
             document.getElementById('header-action').innerHTML = `
                 <div class="search-button" id="search-button">
@@ -5119,16 +5059,23 @@
                 </div>
             `;
             
+            if (isAdmin) {
+                document.getElementById('header-action').innerHTML += `
+                    <div class="events-button" id="create-notification-btn" style="background-color: var(--primary-color); color: white;">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                `;
+                
+                document.getElementById('create-notification-btn').addEventListener('click', function() {
+                    showAdminNotificationDialog();
+                });
+            }
+            
             document.getElementById('search-button').addEventListener('click', toggleSearchBar);
             
-            const createNotifBtn = document.getElementById('create-notification-btn');
-            if (createNotifBtn) {
-                if (isAdmin) {
-                    createNotifBtn.style.display = 'flex';
-                } else {
-                    createNotifBtn.style.display = 'none';
-                }
-            }
+            document.getElementById('header-back-button').addEventListener('click', function() {
+                showAIForecastsSection();
+            });
             
             document.getElementById('bottom-nav').style.display = 'none';
             document.querySelector('.content').classList.add('no-bottom-nav');
@@ -5652,16 +5599,6 @@
         
         function updateAdminStatus() {
             // Mettre à jour l'interface pour refléter le statut d'admin
-            const createNotifBtn = document.getElementById('create-notification-btn');
-            if (createNotifBtn) {
-                if (isAdmin && currentSection === 'events') {
-                    createNotifBtn.style.display = 'flex';
-                } else {
-                    createNotifBtn.style.display = 'none';
-                }
-            }
-            
-            // Mettre à jour le badge admin dans le profil
             updateProfileInfo();
         }
         
