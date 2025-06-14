@@ -293,7 +293,7 @@
             margin: 0;
             padding: 0;
             width: 100%;
-            height: 100%;
+            height: 100vh;
             position: fixed;
             overflow: hidden;
             font-weight: 500;
@@ -400,6 +400,7 @@
             padding: 0 15px;
             z-index: 10;
             transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         
         .header.search-active {
@@ -655,8 +656,7 @@
             bottom: 60px;
             left: 0;
             right: 0;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
+            overflow: hidden;
             background-color: var(--bg-color);
         }
         
@@ -674,6 +674,7 @@
             height: 60px;
             display: flex;
             z-index: 10;
+            box-shadow: 0 -1px 3px rgba(0,0,0,0.1);
         }
         
         .nav-item {
@@ -700,12 +701,15 @@
         }
         
         .section {
-            padding: 10px 0;
+            padding: 0;
             display: none;
+            height: 100%;
+            overflow: hidden;
         }
         
         .section.active {
-            display: block;
+            display: flex;
+            flex-direction: column;
         }
         
         .profile-pic {
@@ -785,6 +789,8 @@
         
         .settings-container {
             padding: 15px;
+            overflow-y: auto;
+            height: 100%;
         }
         
         .setting-item {
@@ -1618,21 +1624,26 @@
         }
         
         .forecasts-section {
-            padding: 0 0 15px 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
         }
         
         .ai-forecasts-section {
-            padding: 0 0 15px 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
         }
         
         .forecasts-tabs, .ai-forecasts-tabs {
             display: flex;
-            border-bottom: none;
-            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            margin: 0;
             background-color: var(--bg-color);
             position: sticky;
             top: 0;
             z-index: 5;
+            flex-shrink: 0;
         }
         
         .forecast-tab, .ai-forecast-tab {
@@ -1665,118 +1676,124 @@
         
         .forecasts-content, .ai-forecasts-content {
             display: none;
-            padding: 0 15px;
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 0;
         }
         
         .forecasts-content.active, .ai-forecasts-content.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
+            display: flex;
+            flex-direction: column;
         }
         
         .forecasts-list, .ai-forecasts-list {
             display: flex;
             flex-direction: column;
             gap: 15px;
+            padding: 15px;
+            min-height: 100%;
         }
         
-        /* Forecast Item Styles avec support du swipe */
+        /* Amélioration du système de cartes avec 3 faces */
         .forecast-item {
             background-color: var(--secondary-color);
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s ease;
+            min-height: 300px;
+            perspective: 1000px;
+            transition: transform 0.2s ease;
+            cursor: pointer;
         }
 
-        .forecast-item.swiped {
-            transform: rotateY(180deg);
+        .forecast-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
-        .forecast-item .forecast-front,
-        .forecast-item .forecast-back {
-            backface-visibility: hidden;
-            transition: transform 0.3s ease;
+        .forecast-card-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 300px;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
         }
 
-        .forecast-item .forecast-back {
+        .forecast-card-container.show-details {
+            transform: rotateY(120deg);
+        }
+
+        .forecast-card-container.show-probabilities {
+            transform: rotateY(240deg);
+        }
+
+        .forecast-face {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 15px;
-            transform: rotateY(180deg);
+            width: 100%;
+            height: 100%;
+            min-height: 300px;
+            backface-visibility: hidden;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-radius: 15px;
             background-color: var(--secondary-color);
-            border-radius: 10px;
         }
 
-        .forecast-item.swiped .forecast-front {
-            transform: rotateY(-180deg);
-        }
-
-        .forecast-item.swiped .forecast-back {
+        .forecast-front {
             transform: rotateY(0deg);
         }
 
-        .forecast-back-content {
-            height: 100%;
-            overflow-y: auto;
+        .forecast-details {
+            transform: rotateY(-120deg);
+            background-color: var(--secondary-color);
         }
 
-        .forecast-description {
-            font-size: 14px;
-            line-height: 1.4;
-            margin-bottom: 15px;
-            color: var(--text-color);
-            opacity: 0.9;
+        .forecast-probabilities {
+            transform: rotateY(-240deg);
+            background-color: var(--secondary-color);
         }
 
-        .poisson-probabilities {
-            background-color: rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-
-        .poisson-title {
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: var(--primary-color);
-        }
-
-        .poisson-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 4px;
-            font-size: 12px;
-        }
-
-        .estimated-odds {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 15px;
-            text-align: center;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        .swipe-indicator {
+        .face-indicator {
             position: absolute;
-            bottom: 5px;
-            right: 10px;
-            color: var(--inactive-text);
+            bottom: 10px;
+            right: 15px;
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+        }
+
+        .face-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(0,0,0,0.3);
+            transition: background-color 0.3s ease;
+        }
+
+        .face-dot.active {
+            background-color: var(--primary-color);
+        }
+
+        .swipe-instruction {
+            position: absolute;
+            bottom: 10px;
+            left: 15px;
             font-size: 12px;
+            color: var(--inactive-text);
             opacity: 0.7;
         }
         
         .forecast-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            align-items: center;
+            margin-bottom: 15px;
             font-weight: bold;
         }
         
@@ -1784,46 +1801,48 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin: 15px 0;
         }
         
         .forecast-team {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
             flex: 1;
         }
         
         .forecast-team-logo {
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             background-color: var(--bg-color);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .forecast-team-name {
             font-weight: 500;
             text-align: center;
             font-size: 14px;
+            line-height: 1.2;
         }
         
         .forecast-score {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: bold;
-            padding: 0 15px;
+            padding: 0 20px;
             display: flex;
             align-items: center;
+            color: var(--primary-color);
         }
         
         .forecast-status {
             display: inline-block;
-            padding: 3px 8px;
-            border-radius: 10px;
+            padding: 4px 10px;
+            border-radius: 12px;
             font-size: 12px;
             font-weight: bold;
         }
@@ -1846,21 +1865,22 @@
         .forecast-date {
             font-size: 12px;
             color: var(--inactive-text);
+            margin-top: 10px;
         }
         
         .forecast-confidence {
             display: flex;
             align-items: center;
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 13px;
             color: var(--text-color);
         }
         
         .confidence-bar-container {
             flex: 1;
-            height: 6px;
+            height: 8px;
             background-color: var(--border-color);
-            border-radius: 3px;
+            border-radius: 4px;
             margin: 0 10px;
             overflow: hidden;
         }
@@ -1868,17 +1888,104 @@
         .confidence-bar {
             height: 100%;
             background-color: var(--primary-color);
-            border-radius: 3px;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .forecast-description {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .poisson-probabilities {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .poisson-title {
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 16px;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .poisson-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            padding: 5px 0;
+        }
+
+        .poisson-row:not(:last-child) {
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .estimated-odds {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .combined-matches {
+            background-color: rgba(0,0,0,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .combined-matches-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .match-detail {
+            background-color: var(--bg-color);
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .match-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .match-prediction {
+            font-size: 13px;
+            color: var(--primary-color);
+            margin-bottom: 3px;
+        }
+
+        .match-confidence {
+            font-size: 12px;
+            opacity: 0.8;
         }
         
         .no-forecasts {
             text-align: center;
-            padding: 30px 15px;
+            padding: 40px 20px;
             color: var(--inactive-text);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         
         .no-forecasts i {
-            font-size: 40px;
+            font-size: 50px;
             margin-bottom: 15px;
             color: var(--primary-color);
             opacity: 0.5;
@@ -2173,6 +2280,7 @@
             align-items: center;
             padding: 15px;
             border-bottom: none;
+            flex-shrink: 0;
         }
         
         .edit-title {
@@ -2225,6 +2333,7 @@
             align-items: center;
             padding: 15px;
             border-bottom: none;
+            flex-shrink: 0;
         }
         
         .terms-title {
@@ -2427,7 +2536,9 @@
 
         /* Subscription Section Styles */
         .subscription-section {
-            padding: 10px 0;
+            padding: 0;
+            height: 100%;
+            overflow-y: auto;
         }
 
         .current-plan {
@@ -2573,7 +2684,9 @@
 
         /* Tutorials Section Styles */
         .tutorials-section {
-            padding: 10px 0;
+            padding: 0;
+            height: 100%;
+            overflow-y: auto;
         }
 
         .tutorial-item {
@@ -2710,6 +2823,33 @@
         .video-close:hover {
             background-color: rgba(0, 0, 0, 0.8);
         }
+
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+        }
+
+        .fab:active {
+            transform: scale(0.95);
+        }
         
         @media (max-height: 640px) {
             .fab {
@@ -2726,6 +2866,24 @@
             .confirmation-button {
                 width: 100%;
             }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
         }
     </style>
 </head>
@@ -2923,7 +3081,7 @@
         </div>
         
         <div id="events-section" class="section">
-            <div id="events-list">
+            <div id="events-list" style="height: 100%; overflow-y: auto; padding: 10px;">
                 <div class="empty-state">
                     <i class="fas fa-bell"></i>
                     <div class="empty-state-title">Aucun événement</div>
@@ -2941,7 +3099,7 @@
         </div>
         
         <div id="forecasts-section" class="section">
-            <div class="forecasts-content active">
+            <div class="forecasts-content active" style="height: 100%; overflow-y: auto;">
                 <div class="forecasts-list" id="simple-forecasts-list">
                 </div>
             </div>
@@ -3049,49 +3207,51 @@
         </div>
         
         <div id="interface-section" class="section">
-            <div class="interface-section">
-                <div class="interface-title">Thème de couleur</div>
-                <div class="theme-selector">
-                    <div class="theme-option theme-blue active" data-theme="default">
-                        <div class="theme-label">Bleu</div>
-                    </div>
-                    <div class="theme-option theme-green" data-theme="green">
-                        <div class="theme-label">Vert</div>
-                    </div>
-                    <div class="theme-option theme-red" data-theme="red">
-                        <div class="theme-label">Rouge</div>
-                    </div>
-                    <div class="theme-option theme-orange" data-theme="orange">
-                        <div class="theme-label">Orange</div>
-                    </div>
-                    <div class="theme-option theme-red-pink" data-theme="red-pink">
-                        <div class="theme-label">Rouge-Rose</div>
-                    </div>
-                    <div class="theme-option theme-green-yellow" data-theme="green-yellow">
-                        <div class="theme-label">Vert-Jaune</div>
-                    </div>
-                    <div class="theme-option theme-blue-purple" data-theme="blue-purple">
-                        <div class="theme-label">Bleu-Violet</div>
-                    </div>
-                    <div class="theme-option theme-orange-gold" data-theme="orange-gold">
-                        <div class="theme-label">Orange-Doré</div>
+            <div style="height: 100%; overflow-y: auto; padding: 10px;">
+                <div class="interface-section">
+                    <div class="interface-title">Thème de couleur</div>
+                    <div class="theme-selector">
+                        <div class="theme-option theme-blue active" data-theme="default">
+                            <div class="theme-label">Bleu</div>
+                        </div>
+                        <div class="theme-option theme-green" data-theme="green">
+                            <div class="theme-label">Vert</div>
+                        </div>
+                        <div class="theme-option theme-red" data-theme="red">
+                            <div class="theme-label">Rouge</div>
+                        </div>
+                        <div class="theme-option theme-orange" data-theme="orange">
+                            <div class="theme-label">Orange</div>
+                        </div>
+                        <div class="theme-option theme-red-pink" data-theme="red-pink">
+                            <div class="theme-label">Rouge-Rose</div>
+                        </div>
+                        <div class="theme-option theme-green-yellow" data-theme="green-yellow">
+                            <div class="theme-label">Vert-Jaune</div>
+                        </div>
+                        <div class="theme-option theme-blue-purple" data-theme="blue-purple">
+                            <div class="theme-label">Bleu-Violet</div>
+                        </div>
+                        <div class="theme-option theme-orange-gold" data-theme="orange-gold">
+                            <div class="theme-label">Orange-Doré</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="interface-section">
-                <div class="interface-title">Mode d'affichage</div>
-                <div class="setting-item">
-                    <div class="setting-row">
-                        <div class="setting-icon">
-                            <i class="fas fa-moon" style="color: var(--primary-color);"></i>
+                
+                <div class="interface-section">
+                    <div class="interface-title">Mode d'affichage</div>
+                    <div class="setting-item">
+                        <div class="setting-row">
+                            <div class="setting-icon">
+                                <i class="fas fa-moon" style="color: var(--primary-color);"></i>
+                            </div>
+                            <div class="setting-label">Mode sombre</div>
                         </div>
-                        <div class="setting-label">Mode sombre</div>
+                        <label class="switch">
+                            <input type="checkbox" id="dark-toggle" checked>
+                            <span class="slider"></span>
+                        </label>
                     </div>
-                    <label class="switch">
-                        <input type="checkbox" id="dark-toggle" checked>
-                        <span class="slider"></span>
-                    </label>
                 </div>
             </div>
             
@@ -3101,45 +3261,47 @@
         </div>
         
         <div id="profile-section" class="section">
-            <div class="profile-header">
-                <div class="profile-pic">
-                    <i class="fas fa-user"></i>
-                    <div class="profile-pic-edit" id="edit-profile-pic">
-                        <i class="fas fa-pencil-alt"></i>
+            <div style="height: 100%; overflow-y: auto;">
+                <div class="profile-header">
+                    <div class="profile-pic">
+                        <i class="fas fa-user"></i>
+                        <div class="profile-pic-edit" id="edit-profile-pic">
+                            <i class="fas fa-pencil-alt"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="profile-info">
-                    <div class="profile-name" id="profile-name">
-                        <span id="profile-name-text">Utilisateur</span>
-                        <span class="admin-badge" id="admin-badge" style="display: none;">Admin</span>
-                    </div>
-                    <div class="profile-email" id="profile-email">user@example.com</div>
-                    <div class="profile-status">En ligne</div>
-                    <div class="profile-edit" id="edit-profile-btn">
-                        <i class="fas fa-edit"></i> Modifier le profil
-                    </div>
-                </div>
-            </div>
-            
-            <div class="section-title">Paramètres</div>
-            
-            <div class="settings-container">
-                <div class="section-title">Nous rejoindre</div>
-                
-                <div class="social-buttons">
-                    <div class="social-button whatsapp" id="whatsapp-btn">
-                        WhatsApp
-                    </div>
-                    <div class="social-button telegram" id="telegram-btn">
-                        Telegram
-                    </div>
-                    <div class="social-button youtube" id="youtube-btn">
-                        YouTube
+                    <div class="profile-info">
+                        <div class="profile-name" id="profile-name">
+                            <span id="profile-name-text">Utilisateur</span>
+                            <span class="admin-badge" id="admin-badge" style="display: none;">Admin</span>
+                        </div>
+                        <div class="profile-email" id="profile-email">user@example.com</div>
+                        <div class="profile-status">En ligne</div>
+                        <div class="profile-edit" id="edit-profile-btn">
+                            <i class="fas fa-edit"></i> Modifier le profil
+                        </div>
                     </div>
                 </div>
                 
-                <button id="logout-btn" class="button">Se déconnecter</button>
-                <button id="delete-account-btn" class="button danger" style="margin-top: 15px;">Supprimer mon compte</button>
+                <div class="section-title">Paramètres</div>
+                
+                <div class="settings-container">
+                    <div class="section-title">Nous rejoindre</div>
+                    
+                    <div class="social-buttons">
+                        <div class="social-button whatsapp" id="whatsapp-btn">
+                            WhatsApp
+                        </div>
+                        <div class="social-button telegram" id="telegram-btn">
+                            Telegram
+                        </div>
+                        <div class="social-button youtube" id="youtube-btn">
+                            YouTube
+                        </div>
+                    </div>
+                    
+                    <button id="logout-btn" class="button">Se déconnecter</button>
+                    <button id="delete-account-btn" class="button danger" style="margin-top: 15px;">Supprimer mon compte</button>
+                </div>
             </div>
         </div>
     </div>
@@ -3626,50 +3788,97 @@
             return processed;
         }
 
-        function setupSwipeHandlers() {
-            let startX = 0;
-            let startY = 0;
+        // Enhanced card system with 3 faces and improved touch handling
+        function setupCardInteractions() {
+            let touchStartX = 0;
+            let touchStartY = 0;
             let currentCard = null;
+            let cardState = 0; // 0: front, 1: details, 2: probabilities
 
             document.addEventListener('touchstart', function(e) {
                 const card = e.target.closest('.forecast-item');
                 if (!card) return;
 
-                startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
                 currentCard = card;
             }, { passive: true });
-
-            document.addEventListener('touchmove', function(e) {
-                if (!currentCard) return;
-                e.preventDefault();
-            }, { passive: false });
 
             document.addEventListener('touchend', function(e) {
                 if (!currentCard) return;
 
-                const endX = e.changedTouches[0].clientX;
-                const endY = e.changedTouches[0].clientY;
-                const diffX = startX - endX;
-                const diffY = startY - endY;
+                const touchEndX = e.changedTouches[0].clientX;
+                const touchEndY = e.changedTouches[0].clientY;
+                const diffX = touchStartX - touchEndX;
+                const diffY = touchStartY - touchEndY;
 
-                // Vérifier si c'est un swipe horizontal (et pas vertical)
+                // Check if it's a horizontal swipe (not vertical)
                 if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-                    currentCard.classList.toggle('swiped');
+                    const container = currentCard.querySelector('.forecast-card-container');
+                    const indicators = currentCard.querySelectorAll('.face-dot');
+                    
+                    // Get current state
+                    const currentState = container.classList.contains('show-details') ? 1 : 
+                                       container.classList.contains('show-probabilities') ? 2 : 0;
+                    
+                    let newState;
+                    if (diffX > 0) {
+                        // Swipe left - next face
+                        newState = (currentState + 1) % 3;
+                    } else {
+                        // Swipe right - previous face
+                        newState = (currentState - 1 + 3) % 3;
+                    }
+                    
+                    // Update card state
+                    container.classList.remove('show-details', 'show-probabilities');
+                    indicators.forEach(dot => dot.classList.remove('active'));
+                    
+                    if (newState === 1) {
+                        container.classList.add('show-details');
+                        indicators[1].classList.add('active');
+                    } else if (newState === 2) {
+                        container.classList.add('show-probabilities');
+                        indicators[2].classList.add('active');
+                    } else {
+                        indicators[0].classList.add('active');
+                    }
                 }
 
                 currentCard = null;
             }, { passive: true });
 
-            // Support pour les clics/taps simples
+            // Support for clicks/taps
             document.addEventListener('click', function(e) {
                 const card = e.target.closest('.forecast-item');
                 if (!card) return;
                 
-                // Éviter le toggle si on clique sur un lien ou un bouton
+                // Avoid toggle if clicking on a link or button
                 if (e.target.closest('a, button')) return;
                 
-                card.classList.toggle('swiped');
+                const container = card.querySelector('.forecast-card-container');
+                const indicators = card.querySelectorAll('.face-dot');
+                
+                // Get current state
+                const currentState = container.classList.contains('show-details') ? 1 : 
+                                   container.classList.contains('show-probabilities') ? 2 : 0;
+                
+                // Cycle to next face
+                const newState = (currentState + 1) % 3;
+                
+                // Update card state
+                container.classList.remove('show-details', 'show-probabilities');
+                indicators.forEach(dot => dot.classList.remove('active'));
+                
+                if (newState === 1) {
+                    container.classList.add('show-details');
+                    indicators[1].classList.add('active');
+                } else if (newState === 2) {
+                    container.classList.add('show-probabilities');
+                    indicators[2].classList.add('active');
+                } else {
+                    indicators[0].classList.add('active');
+                }
             });
         }
 
@@ -4151,9 +4360,6 @@
                 }
             });
             
-            document.addEventListener('touchstart', handleGlobalTouchStart, { passive: true });
-            document.addEventListener('touchend', handleGlobalTouchEnd, { passive: true });
-            
             document.getElementById('whatsapp-btn').addEventListener('click', function() {
                 openSocialLink('whatsapp');
             });
@@ -4175,8 +4381,8 @@
             
             history.pushState({ page: 'main' }, '');
 
-            // Setup swipe handlers pour les cartes
-            setupSwipeHandlers();
+            // Setup card interactions for improved swipe handling
+            setupCardInteractions();
         }
         
         function handleBackButton(event) {
@@ -4234,14 +4440,6 @@
             if (currentSection === 'ai-forecasts') {
                 history.pushState({ page: 'main' }, '');
             }
-        }
-        
-        function handleGlobalTouchStart(e) {
-            // Touch handlers for forecast items if needed
-        }
-        
-        function handleGlobalTouchEnd(e) {
-            // Touch handlers for forecast items if needed
         }
         
         function createRippleEffect(e) {
@@ -4549,7 +4747,7 @@
             if (!listElement) return;
             
             listElement.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 200px;">
                     <i class="fas fa-spinner fa-spin" style="font-size: 30px; color: var(--primary-color);"></i>
                     <div style="margin-top: 10px; font-weight: bold;">Chargement des pronostics...</div>
                 </div>
@@ -4660,55 +4858,81 @@
                 }
             }
 
-            let mainContent = '';
-            let backContent = '';
+            let frontContent = '';
+            let detailsContent = '';
+            let probabilitiesContent = '';
             
             if (type === 'combines' || type === 'sures') {
                 // Combinés
-                mainContent = `
+                frontContent = `
                     <div class="forecast-header">
                         <div>${forecastData.name || 'Combiné'}</div>
                         <div class="forecast-status ${statusClass}">${statusText}</div>
                     </div>
-                    <div style="text-align: center; font-weight: bold; margin: 15px 0; font-size: 16px;">
+                    <div style="text-align: center; font-weight: bold; margin: 20px 0; font-size: 18px; color: var(--primary-color);">
                         ${type === 'sures' ? 'Combiné Sûr' : 'Combiné IA'}
                     </div>
-                    <div style="background-color: rgba(0,0,0,0.05); padding: 10px; border-radius: 8px; margin: 10px 0;">
-                        <div style="font-size: 14px; font-weight: 500; margin-bottom: 5px;">Matchs inclus:</div>
-                        ${forecastData.matches ? forecastData.matches.map(match => 
-                            `<div style="font-size: 13px; margin: 3px 0;">• ${match.match}: ${match.prediction}</div>`
+                    <div class="combined-matches">
+                        <div class="combined-matches-title">Matchs inclus (${forecastData.matches ? forecastData.matches.length : 0})</div>
+                        ${forecastData.matches ? forecastData.matches.slice(0, 2).map(match => 
+                            `<div class="match-detail">
+                                <div class="match-name">${match.match}</div>
+                                <div class="match-prediction">${match.prediction}</div>
+                            </div>`
                         ).join('') : ''}
+                        ${forecastData.matches && forecastData.matches.length > 2 ? 
+                            `<div style="text-align: center; margin-top: 10px; font-size: 12px; opacity: 0.7;">+${forecastData.matches.length - 2} autres matchs</div>` : ''}
                     </div>
                 `;
 
-                backContent = `
-                    <div class="forecast-back-content">
-                        <div class="forecast-description">
-                            <strong>Description détaillée:</strong><br>
-                            ${forecastData.description || 'Aucune description disponible'}
+                detailsContent = `
+                    <div class="forecast-description">
+                        <strong>Description complète:</strong><br>
+                        ${forecastData.description || 'Aucune description disponible'}
+                    </div>
+                    ${forecastData.matches ? `
+                        <div class="combined-matches">
+                            <div class="combined-matches-title">Tous les matchs du combiné</div>
+                            ${forecastData.matches.map(match => `
+                                <div class="match-detail">
+                                    <div class="match-name">${match.match}</div>
+                                    <div class="match-prediction">${match.prediction}</div>
+                                    <div class="match-confidence">Confiance: ${match.individual_confidence}%</div>
+                                </div>
+                            `).join('')}
                         </div>
-                        ${forecastData.estimated_odds ? `
-                            <div class="estimated-odds">
-                                Cote estimée: ${forecastData.estimated_odds}
+                    ` : ''}
+                    ${forecastData.estimated_odds ? `
+                        <div class="estimated-odds">
+                            Cote estimée: ${forecastData.estimated_odds}
+                        </div>
+                    ` : ''}
+                `;
+
+                probabilitiesContent = `
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 15px;">Statistiques avancées</h3>
+                        <div style="background-color: rgba(0,0,0,0.05); padding: 15px; border-radius: 10px;">
+                            <div style="margin-bottom: 10px;">
+                                <strong>Taille du combiné:</strong> ${forecastData.size || forecastData.matches?.length || 'N/A'} matchs
                             </div>
-                        ` : ''}
-                        ${forecastData.matches ? `
-                            <div style="margin-top: 15px;">
-                                <div style="font-weight: bold; margin-bottom: 10px;">Détails des matchs:</div>
-                                ${forecastData.matches.map(match => `
-                                    <div style="background-color: rgba(0,0,0,0.05); padding: 8px; margin: 5px 0; border-radius: 5px;">
-                                        <div style="font-weight: 500;">${match.match}</div>
-                                        <div style="font-size: 13px; color: var(--primary-color);">${match.prediction}</div>
-                                        <div style="font-size: 12px; opacity: 0.8;">Confiance: ${match.individual_confidence}%</div>
-                                    </div>
-                                `).join('')}
+                            <div style="margin-bottom: 10px;">
+                                <strong>Confiance globale:</strong> ${forecastData.confidence || 'N/A'}%
                             </div>
-                        ` : ''}
+                            ${forecastData.estimated_odds ? `
+                                <div style="margin-bottom: 10px;">
+                                    <strong>Cote estimée:</strong> ${forecastData.estimated_odds}
+                                </div>
+                            ` : ''}
+                            <div style="font-size: 12px; margin-top: 15px; opacity: 0.8;">
+                                Plus le combiné contient de matchs, plus la cote est élevée mais le risque augmente.
+                            </div>
+                        </div>
                     </div>
                 `;
             } else {
                 // Safes et Simples
-                mainContent = `
+                frontContent = `
                     <div class="forecast-header">
                         <div>${forecastData.league || 'Compétition'}</div>
                         <div class="forecast-status ${statusClass}">${statusText}</div>
@@ -4728,54 +4952,66 @@
                             <div class="forecast-team-name">${forecastData.AwayTeam || 'Équipe 2'}</div>
                         </div>
                     </div>
-                    <div style="text-align: center; font-weight: bold; margin: 10px 0;">
+                    <div style="text-align: center; font-weight: bold; margin: 15px 0; padding: 10px; background-color: var(--primary-color); color: white; border-radius: 10px;">
                         ${type === 'safes' ? 'Pronostic Safe' : 'Pronostic'}: ${forecastData.prediction || 'N/A'}
                     </div>
                 `;
 
-                backContent = `
-                    <div class="forecast-back-content">
-                        <div class="forecast-description">
-                            <strong>Match:</strong> ${forecastData.HomeTeam} vs ${forecastData.AwayTeam}<br>
-                            <strong>Compétition:</strong> ${forecastData.league || 'N/A'}<br>
-                            <strong>Pays:</strong> ${forecastData.country || 'N/A'}<br>
-                            <strong>Prédiction de score:</strong> ${forecastData.score_prediction || 'N/A'}
+                detailsContent = `
+                    <div class="forecast-description">
+                        <h3 style="color: var(--primary-color); margin-bottom: 15px;">Informations du match</h3>
+                        <div style="background-color: rgba(0,0,0,0.05); padding: 15px; border-radius: 10px;">
+                            <div style="margin-bottom: 8px;"><strong>Match:</strong> ${forecastData.HomeTeam} vs ${forecastData.AwayTeam}</div>
+                            <div style="margin-bottom: 8px;"><strong>Compétition:</strong> ${forecastData.league || 'N/A'}</div>
+                            <div style="margin-bottom: 8px;"><strong>Pays:</strong> ${forecastData.country || 'N/A'}</div>
+                            <div style="margin-bottom: 8px;"><strong>Prédiction de score:</strong> ${forecastData.score_prediction || 'N/A'}</div>
+                            <div style="margin-bottom: 8px;"><strong>Confiance:</strong> ${forecastData.confidence || 'N/A'}%</div>
                         </div>
+                    </div>
+                `;
+
+                probabilitiesContent = `
+                    <div>
+                        <h3 style="color: var(--primary-color); margin-bottom: 15px; text-align: center;">Probabilités de Poisson</h3>
                         ${forecastData.poisson_probabilities ? `
                             <div class="poisson-probabilities">
-                                <div class="poisson-title">Probabilités de Poisson</div>
                                 <div class="poisson-row">
-                                    <span>Victoire domicile:</span>
-                                    <span>${forecastData.poisson_probabilities.win1?.toFixed(1)}%</span>
+                                    <span>🏠 Victoire domicile:</span>
+                                    <strong>${forecastData.poisson_probabilities.win1?.toFixed(1) || 'N/A'}%</strong>
                                 </div>
                                 <div class="poisson-row">
-                                    <span>Match nul:</span>
-                                    <span>${forecastData.poisson_probabilities.draw?.toFixed(1)}%</span>
+                                    <span>🤝 Match nul:</span>
+                                    <strong>${forecastData.poisson_probabilities.draw?.toFixed(1) || 'N/A'}%</strong>
                                 </div>
                                 <div class="poisson-row">
-                                    <span>Victoire extérieur:</span>
-                                    <span>${forecastData.poisson_probabilities.win2?.toFixed(1)}%</span>
+                                    <span>✈️ Victoire extérieur:</span>
+                                    <strong>${forecastData.poisson_probabilities.win2?.toFixed(1) || 'N/A'}%</strong>
                                 </div>
                                 <div class="poisson-row">
-                                    <span>Plus de 1.5 buts:</span>
-                                    <span>${forecastData.poisson_probabilities.over15?.toFixed(1)}%</span>
+                                    <span>⚽ Plus de 1.5 buts:</span>
+                                    <strong>${forecastData.poisson_probabilities.over15?.toFixed(1) || 'N/A'}%</strong>
                                 </div>
                                 <div class="poisson-row">
-                                    <span>Plus de 2.5 buts:</span>
-                                    <span>${forecastData.poisson_probabilities.over25?.toFixed(1)}%</span>
+                                    <span>🎯 Plus de 2.5 buts:</span>
+                                    <strong>${forecastData.poisson_probabilities.over25?.toFixed(1) || 'N/A'}%</strong>
                                 </div>
                                 <div class="poisson-row">
-                                    <span>Les deux équipes marquent:</span>
-                                    <span>${forecastData.poisson_probabilities.btts?.toFixed(1)}%</span>
+                                    <span>⚽⚽ Les deux équipes marquent:</span>
+                                    <strong>${forecastData.poisson_probabilities.btts?.toFixed(1) || 'N/A'}%</strong>
                                 </div>
                             </div>
-                        ` : ''}
+                        ` : `
+                            <div style="text-align: center; padding: 20px; color: var(--inactive-text);">
+                                <i class="fas fa-chart-bar" style="font-size: 30px; margin-bottom: 10px;"></i>
+                                <div>Probabilités non disponibles pour ce match</div>
+                            </div>
+                        `}
                     </div>
                 `;
             }
             
             const confidence = forecastData.confidence || 75;
-            const confidenceBar = `
+            const confidenceSection = `
                 <div class="forecast-confidence">
                     <span>Confiance:</span>
                     <div class="confidence-bar-container">
@@ -4783,25 +5019,28 @@
                     </div>
                     <span>${confidence}%</span>
                 </div>
-            `;
-            
-            const footer = `
                 <div class="forecast-date">${formattedDate}</div>
-                <div class="swipe-indicator">👆 Appuyez pour plus d'infos</div>
             `;
             
             forecastElement.innerHTML = `
-                <div class="forecast-front">
-                    ${mainContent}
-                    ${confidenceBar}
-                    ${footer}
-                </div>
-                <div class="forecast-back">
-                    ${backContent}
-                    <div style="text-align: center; margin-top: 15px; font-size: 12px; opacity: 0.7;">
-                        👆 Appuyez pour revenir
+                <div class="forecast-card-container">
+                    <div class="forecast-face forecast-front">
+                        ${frontContent}
+                        ${confidenceSection}
+                    </div>
+                    <div class="forecast-face forecast-details">
+                        ${detailsContent}
+                    </div>
+                    <div class="forecast-face forecast-probabilities">
+                        ${probabilitiesContent}
                     </div>
                 </div>
+                <div class="face-indicator">
+                    <div class="face-dot active"></div>
+                    <div class="face-dot"></div>
+                    <div class="face-dot"></div>
+                </div>
+                <div class="swipe-instruction">Swipez ou appuyez →</div>
             `;
             
             return forecastElement;
