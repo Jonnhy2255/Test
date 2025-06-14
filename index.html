@@ -1679,11 +1679,98 @@
             gap: 15px;
         }
         
+        /* Forecast Item Styles avec support du swipe */
         .forecast-item {
             background-color: var(--secondary-color);
             border-radius: 10px;
             padding: 15px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .forecast-item.swiped {
+            transform: rotateY(180deg);
+        }
+
+        .forecast-item .forecast-front,
+        .forecast-item .forecast-back {
+            backface-visibility: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .forecast-item .forecast-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 15px;
+            transform: rotateY(180deg);
+            background-color: var(--secondary-color);
+            border-radius: 10px;
+        }
+
+        .forecast-item.swiped .forecast-front {
+            transform: rotateY(-180deg);
+        }
+
+        .forecast-item.swiped .forecast-back {
+            transform: rotateY(0deg);
+        }
+
+        .forecast-back-content {
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .forecast-description {
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            opacity: 0.9;
+        }
+
+        .poisson-probabilities {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .poisson-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--primary-color);
+        }
+
+        .poisson-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            font-size: 12px;
+        }
+
+        .estimated-odds {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .swipe-indicator {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            color: var(--inactive-text);
+            font-size: 12px;
+            opacity: 0.7;
         }
         
         .forecast-header {
@@ -2815,7 +2902,8 @@
         <div id="ai-forecasts-section" class="section active">
             <div class="ai-forecasts-tabs">
                 <div class="ai-forecast-tab active" data-tab="combines">Combinés</div>
-                <div class="ai-forecast-tab" data-tab="safes">Sûrs</div>
+                <div class="ai-forecast-tab" data-tab="sures">Sûrs</div>
+                <div class="ai-forecast-tab" data-tab="safes">Safes</div>
             </div>
             
             <div class="ai-forecasts-content active" id="combines-content">
@@ -2823,6 +2911,11 @@
                 </div>
             </div>
             
+            <div class="ai-forecasts-content" id="sures-content">
+                <div class="ai-forecasts-list" id="sures-list">
+                </div>
+            </div>
+
             <div class="ai-forecasts-content" id="safes-content">
                 <div class="ai-forecasts-list" id="safes-list">
                 </div>
@@ -3438,7 +3531,7 @@
                 }
                 
                 const data = await response.json();
-                addDebugLog(`Pronostics récupérés avec succès: ${data.length} pronostics`, 'success');
+                addDebugLog(`Pronostics récupérés avec succès - Structure: ${Object.keys(data).join(', ')}`, 'success');
                 
                 return data;
             } catch (error) {
@@ -3451,42 +3544,133 @@
         function processForecastData(data) {
             const processed = {
                 combines: [],
+                sures: [],
                 safes: [],
                 simple: []
             };
 
-            if (!data || !Array.isArray(data)) {
+            if (!data) {
                 return processed;
             }
 
-            // Process each forecast item from the array
-            data.forEach((forecast, index) => {
-                const processedForecast = {
-                    id: `${forecast.type}_${index}`,
-                    HomeTeam: forecast.HomeTeam,
-                    AwayTeam: forecast.AwayTeam,
-                    confidence: forecast.confidence || 75,
-                    date: forecast.date,
-                    league: forecast.league,
-                    prediction: forecast.prediction,
-                    type: forecast.type,
-                    status: 'pending'
-                };
+            // Traiter les combinés depuis predictions_combinees.details
+            if (data.predictions_combinees && data.predictions_combinees.details) {
+                data.predictions_combinees.details.forEach(forecast => {
+                    processed.combines.push({
+                        id: forecast.id,
+                        name: forecast.name,
+                        description: forecast.description,
+                        matches: forecast.matches,
+                        confidence: forecast.combined_confidence,
+                        estimated_odds: forecast.estimated_odds,
+                        type: 'combined',
+                        size: forecast.size
+                    });
+                });
+            }
 
-                // Add to appropriate category based on type
-                if (forecast.type === 'combines') {
-                    processed.combines.push(processedForecast);
-                } else if (forecast.type === 'safes') {
-                    processed.safes.push(processedForecast);
-                } else if (forecast.type === 'simple') {
-                    processed.simple.push(processedForecast);
-                } else {
-                    // Default mapping for compatibility
-                    processed.simple.push(processedForecast);
-                }
-            });
+            // Traiter les "sûrs" depuis recommandations.best_combined
+            if (data.recommandations && data.recommandations.best_combined) {
+                data.recommandations.best_combined.forEach(forecast => {
+                    processed.sures.push({
+                        id: forecast.id,
+                        name: forecast.name,
+                        description: forecast.description,
+                        matches: forecast.matches,
+                        confidence: forecast.combined_confidence,
+                        estimated_odds: forecast.estimated_odds,
+                        type: 'combined',
+                        size: forecast.size
+                    });
+                });
+            }
+
+            // Traiter les "safes" depuis recommandations.safest_bets
+            if (data.recommandations && data.recommandations.safest_bets) {
+                data.recommandations.safest_bets.forEach(forecast => {
+                    processed.safes.push({
+                        id: forecast.id,
+                        HomeTeam: forecast.HomeTeam,
+                        AwayTeam: forecast.AwayTeam,
+                        confidence: forecast.confidence,
+                        date: forecast.date,
+                        league: forecast.league,
+                        country: forecast.country,
+                        prediction: forecast.prediction,
+                        type: 'single',
+                        score_prediction: forecast.score_prediction,
+                        poisson_probabilities: forecast.poisson_probabilities
+                    });
+                });
+            }
+
+            // Traiter les pronostics simples
+            if (data.predictions_simples && data.predictions_simples.details) {
+                data.predictions_simples.details.forEach(forecast => {
+                    processed.simple.push({
+                        id: forecast.id,
+                        HomeTeam: forecast.HomeTeam,
+                        AwayTeam: forecast.AwayTeam,
+                        confidence: forecast.confidence,
+                        date: forecast.date,
+                        league: forecast.league,
+                        country: forecast.country,
+                        prediction: forecast.prediction,
+                        type: 'single',
+                        score_prediction: forecast.score_prediction,
+                        poisson_probabilities: forecast.poisson_probabilities
+                    });
+                });
+            }
 
             return processed;
+        }
+
+        function setupSwipeHandlers() {
+            let startX = 0;
+            let startY = 0;
+            let currentCard = null;
+
+            document.addEventListener('touchstart', function(e) {
+                const card = e.target.closest('.forecast-item');
+                if (!card) return;
+
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                currentCard = card;
+            }, { passive: true });
+
+            document.addEventListener('touchmove', function(e) {
+                if (!currentCard) return;
+                e.preventDefault();
+            }, { passive: false });
+
+            document.addEventListener('touchend', function(e) {
+                if (!currentCard) return;
+
+                const endX = e.changedTouches[0].clientX;
+                const endY = e.changedTouches[0].clientY;
+                const diffX = startX - endX;
+                const diffY = startY - endY;
+
+                // Vérifier si c'est un swipe horizontal (et pas vertical)
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                    currentCard.classList.toggle('swiped');
+                }
+
+                currentCard = null;
+            }, { passive: true });
+
+            // Support pour les clics/taps simples
+            document.addEventListener('click', function(e) {
+                const card = e.target.closest('.forecast-item');
+                if (!card) return;
+                
+                // Éviter le toggle si on clique sur un lien ou un bouton
+                if (e.target.closest('a, button')) return;
+                
+                card.classList.toggle('swiped');
+            });
         }
 
         function setupTheme() {
@@ -3990,6 +4174,9 @@
             window.addEventListener('popstate', handleBackButton);
             
             history.pushState({ page: 'main' }, '');
+
+            // Setup swipe handlers pour les cartes
+            setupSwipeHandlers();
         }
         
         function handleBackButton(event) {
@@ -4461,10 +4648,8 @@
             
             let formattedDate = 'Aujourd\'hui';
             if (forecastData.date) {
-                // Parse the date string from GitHub format
                 const dateStr = forecastData.date;
                 if (dateStr.includes('UTC')) {
-                    // Parse "10 juin 2025 à 12:00:00 UTC" format
                     const dateParts = dateStr.split(' à ');
                     if (dateParts.length === 2) {
                         const timePart = dateParts[1].replace(' UTC', '');
@@ -4474,67 +4659,55 @@
                     formattedDate = dateStr;
                 }
             }
-            
+
             let mainContent = '';
+            let backContent = '';
             
-            if (type === 'combines') {
+            if (type === 'combines' || type === 'sures') {
+                // Combinés
                 mainContent = `
                     <div class="forecast-header">
-                        <div>${forecastData.league || 'Compétition'}</div>
+                        <div>${forecastData.name || 'Combiné'}</div>
                         <div class="forecast-status ${statusClass}">${statusText}</div>
                     </div>
-                    <div class="forecast-match">
-                        <div class="forecast-team">
-                            <div class="forecast-team-logo">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <div class="forecast-team-name">${forecastData.HomeTeam || 'Équipe 1'}</div>
-                        </div>
-                        <div class="forecast-score">VS</div>
-                        <div class="forecast-team">
-                            <div class="forecast-team-logo">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <div class="forecast-team-name">${forecastData.AwayTeam || 'Équipe 2'}</div>
-                        </div>
+                    <div style="text-align: center; font-weight: bold; margin: 15px 0; font-size: 16px;">
+                        ${type === 'sures' ? 'Combiné Sûr' : 'Combiné IA'}
                     </div>
-                    <div style="text-align: center; font-weight: bold; margin: 10px 0;">
-                        Combiné IA: ${forecastData.prediction || 'N/A'}
-                    </div>
-                    <div style="font-size: 13px; margin-top: 10px; font-style: italic;">
-                        "Combiné intelligent basé sur l'analyse de données avancées"
+                    <div style="background-color: rgba(0,0,0,0.05); padding: 10px; border-radius: 8px; margin: 10px 0;">
+                        <div style="font-size: 14px; font-weight: 500; margin-bottom: 5px;">Matchs inclus:</div>
+                        ${forecastData.matches ? forecastData.matches.map(match => 
+                            `<div style="font-size: 13px; margin: 3px 0;">• ${match.match}: ${match.prediction}</div>`
+                        ).join('') : ''}
                     </div>
                 `;
-            } else if (type === 'safes') {
-                mainContent = `
-                    <div class="forecast-header">
-                        <div>${forecastData.league || 'Compétition'}</div>
-                        <div class="forecast-status ${statusClass}">${statusText}</div>
-                    </div>
-                    <div class="forecast-match">
-                        <div class="forecast-team">
-                            <div class="forecast-team-logo">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <div class="forecast-team-name">${forecastData.HomeTeam || 'Équipe 1'}</div>
+
+                backContent = `
+                    <div class="forecast-back-content">
+                        <div class="forecast-description">
+                            <strong>Description détaillée:</strong><br>
+                            ${forecastData.description || 'Aucune description disponible'}
                         </div>
-                        <div class="forecast-score">VS</div>
-                        <div class="forecast-team">
-                            <div class="forecast-team-logo">
-                                <i class="fas fa-shield-alt"></i>
+                        ${forecastData.estimated_odds ? `
+                            <div class="estimated-odds">
+                                Cote estimée: ${forecastData.estimated_odds}
                             </div>
-                            <div class="forecast-team-name">${forecastData.AwayTeam || 'Équipe 2'}</div>
-                        </div>
-                    </div>
-                    <div style="text-align: center; font-weight: bold; margin: 10px 0;">
-                        Pronostic Sûr: ${forecastData.prediction || 'N/A'}
-                    </div>
-                    <div style="font-size: 13px; margin-top: 10px; font-style: italic;">
-                        "Pronostic à haute probabilité de réussite"
+                        ` : ''}
+                        ${forecastData.matches ? `
+                            <div style="margin-top: 15px;">
+                                <div style="font-weight: bold; margin-bottom: 10px;">Détails des matchs:</div>
+                                ${forecastData.matches.map(match => `
+                                    <div style="background-color: rgba(0,0,0,0.05); padding: 8px; margin: 5px 0; border-radius: 5px;">
+                                        <div style="font-weight: 500;">${match.match}</div>
+                                        <div style="font-size: 13px; color: var(--primary-color);">${match.prediction}</div>
+                                        <div style="font-size: 12px; opacity: 0.8;">Confiance: ${match.individual_confidence}%</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
                     </div>
                 `;
             } else {
-                // Simple forecasts
+                // Safes et Simples
                 mainContent = `
                     <div class="forecast-header">
                         <div>${forecastData.league || 'Compétition'}</div>
@@ -4556,7 +4729,47 @@
                         </div>
                     </div>
                     <div style="text-align: center; font-weight: bold; margin: 10px 0;">
-                        Pronostic: ${forecastData.prediction || 'N/A'}
+                        ${type === 'safes' ? 'Pronostic Safe' : 'Pronostic'}: ${forecastData.prediction || 'N/A'}
+                    </div>
+                `;
+
+                backContent = `
+                    <div class="forecast-back-content">
+                        <div class="forecast-description">
+                            <strong>Match:</strong> ${forecastData.HomeTeam} vs ${forecastData.AwayTeam}<br>
+                            <strong>Compétition:</strong> ${forecastData.league || 'N/A'}<br>
+                            <strong>Pays:</strong> ${forecastData.country || 'N/A'}<br>
+                            <strong>Prédiction de score:</strong> ${forecastData.score_prediction || 'N/A'}
+                        </div>
+                        ${forecastData.poisson_probabilities ? `
+                            <div class="poisson-probabilities">
+                                <div class="poisson-title">Probabilités de Poisson</div>
+                                <div class="poisson-row">
+                                    <span>Victoire domicile:</span>
+                                    <span>${forecastData.poisson_probabilities.win1?.toFixed(1)}%</span>
+                                </div>
+                                <div class="poisson-row">
+                                    <span>Match nul:</span>
+                                    <span>${forecastData.poisson_probabilities.draw?.toFixed(1)}%</span>
+                                </div>
+                                <div class="poisson-row">
+                                    <span>Victoire extérieur:</span>
+                                    <span>${forecastData.poisson_probabilities.win2?.toFixed(1)}%</span>
+                                </div>
+                                <div class="poisson-row">
+                                    <span>Plus de 1.5 buts:</span>
+                                    <span>${forecastData.poisson_probabilities.over15?.toFixed(1)}%</span>
+                                </div>
+                                <div class="poisson-row">
+                                    <span>Plus de 2.5 buts:</span>
+                                    <span>${forecastData.poisson_probabilities.over25?.toFixed(1)}%</span>
+                                </div>
+                                <div class="poisson-row">
+                                    <span>Les deux équipes marquent:</span>
+                                    <span>${forecastData.poisson_probabilities.btts?.toFixed(1)}%</span>
+                                </div>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
             }
@@ -4574,9 +4787,23 @@
             
             const footer = `
                 <div class="forecast-date">${formattedDate}</div>
+                <div class="swipe-indicator">👆 Appuyez pour plus d'infos</div>
             `;
             
-            forecastElement.innerHTML = mainContent + confidenceBar + footer;
+            forecastElement.innerHTML = `
+                <div class="forecast-front">
+                    ${mainContent}
+                    ${confidenceBar}
+                    ${footer}
+                </div>
+                <div class="forecast-back">
+                    ${backContent}
+                    <div style="text-align: center; margin-top: 15px; font-size: 12px; opacity: 0.7;">
+                        👆 Appuyez pour revenir
+                    </div>
+                </div>
+            `;
+            
             return forecastElement;
         }
         
