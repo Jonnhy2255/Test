@@ -1703,7 +1703,7 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             position: relative;
             overflow: hidden;
-            min-height: 300px;
+            min-height: 350px;
             perspective: 1000px;
             transition: transform 0.2s ease;
             cursor: pointer;
@@ -1718,7 +1718,7 @@
             position: relative;
             width: 100%;
             height: 100%;
-            min-height: 300px;
+            min-height: 350px;
             transform-style: preserve-3d;
             transition: transform 0.6s;
         }
@@ -1735,7 +1735,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            min-height: 300px;
+            min-height: 350px;
             backface-visibility: hidden;
             padding: 20px;
             display: flex;
@@ -1938,38 +1938,42 @@
 
         .combined-matches {
             background-color: rgba(0,0,0,0.05);
-            padding: 15px;
+            padding: 12px;
             border-radius: 10px;
-            margin: 15px 0;
+            margin: 10px 0;
+            max-height: 180px;
+            overflow-y: auto;
         }
 
         .combined-matches-title {
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: var(--primary-color);
+            font-size: 14px;
         }
 
         .match-detail {
             background-color: var(--bg-color);
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 8px;
+            padding: 8px;
+            margin: 6px 0;
+            border-radius: 6px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .match-name {
             font-weight: 500;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
+            font-size: 13px;
         }
 
         .match-prediction {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--primary-color);
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
 
         .match-confidence {
-            font-size: 12px;
+            font-size: 11px;
             opacity: 0.8;
         }
         
@@ -2569,8 +2573,16 @@
             margin: 10px 0;
         }
 
-        .sats-balance i {
+        .sats-balance .bitcoin-icon {
             margin-right: 8px;
+            display: inline;
+            position: static;
+            transform: none;
+            width: auto;
+            height: auto;
+            border-radius: 0;
+            background: none;
+            box-shadow: none;
         }
 
         .plan-item {
@@ -2626,6 +2638,17 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+        }
+
+        .plan-price .bitcoin-icon {
+            display: inline;
+            position: static;
+            transform: none;
+            width: auto;
+            height: auto;
+            border-radius: 0;
+            background: none;
+            box-shadow: none;
         }
 
         .plan-duration {
@@ -3105,7 +3128,7 @@
                     <div class="current-plan-title">Plan Actuel</div>
                     <div class="current-plan-info">Plan Gratuit</div>
                     <div class="sats-balance">
-                        <i class="fab fa-bitcoin"></i>
+                        <i class="fab fa-bitcoin bitcoin-icon"></i>
                         <span id="user-sats-balance">0</span> sats
                     </div>
                     <div style="font-size: 14px; color: var(--inactive-text);">
@@ -3119,7 +3142,7 @@
                         Plan Quotidien
                     </div>
                     <div class="plan-price">
-                        <i class="fab fa-bitcoin"></i>
+                        <i class="fab fa-bitcoin bitcoin-icon"></i>
                         10 <span class="plan-duration">sats/jour</span>
                     </div>
                     <ul class="plan-features">
@@ -3138,7 +3161,7 @@
                         Plan Hebdomadaire
                     </div>
                     <div class="plan-price">
-                        <i class="fab fa-bitcoin"></i>
+                        <i class="fab fa-bitcoin bitcoin-icon"></i>
                         60 <span class="plan-duration">sats/semaine</span>
                     </div>
                     <ul class="plan-features">
@@ -4817,7 +4840,7 @@
             let probabilitiesContent = '';
             
             if (type === 'combines' || type === 'sures') {
-                // Combinés - Afficher TOUS les matchs sur la première face
+                // Combinés - Afficher TOUS les matchs dans un conteneur avec scroll
                 frontContent = `
                     <div class="forecast-header">
                         <div>${forecastData.name || 'Combiné'}</div>
@@ -4834,7 +4857,7 @@
                     </div>
                 `;
 
-                // 2ème face - Juste la description, pas les matchs
+                // 2ème face - Description
                 detailsContent = `
                     <div class="forecast-description">
                         <h3 style="color: var(--primary-color); margin-bottom: 15px;">Description complète</h3>
@@ -4849,6 +4872,7 @@
                     ` : ''}
                 `;
 
+                // 3ème face - Statistiques
                 probabilitiesContent = `
                     <div style="text-align: center; margin-bottom: 20px;">
                         <h3 style="color: var(--primary-color); margin-bottom: 15px;">Statistiques avancées</h3>
