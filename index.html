@@ -2303,6 +2303,7 @@
             color: white;
             font-weight: bold;
             font-size: 16px;
+            text-decoration: none;
         }
         
         .social-button:active {
@@ -2326,7 +2327,7 @@
             background-color: var(--social-youtube);
         }
 
-        .social-button i {
+        .social-button .social-icon {
             font-size: 24px;
             margin-bottom: 8px;
         }
@@ -3161,7 +3162,8 @@
             background-color: rgba(0, 0, 0, 0.8);
         }
 
-        .fab {
+        /* Corriger les boutons flottants - renommer la classe .fab en .floating-action-button */
+        .floating-action-button {
             position: fixed;
             bottom: 80px;
             right: 20px;
@@ -3180,16 +3182,16 @@
             transition: all 0.3s ease;
         }
 
-        .fab:hover {
+        .floating-action-button:hover {
             transform: scale(1.1);
         }
 
-        .fab:active {
+        .floating-action-button:active {
             transform: scale(0.95);
         }
         
         @media (max-height: 640px) {
-            .fab {
+            .floating-action-button {
                 bottom: 70px;
             }
         }
@@ -3694,15 +3696,18 @@
                     <div class="section-title">Nous rejoindre</div>
                     
                     <div class="social-buttons">
-                        <div class="social-button whatsapp" id="whatsapp-btn">
-                            <i class="fab fa-whatsapp"></i>
-                        </div>
-                        <div class="social-button telegram" id="telegram-btn">
-                            <i class="fab fa-telegram"></i>
-                        </div>
-                        <div class="social-button youtube" id="youtube-btn">
-                            <i class="fab fa-youtube"></i>
-                        </div>
+                        <a href="https://chat.whatsapp.com/J9vK3bCr3zxFpT9GYXRdoE" target="_blank" rel="noopener noreferrer" class="social-button whatsapp">
+                            <i class="fab fa-whatsapp social-icon"></i>
+                            WhatsApp
+                        </a>
+                        <a href="https://t.me/parialliance" target="_blank" rel="noopener noreferrer" class="social-button telegram">
+                            <i class="fab fa-telegram social-icon"></i>
+                            Telegram
+                        </a>
+                        <a href="https://www.youtube.com/@PariAlliance" target="_blank" rel="noopener noreferrer" class="social-button youtube">
+                            <i class="fab fa-youtube social-icon"></i>
+                            YouTube
+                        </a>
                     </div>
                     
                     <button id="logout-btn" class="button">Se déconnecter</button>
@@ -5189,18 +5194,6 @@
                 }
             });
             
-            document.getElementById('whatsapp-btn').addEventListener('click', function() {
-                openSocialLink('whatsapp');
-            });
-            
-            document.getElementById('telegram-btn').addEventListener('click', function() {
-                openSocialLink('telegram');
-            });
-            
-            document.getElementById('youtube-btn').addEventListener('click', function() {
-                openSocialLink('youtube');
-            });
-            
             const touchableElements = document.querySelectorAll('.menu-button, .back-button, .search-button, .events-button, .info-button, .search-close');
             touchableElements.forEach(element => {
                 element.addEventListener('touchstart', createRippleEffect);
@@ -5368,29 +5361,6 @@
         function filterEvents(query) {
             // Implement events filtering logic here
             // This would filter the displayed events based on the search query
-        }
-        
-        function openSocialLink(platform) {
-            let url = '';
-            
-            switch(platform) {
-                case 'whatsapp':
-                    url = 'https://wa.me/';
-                    showNotification('Ouverture de WhatsApp', 'info');
-                    break;
-                case 'telegram':
-                    url = 'https://t.me/';
-                    showNotification('Ouverture de Telegram', 'info');
-                    break;
-                case 'youtube':
-                    url = 'https://www.youtube.com/';
-                    showNotification('Ouverture de YouTube', 'info');
-                    break;
-                default:
-                    return;
-            }
-            
-            window.open(url, '_blank', 'noopener,noreferrer');
         }
         
         function showTermsDialog() {
@@ -6509,6 +6479,7 @@
             }
             
             onAuthStateChanged(auth, async (user) => {
+                // Masquer l'animation de vérification immédiatement
                 document.getElementById('verify-animation').style.display = 'none';
                 
                 if (user) {
@@ -6626,95 +6597,95 @@
             if (hasError) return;
             
             setButtonLoading('loginBtn', true);
-        addDebugLog(`Tentative de connexion pour: ${email}`, 'info');
-        
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-            addDebugLog('Connexion réussie', 'success');
-        } catch (error) {
-            console.error('Erreur de connexion:', error);
-            addDebugLog(`Erreur de connexion: ${error.code} - ${error.message}`, 'error');
+            addDebugLog(`Tentative de connexion pour: ${email}`, 'info');
             
-            let errorMessage = 'Erreur de connexion';
-            if (error.code === 'auth/user-not-found') {
-                errorMessage = 'Aucun compte trouvé avec cet email';
-            } else if (error.code === 'auth/wrong-password') {
-                errorMessage = 'Mot de passe incorrect';
-            } else if (error.code === 'auth/invalid-email') {
-                errorMessage = 'Email invalide';
-            } else if (error.code === 'auth/too-many-requests') {
-                errorMessage = 'Trop de tentatives. Réessayez plus tard';
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                addDebugLog('Connexion réussie', 'success');
+            } catch (error) {
+                console.error('Erreur de connexion:', error);
+                addDebugLog(`Erreur de connexion: ${error.code} - ${error.message}`, 'error');
+                
+                let errorMessage = 'Erreur de connexion';
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage = 'Aucun compte trouvé avec cet email';
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessage = 'Mot de passe incorrect';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Email invalide';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage = 'Trop de tentatives. Réessayez plus tard';
+                }
+                
+                const logElement = document.getElementById('login-log');
+                logElement.textContent = errorMessage;
+                logElement.className = 'log-message error';
+                logElement.style.display = 'block';
+            } finally {
+                setButtonLoading('loginBtn', false);
+            }
+        });
+        
+        document.getElementById('registerBtn').addEventListener('click', async function() {
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            
+            let hasError = false;
+            
+            if (!email || !email.includes('@')) {
+                document.getElementById('register-email-error').style.display = 'block';
+                hasError = true;
+            } else {
+                document.getElementById('register-email-error').style.display = 'none';
             }
             
-            const logElement = document.getElementById('login-log');
-            logElement.textContent = errorMessage;
-            logElement.className = 'log-message error';
-            logElement.style.display = 'block';
-        } finally {
-            setButtonLoading('loginBtn', false);
-        }
-    });
-    
-    document.getElementById('registerBtn').addEventListener('click', async function() {
-        const email = document.getElementById('register-email').value.trim();
-        const password = document.getElementById('register-password').value;
-        const confirmPassword = document.getElementById('register-confirm-password').value;
-        
-        let hasError = false;
-        
-        if (!email || !email.includes('@')) {
-            document.getElementById('register-email-error').style.display = 'block';
-            hasError = true;
-        } else {
-            document.getElementById('register-email-error').style.display = 'none';
-        }
-        
-        if (!password || password.length < 6) {
-            document.getElementById('register-password-error').style.display = 'block';
-            hasError = true;
-        } else {
-            document.getElementById('register-password-error').style.display = 'none';
-        }
-        
-        if (password !== confirmPassword) {
-            document.getElementById('register-confirm-password-error').style.display = 'block';
-            hasError = true;
-        } else {
-            document.getElementById('register-confirm-password-error').style.display = 'none';
-        }
-        
-        if (hasError) return;
-        
-        setButtonLoading('registerBtn', true);
-        addDebugLog(`Tentative d'inscription pour: ${email}`, 'info');
-        
-        try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            addDebugLog('Inscription réussie', 'success');
-        } catch (error) {
-            console.error('Erreur d\'inscription:', error);
-            addDebugLog(`Erreur d'inscription: ${error.code} - ${error.message}`, 'error');
-            
-            let errorMessage = 'Erreur d\'inscription';
-            if (error.code === 'auth/email-already-in-use') {
-                errorMessage = 'Cet email est déjà utilisé';
-            } else if (error.code === 'auth/invalid-email') {
-                errorMessage = 'Email invalide';
-            } else if (error.code === 'auth/weak-password') {
-                errorMessage = 'Mot de passe trop faible';
+            if (!password || password.length < 6) {
+                document.getElementById('register-password-error').style.display = 'block';
+                hasError = true;
+            } else {
+                document.getElementById('register-password-error').style.display = 'none';
             }
             
-            const logElement = document.getElementById('register-log');
-            logElement.textContent = errorMessage;
-            logElement.className = 'log-message error';
-            logElement.style.display = 'block';
-        } finally {
-            setButtonLoading('registerBtn', false);
-        }
-    });
-    
-    // Initialize the app
-    initApp();
-</script>
+            if (password !== confirmPassword) {
+                document.getElementById('register-confirm-password-error').style.display = 'block';
+                hasError = true;
+            } else {
+                document.getElementById('register-confirm-password-error').style.display = 'none';
+            }
+            
+            if (hasError) return;
+            
+            setButtonLoading('registerBtn', true);
+            addDebugLog(`Tentative d'inscription pour: ${email}`, 'info');
+            
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                addDebugLog('Inscription réussie', 'success');
+            } catch (error) {
+                console.error('Erreur d\'inscription:', error);
+                addDebugLog(`Erreur d'inscription: ${error.code} - ${error.message}`, 'error');
+                
+                let errorMessage = 'Erreur d\'inscription';
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'Cet email est déjà utilisé';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Email invalide';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Mot de passe trop faible';
+                }
+                
+                const logElement = document.getElementById('register-log');
+                logElement.textContent = errorMessage;
+                logElement.className = 'log-message error';
+                logElement.style.display = 'block';
+            } finally {
+                setButtonLoading('registerBtn', false);
+            }
+        });
+        
+        // Initialize the app
+        initApp();
+    </script>
 </body>
 </html>
