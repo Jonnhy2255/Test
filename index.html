@@ -96,6 +96,8 @@
             --sats-color: #F7931A;
             --plan-active-bg: rgba(93, 92, 222, 0.1);
             --plan-active-border: var(--primary-color);
+            --premium-badge-bg: #FFD700;
+            --premium-badge-text: #000000;
         }
         
         /* Thème vert */
@@ -1425,6 +1427,18 @@
             text-transform: uppercase;
         }
 
+        .premium-badge {
+            display: inline-block;
+            background-color: var(--premium-badge-bg);
+            color: var(--premium-badge-text);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
         .restricted-badge {
             display: inline-block;
             background-color: var(--restricted-badge-bg);
@@ -1486,12 +1500,136 @@
 
         .restricted-message {
             text-align: center;
-            padding: 10px;
-            margin: 10px 0;
+            padding: 20px;
+            margin: 20px;
             background-color: rgba(255, 193, 7, 0.1);
-            border-radius: 10px;
-            font-size: 14px;
+            border-radius: 15px;
+            font-size: 16px;
             color: var(--text-color);
+            border: 2px solid var(--restricted-badge-bg);
+        }
+
+        .restricted-message i {
+            font-size: 30px;
+            color: var(--restricted-badge-bg);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .restricted-message .subscribe-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .restricted-message .subscribe-button:hover {
+            background-color: #4a49c0;
+            transform: translateY(-2px);
+        }
+
+        /* Premium Access Required Modal */
+        .premium-required-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .premium-required-modal.active {
+            display: flex;
+        }
+
+        .premium-required-content {
+            background-color: var(--bg-color);
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .premium-required-icon {
+            font-size: 60px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .premium-required-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+
+        .premium-required-text {
+            font-size: 16px;
+            color: var(--inactive-text);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .premium-required-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .premium-required-subscribe {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .premium-required-subscribe:hover {
+            background-color: #4a49c0;
+            transform: translateY(-1px);
+        }
+
+        .premium-required-close {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .premium-required-close:hover {
+            background-color: var(--border-color);
         }
         
         .profile-edit-dialog {
@@ -2147,7 +2285,7 @@
             justify-content: space-between;
             margin-top: 20px;
             padding: 0 15px;
-            gap: 10px;
+            gap: 15px;
         }
         
         .social-button {
@@ -2156,15 +2294,15 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 15px 10px;
-            border-radius: 10px;
-            background-color: var(--secondary-color);
+            padding: 20px 10px;
+            border-radius: 15px;
             text-align: center;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             cursor: pointer;
+            color: white;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 16px;
         }
         
         .social-button:active {
@@ -2177,15 +2315,20 @@
         }
         
         .social-button.whatsapp {
-            color: var(--social-whatsapp);
+            background-color: var(--social-whatsapp);
         }
         
         .social-button.telegram {
-            color: var(--social-telegram);
+            background-color: var(--social-telegram);
         }
         
         .social-button.youtube {
-            color: var(--social-youtube);
+            background-color: var(--social-youtube);
+        }
+
+        .social-button i {
+            font-size: 24px;
+            margin-bottom: 8px;
         }
 
         .about-dialog {
@@ -2705,6 +2848,175 @@
             transform: none;
         }
 
+        /* Lightning Payment Modal */
+        .lightning-payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .lightning-payment-modal.active {
+            display: flex;
+        }
+
+        .lightning-payment-content {
+            background-color: var(--bg-color);
+            border-radius: 15px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .lightning-payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .lightning-payment-title {
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+
+        .lightning-payment-close {
+            color: var(--text-color);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+
+        .lightning-payment-close:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .payment-amount {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .payment-amount-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--sats-color);
+            margin-bottom: 5px;
+        }
+
+        .payment-amount-label {
+            color: var(--inactive-text);
+            font-size: 14px;
+        }
+
+        .invoice-container {
+            margin-bottom: 20px;
+        }
+
+        .invoice-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .invoice-text {
+            background-color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+            max-height: 100px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+        }
+
+        .copy-invoice-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s ease;
+        }
+
+        .copy-invoice-btn:hover {
+            background-color: #4a49c0;
+        }
+
+        .payment-status {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .payment-status.pending {
+            background-color: var(--forecast-pending-bg);
+            color: var(--text-color);
+        }
+
+        .payment-status.success {
+            background-color: var(--forecast-win-bg);
+            color: var(--success-color);
+        }
+
+        .payment-status.error {
+            background-color: var(--forecast-loss-bg);
+            color: var(--danger-color);
+        }
+
+        .payment-warning {
+            background-color: var(--warning-bg);
+            border: 2px solid var(--warning-text);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--warning-text);
+        }
+
+        .payment-warning i {
+            font-size: 20px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .cancel-payment-btn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: background-color 0.2s ease;
+        }
+
+        .cancel-payment-btn:hover {
+            background-color: #d32f2f;
+        }
+
         /* Tutorials Section Styles */
         .tutorials-section {
             padding: 0;
@@ -2934,6 +3246,64 @@
     <div id="debug-toggle-btn" class="debug-toggle-btn">
         <i class="fas fa-bug"></i>
     </div>
+
+    <!-- Premium Access Required Modal -->
+    <div id="premium-required-modal" class="premium-required-modal">
+        <div class="premium-required-content">
+            <div class="premium-required-icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            <div class="premium-required-title">Accès Premium Requis</div>
+            <div class="premium-required-text">
+                Accédez aux prédictions IA avancées, combinés intelligents et analyses premium avec un abonnement !
+            </div>
+            <div class="premium-required-buttons">
+                <button class="premium-required-subscribe" id="premium-modal-subscribe">
+                    S'abonner maintenant
+                </button>
+                <button class="premium-required-close" id="premium-modal-close">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightning Payment Modal -->
+    <div id="lightning-payment-modal" class="lightning-payment-modal">
+        <div class="lightning-payment-content">
+            <div class="lightning-payment-header">
+                <div class="lightning-payment-title">Paiement Lightning ⚡</div>
+                <div class="lightning-payment-close" id="lightning-payment-close">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            
+            <div class="payment-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>IMPORTANT :</strong> Ne fermez pas cette fenêtre pendant le paiement !
+                Le processus peut prendre quelques minutes.
+            </div>
+            
+            <div class="payment-amount">
+                <div class="payment-amount-value" id="payment-amount-value">10 sats</div>
+                <div class="payment-amount-label">Plan Quotidien</div>
+            </div>
+            
+            <div class="invoice-container">
+                <div class="invoice-label">Invoice Lightning :</div>
+                <div class="invoice-text" id="lightning-invoice-text"></div>
+                <button class="copy-invoice-btn" id="copy-lightning-invoice">Copier Invoice</button>
+            </div>
+            
+            <div class="payment-status pending" id="lightning-payment-status">
+                ⏳ En attente de paiement...
+            </div>
+            
+            <button class="cancel-payment-btn" id="cancel-lightning-payment">
+                Annuler le paiement
+            </button>
+        </div>
+    </div>
     
     <div class="side-menu" id="side-menu">
         <div class="side-menu-header">
@@ -3062,7 +3432,7 @@
                 <i class="fas fa-chevron-left"></i>
             </div>
         </div>
-        <div id="header-title" class="header-title">Prédictions IA</div>
+        <div id="header-title" class="header-title">Simples</div>
         <div id="header-action">
             <div class="search-button" id="search-button">
                 <i class="fas fa-search"></i>
@@ -3082,7 +3452,16 @@
     </div>
 
     <div class="content">
-        <div id="ai-forecasts-section" class="section active">
+        <!-- Section des pronostics simples maintenant par défaut -->
+        <div id="forecasts-section" class="section active">
+            <div class="forecasts-content active" style="height: 100%; overflow-y: auto;">
+                <div class="forecasts-list" id="simple-forecasts-list">
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Prédictions IA pour abonnés seulement -->
+        <div id="ai-forecasts-section" class="section">
             <div class="ai-forecasts-tabs">
                 <div class="ai-forecast-tab active" data-tab="combines">Combinés</div>
                 <div class="ai-forecast-tab" data-tab="sures">Sûrs</div>
@@ -3115,23 +3494,16 @@
             </div>
         </div>
         
-        <div id="forecasts-section" class="section">
-            <div class="forecasts-content active" style="height: 100%; overflow-y: auto;">
-                <div class="forecasts-list" id="simple-forecasts-list">
-                </div>
-            </div>
-        </div>
-        
         <div id="subscription-section" class="section">
             <div style="height: 100%; overflow-y: auto;">
                 <div class="current-plan">
                     <div class="current-plan-title">Plan Actuel</div>
-                    <div class="current-plan-info">Plan Gratuit</div>
+                    <div class="current-plan-info" id="current-plan-name">Plan Gratuit</div>
                     <div class="sats-balance">
                         <i class="fab fa-bitcoin bitcoin-icon"></i>
                         <span id="user-sats-balance">0</span> sats
                     </div>
-                    <div style="font-size: 14px; color: var(--inactive-text);">
+                    <div style="font-size: 14px; color: var(--inactive-text);" id="plan-expiry-info">
                         Rechargez vos sats pour accéder aux plans premium
                     </div>
                 </div>
@@ -3146,8 +3518,11 @@
                         10 <span class="plan-duration">sats/jour</span>
                     </div>
                     <ul class="plan-features">
-                        <li>Accès aux pronostics du jour</li>
-                        <li>Notifications en temps réel</li>
+                        <li>Accès aux prédictions IA du jour</li>
+                        <li>Combinés intelligents</li>
+                        <li>Pronostics sûrs premium</li>
+                        <li>Analyses safes avancées</li>
+                        <li>Badge Premium</li>
                         <li>Support prioritaire</li>
                     </ul>
                     <button class="plan-button" id="daily-plan-btn">
@@ -3169,6 +3544,8 @@
                         <li>Économisez 10 sats par semaine</li>
                         <li>Accès aux analyses avancées</li>
                         <li>Historique complet des pronostics</li>
+                        <li>Badge Premium permanent</li>
+                        <li>Accès prioritaire aux nouveautés</li>
                     </ul>
                     <button class="plan-button" id="weekly-plan-btn">
                         S'abonner au plan hebdomadaire
@@ -3213,6 +3590,25 @@
                         <div class="tutorial-duration">
                             <i class="far fa-clock"></i>
                             3 minutes
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tutorial-item">
+                    <div class="tutorial-thumbnail" data-video="understand-predictions">
+                        <div class="tutorial-play-button">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="tutorial-badge">Éducatif</div>
+                    </div>
+                    <div class="tutorial-content">
+                        <div class="tutorial-title">Comment comprendre nos prédictions</div>
+                        <div class="tutorial-description">
+                            Apprenez à interpréter nos analyses IA, comprendre les probabilités et optimiser vos choix de paris. Un guide essentiel pour maximiser vos gains avec nos pronostics.
+                        </div>
+                        <div class="tutorial-duration">
+                            <i class="far fa-clock"></i>
+                            7 minutes
                         </div>
                     </div>
                 </div>
@@ -3282,6 +3678,7 @@
                         <div class="profile-name" id="profile-name">
                             <span id="profile-name-text">Utilisateur</span>
                             <span class="admin-badge" id="admin-badge" style="display: none;">Admin</span>
+                            <span class="premium-badge" id="premium-badge" style="display: none;">Premium</span>
                         </div>
                         <div class="profile-email" id="profile-email">user@example.com</div>
                         <div class="profile-status">En ligne</div>
@@ -3298,13 +3695,13 @@
                     
                     <div class="social-buttons">
                         <div class="social-button whatsapp" id="whatsapp-btn">
-                            WhatsApp
+                            <i class="fab fa-whatsapp"></i>
                         </div>
                         <div class="social-button telegram" id="telegram-btn">
-                            Telegram
+                            <i class="fab fa-telegram"></i>
                         </div>
                         <div class="social-button youtube" id="youtube-btn">
-                            YouTube
+                            <i class="fab fa-youtube"></i>
                         </div>
                     </div>
                     
@@ -3405,39 +3802,58 @@
             <div class="about-section">
                 <div class="about-section-title">Description</div>
                 <div class="about-section-content">
-                    Pari Alliance est une application de prédictions sportives basée sur l'intelligence artificielle qui fournit des pronostics précis et fiables.
+                    Pari Alliance est une application de prédictions sportives révolutionnaire qui combine l'intelligence artificielle avancée avec des analyses de données en temps réel pour fournir des pronostics précis et fiables dans le domaine sportif.
                 </div>
             </div>
             
             <div class="about-section">
                 <div class="about-section-title">Fonctionnalités</div>
                 <div class="about-section-content">
+                    <strong>Plan Gratuit :</strong><br>
+                    • Pronostics simples quotidiens<br>
+                    • Accès aux événements et notifications<br>
+                    • Personnalisation de l'interface<br><br>
+                    
+                    <strong>Plans Premium :</strong><br>
                     • Prédictions IA avancées<br>
-                    • Combinés intelligents<br>
-                    • Pronostics sûrs<br>
-                    • Analyses simples<br>
-                    • Mode sombre personnalisable<br>
-                    • Thèmes de couleurs multiples<br>
-                    • Plans d'abonnement flexibles
+                    • Combinés intelligents optimisés<br>
+                    • Pronostics sûrs premium<br>
+                    • Analyses safes avancées<br>
+                    • Badge Premium distinctif<br>
+                    • Support prioritaire<br>
+                    • Accès prioritaire aux nouveautés
                 </div>
             </div>
             
             <div class="about-section">
-                <div class="about-section-title">À propos de l'application</div>
+                <div class="about-section-title">Système d'abonnement</div>
                 <div class="about-section-content">
-                    Le logo de l'application représente un ballon de football symbolisant notre expertise dans le domaine sportif. L'application a été créée par Pronosoft AI.
+                    Nos abonnements fonctionnent avec des satoshis (sats), la plus petite unité du Bitcoin, permettant des micro-paiements rapides et sécurisés via le Lightning Network.<br><br>
+                    
+                    <strong>Plans disponibles :</strong><br>
+                    • Plan Quotidien : 10 sats/jour<br>
+                    • Plan Hebdomadaire : 60 sats/semaine (économie de 10 sats)<br><br>
+                    
+                    Les abonnements se renouvellent automatiquement à minuit (00h00) et donnent accès à toutes les fonctionnalités premium pendant la durée active.
                 </div>
             </div>
             
             <div class="about-section">
-                <div class="about-section-title">Confidentialité</div>
+                <div class="about-section-title">Technologie</div>
                 <div class="about-section-content">
-                    Pari Alliance respecte votre vie privée. Vos données personnelles ne sont utilisées que pour le fonctionnement de l'application et ne sont jamais partagées avec des tiers.
+                    Notre plateforme utilise des algorithmes d'intelligence artificielle sophistiqués pour analyser des milliers de données sportives, statistiques d'équipes, performances historiques et tendances actuelles afin de générer des prédictions avec un taux de précision optimal.
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <div class="about-section-title">Confidentialité et sécurité</div>
+                <div class="about-section-content">
+                    Pari Alliance respecte strictement votre vie privée. Vos données personnelles sont protégées par des protocoles de sécurité avancés et ne sont jamais partagées avec des tiers. Tous les paiements sont sécurisés via le Lightning Network Bitcoin.
                 </div>
             </div>
             
             <div class="about-footer">
-                © 2025-2026 Pari Alliance. Tous droits réservés.
+                © 2025-2026 Pari Alliance - Pronosoft AI. Tous droits réservés.
             </div>
         </div>
     </div>
@@ -3451,48 +3867,84 @@
         </div>
         <div class="terms-content">
             <div class="about-section">
-                <div class="about-section-title">Conditions générales</div>
+                <div class="about-section-title">Conditions générales d'utilisation</div>
                 <div class="about-section-content">
-                    En utilisant l'application Pari Alliance, vous acceptez de respecter les présentes conditions d'utilisation. L'accès et l'utilisation de cette application sont soumis à votre acceptation et au respect des présentes conditions.
+                    En utilisant l'application Pari Alliance, vous acceptez de respecter les présentes conditions d'utilisation. L'accès et l'utilisation de cette application sont soumis à votre acceptation et au respect des présentes conditions. Toute violation de ces termes peut entraîner la suspension ou la résiliation de votre compte.
                 </div>
             </div>
             
             <div class="warning-box">
-                <i class="fas fa-exclamation-triangle"></i> <strong>AVERTISSEMENT :</strong> Les pronostics sont fournis à titre informatif uniquement. La vente ou revente de ces pronostics est strictement interdite et passible de bannissement à vie et de poursuites judiciaires.
+                <i class="fas fa-exclamation-triangle"></i> 
+                <strong>AVERTISSEMENT IMPORTANT :</strong> Les pronostics fournis par Pari Alliance sont destinés uniquement à des fins d'information et de divertissement. La revente, redistribution ou commercialisation de ces pronostics est strictement interdite et passible de bannissement définitif et de poursuites judiciaires.
             </div>
             
             <div class="about-section">
-                <div class="about-section-title">Utilisation des pronostics</div>
+                <div class="about-section-title">Utilisation des pronostics et responsabilité</div>
                 <div class="about-section-content">
-                    Les pronostics sportifs fournis dans cette application sont destinés uniquement à des fins d'information et de divertissement. Ils peuvent être utilisés pour effectuer des paris réels, mais il est recommandé de le faire avec responsabilité.<br><br>
+                    <strong>Nature des pronostics :</strong><br>
+                    Les prédictions sportives générées par notre intelligence artificielle sont basées sur des analyses statistiques et des algorithmes avancés. Cependant, le sport reste imprévisible par nature.<br><br>
                     
-                    Nous ne sommes pas responsables de leurs pertes éventuelles. Les pronostics ne constituent en aucun cas une incitation au jeu ou un conseil d'investissement.<br><br>
+                    <strong>Limitation de responsabilité :</strong><br>
+                    Pari Alliance ne peut être tenu responsable des pertes financières résultant de l'utilisation de nos pronostics. Des événements imprévisibles (cartons rouges, pénaltys, blessures, conditions météorologiques, décisions arbitrales, etc.) peuvent influencer l'issue des matchs indépendamment de nos analyses.<br><br>
                     
-                    Il est strictement interdit de:<br>
-                    • Revendre ou commercialiser ces pronostics<br>
-                    • Partager ces informations en dehors de la plateforme<br>
-                    • Utiliser ces informations à des fins commerciales<br><br>
-                    
-                    Tout utilisateur enfreignant ces règles s'expose à une suspension immédiate de son compte et à d'éventuelles poursuites judiciaires.
+                    <strong>Recommandations d'usage :</strong><br>
+                    • Utilisez nos pronostics comme aide à la décision, non comme garantie<br>
+                    • Pariez toujours de manière responsable et dans vos moyens<br>
+                    • Ne misez jamais plus que ce que vous pouvez vous permettre de perdre<br>
+                    • Considérez le pari sportif comme un divertissement, non un investissement
                 </div>
             </div>
             
             <div class="about-section">
-                <div class="about-section-title">Utilisation de l'application</div>
+                <div class="about-section-title">Propriété intellectuelle et interdictions</div>
                 <div class="about-section-content">
-                    Vous vous engagez à utiliser l'application de manière légale et responsable. Il est interdit de:<br>
-                    • Publier du contenu illégal, diffamatoire, harcelant ou menaçant<br>
-                    • Usurper l'identité d'une autre personne<br>
-                    • Tenter d'accéder sans autorisation à des parties de l'application qui vous sont interdites<br>
-                    • Perturber le fonctionnement normal de l'application<br>
-                    • Publier des messages à caractère commercial non sollicités
+                    <strong>Propriété des contenus :</strong><br>
+                    Tous les pronostics, analyses et contenus générés par Pari Alliance sont la propriété exclusive de Pronosoft AI. Ils sont protégés par les droits d'auteur et la propriété intellectuelle.<br><br>
+                    
+                    <strong>Interdictions formelles :</strong><br>
+                    • Revendre ou commercialiser nos pronostics sous quelque forme que ce soit<br>
+                    • Partager ou redistribuer nos analyses premium en dehors de la plateforme<br>
+                    • Copier, reproduire ou utiliser nos contenus à des fins commerciales<br>
+                    • Créer des comptes multiples pour contourner les limitations<br>
+                    • Utiliser des méthodes automatisées pour extraire nos données<br><br>
+                    
+                    <strong>Sanctions :</strong><br>
+                    Toute violation de ces interdictions entraînera la suspension immédiate du compte et pourra donner lieu à des poursuites judiciaires pour violation de propriété intellectuelle.
                 </div>
             </div>
             
             <div class="about-section">
-                <div class="about-section-title">Responsabilité</div>
+                <div class="about-section-title">Abonnements et paiements</div>
                 <div class="about-section-content">
-                    Pari Alliance n'est pas responsable des pertes financières ou autres dommages qui pourraient résulter de l'utilisation des pronostics(des événements imprévus tels que les cartons rouges,les fautes pouvant causer un penalty etc...)ou des informations disponibles sur l'application. Les utilisateurs sont seuls responsables de leurs décisions et de leurs actions.
+                    <strong>Système de paiement :</strong><br>
+                    Les abonnements premium fonctionnent avec des satoshis (sats) via le Lightning Network Bitcoin, garantissant des transactions rapides et sécurisées.<br><br>
+                    
+                    <strong>Durée et renouvellement :</strong><br>
+                    • Les abonnements expirent automatiquement à minuit (00h00)<br>
+                    • Aucun renouvellement automatique n'est effectué<br>
+                    • Vous devez renouveler manuellement votre abonnement<br><br>
+                    
+                    <strong>Politique de remboursement :</strong><br>
+                    En raison de la nature numérique instantanée de nos services et des micro-paiements en cryptomonnaie, aucun remboursement n'est possible une fois l'accès premium activé.
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <div class="about-section-title">Conduite des utilisateurs</div>
+                <div class="about-section-content">
+                    En utilisant Pari Alliance, vous vous engagez à :<br>
+                    • Respecter les autres utilisateurs et maintenir un environnement respectueux<br>
+                    • Ne pas publier de contenu illégal, diffamatoire ou offensant<br>
+                    • Ne pas usurper l'identité d'autres personnes<br>
+                    • Ne pas tenter de contourner les mesures de sécurité de l'application<br>
+                    • Signaler tout comportement suspect ou violation des conditions
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <div class="about-section-title">Modifications et résiliation</div>
+                <div class="about-section-content">
+                    Pari Alliance se réserve le droit de modifier ces conditions d'utilisation à tout moment. Les utilisateurs seront notifiés des changements importants. Nous nous réservons également le droit de suspendre ou résilier l'accès à l'application en cas de violation de ces conditions.
                 </div>
             </div>
         </div>
@@ -3516,15 +3968,6 @@
         </div>
     </div>
 
-    <div id="plan-confirmation" class="confirmation-dialog">
-        <div class="confirmation-title">Confirmer l'abonnement</div>
-        <div class="confirmation-text" id="plan-confirmation-text">Voulez-vous vraiment souscrire à ce plan ?</div>
-        <div class="confirmation-buttons">
-            <div class="confirmation-button confirmation-cancel" id="plan-cancel">Annuler</div>
-            <div class="confirmation-button confirmation-confirm" id="plan-confirm">Confirmer</div>
-        </div>
-    </div>
-
     <div id="overlay" class="overlay"></div>
 
     <div class="notification" id="notification"></div>
@@ -3534,21 +3977,19 @@
             <div class="video-close" id="video-close">
                 <i class="fas fa-times"></i>
             </div>
-            <video class="video-player" id="video-player" controls>
-                <source src="" type="video/mp4">
-                Votre navigateur ne supporte pas la lecture vidéo.
-            </video>
+            <iframe class="video-player" id="video-player" frameborder="0" allowfullscreen>
+            </iframe>
         </div>
     </div>
 
     <div class="bottom-nav" id="bottom-nav">
-        <div class="nav-item active" data-section="ai-forecasts" style="flex: 1;">
-            <i class="nav-icon fas fa-brain"></i>
-            <span>Prédictions IA</span>
-        </div>
-        <div class="nav-item" data-section="forecasts" style="flex: 1;">
+        <div class="nav-item active" data-section="forecasts" style="flex: 1;">
             <i class="nav-icon fas fa-futbol"></i>
             <span>Simples</span>
+        </div>
+        <div class="nav-item" data-section="ai-forecasts" style="flex: 1;">
+            <i class="nav-icon fas fa-brain"></i>
+            <span>Prédictions IA</span>
         </div>
     </div>
 
@@ -3571,6 +4012,19 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+
+        // Admin configuration
+        const ADMIN_EMAILS = ['billionsjonnhy@gmail.com', 'louiskbn05@gmail.com'];
+
+        // Lightning payment configuration
+        const BLINK_API_KEY = "blink_GfLbFm7LuO6kWCee61eDGbHreslJIAj9WvkJ5INk3NfmuG8LewqYmwCmeu5i1P9D";
+        const BLINK_WALLET_ID = "152f6bb5-fe7a-491c-b5d8-99bfd1853940";
+        const BLINK_API_URL = "https://api.blink.sv/graphql";
+
+        // Lightning payment variables
+        let currentPaymentRequest = "";
+        let autoCheckInterval = null;
+        let currentPlanTypeForPayment = '';
 
         // Debug system
         let debugLogs = [];
@@ -3610,11 +4064,15 @@
                 
                 let messageContent = log.message;
                 
-                // Handle Firestore index links
+                // Handle Firestore index links - make them clickable
                 if (log.linkUrl) {
+                    const linkText = `<a href="${log.linkUrl}" target="_blank" rel="noopener noreferrer" class="debug-log-link">Créer l'index requis ici</a>`;
+                    messageContent = messageContent.replace(log.linkUrl, linkText);
+                } else {
+                    // Look for URLs in the message and make them clickable
                     const linkPattern = /https:\/\/console\.firebase\.google\.com[^\s)]+/g;
                     messageContent = messageContent.replace(linkPattern, (url) => {
-                        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="debug-log-link">${url}</a>`;
+                        return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="debug-log-link">Créer l'index requis ici</a>`;
                     });
                 }
                 
@@ -3650,11 +4108,385 @@
             return errorMessage;
         }
 
+        // Lightning payment functions (simplifiées)
+        async function generateLightningInvoice(amount, planType) {
+            addDebugLog(`Génération d'invoice pour ${amount} sats`, 'info');
+
+            const mutation = `
+                mutation CreateInvoice {
+                    lnInvoiceCreate(input: {
+                        walletId: "${BLINK_WALLET_ID}",
+                        amount: ${amount},
+                        memo: "Abonnement ${planType === 'daily' ? 'Quotidien' : 'Hebdomadaire'} - Pari Alliance"
+                    }) {
+                        invoice {
+                            paymentRequest
+                        }
+                        errors {
+                            message
+                        }
+                    }
+                }
+            `;
+
+            try {
+                const response = await fetch(BLINK_API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-API-KEY": BLINK_API_KEY,
+                    },
+                    body: JSON.stringify({ query: mutation }),
+                });
+
+                const result = await response.json();
+
+                if (result.data?.lnInvoiceCreate?.errors?.length) {
+                    throw new Error("Erreur lors de la création de l'invoice");
+                }
+
+                const invoice = result.data.lnInvoiceCreate.invoice;
+                if (!invoice) {
+                    throw new Error("Invoice non reçue");
+                }
+
+                currentPaymentRequest = invoice.paymentRequest;
+                addDebugLog("Invoice générée avec succès", 'success');
+
+                // Start checking payment status every 3 seconds automatically
+                if (autoCheckInterval) clearInterval(autoCheckInterval);
+                autoCheckInterval = setInterval(checkLightningPaymentStatus, 3000);
+
+                return currentPaymentRequest;
+
+            } catch (error) {
+                addDebugLog("Erreur génération invoice: " + error.message, 'error');
+                throw error;
+            }
+        }
+
+        async function checkLightningPaymentStatus() {
+            if (!currentPaymentRequest) return;
+
+            const query = `
+                query CheckPaymentStatus {
+                    lnInvoicePaymentStatus(input: { paymentRequest: "${currentPaymentRequest}" }) {
+                        status
+                    }
+                }
+            `;
+
+            try {
+                const response = await fetch(BLINK_API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-API-KEY": BLINK_API_KEY,
+                    },
+                    body: JSON.stringify({ query }),
+                });
+
+                const result = await response.json();
+
+                if (result.errors) {
+                    return;
+                }
+
+                const status = result.data?.lnInvoicePaymentStatus?.status;
+                if (!status) return;
+
+                const paymentStatusElement = document.getElementById('lightning-payment-status');
+
+                if (status === "PAID") {
+                    clearInterval(autoCheckInterval);
+                    paymentStatusElement.className = 'payment-status success';
+                    paymentStatusElement.innerHTML = '✅ Paiement reçu !';
+                    addDebugLog("Paiement confirmé !", 'success');
+                    
+                    // Process subscription
+                    await processSubscription(currentPlanTypeForPayment);
+                    
+                    setTimeout(() => {
+                        hideLightningPaymentModal();
+                        showNotification('Abonnement activé avec succès !', 'success');
+                    }, 2000);
+                } else {
+                    paymentStatusElement.innerHTML = `⌛ Statut : ${status}`;
+                }
+
+            } catch (error) {
+                addDebugLog("Erreur vérification paiement: " + error.message, 'error');
+            }
+        }
+
+        function showLightningPaymentModal(amount, planType) {
+            currentPlanTypeForPayment = planType;
+            const modal = document.getElementById('lightning-payment-modal');
+            const amountElement = document.getElementById('payment-amount-value');
+            const statusElement = document.getElementById('lightning-payment-status');
+            const invoiceElement = document.getElementById('lightning-invoice-text');
+
+            // Reset modal state
+            amountElement.textContent = `${amount} sats`;
+            statusElement.className = 'payment-status pending';
+            statusElement.innerHTML = '⏳ Génération de l\'invoice...';
+            invoiceElement.textContent = '';
+            currentPaymentRequest = '';
+
+            modal.classList.add('active');
+
+            addDebugLog(`Ouverture du modal de paiement Lightning pour ${amount} sats (plan ${planType})`, 'info');
+
+            // Generate invoice
+            generateLightningInvoice(amount, planType)
+                .then(invoice => {
+                    invoiceElement.textContent = invoice;
+                    statusElement.innerHTML = '⏳ En attente de paiement...';
+                })
+                .catch(error => {
+                    statusElement.className = 'payment-status error';
+                    statusElement.innerHTML = '❌ Erreur génération invoice';
+                });
+        }
+
+        function hideLightningPaymentModal() {
+            const modal = document.getElementById('lightning-payment-modal');
+            modal.classList.remove('active');
+            
+            if (autoCheckInterval) {
+                clearInterval(autoCheckInterval);
+                autoCheckInterval = null;
+            }
+            
+            currentPaymentRequest = '';
+            currentPlanTypeForPayment = '';
+            addDebugLog('Fermeture du modal de paiement Lightning', 'info');
+        }
+
+        function copyLightningInvoice() {
+            const invoiceText = document.getElementById('lightning-invoice-text').textContent;
+            if (invoiceText) {
+                navigator.clipboard.writeText(invoiceText).then(() => {
+                    showNotification('Invoice copiée !', 'success');
+                }).catch(err => {
+                    addDebugLog("Erreur copie: " + err.message, 'error');
+                });
+            }
+        }
+
+        // Premium required modal functions
+        function showPremiumRequiredModal() {
+            const modal = document.getElementById('premium-required-modal');
+            modal.classList.add('active');
+            addDebugLog('Affichage de la popup premium requis', 'info');
+        }
+
+        function hidePremiumRequiredModal() {
+            const modal = document.getElementById('premium-required-modal');
+            modal.classList.remove('active');
+            addDebugLog('Fermeture de la popup premium requis', 'info');
+        }
+
+        async function processSubscription(planType) {
+            if (!currentUser) return;
+            
+            try {
+                addDebugLog(`Début du traitement de l'abonnement ${planType}`, 'info');
+                
+                // Calculer la date d'expiration à minuit
+                const now = new Date();
+                let expiryDate;
+                
+                if (planType === 'daily') {
+                    // Expiration le lendemain à minuit
+                    expiryDate = new Date(now);
+                    expiryDate.setDate(expiryDate.getDate() + 1);
+                } else {
+                    // Expiration dans 7 jours à minuit
+                    expiryDate = new Date(now);
+                    expiryDate.setDate(expiryDate.getDate() + 7);
+                }
+                
+                // Forcer l'heure à minuit
+                expiryDate.setHours(0, 0, 0, 0);
+                
+                // Update user data
+                const userRef = doc(db, "Users", currentUser.uid);
+                await updateDoc(userRef, {
+                    currentPlan: planType,
+                    planExpiryDate: expiryDate,
+                    lastPaymentDate: now
+                });
+                
+                addDebugLog(`Données utilisateur mises à jour: plan=${planType}, expiration=${expiryDate.toISOString()}`, 'success');
+                
+                // Add to Premium collection
+                const premiumCollectionName = planType === 'daily' ? 'PremiumQuotidien' : 'PremiumHebdomadaire';
+                const premiumRef = doc(db, premiumCollectionName, currentUser.uid);
+                
+                const premiumData = {
+                    userId: currentUser.uid,
+                    userEmail: currentUser.email,
+                    planType: planType,
+                    activatedAt: now,
+                    expiresAt: expiryDate,
+                    status: 'active'
+                };
+                
+                await setDoc(premiumRef, premiumData);
+                addDebugLog(`Utilisateur ajouté à la collection ${premiumCollectionName}`, 'success');
+                
+                currentPlanType = planType;
+                
+                // Update UI
+                await loadUserSubscriptionData();
+                updateBadges();
+                
+            } catch (error) {
+                const errorMsg = handleFirestoreError(error, 'traitement de l\'abonnement');
+                showNotification('Erreur lors de l\'activation de l\'abonnement', 'error');
+            }
+        }
+
+        // Check if user's subscription has expired and remove from Premium collection
+        async function checkSubscriptionExpiry() {
+            if (!currentUser || !currentUserData) return;
+            
+            try {
+                if (currentUserData.currentPlan && currentUserData.currentPlan !== 'free') {
+                    const expiryDate = currentUserData.planExpiryDate?.toDate ? currentUserData.planExpiryDate.toDate() : new Date(currentUserData.planExpiryDate);
+                    const now = new Date();
+                    
+                    if (now > expiryDate) {
+                        addDebugLog(`Abonnement expiré depuis ${expiryDate.toLocaleString('fr-FR')}`, 'warning');
+                        
+                        // Remove from Premium collection
+                        const premiumCollectionName = currentUserData.currentPlan === 'daily' ? 'PremiumQuotidien' : 'PremiumHebdomadaire';
+                        const premiumRef = doc(db, premiumCollectionName, currentUser.uid);
+                        
+                        try {
+                            await deleteDoc(premiumRef);
+                            addDebugLog(`Utilisateur retiré de ${premiumCollectionName}`, 'success');
+                        } catch (deleteError) {
+                            addDebugLog(`Erreur suppression de ${premiumCollectionName}: ${deleteError.message}`, 'warning');
+                        }
+                        
+                        // Update user to free plan
+                        const userRef = doc(db, "Users", currentUser.uid);
+                        await updateDoc(userRef, {
+                            currentPlan: 'free',
+                            planExpiryDate: null
+                        });
+                        
+                        currentUserData.currentPlan = 'free';
+                        currentUserData.planExpiryDate = null;
+                        currentPlanType = 'free';
+                        
+                        addDebugLog('Utilisateur remis au plan gratuit', 'success');
+                        showNotification('Votre abonnement a expiré. Vous êtes maintenant sur le plan gratuit.', 'info');
+                        
+                        await loadUserSubscriptionData();
+                        updateBadges();
+                    }
+                }
+            } catch (error) {
+                handleFirestoreError(error, 'vérification de l\'expiration de l\'abonnement');
+            }
+        }
+
+        // Function to check if user has premium access
+        function hasPremiumAccess() {
+            return isAdmin || (currentPlanType && currentPlanType !== 'free');
+        }
+
+        // Initialize or check Admin collection
+        async function initializeAdminCollection() {
+            try {
+                addDebugLog('Vérification de la collection Admin...', 'info');
+                
+                const adminCollectionRef = collection(db, "Admin");
+                const adminSnapshot = await getDocs(adminCollectionRef);
+                
+                if (adminSnapshot.empty) {
+                    addDebugLog('Collection Admin vide, création des admins par défaut...', 'info');
+                    
+                    // Create admin entries for each admin email
+                    for (const email of ADMIN_EMAILS) {
+                        const adminData = {
+                            email: email,
+                            isAdmin: true,
+                            createdAt: serverTimestamp(),
+                            addedBy: 'system'
+                        };
+                        
+                        // Use email as document ID (replace dots and @ with underscores for valid doc ID)
+                        const adminDocId = email.replace(/[@.]/g, '_');
+                        await setDoc(doc(db, "Admin", adminDocId), adminData);
+                        
+                        addDebugLog(`Admin ajouté: ${email}`, 'success');
+                    }
+                    
+                    addDebugLog(`Collection Admin initialisée avec ${ADMIN_EMAILS.length} administrateurs`, 'success');
+                } else {
+                    addDebugLog(`Collection Admin déjà existante avec ${adminSnapshot.size} entrées`, 'info');
+                }
+                
+            } catch (error) {
+                handleFirestoreError(error, 'initialisation de la collection Admin');
+            }
+        }
+
+        // Check if current user is admin
+        async function checkAdminStatus() {
+            if (!currentUser) return false;
+            
+            try {
+                // Check if user email is in admin list
+                if (ADMIN_EMAILS.includes(currentUser.email)) {
+                    addDebugLog(`Utilisateur ${currentUser.email} identifié comme administrateur`, 'success');
+                    
+                    // Also verify in Admin collection
+                    const adminDocId = currentUser.email.replace(/[@.]/g, '_');
+                    const adminRef = doc(db, "Admin", adminDocId);
+                    const adminDoc = await getDoc(adminRef);
+                    
+                    if (adminDoc.exists() && adminDoc.data().isAdmin) {
+                        isAdmin = true;
+                        updateAdminStatus();
+                        return true;
+                    } else {
+                        // If not in collection but in the email list, add them
+                        const adminData = {
+                            email: currentUser.email,
+                            isAdmin: true,
+                            createdAt: serverTimestamp(),
+                            addedBy: 'system',
+                            userId: currentUser.uid
+                        };
+                        
+                        await setDoc(adminRef, adminData);
+                        addDebugLog(`Admin ${currentUser.email} ajouté à la collection Admin`, 'success');
+                        
+                        isAdmin = true;
+                        updateAdminStatus();
+                        return true;
+                    }
+                } else {
+                    isAdmin = false;
+                    return false;
+                }
+                
+            } catch (error) {
+                handleFirestoreError(error, 'vérification du statut admin');
+                return false;
+            }
+        }
+
         let isLoggedIn = false;
         let currentUser = null;
         let currentUserData = null;
         let isAdmin = false;
-        let currentSection = 'ai-forecasts';
+        let currentSection = 'forecasts'; // Section par défaut changée à 'forecasts'
         let isOnline = navigator.onLine;
         let eventsUnsubscribe = null;
         let profileImageFile = null;
@@ -3954,7 +4786,11 @@
                 
                 setTimeout(() => {
                     if (isLoggedIn && (currentSection === 'ai-forecasts' || currentSection === 'forecasts')) {
-                        loadForecastsData(currentForecastTab);
+                        if (currentSection === 'ai-forecasts') {
+                            loadForecastsData(currentForecastTab);
+                        } else {
+                            loadForecastsData('simple');
+                        }
                     }
                 }, 1000);
             });
@@ -4000,10 +4836,15 @@
                     userSatsBalance = userData.satsBalance || 0;
                     currentPlanType = userData.currentPlan || 'free';
                     
+                    // Check if subscription has expired
+                    await checkSubscriptionExpiry();
+                    
                     updateSubscriptionDisplay();
+                    updateBadges();
                 }
             } catch (error) {
                 console.error('Erreur lors du chargement des données d\'abonnement:', error);
+                addDebugLog(`Erreur chargement abonnement: ${error.message}`, 'error');
             }
         }
 
@@ -4013,78 +4854,74 @@
                 satsBalanceElement.textContent = userSatsBalance;
             }
             
-            // Les boutons affichent toujours "S'abonner" au lieu de "Sats insuffisants"
+            // Update current plan display
+            const currentPlanNameElement = document.getElementById('current-plan-name');
+            const planExpiryInfoElement = document.getElementById('plan-expiry-info');
+            
+            if (currentPlanNameElement && planExpiryInfoElement) {
+                if (currentPlanType === 'free') {
+                    currentPlanNameElement.textContent = 'Plan Gratuit';
+                    planExpiryInfoElement.textContent = 'Rechargez vos sats pour accéder aux plans premium';
+                } else {
+                    const planNames = {
+                        'daily': 'Plan Quotidien',
+                        'weekly': 'Plan Hebdomadaire'
+                    };
+                    currentPlanNameElement.textContent = planNames[currentPlanType] || 'Plan Premium';
+                    
+                    if (currentUserData?.planExpiryDate) {
+                        const expiryDate = currentUserData.planExpiryDate.toDate ? currentUserData.planExpiryDate.toDate() : new Date(currentUserData.planExpiryDate);
+                        planExpiryInfoElement.textContent = `Expire le ${expiryDate.toLocaleDateString('fr-FR')} à minuit`;
+                    } else {
+                        planExpiryInfoElement.textContent = 'Plan actif';
+                    }
+                }
+            }
+            
+            // Update plan buttons
             const planButtons = document.querySelectorAll('.plan-button');
             planButtons.forEach(button => {
-                const isDaily = button.id === 'daily-plan-btn';
-                
                 button.disabled = false;
-                if (isDaily) {
-                    button.textContent = 'S\'abonner au plan quotidien';
+                if (button.id === 'daily-plan-btn') {
+                    button.textContent = currentPlanType === 'daily' ? 'Plan actuel' : 'S\'abonner au plan quotidien';
+                    button.disabled = currentPlanType === 'daily';
                 } else {
-                    button.textContent = 'S\'abonner au plan hebdomadaire';
+                    button.textContent = currentPlanType === 'weekly' ? 'Plan actuel' : 'S\'abonner au plan hebdomadaire';
+                    button.disabled = currentPlanType === 'weekly';
                 }
             });
         }
 
-        async function subscribeToPlan(planType) {
-            const requiredSats = planType === 'daily' ? 10 : 60;
+        function updateBadges() {
+            const premiumBadge = document.getElementById('premium-badge');
+            const adminBadge = document.getElementById('admin-badge');
             
-            if (userSatsBalance < requiredSats) {
-                showNotification('Sats insuffisants pour ce plan', 'error');
-                return;
+            if (premiumBadge) {
+                if (hasPremiumAccess() && !isAdmin) {
+                    premiumBadge.style.display = 'inline-block';
+                } else {
+                    premiumBadge.style.display = 'none';
+                }
             }
             
-            try {
-                const userRef = doc(db, "Users", currentUser.uid);
-                await updateDoc(userRef, {
-                    satsBalance: userSatsBalance - requiredSats,
-                    currentPlan: planType,
-                    planExpiryDate: new Date(Date.now() + (planType === 'daily' ? 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000))
-                });
-                
-                userSatsBalance -= requiredSats;
-                currentPlanType = planType;
-                
-                updateSubscriptionDisplay();
-                
-                showNotification(`Abonnement ${planType === 'daily' ? 'quotidien' : 'hebdomadaire'} activé !`, 'success');
-                
-            } catch (error) {
-                console.error('Erreur lors de l\'abonnement:', error);
-                showNotification('Erreur lors de l\'abonnement', 'error');
+            if (adminBadge) {
+                if (isAdmin) {
+                    adminBadge.style.display = 'inline-block';
+                } else {
+                    adminBadge.style.display = 'none';
+                }
             }
-        }
-
-        function showPlanConfirmation(planType) {
-            const requiredSats = planType === 'daily' ? 10 : 60;
-            const planName = planType === 'daily' ? 'quotidien' : 'hebdomadaire';
-            
-            document.getElementById('plan-confirmation-text').textContent = 
-                `Voulez-vous vraiment souscrire au plan ${planName} pour ${requiredSats} sats ?`;
-            
-            document.getElementById('plan-confirmation').classList.add('active');
-            document.getElementById('overlay').classList.add('active');
-            
-            // Store plan type for confirmation
-            document.getElementById('plan-confirm').setAttribute('data-plan', planType);
-            
-            history.pushState({ page: 'plan-confirmation' }, '');
-        }
-
-        function hidePlanConfirmation() {
-            document.getElementById('plan-confirmation').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
         }
 
         function playTutorialVideo(videoType) {
             const videoModal = document.getElementById('video-modal');
             const videoPlayer = document.getElementById('video-player');
             
-            // Simulate video URLs (replace with actual video URLs)
+            // URLs YouTube démo pour les tutoriels
             const videoUrls = {
-                'free-sats': 'https://example.com/free-sats-tutorial.mp4',
-                'buy-plan': 'https://example.com/buy-plan-tutorial.mp4'
+                'free-sats': 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                'buy-plan': 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                'understand-predictions': 'https://www.youtube.com/embed/dQw4w9WgXcQ'
             };
             
             if (videoUrls[videoType]) {
@@ -4095,7 +4932,8 @@
                 // Fallback: show notification for demo
                 const videoTitles = {
                     'free-sats': 'Comment obtenir des sats gratuitement',
-                    'buy-plan': 'Comment acheter un plan d\'abonnement'
+                    'buy-plan': 'Comment acheter un plan d\'abonnement',
+                    'understand-predictions': 'Comment comprendre nos prédictions'
                 };
                 
                 showNotification(`Vidéo "${videoTitles[videoType]}" bientôt disponible`, 'info');
@@ -4107,7 +4945,6 @@
             const videoPlayer = document.getElementById('video-player');
             
             videoModal.classList.remove('active');
-            videoPlayer.pause();
             videoPlayer.src = '';
         }
         
@@ -4128,6 +4965,19 @@
                 debugPanelVisible = false;
                 document.getElementById('debug-log-panel').classList.remove('active');
             });
+
+            // Premium required modal events
+            document.getElementById('premium-modal-subscribe').addEventListener('click', function() {
+                hidePremiumRequiredModal();
+                showSubscriptionSection();
+            });
+
+            document.getElementById('premium-modal-close').addEventListener('click', hidePremiumRequiredModal);
+
+            // Lightning payment modal events
+            document.getElementById('lightning-payment-close').addEventListener('click', hideLightningPaymentModal);
+            document.getElementById('copy-lightning-invoice').addEventListener('click', copyLightningInvoice);
+            document.getElementById('cancel-lightning-payment').addEventListener('click', hideLightningPaymentModal);
 
             document.getElementById('header-menu-button').addEventListener('click', function() {
                 document.getElementById('side-menu').classList.add('active');
@@ -4213,10 +5063,15 @@
                         e.clientY >= rect.top && e.clientY <= rect.bottom) {
                         
                         const section = item.getAttribute('data-section');
-                        if (section === 'ai-forecasts') {
-                            showAIForecastsSection();
-                        } else if (section === 'forecasts') {
+                        if (section === 'forecasts') {
                             showForecastsSection();
+                        } else if (section === 'ai-forecasts') {
+                            // Vérifier l'accès premium
+                            if (hasPremiumAccess()) {
+                                showAIForecastsSection();
+                            } else {
+                                showPremiumRequiredModal();
+                            }
                         }
                         
                         break;
@@ -4234,20 +5089,17 @@
 
             document.getElementById('video-close').addEventListener('click', closeVideoModal);
 
-            // Subscription plan events
+            // Subscription plan events with Lightning payment
             document.getElementById('daily-plan-btn').addEventListener('click', function() {
-                showPlanConfirmation('daily');
+                if (currentPlanType !== 'daily') {
+                    showLightningPaymentModal(10, 'daily');
+                }
             });
 
             document.getElementById('weekly-plan-btn').addEventListener('click', function() {
-                showPlanConfirmation('weekly');
-            });
-
-            document.getElementById('plan-cancel').addEventListener('click', hidePlanConfirmation);
-            document.getElementById('plan-confirm').addEventListener('click', function() {
-                const planType = this.getAttribute('data-plan');
-                hidePlanConfirmation();
-                subscribeToPlan(planType);
+                if (currentPlanType !== 'weekly') {
+                    showLightningPaymentModal(60, 'weekly');
+                }
             });
             
             document.querySelectorAll('.ai-forecast-tab').forEach(tab => {
@@ -4365,6 +5217,18 @@
         function handleBackButton(event) {
             event.preventDefault();
             
+            if (document.getElementById('premium-required-modal').classList.contains('active')) {
+                hidePremiumRequiredModal();
+                history.pushState({ page: 'main' }, '');
+                return;
+            }
+            
+            if (document.getElementById('lightning-payment-modal').classList.contains('active')) {
+                hideLightningPaymentModal();
+                history.pushState({ page: 'main' }, '');
+                return;
+            }
+            
             if (document.querySelector('.confirmation-dialog.active')) {
                 document.querySelectorAll('.confirmation-dialog.active').forEach(dialog => {
                     const cancelBtn = dialog.querySelector('.confirmation-cancel');
@@ -4393,8 +5257,8 @@
                 return;
             }
             
-            if (currentSection !== 'ai-forecasts') {
-                showAIForecastsSection();
+            if (currentSection !== 'forecasts') {
+                showForecastsSection();
                 history.pushState({ page: 'main' }, '');
                 return;
             }
@@ -4414,7 +5278,7 @@
                 }
             }
             
-            if (currentSection === 'ai-forecasts') {
+            if (currentSection === 'forecasts') {
                 history.pushState({ page: 'main' }, '');
             }
         }
@@ -4566,7 +5430,7 @@
             document.getElementById('header-action').innerHTML = '';
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showAIForecastsSection();
+                showForecastsSection();
             });
 
             document.getElementById('bottom-nav').style.display = 'none';
@@ -4596,7 +5460,7 @@
             document.getElementById('header-action').innerHTML = '';
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showAIForecastsSection();
+                showForecastsSection();
             });
 
             document.getElementById('bottom-nav').style.display = 'none';
@@ -4628,6 +5492,12 @@
         }
         
         function showAIForecastsSection() {
+            // Vérifier l'accès premium
+            if (!hasPremiumAccess()) {
+                showPremiumRequiredModal();
+                return;
+            }
+
             hideSearchBar();
             
             document.querySelectorAll('.nav-item').forEach(item => {
@@ -4697,7 +5567,7 @@
             document.getElementById('header-action').innerHTML = '';
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showAIForecastsSection();
+                showForecastsSection();
             });
 
             document.getElementById('bottom-nav').style.display = 'none';
@@ -4738,7 +5608,7 @@
                     listElement.innerHTML = `
                         <div class="no-forecasts">
                             <i class="fas fa-calendar-day"></i>
-                            <div class="empty-state-title">Pas de pronostics aujourd'hui</div>
+                            <div class="empty-state-title">Aucune prédiction fiable pour cette section</div>
                             <div class="empty-state-text">Aucun pronostic disponible pour aujourd'hui (${getCurrentDateString()})</div>
                         </div>
                     `;
@@ -4764,7 +5634,7 @@
                 listElement.innerHTML = `
                     <div class="no-forecasts">
                         <i class="fas fa-exclamation-circle"></i>
-                        <div class="empty-state-title">Erreur</div>
+                        <div class="empty-state-title">Aucune prédiction fiable pour cette section</div>
                         <div class="empty-state-text">Impossible de charger les pronostics depuis GitHub</div>
                     </div>
                 `;
@@ -4789,7 +5659,7 @@
                 listElement.innerHTML = `
                     <div class="no-forecasts">
                         <i class="fas fa-futbol"></i>
-                        <div class="empty-state-title">Aucun pronostic</div>
+                        <div class="empty-state-title">Aucune prédiction fiable pour cette section</div>
                         <div class="empty-state-text">Aucun pronostic disponible pour cette catégorie</div>
                     </div>
                 `;
@@ -4857,7 +5727,7 @@
                     </div>
                 `;
 
-                // 2ème face - Description
+                // 2ème face - Description sans les ligues des matchs
                 detailsContent = `
                     <div class="forecast-description">
                         <h3 style="color: var(--primary-color); margin-bottom: 15px;">Description complète</h3>
@@ -5098,7 +5968,7 @@
             document.getElementById('search-button').addEventListener('click', toggleSearchBar);
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showAIForecastsSection();
+                showForecastsSection();
             });
             
             document.getElementById('bottom-nav').style.display = 'none';
@@ -5128,7 +5998,7 @@
             document.getElementById('header-action').innerHTML = '';
             
             document.getElementById('header-back-button').addEventListener('click', function() {
-                showAIForecastsSection();
+                showForecastsSection();
             });
 
             document.getElementById('bottom-nav').style.display = 'none';
@@ -5271,8 +6141,9 @@
             try {
                 await deleteDoc(doc(db, "Events", eventId));
                 showNotification('Événement supprimé', 'success');
+                addDebugLog(`Événement ${eventId} supprimé par l'admin`, 'info');
             } catch (error) {
-                console.error('Erreur lors de la suppression de l\'événement:', error);
+                handleFirestoreError(error, 'suppression de l\'événement');
                 showNotification('Erreur lors de la suppression de l\'événement', 'error');
             }
         }
@@ -5320,6 +6191,7 @@
                 await addDoc(collection(db, "Events"), eventData);
                 
                 showNotification('Notification envoyée avec succès', 'success');
+                addDebugLog(`Notification "${title}" envoyée par l'admin`, 'success');
                 hideAdminNotificationDialog();
                 
                 // Clear form
@@ -5328,7 +6200,7 @@
                 document.getElementById('notif-type').value = 'info';
                 
             } catch (error) {
-                console.error('Erreur lors de l\'envoi de la notification:', error);
+                handleFirestoreError(error, 'envoi de la notification');
                 showNotification('Erreur lors de l\'envoi de la notification', 'error');
             } finally {
                 setButtonLoading('send-notification-btn', false);
@@ -5361,6 +6233,7 @@
                 
                 showNotification('Nom d\'utilisateur mis à jour', 'success');
                 profileNameChanged = false;
+                addDebugLog(`Nom d'utilisateur mis à jour: ${displayName}`, 'success');
             } catch (error) {
                 handleFirestoreError(error, 'mise à jour du nom d\'utilisateur');
                 showNotification('Erreur lors de la mise à jour du nom d\'utilisateur', 'error');
@@ -5389,6 +6262,7 @@
                 
                 showNotification('Photo de profil mise à jour', 'success');
                 profileImageFile = null;
+                addDebugLog('Photo de profil mise à jour', 'success');
                 
                 const imageButton = document.getElementById('save-profile-image-btn');
                 imageButton.textContent = 'Image enregistrée';
@@ -5486,11 +6360,14 @@
             
             try {
                 showNotification('Suppression du compte en cours...', 'info');
+                addDebugLog('Début de la suppression du compte utilisateur', 'warning');
                 
                 const userRef = doc(db, "Users", currentUser.uid);
                 await deleteDoc(userRef);
+                addDebugLog('Données utilisateur supprimées de Firestore', 'success');
                 
                 await deleteUser(currentUser);
+                addDebugLog('Compte utilisateur supprimé de Firebase Auth', 'success');
                 
                 showNotification('Compte supprimé avec succès', 'success');
                 
@@ -5500,6 +6377,7 @@
                 
             } catch (error) {
                 console.error('Erreur lors de la suppression du compte:', error);
+                addDebugLog(`Erreur suppression du compte: ${error.message}`, 'error');
                 
                 let errorMessage = 'Erreur lors de la suppression du compte';
                 
@@ -5522,6 +6400,11 @@
                     eventsUnsubscribe = null;
                 }
                 
+                if (autoCheckInterval) {
+                    clearInterval(autoCheckInterval);
+                    autoCheckInterval = null;
+                }
+                
                 await signOut(auth);
                 
                 isLoggedIn = false;
@@ -5530,6 +6413,7 @@
                 isAdmin = false;
                 
                 showNotification('Déconnexion réussie', 'success');
+                addDebugLog('Utilisateur déconnecté', 'info');
                 
                 setTimeout(() => {
                     window.location.reload();
@@ -5537,6 +6421,7 @@
                 
             } catch (error) {
                 console.error('Erreur lors de la déconnexion:', error);
+                addDebugLog(`Erreur déconnexion: ${error.message}`, 'error');
                 showNotification('Erreur lors de la déconnexion', 'error');
             }
         }
@@ -5547,7 +6432,6 @@
             const profilePic = document.querySelector('.profile-header .profile-pic');
             const profileNameText = document.getElementById('profile-name-text');
             const profileEmail = document.getElementById('profile-email');
-            const adminBadge = document.getElementById('admin-badge');
             
             if (profilePic) {
                 if (currentUserData.photoURL) {
@@ -5579,48 +6463,10 @@
             if (profileEmail) {
                 profileEmail.textContent = currentUser.email || 'Non défini';
             }
-            
-            if (adminBadge) {
-                if (isAdmin) {
-                    adminBadge.style.display = 'inline-block';
-                } else {
-                    adminBadge.style.display = 'none';
-                }
-            }
+
+            updateBadges();
         }
 
-        async function loadUsers() {
-            try {
-                const usersRef = collection(db, "Users");
-                const q = query(usersRef, orderBy("createdAt", "asc"));
-                
-                const snapshot = await getDocs(q);
-                usersCache = {};
-                const users = [];
-                
-                snapshot.forEach(doc => {
-                    const userData = doc.data();
-                    usersCache[doc.id] = userData;
-                    users.push({
-                        id: doc.id,
-                        ...userData
-                    });
-                });
-                
-                // Déterminer qui est admin (compte le plus ancien)
-                if (users.length > 0) {
-                    const oldestUser = users[0];
-                    if (oldestUser.id === currentUser.uid) {
-                        isAdmin = true;
-                        updateAdminStatus();
-                    }
-                }
-                
-            } catch (error) {
-                handleFirestoreError(error, 'chargement des utilisateurs');
-            }
-        }
-        
         function updateAdminStatus() {
             // Mettre à jour l'interface pour refléter le statut d'admin
             updateProfileInfo();
@@ -5649,7 +6495,7 @@
         
         // Initialize app
         function initApp() {
-            addDebugLog('Initialisation de l\'application', 'info');
+            addDebugLog('Initialisation de l\'application Pari Alliance', 'info');
             
             setupDarkMode();
             setupTheme();
@@ -5672,11 +6518,15 @@
                     isLoggedIn = true;
                     
                     try {
+                        // Initialize Admin collection first
+                        await initializeAdminCollection();
+                        
                         const userRef = doc(db, "Users", user.uid);
                         const userDoc = await getDoc(userRef);
                         
                         if (userDoc.exists()) {
                             currentUserData = userDoc.data();
+                            addDebugLog('Données utilisateur récupérées depuis Firestore', 'success');
                         } else {
                             currentUserData = {
                                 email: user.email,
@@ -5688,19 +6538,31 @@
                             };
                             
                             await setDoc(userRef, currentUserData);
+                            addDebugLog('Nouveau profil utilisateur créé dans Firestore', 'success');
                         }
                         
+                        // Check admin status after user data is loaded
+                        await checkAdminStatus();
+                        
+                        // Check subscription status and update badges
+                        await checkSubscriptionExpiry();
                         updateProfileInfo();
-                        await loadUsers(); // Charger les utilisateurs pour déterminer qui est admin
+                        await loadUserSubscriptionData();
                         
                         document.getElementById('auth-screen').style.display = 'none';
                         document.getElementById('loading').style.display = 'none';
                         
-                        showAIForecastsSection();
+                        // Par défaut, commencer par la section "Simples"
+                        showForecastsSection();
                         
                     } catch (error) {
                         addDebugLog(`Erreur lors de la récupération des données utilisateur: ${error.message}`, 'error');
                         showNotification('Erreur lors de la connexion', 'error');
+                        
+                        // Still show the app even if there are errors
+                        document.getElementById('auth-screen').style.display = 'none';
+                        document.getElementById('loading').style.display = 'none';
+                        showForecastsSection();
                     }
                 } else {
                     addDebugLog('Aucun utilisateur connecté', 'info');
@@ -5764,89 +6626,95 @@
             if (hasError) return;
             
             setButtonLoading('loginBtn', true);
-            
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                console.error('Erreur de connexion:', error);
-                
-                let errorMessage = 'Erreur de connexion';
-                if (error.code === 'auth/user-not-found') {
-                    errorMessage = 'Aucun compte trouvé avec cet email';
-                } else if (error.code === 'auth/wrong-password') {
-                    errorMessage = 'Mot de passe incorrect';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = 'Email invalide';
-                } else if (error.code === 'auth/too-many-requests') {
-                    errorMessage = 'Trop de tentatives. Réessayez plus tard';
-                }
-                
-                const logElement = document.getElementById('login-log');
-                logElement.textContent = errorMessage;
-                logElement.className = 'log-message error';
-                logElement.style.display = 'block';
-            } finally {
-                setButtonLoading('loginBtn', false);
-            }
-        });
+        addDebugLog(`Tentative de connexion pour: ${email}`, 'info');
         
-        document.getElementById('registerBtn').addEventListener('click', async function() {
-            const email = document.getElementById('register-email').value.trim();
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('register-confirm-password').value;
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            addDebugLog('Connexion réussie', 'success');
+        } catch (error) {
+            console.error('Erreur de connexion:', error);
+            addDebugLog(`Erreur de connexion: ${error.code} - ${error.message}`, 'error');
             
-            let hasError = false;
-            
-            if (!email || !email.includes('@')) {
-                document.getElementById('register-email-error').style.display = 'block';
-                hasError = true;
-            } else {
-                document.getElementById('register-email-error').style.display = 'none';
+            let errorMessage = 'Erreur de connexion';
+            if (error.code === 'auth/user-not-found') {
+                errorMessage = 'Aucun compte trouvé avec cet email';
+            } else if (error.code === 'auth/wrong-password') {
+                errorMessage = 'Mot de passe incorrect';
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = 'Email invalide';
+            } else if (error.code === 'auth/too-many-requests') {
+                errorMessage = 'Trop de tentatives. Réessayez plus tard';
             }
             
-            if (!password || password.length < 6) {
-                document.getElementById('register-password-error').style.display = 'block';
-                hasError = true;
-            } else {
-                document.getElementById('register-password-error').style.display = 'none';
-            }
-            
-            if (password !== confirmPassword) {
-                document.getElementById('register-confirm-password-error').style.display = 'block';
-                hasError = true;
-            } else {
-                document.getElementById('register-confirm-password-error').style.display = 'none';
-            }
-            
-            if (hasError) return;
-            
-            setButtonLoading('registerBtn', true);
-            
-            try {
-                await createUserWithEmailAndPassword(auth, email, password);
-            } catch (error) {
-                console.error('Erreur d\'inscription:', error);
-                
-                let errorMessage = 'Erreur d\'inscription';
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMessage = 'Cet email est déjà utilisé';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = 'Email invalide';
-                } else if (error.code === 'auth/weak-password') {
-                    errorMessage = 'Mot de passe trop faible';
-                }
-                
-                const logElement = document.getElementById('register-log');
-                logElement.textContent = errorMessage;
-                logElement.className = 'log-message error';
-                logElement.style.display = 'block';
-            } finally {
-                setButtonLoading('registerBtn', false);
-            }
-        });
+            const logElement = document.getElementById('login-log');
+            logElement.textContent = errorMessage;
+            logElement.className = 'log-message error';
+            logElement.style.display = 'block';
+        } finally {
+            setButtonLoading('loginBtn', false);
+        }
+    });
+    
+    document.getElementById('registerBtn').addEventListener('click', async function() {
+        const email = document.getElementById('register-email').value.trim();
+        const password = document.getElementById('register-password').value;
+        const confirmPassword = document.getElementById('register-confirm-password').value;
         
-        // Initialize the app
-        initApp();
-    </script>
+        let hasError = false;
+        
+        if (!email || !email.includes('@')) {
+            document.getElementById('register-email-error').style.display = 'block';
+            hasError = true;
+        } else {
+            document.getElementById('register-email-error').style.display = 'none';
+        }
+        
+        if (!password || password.length < 6) {
+            document.getElementById('register-password-error').style.display = 'block';
+            hasError = true;
+        } else {
+            document.getElementById('register-password-error').style.display = 'none';
+        }
+        
+        if (password !== confirmPassword) {
+            document.getElementById('register-confirm-password-error').style.display = 'block';
+            hasError = true;
+        } else {
+            document.getElementById('register-confirm-password-error').style.display = 'none';
+        }
+        
+        if (hasError) return;
+        
+        setButtonLoading('registerBtn', true);
+        addDebugLog(`Tentative d'inscription pour: ${email}`, 'info');
+        
+        try {
+            await createUserWithEmailAndPassword(auth, email, password);
+            addDebugLog('Inscription réussie', 'success');
+        } catch (error) {
+            console.error('Erreur d\'inscription:', error);
+            addDebugLog(`Erreur d'inscription: ${error.code} - ${error.message}`, 'error');
+            
+            let errorMessage = 'Erreur d\'inscription';
+            if (error.code === 'auth/email-already-in-use') {
+                errorMessage = 'Cet email est déjà utilisé';
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = 'Email invalide';
+            } else if (error.code === 'auth/weak-password') {
+                errorMessage = 'Mot de passe trop faible';
+            }
+            
+            const logElement = document.getElementById('register-log');
+            logElement.textContent = errorMessage;
+            logElement.className = 'log-message error';
+            logElement.style.display = 'block';
+        } finally {
+            setButtonLoading('registerBtn', false);
+        }
+    });
+    
+    // Initialize the app
+    initApp();
+</script>
 </body>
 </html>
