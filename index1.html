@@ -1,0 +1,3218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KING PRONOS - Analyses Sportives Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            /* Couleurs principales */
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary-color: #f8fafc;
+            --accent-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            
+            /* Couleurs de fond */
+            --bg-color: #ffffff;
+            --surface-color: #f8fafc;
+            --card-color: #ffffff;
+            
+            /* Couleurs de texte */
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            
+            /* Bordures et ombres */
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            
+            /* Rayons de bordure */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            
+            /* Espacements */
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --card-color: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-color: #334155;
+            --secondary-color: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            padding-bottom: 5rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+        }
+
+        body.no-scroll {
+            overflow: hidden;
+            padding-bottom: 0;
+        }
+
+        /* Protection contre la copie */
+        body::selection { background-color: transparent; }
+        body::-moz-selection { background-color: transparent; }
+
+        /* Page de chargement professionnelle */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: white;
+            overflow: hidden;
+        }
+
+        .loading-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            animation: backgroundShift 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes backgroundShift {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .loading-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: brandFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes brandFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .loading-logo-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 2rem;
+        }
+
+        .loading-logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+            animation: logoGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            0% { 
+                box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+                transform: scale(1);
+            }
+            100% { 
+                box-shadow: 0 25px 50px rgba(59, 130, 246, 0.5);
+                transform: scale(1.05);
+            }
+        }
+
+        .loading-logo::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(135deg, #3b82f6, #10b981, #8b5cf6);
+            border-radius: 33px;
+            z-index: -1;
+            animation: borderRotate 3s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-title {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, #ffffff, #3b82f6, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleShimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes titleShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Auth screen styles */
+        .auth-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-color);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        
+        .auth-header {
+            padding: 40px 0 20px;
+            text-align: center;
+        }
+        
+        .auth-logo {
+            font-size: 50px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .auth-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .auth-subtitle {
+            font-size: 16px;
+            color: var(--text-primary);
+            opacity: 0.8;
+            margin-bottom: 20px;
+            padding: 0 20px;
+            text-align: center;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: none;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            color: var(--text-muted);
+            transition: color 0.3s, background-color 0.2s ease;
+            text-decoration: none;
+            border-bottom: none;
+        }
+        
+        .auth-tab.active {
+            color: var(--primary-color);
+        }
+        
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px 3px 0 0;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+        
+        .auth-form {
+            padding: 20px;
+            display: none;
+            animation: fadeUp 0.5s ease;
+        }
+        
+        @keyframes fadeUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background-color: var(--surface-color);
+            font-size: 16px;
+            color: var(--text-primary);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            outline: none;
+        }
+        
+        .form-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+        }
+        
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .form-error {
+            color: var(--danger-color);
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+            animation: shakeX 0.75s ease;
+        }
+        
+        @keyframes shakeX {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+            20%, 40%, 60%, 80% { transform: translateX(4px); }
+        }
+        
+        .form-footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .form-footer-text {
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--text-primary);
+            opacity: 0.8;
+        }
+        
+        .form-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+        
+        .form-link:hover {
+            text-decoration: underline;
+        }
+
+        .button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: transform 0.15s ease, opacity 0.2s ease, background-color 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .button:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+        
+        .button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .button:disabled {
+            background-color: var(--border-color);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+        
+        .button.danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .button.danger:hover {
+            background-color: #dc2626;
+        }
+
+        .log-message {
+            margin-top: 15px;
+            padding: 12px;
+            font-weight: bold;
+            border-radius: 6px;
+            white-space: pre-line;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+          
+        .log-message.info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+          
+        .log-message.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+          
+        .log-message.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .btn-loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+        }
+        
+        .button.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        
+        .button.loading .btn-text {
+            visibility: hidden;
+        }
+        
+        .button.loading .btn-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-top: -10px;
+            margin-left: -10px;
+            visibility: visible;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Effet de transition de thème */
+        .theme-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+        }
+
+        .theme-transition.active {
+            opacity: 1;
+        }
+
+        .theme-circle {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .theme-circle.expanding {
+            transform: scale(50);
+        }
+
+        /* Header principal */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4rem;
+            background-color: var(--card-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-sm);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-logo {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-btn {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius-md);
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .header-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .theme-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-icon {
+            transition: all 0.3s ease;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .theme-icon.moon {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .theme-icon.sun {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+
+        [data-theme="dark"] .theme-icon.moon {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+
+        [data-theme="dark"] .theme-icon.sun {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* Navigation en bas */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 5rem;
+            background-color: var(--card-color);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .nav-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            text-decoration: none;
+            border: none;
+            background: none;
+            color: var(--text-secondary);
+        }
+
+        .nav-tab.active {
+            color: var(--primary-color);
+        }
+
+        .nav-tab:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .nav-tab-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-tab.active .nav-tab-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-tab-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Contenu principal */
+        .main-content {
+            margin-top: 4rem;
+            padding: 0.8rem;
+            min-height: calc(100vh - 9rem);
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .detail-content {
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+
+        /* Section de contenu par onglet */
+        .tab-section {
+            display: none;
+        }
+
+        .tab-section.active {
+            display: block;
+        }
+
+        /* Grille de matchs - Largeur réduite */
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            max-width: 100%;
+        }
+
+        .match-card {
+            background-color: var(--card-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 0.8rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            max-width: 320px;
+            width: 100%;
+        }
+
+        .match-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.6rem;
+        }
+
+        .league-badge {
+            background-color: var(--surface-color);
+            color: var(--text-secondary);
+            padding: 0.2rem 0.4rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .match-day {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            padding: 0.2rem 0.4rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+
+        /* Section équipes */
+        .teams-section {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: start;
+            gap: 0.6rem;
+            margin-bottom: 0.8rem;
+            width: 100%;
+            min-height: 3.6rem;
+        }
+
+        .team-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+            justify-content: flex-start;
+        }
+
+        .team-logo {
+            width: 2.4rem;
+            height: 2.4rem;
+            background: var(--surface-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: var(--primary-color);
+            border: 2px solid var(--border-color);
+            margin-bottom: 0.4rem;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .team-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .team-name {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.1;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            max-width: 100%;
+            text-align: center;
+            min-height: 1.6rem;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .match-vs {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0.2rem;
+            border-radius: var(--radius-md);
+            height: 100%;
+        }
+
+        .vs-text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--text-muted);
+            margin-bottom: 0.2rem;
+        }
+
+        .match-time {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .match-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.6rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .confidence-score {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .confidence-bar {
+            width: 2rem;
+            height: 0.2rem;
+            background-color: var(--surface-color);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+            border-radius: var(--radius-sm);
+            transition: width 0.5s ease;
+        }
+
+        .confidence-text {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .prediction-chip {
+            background: linear-gradient(135deg, var(--accent-color), #059669);
+            color: white;
+            padding: 0.2rem 0.4rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+
+        /* Section Menu */
+        .menu-section {
+            padding: 1rem;
+        }
+
+        .menu-info-cards {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .menu-info-card {
+            background: var(--card-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .menu-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .menu-info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .menu-info-label {
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .menu-info-value {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .version-badge {
+            background: linear-gradient(135deg, var(--accent-color), #059669);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .menu-options {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .menu-option {
+            background: var(--card-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .menu-option:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .menu-option-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .menu-option-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: var(--surface-color);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.125rem;
+        }
+
+        .menu-option-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-option-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .menu-option-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .menu-option-arrow {
+            color: var(--text-muted);
+        }
+
+        /* Page de détail */
+        .detail-page {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-color);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        .detail-page.active {
+            display: block;
+        }
+
+        /* Header de détail intégré avec hero */
+        .detail-hero-header {
+            background: linear-gradient(135deg, #1e3a8a, #1e40af);
+            color: white;
+            position: relative;
+            padding: 0.75rem;
+            transition: all 0.4s ease;
+        }
+
+        .detail-hero-header.compact {
+            padding: 0.5rem 0.75rem;
+        }
+
+        /* Navigation header intégrée */
+        .detail-header-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            transition: all 0.4s ease;
+        }
+
+        .detail-header-nav.compact {
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .back-button {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius-md);
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-right: 1rem;
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .detail-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.4s ease;
+        }
+
+        .detail-title.compact {
+            font-size: 1rem;
+        }
+
+        .detail-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-action-btn {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius-md);
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .detail-action-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .detail-action-btn.favorite.active {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        /* Section équipes détail */
+        .detail-teams {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            width: 100%;
+            transition: all 0.4s ease;
+        }
+
+        .detail-teams.compact {
+            gap: 0.75rem;
+            margin-bottom: 0;
+        }
+
+        .detail-team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .detail-team.compact {
+            flex-direction: row;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .detail-team-logo {
+            width: 4rem;
+            height: 4rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            font-size: 1.75rem;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s ease;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .detail-team-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .detail-team-logo.compact {
+            width: 2.25rem;
+            height: 2.25rem;
+            font-size: 1rem;
+            margin-bottom: 0;
+            border-width: 2px;
+        }
+
+        .detail-team-name {
+            font-weight: 700;
+            text-align: center;
+            font-size: 0.9rem;
+            transition: all 0.4s ease;
+            line-height: 1.2;
+            max-width: 7rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            min-height: 2.2rem;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .detail-team-name.compact {
+            display: none;
+        }
+
+        .detail-vs {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+        }
+
+        .detail-vs-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+            transition: all 0.4s ease;
+        }
+
+        .detail-vs-text.compact {
+            font-size: 1.25rem;
+            margin-bottom: 0;
+        }
+
+        .detail-match-info {
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+
+        .detail-match-info.compact {
+            display: none;
+        }
+
+        /* Onglets */
+        .tabs-container {
+            background-color: var(--card-color);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .tabs {
+            display: flex;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            min-width: max-content;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-content {
+            padding: 1.5rem;
+            display: none;
+            max-height: calc(100vh - 280px);
+            overflow-y: auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Analyse détaillée */
+        .analysis-card {
+            background: var(--card-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .analysis-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .analysis-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 1rem;
+        }
+
+        .analysis-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .analysis-content {
+            line-height: 1.7;
+            color: var(--text-primary);
+        }
+
+        .confidence-section {
+            background: var(--surface-color);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
+        }
+
+        .confidence-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .confidence-label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .confidence-value {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 1.125rem;
+        }
+
+        .confidence-bar-large {
+            width: 100%;
+            height: 0.75rem;
+            background: var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .confidence-fill-large {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+            border-radius: var(--radius-md);
+            transition: width 0.8s ease;
+        }
+
+        .key-factors {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .factor-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--surface-color);
+            border-radius: var(--radius-md);
+        }
+
+        .factor-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            font-size: 0.75rem;
+        }
+
+        .factor-positive {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .factor-negative {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .factor-neutral {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .factor-text {
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        /* États vides */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .empty-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-description {
+            color: var(--text-secondary);
+        }
+
+        /* Loading state */
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            height: 100%;
+        }
+
+        .loading-spinner {
+            font-size: 40px;
+            color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            opacity: 0;
+            background-color: var(--card-color);
+            color: var(--text-primary);
+            padding: 12px 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-lg);
+            font-weight: 500;
+            z-index: 1000;
+            max-width: 90%;
+            text-align: center;
+            line-height: 1.4;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+            border: 1px solid var(--border-color);
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+            pointer-events: auto;
+        }
+
+        .notification.success {
+            background-color: var(--card-color);
+            color: var(--accent-color);
+        }
+
+        .notification.error {
+            background-color: var(--card-color);
+            color: var(--danger-color);
+        }
+
+        .notification.info {
+            background-color: var(--card-color);
+            color: var(--primary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .main-content {
+                padding: 0.6rem;
+            }
+
+            .matches-grid {
+                grid-template-columns: 1fr;
+                max-width: 320px;
+                margin: 0 auto 2rem auto;
+            }
+
+            .match-card {
+                padding: 0.6rem;
+            }
+
+            .team-logo {
+                width: 2rem;
+                height: 2rem;
+                font-size: 0.875rem;
+            }
+
+            .team-name {
+                font-size: 0.65rem;
+            }
+
+            .detail-team-logo {
+                width: 3.5rem;
+                height: 3.5rem;
+                font-size: 1.5rem;
+            }
+
+            .detail-team-logo.compact {
+                width: 2rem;
+                height: 2rem;
+                font-size: 0.875rem;
+            }
+
+            .detail-team-name {
+                max-width: 5.5rem;
+                font-size: 0.8rem;
+            }
+
+            .detail-hero-header {
+                padding: 0.75rem;
+            }
+
+            .detail-hero-header.compact {
+                padding: 0.5rem 0.75rem;
+            }
+
+            .detail-teams {
+                gap: 0.75rem;
+            }
+
+            .detail-teams.compact {
+                gap: 0.5rem;
+            }
+
+            .analysis-card {
+                padding: 1rem;
+            }
+
+            .tab-content {
+                padding: 1rem;
+                max-height: calc(100vh - 230px);
+            }
+
+            .nav-tab-icon {
+                font-size: 1.25rem;
+            }
+
+            .nav-tab-label {
+                font-size: 0.7rem;
+            }
+
+            .menu-section {
+                padding: 0.5rem;
+            }
+
+            .menu-option {
+                padding: 0.75rem 1rem;
+            }
+
+            .menu-option-icon {
+                width: 2rem;
+                height: 2rem;
+                font-size: 1rem;
+            }
+
+            .loading-title {
+                font-size: 2.5rem;
+            }
+
+            .loading-logo-container {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 1.5rem;
+            }
+
+            .loading-logo {
+                width: 100px;
+                height: 100px;
+                border-radius: 25px;
+                font-size: 2.5rem;
+            }
+
+            .loading-logo::before {
+                border-radius: 28px;
+            }
+        }
+
+        /* Animations d'entrée */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page de chargement professionnelle -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-logo-container">
+                <div class="loading-logo">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+            </div>
+            
+            <div class="loading-title">KING PRONOS</div>
+        </div>
+    </div>
+
+    <!-- Auth Screen -->
+    <div id="auth-screen" class="auth-screen" style="display: none;">
+        <div class="auth-header">
+            <div class="auth-logo">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h1 class="auth-title">KING PRONOS</h1>
+            <p class="auth-subtitle">Analyses sportives avancées</p>
+        </div>
+        
+        <div class="auth-tabs">
+            <div class="auth-tab active" id="login-tab">Connexion</div>
+            <div class="auth-tab" id="register-tab">Inscription</div>
+        </div>
+        
+        <div id="login-form" class="auth-form active">
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" id="login-email" placeholder="Votre email">
+                <div id="login-email-error" class="form-error">Veuillez entrer un email valide</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Mot de passe</label>
+                <input type="password" class="form-input" id="login-password" placeholder="Votre mot de passe">
+                <div id="login-password-error" class="form-error">Le mot de passe est obligatoire</div>
+            </div>
+            
+            <div id="login-log" class="log-message" style="display:none;"></div>
+
+            <div class="form-footer">
+                <button class="button" id="loginBtn">
+                    <span class="btn-loader" style="display:none;"></span>
+                    <span class="btn-text">Se connecter</span>
+                </button>
+                <p class="form-footer-text">
+                    Vous n'avez pas de compte ? <a href="#" class="form-link" id="goto-register">S'inscrire</a>
+                </p>
+            </div>
+        </div>
+        
+        <div id="register-form" class="auth-form">
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" id="register-email" placeholder="Votre adresse email">
+                <div id="register-email-error" class="form-error">Veuillez entrer un email valide</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Mot de passe</label>
+                <input type="password" class="form-input" id="register-password" placeholder="Créez un mot de passe sécurisé">
+                <div id="register-password-error" class="form-error">Le mot de passe doit contenir au moins 6 caractères</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Confirmer le mot de passe</label>
+                <input type="password" class="form-input" id="register-confirm-password" placeholder="Confirmez votre mot de passe">
+                <div id="register-confirm-password-error" class="form-error">Les mots de passe ne correspondent pas</div>
+            </div>
+            
+            <div id="register-log" class="log-message" style="display:none;"></div>
+
+            <div class="form-footer">
+                <button class="button" id="registerBtn">
+                    <span class="btn-loader" style="display:none;"></span>
+                    <span class="btn-text">S'inscrire</span>
+                </button>
+                <p class="form-footer-text">
+                    Vous avez déjà un compte ? <a href="#" class="form-link" id="goto-login">Se connecter</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Effet de transition de thème -->
+    <div class="theme-transition" id="themeTransition">
+        <div class="theme-circle" id="themeCircle"></div>
+    </div>
+
+    <!-- Interface principale -->
+    <div class="app-container" id="appContainer" style="display: none;">
+        <!-- Header principal -->
+        <header class="main-header">
+            <div class="header-brand">
+                <div class="header-logo">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="header-btn notification-btn" onclick="showNotifications()">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button class="header-btn theme-btn" id="themeBtn" onclick="toggleDarkMode()">
+                    <i class="fas fa-moon theme-icon moon"></i>
+                    <i class="fas fa-sun theme-icon sun"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Contenu principal -->
+        <main class="main-content">
+            <!-- Section Pronostics -->
+            <div class="tab-section active" id="pronosticsSection">
+                <div class="matches-grid" id="matchesGrid">
+                    <!-- Loading state -->
+                    <div class="loading-state" id="loading-state">
+                        <i class="fas fa-chart-line loading-spinner"></i>
+                        <h3>Chargement...</h3>
+                        <p>Veuillez patienter</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section ICEGAME -->
+            <div class="tab-section" id="icegameSection">
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="empty-title">ICEGAME</div>
+                    <div class="empty-description">Méthode d'investissement IA - Le match le plus sûr sélectionné quotidiennement par notre intelligence artificielle avec analyse approfondie et stratégie optimisée</div>
+                </div>
+            </div>
+
+            <!-- Section Menu -->
+            <div class="tab-section" id="menuSection">
+                <div class="menu-section">
+                    <!-- Informations système -->
+                    <div class="menu-info-cards">
+                        <div class="menu-info-card">
+                            <div class="menu-info-row">
+                                <div class="menu-info-label">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    Application
+                                </div>
+                                <div class="menu-info-value">KING PRONOS</div>
+                            </div>
+                            <div class="menu-info-row">
+                                <div class="menu-info-label">
+                                    <i class="fas fa-code-branch"></i>
+                                    Version
+                                </div>
+                                <div class="version-badge">v8.2</div>
+                            </div>
+                            <div class="menu-info-row">
+                                <div class="menu-info-label">
+                                    <i class="fas fa-tablet-alt"></i>
+                                    Appareil
+                                </div>
+                                <div class="menu-info-value" id="deviceName">Détection...</div>
+                            </div>
+                            <div class="menu-info-row">
+                                <div class="menu-info-label">
+                                    <i class="fas fa-microchip"></i>
+                                    Système
+                                </div>
+                                <div class="menu-info-value" id="systemVersion">Détection...</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Options du menu -->
+                    <div class="menu-options">
+                        <div class="menu-option" onclick="showCustomAlert('Fonctionnalité en développement\n\nICEBET - Méthode d\'investissement IA consistant à parier quotidiennement sur le match le plus sûr sélectionné par notre intelligence artificielle. Stratégie optimisée avec gestion avancée des mises et analyse de risque.')">
+                            <div class="menu-option-left">
+                                <div class="menu-option-icon">
+                                    <i class="fas fa-dice"></i>
+                                </div>
+                                <div class="menu-option-text">
+                                    <div class="menu-option-title">ICEBET</div>
+                                    <div class="menu-option-subtitle">Méthode d'investissement IA</div>
+                                </div>
+                            </div>
+                            <div class="menu-option-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+
+                        <div class="menu-option" onclick="showCustomAlert('Fonctionnalité en développement\n\nBonus et secrets - Accès aux stratégies exclusives, codes bonus et méthodes secrètes des experts.')">
+                            <div class="menu-option-left">
+                                <div class="menu-option-icon">
+                                    <i class="fas fa-gift"></i>
+                                </div>
+                                <div class="menu-option-text">
+                                    <div class="menu-option-title">Bonus et secrets</div>
+                                    <div class="menu-option-subtitle">Stratégies exclusives</div>
+                                </div>
+                            </div>
+                            <div class="menu-option-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+
+                        <div class="menu-option" onclick="showCustomAlert('Fonctionnalité en développement\n\nPersonnalisation de l\'interface, thèmes, langue et préférences d\'affichage.')">
+                            <div class="menu-option-left">
+                                <div class="menu-option-icon">
+                                    <i class="fas fa-cog"></i>
+                                </div>
+                                <div class="menu-option-text">
+                                    <div class="menu-option-title">Paramètres</div>
+                                    <div class="menu-option-subtitle">Personnaliser l'application</div>
+                                </div>
+                            </div>
+                            <div class="menu-option-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+
+                        <div class="menu-option" onclick="showCustomAlert('Fonctionnalité en développement\n\nGestion du profil utilisateur, statistiques personnelles et historique des paris.')">
+                            <div class="menu-option-left">
+                                <div class="menu-option-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="menu-option-text">
+                                    <div class="menu-option-title">Mon Profil</div>
+                                    <div class="menu-option-subtitle">Compte et statistiques</div>
+                                </div>
+                            </div>
+                            <div class="menu-option-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+
+                        <div class="menu-option" onclick="showCustomAlert('Fonctionnalité en développement\n\nAccès à l\'assistance, FAQ, guides d\'utilisation et support technique.')">
+                            <div class="menu-option-left">
+                                <div class="menu-option-icon">
+                                    <i class="fas fa-question-circle"></i>
+                                </div>
+                                <div class="menu-option-text">
+                                    <div class="menu-option-title">Aide & Support</div>
+                                    <div class="menu-option-subtitle">FAQ et assistance</div>
+                                </div>
+                            </div>
+                            <div class="menu-option-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+
+                        <div class="menu-option" onclick="showCustomAlert('Fonctionnalité en développement\n\nInformations légales, conditions d\'utilisation, politique de confidentialité et crédits.')">
+                            <div class="menu-option-left">
+                                <div class="menu-option-icon">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                <div class="menu-option-text">
+                                    <div class="menu-option-title">À propos</div>
+                                    <div class="menu-option-subtitle">Informations et légal</div>
+                                </div>
+                            </div>
+                            <div class="menu-option-arrow">
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Navigation en bas -->
+        <nav class="bottom-nav">
+            <button class="nav-tab active" onclick="switchMainTab('pronostics')">
+                <div class="nav-tab-icon">
+                    <i class="fas fa-list-ol"></i>
+                </div>
+                <div class="nav-tab-label">1X2</div>
+            </button>
+            <button class="nav-tab" onclick="switchMainTab('icegame')">
+                <div class="nav-tab-icon">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <div class="nav-tab-label">ICEGAME</div>
+            </button>
+            <button class="nav-tab" onclick="switchMainTab('menu')">
+                <div class="nav-tab-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div class="nav-tab-label">MENU</div>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Page de détail -->
+    <div class="detail-page" id="detailPage">
+        <!-- Header intégré avec hero -->
+        <section class="detail-hero-header" id="detailHeroHeader">
+            <!-- Navigation intégrée -->
+            <div class="detail-header-nav" id="detailHeaderNav">
+                <div class="detail-header-left">
+                    <button class="back-button" onclick="closeDetail()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="detail-title" id="detailTitle">Premier League • J15</div>
+                </div>
+                <div class="detail-header-actions">
+                    <button class="detail-action-btn" onclick="shareMatch()">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                    <button class="detail-action-btn favorite" id="favoriteBtn" onclick="toggleFavorite()">
+                        <i class="fas fa-star"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Section équipes -->
+            <div class="detail-teams" id="detailTeams">
+                <div class="detail-team" id="detailHomeTeam">
+                    <div class="detail-team-logo" id="detailHomeLogo">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="detail-team-name" id="detailHomeName">Manchester United</div>
+                </div>
+                <div class="detail-vs" id="detailVs">
+                    <div class="detail-vs-text" id="detailVsText">VS</div>
+                    <div class="detail-match-info" id="detailMatchInfo">
+                        <div class="match-time">Aujourd'hui 16h00</div>
+                    </div>
+                </div>
+                <div class="detail-team" id="detailAwayTeam">
+                    <div class="detail-team-logo" id="detailAwayLogo">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="detail-team-name" id="detailAwayName">Liverpool FC</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Onglets -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('analysis')">Analyse</div>
+                <div class="tab" onclick="switchTab('stats')">Statistiques</div>
+                <div class="tab" onclick="switchTab('history')">Historique</div>
+                <div class="tab" onclick="switchTab('live')">Live Data</div>
+            </div>
+        </div>
+
+        <!-- Contenu des onglets -->
+        <div class="tab-content active" id="analysisTab">
+            <div id="analysisContent">
+                <!-- Le contenu sera chargé dynamiquement -->
+            </div>
+        </div>
+
+        <div class="tab-content" id="statsTab">
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="empty-title">Statistiques détaillées</div>
+                <div class="empty-description">Graphiques et analyses statistiques approfondies</div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="historyTab">
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <div class="empty-title">Historique des confrontations</div>
+                <div class="empty-description">Données historiques et tendances</div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="liveTab">
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="empty-title">Données en temps réel</div>
+                <div class="empty-description">Informations live et mises à jour</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, deleteUser } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, addDoc, onSnapshot, where, deleteDoc, serverTimestamp, updateDoc, arrayUnion, arrayRemove, limit, Timestamp } from "https://www.gstatic.com/firebasejs/11.7.3/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTPLxUiA8lj82kqc6CyCPLQDITc0CtLUE",
+            authDomain: "ichat-betai.firebaseapp.com",
+            databaseURL: "https://ichat-betai-default-rtdb.firebaseio.com",
+            projectId: "ichat-betai",
+            storageBucket: "ichat-betai.appspot.com",
+            messagingSenderId: "168337722600",
+            appId: "1:168337722600:web:beb331f83cc4778c5b4d5d",
+            measurementId: "G-STXPSZN7X8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global variables
+        let isLoggedIn = false;
+        let currentUser = null;
+        let currentUserData = null;
+        let currentMainTab = 'pronostics';
+        let forecastsCache = {};
+        let selectedForecast = null;
+        let isFavorite = false;
+        let isCompactMode = false;
+
+        // Protection contre la copie
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('cut', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('paste', function(e) {
+            e.preventDefault();
+        });
+
+        // Protection contre F12, Ctrl+Shift+I, etc.
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'C') ||
+                (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+                (e.ctrlKey && e.key === 'U') ||
+                (e.ctrlKey && e.key === 'S') ||
+                (e.ctrlKey && e.key === 'A') ||
+                (e.ctrlKey && e.key === 'C') ||
+                (e.ctrlKey && e.key === 'X') ||
+                (e.ctrlKey && e.key === 'V')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Fonction pour détecter les informations de l'appareil
+        function detectDeviceInfo() {
+            const userAgent = navigator.userAgent;
+            const platform = navigator.platform;
+            let deviceName = 'Appareil inconnu';
+            let systemVersion = 'Système inconnu';
+
+            // Détection plus précise de l'appareil
+            if (userAgent.includes('iPhone')) {
+                deviceName = 'iPhone';
+                const iosMatch = userAgent.match(/OS (\d+_\d+)/);
+                systemVersion = iosMatch ? `iOS ${iosMatch[1].replace('_', '.')}` : 'iOS';
+            } else if (userAgent.includes('iPad')) {
+                deviceName = 'iPad';
+                const iosMatch = userAgent.match(/OS (\d+_\d+)/);
+                systemVersion = iosMatch ? `iPadOS ${iosMatch[1].replace('_', '.')}` : 'iPadOS';
+            } else if (userAgent.includes('Android')) {
+                // Détection du modèle Android
+                if (userAgent.includes('Samsung')) {
+                    const modelMatch = userAgent.match(/SM-([A-Z0-9]+)/);
+                    deviceName = modelMatch ? `Samsung ${modelMatch[1]}` : 'Samsung Galaxy';
+                } else if (userAgent.includes('Pixel')) {
+                    const pixelMatch = userAgent.match(/Pixel (\d+[a-zA-Z]*)/);
+                    deviceName = pixelMatch ? `Google Pixel ${pixelMatch[1]}` : 'Google Pixel';
+                } else if (userAgent.includes('Huawei') || userAgent.includes('HUAWEI')) {
+                    deviceName = 'Huawei';
+                } else if (userAgent.includes('OnePlus')) {
+                    deviceName = 'OnePlus';
+                } else if (userAgent.includes('Xiaomi') || userAgent.includes('Mi ')) {
+                    deviceName = 'Xiaomi';
+                } else if (userAgent.includes('OPPO')) {
+                    deviceName = 'OPPO';
+                } else if (userAgent.includes('Vivo')) {
+                    deviceName = 'Vivo';
+                } else {
+                    deviceName = 'Android';
+                }
+                
+                const androidMatch = userAgent.match(/Android (\d+\.?\d*)/);
+                systemVersion = androidMatch ? `Android ${androidMatch[1]}` : 'Android';
+            } else if (userAgent.includes('Windows')) {
+                deviceName = 'PC Windows';
+                if (userAgent.includes('Windows NT 10.0')) {
+                    systemVersion = 'Windows 10/11';
+                } else if (userAgent.includes('Windows NT 6.3')) {
+                    systemVersion = 'Windows 8.1';
+                } else if (userAgent.includes('Windows NT 6.1')) {
+                    systemVersion = 'Windows 7';
+                } else {
+                    systemVersion = 'Windows';
+                }
+            } else if (userAgent.includes('Mac')) {
+                if (userAgent.includes('Mobile')) {
+                    deviceName = 'iPhone/iPad';
+                } else {
+                    deviceName = 'Mac';
+                    const macMatch = userAgent.match(/Mac OS X (\d+_\d+_?\d*)/);
+                    systemVersion = macMatch ? `macOS ${macMatch[1].replace(/_/g, '.')}` : 'macOS';
+                }
+            } else if (userAgent.includes('Linux')) {
+                deviceName = 'Linux';
+                systemVersion = 'Linux';
+            }
+
+            // Mise à jour de l'interface
+            document.getElementById('deviceName').textContent = deviceName;
+            document.getElementById('systemVersion').textContent = systemVersion;
+        }
+
+        // Fonction pour initialiser le thème
+        function initializeTheme() {
+            const savedDarkMode = localStorage.getItem('darkMode');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedDarkMode === 'true' || (savedDarkMode === null && prefersDark)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        }
+
+        // Détection automatique du mode sombre avec écouteur
+        if (window.matchMedia) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+                if (localStorage.getItem('darkMode') === null) {
+                    if (event.matches) {
+                        document.documentElement.setAttribute('data-theme', 'dark');
+                    } else {
+                        document.documentElement.setAttribute('data-theme', 'light');
+                    }
+                }
+            });
+        }
+
+        // Function to get current date in YYYY-MM-DD format
+        function getCurrentDateString() {
+            return new Date().toISOString().slice(0, 10);
+        }
+
+        // Function to get forecast file URL for a specific date
+        function getForecastFileUrl(dateString) {
+            return `https://raw.githubusercontent.com/Jonnhy2255/Pronosoftbot/main/prédiction-${dateString}-analyse-ia.json`;
+        }
+
+        // Function to fetch forecasts from GitHub for a specific date
+        async function fetchForecastsFromGitHub(dateString) {
+            const fileUrl = getForecastFileUrl(dateString);
+            
+            try {
+                console.log(`Récupération des pronostics pour ${dateString}: ${fileUrl}`);
+                
+                const response = await fetch(fileUrl);
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.log(`Fichier de pronostics non trouvé pour ${dateString}`);
+                        return null;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log(`Pronostics récupérés avec succès pour ${dateString}`);
+                
+                return data;
+            } catch (error) {
+                console.error(`Erreur lors de la récupération des pronostics pour ${dateString}: ${error.message}`);
+                return null;
+            }
+        }
+
+        // Function to process and categorize forecasts
+        function processForecastData(data) {
+            const processed = {
+                'pronostics': []
+            };
+
+            if (!data || !data.statistiques_brutes_avec_ia || !Array.isArray(data.statistiques_brutes_avec_ia.details)) {
+                return processed;
+            }
+
+            // Traiter tous les pronostics depuis la nouvelle structure
+            data.statistiques_brutes_avec_ia.details.forEach(forecast => {
+                processed.pronostics.push({
+                    id: forecast.id,
+                    HomeTeam: forecast.HomeTeam,
+                    AwayTeam: forecast.AwayTeam,
+                    date: forecast.date,
+                    league: forecast.league,
+                    country_fr: forecast.country_fr,
+                    type: forecast.type,
+                    stats_home: forecast.stats_home,
+                    stats_away: forecast.stats_away,
+                    last_matches_home: forecast.last_matches_home,
+                    last_matches_away: forecast.last_matches_away,
+                    classement: forecast.classement,
+                    classement_complet: forecast.classement_complet,
+                    confrontations_saison_derniere: forecast.confrontations_saison_derniere || [],
+                    logo_home: forecast.logo_home,
+                    logo_away: forecast.logo_away,
+                    analyse_ia: forecast.analyse_ia
+                });
+            });
+
+            return processed;
+        }
+
+        // Function to parse French date format
+        function parseFrenchDate(dateStr) {
+            if (!dateStr) return null;
+            
+            try {
+                const frenchMonths = {
+                    'janvier': '01', 'février': '02', 'mars': '03', 'avril': '04',
+                    'mai': '05', 'juin': '06', 'juillet': '07', 'août': '08',
+                    'septembre': '09', 'octobre': '10', 'novembre': '11', 'décembre': '12'
+                };
+                
+                const parts = dateStr.split(' à ');
+                const datePart = parts[0];
+                const timePart = parts[1] || '00:00:00';
+                
+                const dateComponents = datePart.split(' ');
+                if (dateComponents.length >= 3) {
+                    const day = dateComponents[0].padStart(2, '0');
+                    const monthName = dateComponents[1].toLowerCase();
+                    const year = dateComponents[2];
+                    const month = frenchMonths[monthName] || '01';
+                    
+                    const time = timePart.replace(' UTC', '');
+                    
+                    const isoString = `${year}-${month}-${day}T${time}Z`;
+                    return new Date(isoString);
+                }
+            } catch (error) {
+                console.error('Error parsing French date:', dateStr, error);
+            }
+            
+            return new Date(dateStr);
+        }
+
+        // Function to get team icons (fallback)
+        function getTeamIcon(teamName) {
+            const icons = ['fas fa-shield-alt', 'fas fa-star', 'fas fa-trophy', 'fas fa-fire', 'fas fa-bolt'];
+            const hash = teamName ? teamName.split('').reduce((a, b) => (a + b.charCodeAt(0)) % icons.length, 0) : 0;
+            return icons[hash];
+        }
+
+        // Function to create team logo element
+        function createTeamLogoElement(logoUrl, teamName, className = 'team-logo') {
+            const logoContainer = document.createElement('div');
+            logoContainer.className = className;
+
+            if (logoUrl) {
+                const img = document.createElement('img');
+                img.src = logoUrl;
+                img.alt = teamName || 'Team Logo';
+                img.onerror = function() {
+                    logoContainer.innerHTML = `<i class="${getTeamIcon(teamName)}"></i>`;
+                };
+                logoContainer.appendChild(img);
+            } else {
+                logoContainer.innerHTML = `<i class="${getTeamIcon(teamName)}"></i>`;
+            }
+
+            return logoContainer;
+        }
+
+        // Fonction pour changer d'onglet principal
+        function switchMainTab(tabName) {
+            // Mettre à jour l'état actuel
+            currentMainTab = tabName;
+            
+            // Masquer toutes les sections
+            document.querySelectorAll('.tab-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Afficher la section sélectionnée
+            document.getElementById(tabName + 'Section').classList.add('active');
+            
+            // Mettre à jour les onglets de navigation
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Activer l'onglet sélectionné
+            event.target.closest('.nav-tab').classList.add('active');
+
+            // Charger les données spécifiques à l'onglet
+            if (tabName === 'pronostics') {
+                loadForecastsData();
+            } else if (tabName === 'icegame') {
+                loadIcegameData();
+            }
+        }
+
+        // Function to create forecast card
+        function createForecastCard(forecastData) {
+            const card = document.createElement('div');
+            card.className = 'match-card slide-up';
+            card.addEventListener('click', () => openDetail(forecastData));
+
+            let formattedDate = 'Aujourd\'hui';
+            try {
+                if (forecastData.date) {
+                    const matchDate = parseFrenchDate(forecastData.date);
+                    if (matchDate && !isNaN(matchDate.getTime())) {
+                        const today = new Date();
+                        const diffTime = matchDate.getTime() - today.getTime();
+                        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        if (diffDays === 0) {
+                            formattedDate = 'Aujourd\'hui';
+                        } else if (diffDays === 1) {
+                            formattedDate = 'Demain';
+                        } else if (diffDays === -1) {
+                            formattedDate = 'Hier';
+                        } else {
+                            formattedDate = matchDate.toLocaleDateString('fr-FR', {
+                                day: 'numeric',
+                                month: 'short'
+                            });
+                        }
+                    }
+                }
+            } catch (e) {
+                formattedDate = 'Date inconnue';
+            }
+
+            // Générer un niveau de confiance aléatoire pour la démonstration
+            const confidence = Math.floor(Math.random() * 30) + 70; // Entre 70 et 99
+
+            card.innerHTML = `
+                <div class="match-header">
+                    <div class="league-badge">${forecastData.league || 'Compétition'}</div>
+                    <div class="match-day">J${Math.floor(Math.random() * 20) + 1}</div>
+                </div>
+                <div class="teams-section">
+                    <div class="team-container">
+                        <div class="team-logo-container"></div>
+                        <div class="team-name">${forecastData.HomeTeam || 'Équipe 1'}</div>
+                    </div>
+                    <div class="match-vs">
+                        <div class="vs-text">VS</div>
+                        <div class="match-time">${formattedDate}</div>
+                    </div>
+                    <div class="team-container">
+                        <div class="team-logo-container-away"></div>
+                        <div class="team-name">${forecastData.AwayTeam || 'Équipe 2'}</div>
+                    </div>
+                </div>
+                <div class="match-footer">
+                    <div class="confidence-score">
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: ${confidence}%;"></div>
+                        </div>
+                        <span class="confidence-text">${confidence}%</span>
+                    </div>
+                    <div class="prediction-chip">Analyse IA</div>
+                </div>
+            `;
+
+            setTimeout(() => {
+                const homeLogoContainer = card.querySelector('.team-logo-container');
+                const awayLogoContainer = card.querySelector('.team-logo-container-away');
+                
+                if (homeLogoContainer) {
+                    const homeLogo = createTeamLogoElement(forecastData.logo_home, forecastData.HomeTeam);
+                    homeLogoContainer.replaceWith(homeLogo);
+                }
+                
+                if (awayLogoContainer) {
+                    const awayLogo = createTeamLogoElement(forecastData.logo_away, forecastData.AwayTeam);
+                    awayLogoContainer.replaceWith(awayLogo);
+                }
+            }, 0);
+
+            return card;
+        }
+
+        // Function to load forecasts data
+        async function loadForecastsData() {
+            const listElement = document.getElementById('matchesGrid');
+            
+            if (!listElement) return;
+            
+            listElement.innerHTML = `
+                <div class="loading-state">
+                    <i class="fas fa-chart-line loading-spinner"></i>
+                    <h3>Chargement...</h3>
+                    <p>Veuillez patienter</p>
+                </div>
+            `;
+            
+            try {
+                const githubData = await fetchForecastsFromGitHub(getCurrentDateString());
+                
+                if (!githubData) {
+                    listElement.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                            <div class="empty-title">Aucune prédiction</div>
+                            <div class="empty-description">Aucun pronostic disponible pour aujourd'hui</div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const processedData = processForecastData(githubData);
+                
+                forecastsCache['pronostics'] = processedData.pronostics;
+                
+                displayForecastsFromCache();
+                
+            } catch (error) {
+                console.error(`Erreur chargement pronostics: ${error.message}`);
+                listElement.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="empty-title">Erreur de chargement</div>
+                        <div class="empty-description">Impossible de charger les pronostics</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Function to display forecasts from cache
+        function displayForecastsFromCache() {
+            const listElement = document.getElementById('matchesGrid');
+            
+            if (!listElement || !forecastsCache['pronostics']) return;
+            
+            listElement.innerHTML = '';
+            
+            const forecasts = forecastsCache['pronostics'];
+            
+            if (forecasts.length === 0) {
+                listElement.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="empty-title">Aucune prédiction</div>
+                        <div class="empty-description">Aucun pronostic disponible pour le moment</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            const fragment = document.createDocumentFragment();
+            
+            forecasts.forEach((forecastData) => {
+                const forecastElement = createForecastCard(forecastData);
+                fragment.appendChild(forecastElement);
+            });
+            
+            listElement.appendChild(fragment);
+        }
+
+        // Function to load ICEGAME data
+        async function loadIcegameData() {
+            // Pour l'instant, on garde l'état vide
+            // Cette fonction peut être étendue pour charger des données spécifiques à ICEGAME
+        }
+
+        // Fonction pour ouvrir le détail
+        function openDetail(forecastData) {
+            selectedForecast = forecastData;
+            
+            document.body.classList.add('no-scroll');
+            
+            // Mettre à jour le titre avec le championnat
+            document.getElementById('detailTitle').textContent = `${forecastData.league || 'Compétition'}`;
+            document.getElementById('detailHomeName').textContent = forecastData.HomeTeam || 'Équipe 1';
+            document.getElementById('detailAwayName').textContent = forecastData.AwayTeam || 'Équipe 2';
+            
+            // Mettre à jour les logos
+            const detailHomeLogo = document.getElementById('detailHomeLogo');
+            const detailAwayLogo = document.getElementById('detailAwayLogo');
+            
+            detailHomeLogo.innerHTML = '';
+            if (forecastData.logo_home) {
+                const homeImg = document.createElement('img');
+                homeImg.src = forecastData.logo_home;
+                homeImg.alt = forecastData.HomeTeam || 'Home Team';
+                homeImg.onerror = function() {
+                    detailHomeLogo.innerHTML = `<i class="${getTeamIcon(forecastData.HomeTeam)}"></i>`;
+                };
+                detailHomeLogo.appendChild(homeImg);
+            } else {
+                detailHomeLogo.innerHTML = `<i class="${getTeamIcon(forecastData.HomeTeam)}"></i>`;
+            }
+            
+            detailAwayLogo.innerHTML = '';
+            if (forecastData.logo_away) {
+                const awayImg = document.createElement('img');
+                awayImg.src = forecastData.logo_away;
+                awayImg.alt = forecastData.AwayTeam || 'Away Team';
+                awayImg.onerror = function() {
+                    detailAwayLogo.innerHTML = `<i class="${getTeamIcon(forecastData.AwayTeam)}"></i>`;
+                };
+                detailAwayLogo.appendChild(awayImg);
+            } else {
+                detailAwayLogo.innerHTML = `<i class="${getTeamIcon(forecastData.AwayTeam)}"></i>`;
+            }
+
+            // Mettre à jour le contenu de l'analyse
+            updateAnalysisContent(forecastData);
+            
+            document.getElementById('detailPage').classList.add('active');
+            setupScrollAnimation();
+        }
+
+        // Function to update analysis content
+        function updateAnalysisContent(forecastData) {
+            const analysisContent = document.getElementById('analysisContent');
+            
+            if (forecastData.analyse_ia) {
+                // Extraire la prédiction recommandée
+                let predictionText = 'N/A';
+                const predictionMatch = forecastData.analyse_ia.match(/\*\*Prédiction\s*:\s*([^*]+)\*\*/);
+                if (predictionMatch) {
+                    predictionText = predictionMatch[1].trim();
+                }
+
+                // Générer un niveau de confiance aléatoire pour la démonstration
+                const confidence = Math.floor(Math.random() * 30) + 70; // Entre 70 et 99
+
+                analysisContent.innerHTML = `
+                    <!-- Analyse IA principale -->
+                    <div class="analysis-card">
+                        <div class="analysis-header">
+                            <div class="analysis-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="analysis-title">Analyse IA Complète</div>
+                        </div>
+                        <div class="analysis-content">
+                            <p><strong>Prédiction recommandée :</strong> ${predictionText}</p>
+                            <br>
+                            <div style="white-space: pre-line;">${forecastData.analyse_ia}</div>
+                        </div>
+                        <div class="confidence-section">
+                            <div class="confidence-header">
+                                <span class="confidence-label">Niveau de confiance IA</span>
+                                <span class="confidence-value">${confidence}%</span>
+                            </div>
+                            <div class="confidence-bar-large">
+                                <div class="confidence-fill-large" style="width: ${confidence}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Facteurs clés -->
+                    <div class="analysis-card">
+                        <div class="analysis-header">
+                            <div class="analysis-icon">
+                                <i class="fas fa-key"></i>
+                            </div>
+                            <div class="analysis-title">Facteurs Décisifs</div>
+                        </div>
+                        <div class="key-factors">
+                            <div class="factor-item">
+                                <div class="factor-icon factor-positive">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div class="factor-text">Analyse basée sur les données statistiques avancées</div>
+                            </div>
+                            <div class="factor-item">
+                                <div class="factor-icon factor-positive">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                                <div class="factor-text">Forme récente des équipes prise en compte</div>
+                            </div>
+                            <div class="factor-item">
+                                <div class="factor-icon factor-neutral">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="factor-text">Historique des confrontations analysé</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommandations de mise -->
+                    <div class="analysis-card">
+                        <div class="analysis-header">
+                            <div class="analysis-icon">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <div class="analysis-title">Recommandations Générales</div>
+                        </div>
+                        <div class="analysis-content">
+                            <p><strong>Gestion de bankroll recommandée :</strong></p>
+                            <p>• Ne jamais miser plus de 5% de votre bankroll sur un seul match<br>
+                            • Répartir les mises selon le niveau de confiance<br>
+                            • Prévoir un stop-loss quotidien<br>
+                            • Toujours parier de manière responsable</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                analysisContent.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="empty-title">Analyse IA</div>
+                        <div class="empty-description">Analyse non disponible pour ce match</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Fonction pour fermer le détail
+        function closeDetail() {
+            document.getElementById('detailPage').classList.remove('active');
+            document.body.classList.remove('no-scroll');
+            
+            const detailPage = document.getElementById('detailPage');
+            detailPage.removeEventListener('scroll', handleDetailScroll);
+            
+            // Réinitialiser le mode compact
+            resetCompactMode();
+        }
+
+        // Fonction pour réinitialiser le mode compact
+        function resetCompactMode() {
+            isCompactMode = false;
+            const elementsToReset = [
+                'detailHeroHeader', 'detailHeaderNav', 'detailTitle', 'detailTeams', 'detailVs',
+                'detailVsText', 'detailHomeLogo', 'detailAwayLogo', 
+                'detailHomeName', 'detailAwayName', 'detailMatchInfo',
+                'detailHomeTeam', 'detailAwayTeam'
+            ];
+            
+            elementsToReset.forEach(elementId => {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.classList.remove('compact');
+                }
+            });
+        }
+
+        // Fonction pour gérer l'animation lors du scroll
+        function setupScrollAnimation() {
+            const detailPage = document.getElementById('detailPage');
+            detailPage.addEventListener('scroll', handleDetailScroll);
+        }
+
+        function handleDetailScroll() {
+            const detailPage = document.getElementById('detailPage');
+            const scrollTop = detailPage.scrollTop;
+            const activationThreshold = 120;
+            const deactivationThreshold = 80;
+            
+            const elementsToAnimate = [
+                'detailHeroHeader', 'detailHeaderNav', 'detailTitle', 'detailTeams', 'detailVs',
+                'detailVsText', 'detailHomeLogo', 'detailAwayLogo', 
+                'detailHomeName', 'detailAwayName', 'detailMatchInfo',
+                'detailHomeTeam', 'detailAwayTeam'
+            ];
+            
+            if (!isCompactMode && scrollTop > activationThreshold) {
+                isCompactMode = true;
+                elementsToAnimate.forEach(elementId => {
+                    const element = document.getElementById(elementId);
+                    if (element) {
+                        element.classList.add('compact');
+                    }
+                });
+            } else if (isCompactMode && scrollTop < deactivationThreshold) {
+                isCompactMode = false;
+                elementsToAnimate.forEach(elementId => {
+                    const element = document.getElementById(elementId);
+                    if (element) {
+                        element.classList.remove('compact');
+                    }
+                });
+            }
+        }
+
+        // Fonction pour afficher les notifications
+        function showNotifications() {
+            showCustomAlert('Notifications\n\n🔔 3 nouveaux pronostics disponibles\n⚽ Liverpool vs Arsenal - 87% confiance\n🏆 Votre analyse est prête !\n📊 Nouvelle analyse IA disponible');
+        }
+
+        // Fonction pour partager un match
+        function shareMatch() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'King Pronos - Analyse de match',
+                    text: 'Découvrez cette analyse détaillée',
+                    url: window.location.href
+                }).catch(console.error);
+            } else {
+                const url = window.location.href;
+                navigator.clipboard.writeText(url).then(() => {
+                    showCustomAlert('Lien copié dans le presse-papiers !');
+                }).catch(() => {
+                    showCustomAlert('Impossible de copier le lien');
+                });
+            }
+        }
+
+        // Fonction pour basculer les favoris
+        function toggleFavorite() {
+            const favoriteBtn = document.getElementById('favoriteBtn');
+            isFavorite = !isFavorite;
+            
+            if (isFavorite) {
+                favoriteBtn.classList.add('active');
+            } else {
+                favoriteBtn.classList.remove('active');
+            }
+        }
+
+        // Fonction pour changer d'onglet dans le détail
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabId + 'Tab').classList.add('active');
+        }
+
+        // Fonction pour basculer le mode sombre avec effet de cercle amélioré
+        function toggleDarkMode() {
+            const themeBtn = document.getElementById('themeBtn');
+            const themeTransition = document.getElementById('themeTransition');
+            const themeCircle = document.getElementById('themeCircle');
+            
+            // Obtenir le thème actuel
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const isCurrentlyDark = currentTheme === 'dark';
+            
+            // Définir la couleur du cercle selon le thème de destination
+            const circleColor = isCurrentlyDark ? '#ffffff' : '#0f172a';
+            themeCircle.style.background = circleColor;
+            
+            // Obtenir la position du bouton
+            const btnRect = themeBtn.getBoundingClientRect();
+            const centerX = btnRect.left + btnRect.width / 2;
+            const centerY = btnRect.top + btnRect.height / 2;
+            
+            // Positionner le cercle au centre du bouton
+            const circleSize = Math.max(window.innerWidth, window.innerHeight) * 2;
+            themeCircle.style.width = circleSize + 'px';
+            themeCircle.style.height = circleSize + 'px';
+            themeCircle.style.left = (centerX - circleSize / 2) + 'px';
+            themeCircle.style.top = (centerY - circleSize / 2) + 'px';
+            
+            // Activer la transition
+            themeTransition.classList.add('active');
+            
+            // Démarrer l'animation du cercle
+            setTimeout(() => {
+                themeCircle.classList.add('expanding');
+            }, 50);
+            
+            // Changer le thème au milieu de l'animation
+            setTimeout(() => {
+                if (isCurrentlyDark) {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    localStorage.setItem('darkMode', 'false');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('darkMode', 'true');
+                }
+            }, 500);
+            
+            // Nettoyer après l'animation
+            setTimeout(() => {
+                themeTransition.classList.remove('active');
+                themeCircle.classList.remove('expanding');
+            }, 1000);
+        }
+
+        // Fonction pour afficher une alerte personnalisée
+        function showCustomAlert(message) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 9999;
+                backdrop-filter: blur(5px);
+            `;
+            
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background-color: var(--card-color);
+                color: var(--text-primary);
+                padding: 1.5rem;
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-xl);
+                max-width: 20rem;
+                width: 90%;
+                margin: 1rem;
+                text-align: center;
+                animation: modalSlideIn 0.3s ease-out;
+                border: 1px solid var(--border-color);
+            `;
+            
+            const messageP = document.createElement('p');
+            messageP.style.cssText = `
+                margin-bottom: 1rem;
+                line-height: 1.5;
+                white-space: pre-line;
+            `;
+            messageP.textContent = message;
+            
+            const button = document.createElement('button');
+            button.style.cssText = `
+                background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+                color: white;
+                border: none;
+                padding: 0.5rem 1rem;
+                border-radius: var(--radius-md);
+                cursor: pointer;
+                font-weight: 600;
+                transition: transform 0.2s ease;
+            `;
+            button.textContent = 'OK';
+            button.onclick = () => {
+                document.body.removeChild(modal);
+                style.remove();
+            };
+            button.onmouseover = () => button.style.transform = 'translateY(-1px)';
+            button.onmouseout = () => button.style.transform = 'translateY(0)';
+            
+            modalContent.appendChild(messageP);
+            modalContent.appendChild(button);
+            modal.appendChild(modalContent);
+            
+            // Ajouter l'animation CSS
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes modalSlideIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px) scale(0.9);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(modal);
+            
+            // Auto-fermeture après 5 secondes
+            setTimeout(() => {
+                if (document.body.contains(modal)) {
+                    document.body.removeChild(modal);
+                    style.remove();
+                }
+            }, 5000);
+        }
+
+        // Utility functions
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            if (!notification) return;
+            
+            notification.classList.remove('show');
+            
+            setTimeout(() => {
+                notification.textContent = message;
+                notification.className = 'notification ' + type;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    
+                    setTimeout(() => {
+                        notification.className = 'notification';
+                        notification.textContent = '';
+                    }, 300);
+                }, 3000);
+            }, 100);
+        }
+
+        // Auth functions
+        function setupAuth() {
+            const loginBtn = document.getElementById('loginBtn');
+            const registerBtn = document.getElementById('registerBtn');
+            const loginTab = document.getElementById('login-tab');
+            const registerTab = document.getElementById('register-tab');
+            const gotoRegister = document.getElementById('goto-register');
+            const gotoLogin = document.getElementById('goto-login');
+            
+            loginBtn.addEventListener('click', loginUser);
+            registerBtn.addEventListener('click', registerUser);
+            
+            loginTab.addEventListener('click', () => switchAuthTab('login'));
+            registerTab.addEventListener('click', () => switchAuthTab('login'));
+            gotoRegister.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchAuthTab('register');
+            });
+            gotoLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchAuthTab('login');
+            });
+            
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    currentUser = user;
+                    isLoggedIn = true;
+                    
+                    try {
+                        await loadUserData();
+                        showMainApp();
+                        
+                        console.log(`Utilisateur connecté: ${user.email}`);
+                        
+                    } catch (error) {
+                        console.error(`Erreur initialisation: ${error.message}`);
+                        showNotification("Erreur lors de l'initialisation", "error");
+                    }
+                } else {
+                    isLoggedIn = false;
+                    currentUser = null;
+                    currentUserData = null;
+                    showAuthScreen();
+                }
+                
+                hideLoading();
+            });
+        }
+
+        function switchAuthTab(tab) {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const loginTab = document.getElementById('login-tab');
+            const registerTab = document.getElementById('register-tab');
+            
+            if (tab === 'register') {
+                loginForm.classList.remove('active');
+                registerForm.classList.add('active');
+                loginTab.classList.remove('active');
+                registerTab.classList.add('active');
+            } else {
+                registerForm.classList.remove('active');
+                loginForm.classList.add('active');
+                registerTab.classList.remove('active');
+                loginTab.classList.add('active');
+            }
+            
+            clearAuthErrors();
+        }
+
+        function clearAuthErrors() {
+            document.querySelectorAll('.form-error').forEach(error => {
+                error.style.display = 'none';
+            });
+            document.querySelectorAll('.log-message').forEach(log => {
+                log.style.display = 'none';
+            });
+        }
+
+        async function loginUser() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            const button = document.getElementById('loginBtn');
+            const logElement = document.getElementById('login-log');
+            
+            clearAuthErrors();
+            
+            let hasError = false;
+            
+            if (!email || !email.includes('@')) {
+                document.getElementById('login-email-error').style.display = 'block';
+                hasError = true;
+            }
+            
+            if (!password) {
+                document.getElementById('login-password-error').style.display = 'block';
+                hasError = true;
+            }
+            
+            if (hasError) return;
+            
+            button.classList.add('loading');
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                
+                console.log(`Connexion réussie pour ${email}`);
+                logElement.textContent = 'Connexion réussie !';
+                logElement.className = 'log-message success';
+                logElement.style.display = 'block';
+                
+            } catch (error) {
+                console.error(`Erreur connexion: ${error.message}`);
+                
+                let errorMessage = 'Erreur de connexion';
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage = 'Aucun compte trouvé avec cet email';
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessage = 'Mot de passe incorrect';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Adresse email invalide';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage = 'Trop de tentatives. Réessayez plus tard';
+                }
+                
+                logElement.textContent = errorMessage;
+                logElement.className = 'log-message error';
+                logElement.style.display = 'block';
+            }
+            
+            button.classList.remove('loading');
+        }
+
+        async function registerUser() {
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            const button = document.getElementById('registerBtn');
+            const logElement = document.getElementById('register-log');
+            
+            clearAuthErrors();
+            
+            let hasError = false;
+            
+            if (!email || !email.includes('@')) {
+                document.getElementById('register-email-error').style.display = 'block';
+                hasError = true;
+            }
+            
+            if (password.length < 6) {
+                document.getElementById('register-password-error').style.display = 'block';
+                hasError = true;
+            }
+            
+            if (password !== confirmPassword) {
+                document.getElementById('register-confirm-password-error').style.display = 'block';
+                hasError = true;
+            }
+            
+            if (hasError) return;
+            
+            button.classList.add('loading');
+            
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                const userData = {
+                    email: user.email,
+                    displayName: user.displayName || 'Utilisateur',
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp(),
+                    uid: user.uid
+                };
+                
+                await setDoc(doc(db, "Users", user.uid), userData);
+                
+                console.log(`Inscription réussie pour ${email}`);
+                logElement.textContent = 'Compte créé avec succès !';
+                logElement.className = 'log-message success';
+                logElement.style.display = 'block';
+                
+            } catch (error) {
+                console.error(`Erreur inscription: ${error.message}`);
+                
+                let errorMessage = 'Erreur lors de la création du compte';
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = 'Un compte existe déjà avec cet email';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = 'Adresse email invalide';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'Le mot de passe est trop faible';
+                }
+                
+                logElement.textContent = errorMessage;
+                logElement.className = 'log-message error';
+                logElement.style.display = 'block';
+            }
+            
+            button.classList.remove('loading');
+        }
+
+        async function loadUserData() {
+            if (!currentUser) return;
+            
+            try {
+                const userDoc = await getDoc(doc(db, "Users", currentUser.uid));
+                
+                if (userDoc.exists()) {
+                    currentUserData = userDoc.data();
+                } else {
+                    const userData = {
+                        email: currentUser.email,
+                        displayName: currentUser.displayName || 'Utilisateur',
+                        createdAt: serverTimestamp(),
+                        updatedAt: serverTimestamp(),
+                        uid: currentUser.uid
+                    };
+                    
+                    await setDoc(doc(db, "Users", currentUser.uid), userData);
+                    currentUserData = userData;
+                }
+                
+                console.log('Données utilisateur chargées');
+                
+            } catch (error) {
+                console.error('Erreur chargement données utilisateur:', error);
+            }
+        }
+
+        function showAuthScreen() {
+            document.getElementById('auth-screen').style.display = 'flex';
+            document.getElementById('loadingScreen').style.display = 'none';
+            hideMainApp();
+        }
+
+        function showMainApp() {
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+            
+            // Charger les données initiales
+            loadForecastsData();
+        }
+
+        function hideMainApp() {
+            document.getElementById('appContainer').style.display = 'none';
+        }
+
+        function hideLoading() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+            }, 3500);
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialiser le thème
+            initializeTheme();
+            
+            // Détecter les informations de l'appareil
+            detectDeviceInfo();
+
+            // Setup auth
+            setupAuth();
+
+            // Gestion du retour mobile
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if (document.getElementById('detailPage').classList.contains('active')) {
+                        closeDetail();
+                    }
+                }
+            });
+
+            console.log('Application KING PRONOS initialisée');
+        });
+
+        // Make functions global for onclick handlers
+        window.switchMainTab = switchMainTab;
+        window.openDetail = openDetail;
+        window.closeDetail = closeDetail;
+        window.switchTab = switchTab;
+        window.toggleDarkMode = toggleDarkMode;
+        window.showNotifications = showNotifications;
+        window.shareMatch = shareMatch;
+        window.toggleFavorite = toggleFavorite;
+        window.showCustomAlert = showCustomAlert;
+    </script>
+</body>
+</html>
