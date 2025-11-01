@@ -1,703 +1,301 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Prédictions Sportives - 7ylan007</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertisseur Image → SVG (Optimisé)</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="manifest" href="manifest.json">
+    <script src="https://cdn.jsdelivr.net/npm/imagetracerjs@1.2.6/imagetracer_v1.2.6.js"></script>
     <style>
-        /* --- Styles (identiques à votre original) --- */
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(180deg, #0a1647 0%, #1a2b7a 50%, #0a1647 100%);
-            min-height: 100vh; color: white;
+        body { transition: background-color 0.3s ease; }
+        .loading-spinner {
+            border: 3px solid rgba(93, 92, 222, 0.1);
+            border-radius: 50%;
+            border-top: 3px solid #5D5CDE;
+            width: 40px; height: 40px;
+            animation: spin 1s linear infinite;
         }
-        .container { max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column; background: linear-gradient(180deg, #0d1b5e 0%, #0a1445 100%); }
-        header.app-header { display:flex; align-items:center; justify-content:center; gap:20px; padding:20px; margin:20px 20px 30px 20px; }
-        .app-logo { width:80px; height:80px; border-radius:50%; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; text-align:center; line-height:1.3; padding:10px; box-shadow:0 4px 20px rgba(59,130,246,0.4), inset 0 2px 10px rgba(255,255,255,0.1); border:2px solid rgba(96,165,250,0.4); }
-        .app-title { font-size:28px; font-weight:700; letter-spacing:2px; }
-        .loading-container { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:40px; }
-        .spinner { width:60px; height:60px; border:4px solid rgba(59,130,246,0.2); border-top:4px solid #3b82f6; border-radius:50%; animation:spin 1s linear infinite; }
-        @keyframes spin { 0%{ transform:rotate(0deg);} 100%{ transform:rotate(360deg);} }
-        .loading-text { font-size:16px; color:rgba(255,255,255,0.8); text-align:center; }
-        .error-container { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:40px; }
-        .error-icon { font-size:64px; }
-        .error-text { font-size:16px; color:rgba(255,255,255,0.8); text-align:center; line-height:1.6; }
-        .matches-container { flex:1; padding:0 20px; overflow-y:auto; padding-bottom:20px; }
-        .match-card { background: linear-gradient(135deg, rgba(37,99,235,0.25) 0%, rgba(29,78,216,0.15) 100%); border-radius:32px; padding:30px 20px; margin-bottom:30px; box-shadow:0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), 0 0 40px rgba(37,99,235,0.1); border:1px solid rgba(59,130,246,0.2); position:relative; cursor:pointer; transition:all 0.3s ease; }
-        .match-card:hover { transform:translateY(-2px); box-shadow:0 12px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1), 0 0 50px rgba(37,99,235,0.2); }
-        .match-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-        .team { display:flex; flex-direction:column; align-items:center; gap:12px; flex:1; }
-        .team-logo { width:90px; height:90px; border-radius:50%; background:white; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(59,130,246,0.4), inset 0 2px 10px rgba(255,255,255,0.1); border:2px solid rgba(96,165,250,0.4); overflow:hidden; }
-        .team-logo img { width:100%; height:100%; object-fit:contain; }
-        .team-name { font-size:18px; font-weight:700; text-transform:uppercase; letter-spacing:1px; text-align:center; }
-        .vs-container { display:flex; flex-direction:column; align-items:center; gap:8px; margin:0 20px; }
-        .match-date { font-size:12px; font-weight:600; letter-spacing:1px; color:rgba(255,255,255,0.8); text-transform:uppercase; text-align:center; width:100%; }
-        .vs-text { font-size:48px; font-weight:900; letter-spacing:4px; color:white; text-shadow:0 4px 20px rgba(59,130,246,0.6); }
-        .reliability { text-align:center; background: linear-gradient(135deg, rgba(59,130,246,0.4) 0%, rgba(37,99,235,0.3) 100%); border-radius:20px; padding:12px 24px; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; border:1px solid rgba(96,165,250,0.3); box-shadow:0 2px 10px rgba(0,0,0,0.2); }
-        .bottom-nav { display:flex; justify-content:space-around; align-items:center; padding:16px 8px 20px 8px; background: linear-gradient(180deg, rgba(10,22,71,0.95) 0%, rgba(13,27,94,0.98) 100%); backdrop-filter: blur(10px); border-top:1px solid rgba(59,130,246,0.2); box-shadow:0 -4px 20px rgba(0,0,0,0.3); }
-        .nav-item { display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; transition:all 0.3s ease; padding:8px 12px; border-radius:12px; }
-        .nav-item:hover { background: rgba(59,130,246,0.2); }
-        .nav-item.active { background: rgba(59,130,246,0.3); }
-        .nav-item span { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; text-align:center; line-height:1.2; }
-        .details-page { position:fixed; top:0; left:0; right:0; bottom:0; background: linear-gradient(180deg, #0d1b5e 0%, #0a1445 100%); z-index:1000; display:none; flex-direction:column; overflow:hidden; }
-        .details-page.active { display:flex; }
-        .details-header { background: linear-gradient(135deg, rgba(37,99,235,0.3) 0%, rgba(29,78,216,0.2) 100%); padding:20px; border-bottom:1px solid rgba(59,130,246,0.2); z-index:1002; position:relative; }
-        .back-button { background: rgba(59,130,246,0.3); border:1px solid rgba(96,165,250,0.3); border-radius:12px; padding:10px 20px; color:white; font-size:14px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:8px; margin-bottom:20px; transition:all 0.3s ease; }
-        .back-button:hover { background: rgba(59,130,246,0.4); }
-        .details-match-info { display:flex; align-items:center; justify-content:space-between; margin-top:10px; }
-        .details-team { display:flex; flex-direction:column; align-items:center; gap:10px; flex:1; }
-        .details-team-logo { width:70px; height:70px; border-radius:50%; background:white; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 20px rgba(59,130,246,0.4); border:2px solid rgba(96,165,250,0.4); overflow:hidden; }
-        .details-team-logo img { width:100%; height:100%; object-fit:contain; }
-        .details-team-name { font-size:16px; font-weight:700; text-transform:uppercase; text-align:center; }
-        .details-vs { font-size:32px; font-weight:900; margin:0 15px; color:white; text-shadow:0 4px 20px rgba(59,130,246,0.6); }
-        .tabs-container { background: rgba(10,22,71,0.95); padding:15px 10px 10px 10px; overflow-x:auto; border-bottom:1px solid rgba(59,130,246,0.2); position:sticky; top:0; z-index:1001; backdrop-filter: blur(10px); }
-        .tabs-wrapper { display:flex; gap:10px; min-width:min-content; padding-bottom:5px; }
-        .tab-button { padding:10px 20px; background: rgba(37,99,235,0.2); border:1px solid rgba(59,130,246,0.3); border-radius:20px; color:rgba(255,255,255,0.7); font-size:13px; font-weight:600; cursor:pointer; transition:all 0.3s ease; white-space:nowrap; text-transform:uppercase; letter-spacing:0.5px; }
-        .tab-button:hover { background: rgba(37,99,235,0.3); color:white; }
-        .tab-button.active { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color:white; border-color: rgba(96,165,250,0.5); box-shadow:0 4px 15px rgba(59,130,246,0.4); }
-        .tab-contents-wrapper { flex:1; overflow-y:auto; overflow-x:hidden; position:relative; z-index:1000; }
-        .tab-content { padding:20px; display:none; min-height:100%; }
-        .tab-content.active { display:block; }
-        .stat-card { background: linear-gradient(135deg, rgba(37,99,235,0.2) 0%, rgba(29,78,216,0.1) 100%); border-radius:20px; padding:20px; margin-bottom:15px; border:1px solid rgba(59,130,246,0.2); }
-        .stat-title { font-size:14px; font-weight:700; text-transform:uppercase; color:rgba(255,255,255,0.9); margin-bottom:15px; letter-spacing:1px; }
-        .stat-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:14px; }
-        .stat-row:last-child { margin-bottom:0; }
-        .stat-label { color:rgba(255,255,255,0.7); font-weight:500; }
-        .stat-value { font-weight:700; color:white; }
-        .progress-bar { width:100%; height:8px; background: rgba(0,0,0,0.3); border-radius:10px; overflow:hidden; margin-top:8px; }
-        .progress-fill { height:100%; background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%); border-radius:10px; transition: width 0.3s ease; }
-        .vs-stat { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-        .vs-stat-team { flex:1; text-align:center; }
-        .vs-stat-value { font-size:24px; font-weight:900; color:white; }
-        .vs-stat-label { font-size:11px; color:rgba(255,255,255,0.6); text-transform:uppercase; margin-top:5px; letter-spacing:0.5px; }
-        .vs-stat-vs { margin:0 20px; color:rgba(255,255,255,0.4); font-weight:700; }
-        .proba-card { background: linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(5,150,105,0.1) 100%); border:1px solid rgba(16,185,129,0.3); border-radius:20px; padding:20px; margin-bottom:15px; text-align:center; }
-        .proba-label { font-size:13px; text-transform:uppercase; color:rgba(255,255,255,0.7); letter-spacing:1px; margin-bottom:10px; }
-        .proba-value { font-size:48px; font-weight:900; color:#10b981; text-shadow:0 4px 20px rgba(16,185,129,0.5); }
-        .prediction-card { background: linear-gradient(135deg, rgba(245,158,11,0.2) 0%, rgba(217,119,6,0.1) 100%); border:1px solid rgba(245,158,11,0.3); border-radius:20px; padding:25px; margin-bottom:15px; text-align:center; }
-        .prediction-title { font-size:14px; text-transform:uppercase; color:rgba(255,255,255,0.7); letter-spacing:1px; margin-bottom:15px; }
-        .prediction-result { font-size:28px; font-weight:900; color:#f59e0b; text-shadow:0 4px 20px rgba(245,158,11,0.5); margin-bottom:10px; }
-        .prediction-confidence { font-size:13px; color:rgba(255,255,255,0.6); }
-        .recent-match { background: linear-gradient(135deg, rgba(37,99,235,0.15) 0%, rgba(29,78,216,0.1) 100%); border:1px solid rgba(59,130,246,0.2); border-radius:16px; padding:15px; margin-bottom:12px; }
-        .recent-match-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-        .recent-match-date { font-size:11px; color:rgba(255,255,255,0.5); text-transform:uppercase; }
-        .recent-match-teams { display:flex; justify-content:space-between; align-items:center; }
-        .recent-team { font-size:14px; font-weight:600; }
-        .recent-score { font-size:18px; font-weight:900; color:#3b82f6; }
-        .ranking-item { display:flex; align-items:center; gap:15px; padding:15px; background: linear-gradient(135deg, rgba(37,99,235,0.15) 0%, rgba(29,78,216,0.1) 100%); border:1px solid rgba(59,130,246,0.2); border-radius:16px; margin-bottom:12px; }
-        .ranking-position { font-size:20px; font-weight:900; color:#3b82f6; min-width:30px; }
-        .ranking-team { flex:1; font-size:14px; font-weight:600; }
-        .ranking-points { font-size:16px; font-weight:700; color:#10b981; }
-        .info-box { background: linear-gradient(135deg, rgba(139,92,246,0.2) 0%, rgba(124,58,237,0.1) 100%); border:1px solid rgba(139,92,246,0.3); border-radius:16px; padding:15px; margin-bottom:12px; }
-        .info-box-title { font-size:13px; font-weight:700; color:#a78bfa; text-transform:uppercase; margin-bottom:8px; letter-spacing:0.5px; }
-        .info-box-content { font-size:13px; color:rgba(255,255,255,0.8); line-height:1.6; white-space:pre-wrap; }
-        .form-indicator { display:inline-block; width:24px; height:24px; border-radius:4px; text-align:center; line-height:24px; font-weight:700; font-size:12px; margin-right:4px; }
-        .form-w { background:#10b981; color:white; }
-        .form-d { background:#eab308; color:white; }
-        .form-l { background:#ef4444; color:white; }
-        @media (prefers-color-scheme: dark) {
-            body { background: linear-gradient(180deg, #0a1647 0%, #1a2b7a 50%, #0a1647 100%); }
+        @keyframes spin { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
+        .drop-zone {
+            border: 3px dashed #5D5CDE;
+            transition: all 0.3s ease;
         }
-        @media (max-width:380px) {
-            .team-logo { width:75px; height:75px; font-size:10px; }
-            .vs-container { margin:0 10px; }
-            .match-date { font-size:10px; }
-            .vs-text { font-size:36px; }
-            .team-name { font-size:16px; }
-            .nav-item span { font-size:9px; }
-            .details-team-logo { width:60px; height:60px; }
-            .details-vs { font-size:24px; margin:0 10px; }
-            .tab-button { padding:8px 16px; font-size:12px; }
+        .drop-zone.dragover {
+            background-color: rgba(93, 92, 222, 0.1);
+            border-color: #4a49b8;
         }
-        .tabs-container::-webkit-scrollbar { height:3px; }
-        .tabs-container::-webkit-scrollbar-track { background:rgba(0,0,0,0.2); border-radius:10px; }
-        .tabs-container::-webkit-scrollbar-thumb { background:rgba(59,130,246,0.5); border-radius:10px; }
-        .tab-contents-wrapper::-webkit-scrollbar { width:6px; }
-        .tab-contents-wrapper::-webkit-scrollbar-track { background:rgba(0,0,0,0.2); }
-        .tab-contents-wrapper::-webkit-scrollbar-thumb { background:rgba(59,130,246,0.5); border-radius:10px; }
-        /* Simple notification */
-        .notification { position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(100px); opacity:0; background: rgba(0,0,0,0.85); color:white; padding:12px 20px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.4); z-index:2000; transition: all 0.3s ease; pointer-events:none; }
-        .notification.show { transform:translateX(-50%) translateY(0); opacity:1; pointer-events:auto; }
+        .image-container img, .image-container svg {
+            max-width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+        }
+        .slider-container { position: relative; }
+        .slider-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #5D5CDE;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
     </style>
 </head>
-<body>
-    <div class="container">
-        <header class="app-header" role="banner">
-            <div class="app-title">7ylan007</div>
-            <div class="app-logo">PRÉDICTIONS<br>SPORTIVES</div>
-        </header>
+<body class="bg-white dark:bg-[#181818] min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <h1 class="text-4xl font-bold text-center mb-2 text-gray-900 dark:text-white">
+            Convertisseur Image → SVG (Optimisé)
+        </h1>
+        <p class="text-center text-gray-600 dark:text-gray-400 mb-8">
+            Transformez vos images en vecteurs SVG de haute précision
+        </p>
 
-        <div class="loading-container" id="loadingContainer">
-            <div class="spinner" id="spinner"></div>
-            <div class="loading-text" id="loadingText">Chargement des prédictions...</div>
+        <!-- Zone de dépôt -->
+        <div id="dropZone" class="drop-zone rounded-lg p-12 text-center mb-8 cursor-pointer bg-gray-50 dark:bg-gray-800">
+            <input type="file" id="fileInput" accept="image/*" class="hidden">
+            <svg class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+            </svg>
+            <p class="text-lg text-gray-700 dark:text-gray-300 mb-2">
+                Cliquez pour sélectionner une image ou glissez-la ici
+            </p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+                PNG, JPG, GIF jusqu’à 10MB
+            </p>
         </div>
 
-        <div class="error-container" id="errorContainer" style="display:none;">
-            <div class="error-icon">⚠️</div>
-            <div class="error-text" id="errorText">Erreur de chargement des données</div>
+        <!-- Paramètres -->
+        <div id="controlsSection" class="hidden mb-8 bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Paramètres de vectorisation</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Précision des couleurs
+                    </label>
+                    <div class="slider-container">
+                        <span id="colorSamplingValue" class="slider-value">1</span>
+                        <input type="range" id="colorSampling" min="1" max="4" value="1" step="0.5" class="w-full">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Lissage des contours
+                    </label>
+                    <div class="slider-container">
+                        <span id="pathOmitValue" class="slider-value">2</span>
+                        <input type="range" id="pathOmit" min="0" max="20" value="2" step="1" class="w-full">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Nombre de couleurs
+                    </label>
+                    <div class="slider-container">
+                        <span id="numberOfColorsValue" class="slider-value">32</span>
+                        <input type="range" id="numberOfColors" min="2" max="64" value="32" step="1" class="w-full">
+                    </div>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <button id="convertBtn"
+                            class="w-full bg-[#5D5CDE] hover:bg-[#4a49b8] text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                        Convertir en SVG
+                    </button>
+                    <button id="highPrecisionBtn"
+                            class="w-full bg-[#3a3aad] hover:bg-[#2f2f8c] text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                        Vectorisation haute précision
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <div class="matches-container" id="matchesContainer" style="display:none;"></div>
+        <!-- Chargement -->
+        <div id="loadingSection" class="hidden text-center py-12">
+            <div class="loading-spinner mx-auto mb-4"></div>
+            <p class="text-gray-700 dark:text-gray-300">Conversion en cours...</p>
+        </div>
 
-        <div class="bottom-nav">
-            <div class="nav-item active"><span>PRONOSTIC<br>1X2</span></div>
-            <div class="nav-item"><span>LIVE</span></div>
-            <div class="nav-item"><span>PRONOS<br>SCORE EXACT</span></div>
-            <div class="nav-item"><span>PROFIL</span></div>
+        <!-- Résultats -->
+        <div id="resultsSection" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Image originale</h3>
+                    <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 image-container flex items-center justify-center min-h-[300px]">
+                        <img id="originalImage" class="rounded">
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Vecteur SVG</h3>
+                    <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 image-container flex items-center justify-center min-h-[300px]" id="svgContainer"></div>
+                </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">SVG prêt</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400" id="svgInfo"></p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button id="downloadBtn" class="bg-[#5D5CDE] hover:bg-[#4a49b8] text-white font-semibold py-2 px-6 rounded-lg transition-colors">
+                            Télécharger SVG
+                        </button>
+                        <button id="newImageBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors">
+                            Nouvelle image
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Code SVG brut -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Code SVG</h3>
+                    <textarea id="svgCode"
+                        class="w-full bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 p-4 rounded-lg font-mono text-sm h-60"
+                        readonly></textarea>
+                    <button id="copySvgBtn"
+                        class="mt-3 bg-[#5D5CDE] hover:bg-[#4a49b8] text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                        Copier le code
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="details-page" id="detailsPage">
-        <div class="details-header">
-            <button class="back-button" id="backButton">← Retour</button>
-            <div class="details-match-info">
-                <div class="details-team">
-                    <div class="details-team-logo" id="detailsTeam1Logo">
-                        <img src="" alt="" id="detailsTeam1LogoImg">
-                    </div>
-                    <div class="details-team-name" id="detailsTeam1Name">ÉQUIPE 1</div>
-                </div>
-                <div class="details-vs">VS</div>
-                <div class="details-team">
-                    <div class="details-team-logo" id="detailsTeam2Logo">
-                        <img src="" alt="" id="detailsTeam2LogoImg">
-                    </div>
-                    <div class="details-team-name" id="detailsTeam2Name">ÉQUIPE 2</div>
-                </div>
-            </div>
-        </div>
+<script>
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    document.documentElement.classList.add('dark');
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    document.documentElement.classList.toggle('dark', e.matches);
+});
 
-        <div class="tabs-container">
-            <div class="tabs-wrapper" id="tabsWrapper"></div>
-        </div>
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const controlsSection = document.getElementById('controlsSection');
+const loadingSection = document.getElementById('loadingSection');
+const resultsSection = document.getElementById('resultsSection');
+const originalImage = document.getElementById('originalImage');
+const svgContainer = document.getElementById('svgContainer');
+const convertBtn = document.getElementById('convertBtn');
+const highPrecisionBtn = document.getElementById('highPrecisionBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const newImageBtn = document.getElementById('newImageBtn');
+const svgInfo = document.getElementById('svgInfo');
+const svgCode = document.getElementById('svgCode');
+const copySvgBtn = document.getElementById('copySvgBtn');
 
-        <div class="tab-contents-wrapper">
-            <div id="tabContentsContainer"></div>
-        </div>
-    </div>
+const colorSampling = document.getElementById('colorSampling');
+const pathOmit = document.getElementById('pathOmit');
+const numberOfColors = document.getElementById('numberOfColors');
 
-    <div class="notification" id="notification" role="status" aria-live="polite"></div>
+let currentImageFile = null;
+let currentSvgString = '';
 
-    <script>
-    // Protection basique contre sélection/copier (optionnel)
-    ['selectstart','contextmenu','dragstart','copy','cut','paste'].forEach(evt=>{
-        document.addEventListener(evt, e=>{
-            // autoriser quand un champ de saisie est ciblé
-            const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
-            if (tag === 'input' || tag === 'textarea') return;
-            // on laisse copier/paste pour debug si besoin ; ici on ne bloque pas pour éviter nuisance
-        });
-    });
+function updateSlider(id, value) { document.getElementById(id).textContent = value; }
+colorSampling.addEventListener('input', e => updateSlider('colorSamplingValue', e.target.value));
+pathOmit.addEventListener('input', e => updateSlider('pathOmitValue', e.target.value));
+numberOfColors.addEventListener('input', e => updateSlider('numberOfColorsValue', e.target.value));
 
-    // Notification helper
-    function showNotification(msg, timeout=3000) {
-        const n = document.getElementById('notification');
-        n.textContent = msg;
-        n.classList.add('show');
-        setTimeout(()=> n.classList.remove('show'), timeout);
-    }
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+    e.preventDefault(); dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', e => { if (e.target.files.length > 0) handleFile(e.target.files[0]); });
 
-    // PWA install prompt handling
-    let deferredInstallPrompt = null;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredInstallPrompt = e;
-        // vous pouvez afficher un bouton d'installation si vous voulez
-        console.log('beforeinstallprompt captured');
-    });
-    window.addEventListener('appinstalled', () => {
-        deferredInstallPrompt = null;
-        showNotification('Application installée', 2500);
-    });
+function handleFile(file) {
+    if (!file.type.startsWith('image/')) return showNotification('Erreur', 'Veuillez sélectionner une image valide.');
+    if (file.size > 10 * 1024 * 1024) return showNotification('Erreur', 'L’image ne doit pas dépasser 10MB.');
+    currentImageFile = file;
+    const reader = new FileReader();
+    reader.onload = e => {
+        originalImage.src = e.target.result;
+        controlsSection.classList.remove('hidden');
+        resultsSection.classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+}
 
-    // Service worker dynamic registration: we generate the SW script as blob (comme 4.html)
-    const SW_VERSION = '1.0.0';
-    const CACHE_NAME = `7ylan007-v${SW_VERSION}`;
-    const urlsToCache = [
-        '/',
-        'index.html',
-        'manifest.json',
-        'https://cdn.tailwindcss.com'
-        // Ajoutez d'autres assets si besoin
-    ];
+function vectorize(highPrecision = false) {
+    if (!currentImageFile) return;
+    loadingSection.classList.remove('hidden');
+    controlsSection.classList.add('hidden');
+    resultsSection.classList.add('hidden');
 
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            const swCode = `
-                const CACHE_NAME = '${CACHE_NAME}';
-                const urlsToCache = ${JSON.stringify(urlsToCache)};
+    const reader = new FileReader();
+    reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+            const opts = highPrecision ? {
+                numberofcolors: 48, colorsampling: 1, pathomit: 1, ltres: 0.3, qtres: 0.3,
+                blurradius: 0.3, blurdelta: 5, roundcoords: 1, strokewidth: 1, desc: true, viewbox: true,
+            } : {
+                numberofcolors: parseInt(numberOfColors.value),
+                colorsampling: parseFloat(colorSampling.value),
+                pathomit: parseFloat(pathOmit.value),
+                blurradius: 0.3, blurdelta: 5, ltres: 0.3, qtres: 0.3,
+                roundcoords: 1, desc: true, viewbox: true,
+            };
 
-                self.addEventListener('install', event => {
-                    self.skipWaiting();
-                    event.waitUntil(
-                        caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache).catch(()=>{}))
-                    );
-                });
-
-                self.addEventListener('activate', event => {
-                    event.waitUntil(
-                        caches.keys().then(keys =>
-                            Promise.all(keys.map(k => {
-                                if (k !== CACHE_NAME) return caches.delete(k);
-                            }))
-                        )
-                    );
-                    return self.clients.claim();
-                });
-
-                self.addEventListener('fetch', event => {
-                    const req = event.request;
-                    // Navigation requests --> try network first (fresh content), fallback to cache
-                    if (req.mode === 'navigate') {
-                        event.respondWith(
-                            fetch(req).then(res => {
-                                const copy = res.clone();
-                                caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
-                                return res;
-                            }).catch(()=> caches.match(req).then(r => r || caches.match('/')))
-                        );
-                        return;
-                    }
-
-                    // For other requests prefer cache first
-                    event.respondWith(
-                        caches.match(req).then(cached => {
-                            if (cached) return cached;
-                            return fetch(req).then(res => {
-                                // cache images & json for offline
-                                const resClone = res.clone();
-                                if (req.destination === 'image' || req.url.endsWith('.json') || req.url.endsWith('.png') || req.url.endsWith('.jpg')) {
-                                    caches.open(CACHE_NAME).then(cache => cache.put(req, resClone));
-                                }
-                                return res;
-                            }).catch(() => {
-                                // fallback response could be created here for images
-                                return new Response('', { status: 504, statusText: 'offline' });
-                            });
-                        })
-                    );
-                });
-            `;
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            const swUrl = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(swUrl).then(reg => {
-                console.log('Service Worker enregistré dynamique:', reg);
-            }).catch(err => {
-                console.warn('Erreur enregistrement SW dynamique:', err);
-            });
-        });
-    }
-
-    // Utilitaires
-    function getTodayDate() {
-        const d = new Date();
-        const y = d.getFullYear();
-        const m = String(d.getMonth()+1).padStart(2,'0');
-        const day = String(d.getDate()).padStart(2,'0');
-        return `${y}-${m}-${day}`;
-    }
-
-    function formatDate(dateString) {
-        // si format ISO -> Date
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) return dateString || '';
-        const opt = { day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' };
-        return date.toLocaleDateString('fr-FR', opt);
-    }
-
-    function formatForm(form) {
-        if (!form || !Array.isArray(form)) return '';
-        return form.map(result => {
-            const letter = (result || '').toUpperCase();
-            const className = letter === 'W' ? 'form-w' : (letter === 'D' ? 'form-d' : 'form-l');
-            const display = letter === 'W' ? 'V' : (letter === 'D' ? 'N' : 'D');
-            return `<span class="form-indicator ${className}">${display}</span>`;
-        }).join('');
-    }
-
-    // Robust fetch with timeout and retries
-    async function fetchWithTimeout(url, options = {}, timeout = 8000) {
-        const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), timeout);
-        try {
-            const resp = await fetch(url, { ...options, signal: controller.signal });
-            clearTimeout(id);
-            return resp;
-        } catch (err) {
-            clearTimeout(id);
-            throw err;
-        }
-    }
-
-    async function loadData() {
-        const todayDate = getTodayDate();
-        const url = `https://raw.githubusercontent.com/7ylan007/7ylan007/main/prédiction-${todayDate}-analyse-ia.json`;
-        const maxRetries = 2;
-        let attempt = 0;
-        while (attempt <= maxRetries) {
-            try {
-                const res = await fetchWithTimeout(url, {}, 8000);
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                const data = await res.json();
-                return data;
-            } catch (err) {
-                attempt++;
-                console.warn('Fetch attempt', attempt, 'failed:', err);
-                if (attempt > maxRetries) throw err;
-                await new Promise(r => setTimeout(r, 1000 * attempt)); // backoff
-            }
-        }
-        throw new Error('Échec de récupération');
-    }
-
-    // Rendu des matches
-    function renderMatches(data) {
-        const container = document.getElementById('matchesContainer');
-        container.innerHTML = '';
-
-        // Sécurité: vérifier structure
-        const details = (data && data.statistiques_brutes_avec_ia_hors_montecarlo && data.statistiques_brutes_avec_ia_hors_montecarlo.details) || (data && data.statistiques_brutes_avec_ia && data.statistiques_brutes_avec_ia.details) || [];
-        if (!Array.isArray(details) || details.length === 0) {
-            document.getElementById('loadingContainer').style.display = 'none';
-            document.getElementById('errorContainer').style.display = 'flex';
-            document.getElementById('errorText').textContent = 'Aucun pronostic disponible aujourd\'hui.';
-            return;
-        }
-
-        details.forEach(match => {
-            const matchCard = document.createElement('div');
-            matchCard.className = 'match-card';
-            matchCard.dataset.matchId = match.id || '';
-
-            const logoHome = match.logo_home || '';
-            const logoAway = match.logo_away || '';
-
-            // fallback pour date
-            const dateFormatted = formatDate(match.date || match.Date || '');
-
-            matchCard.innerHTML = `
-                <div class="match-row">
-                    <div class="team">
-                        <div class="team-logo">${logoHome ? `<img src="${logoHome}" alt="${escapeHtml(match.HomeTeam||'')}" onerror="this.style.display='none'">` : ''}</div>
-                        <div class="team-name">${escapeHtml(match.HomeTeam||'')}</div>
-                    </div>
-
-                    <div class="vs-container">
-                        <div class="match-date">${dateFormatted}</div>
-                        <div class="vs-text">VS</div>
-                    </div>
-
-                    <div class="team">
-                        <div class="team-logo">${logoAway ? `<img src="${logoAway}" alt="${escapeHtml(match.AwayTeam||'')}" onerror="this.style.display='none'">` : ''}</div>
-                        <div class="team-name">${escapeHtml(match.AwayTeam||'')}</div>
-                    </div>
-                </div>
-
-                <div class="reliability">FIABILITÉ : ${Number(match.confiance_pourcentage || match.confiance || 50)}%</div>
-            `;
-
-            matchCard.addEventListener('click', () => openMatchDetails(match));
-            container.appendChild(matchCard);
-        });
-
-        document.getElementById('loadingContainer').style.display = 'none';
-        container.style.display = 'block';
-    }
-
-    // echappement simple pour text injection
-    function escapeHtml(str) {
-        if (!str) return '';
-        return String(str)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-
-    // Ouvrir détail
-    function openMatchDetails(match) {
-        // Mise à jour header
-        document.getElementById('detailsTeam1Name').textContent = match.HomeTeam || 'ÉQUIPE 1';
-        document.getElementById('detailsTeam2Name').textContent = match.AwayTeam || 'ÉQUIPE 2';
-        document.getElementById('detailsTeam1LogoImg').src = match.logo_home || '';
-        document.getElementById('detailsTeam2LogoImg').src = match.logo_away || '';
-
-        // Tabs dynamiques
-        const tabs = [];
-        tabs.push({ id: 'statistiques', label: 'Statistiques' });
-        if (match.Probabilites) tabs.push({ id: 'probabilites', label: 'Probabilités' });
-        if (match.analyse_ia || match.prediction_principale) tabs.push({ id: 'prediction', label: 'Prédiction IA' });
-        if (match.last_matches_home && match.last_matches_home.length) tabs.push({ id: 'recents', label: 'Matchs Récents' });
-        if (match.confrontations_saison_derniere && match.confrontations_saison_derniere.length) tabs.push({ id: 'h2h', label: 'H2H' });
-        if (match.classement_complet && match.classement_complet.length) tabs.push({ id: 'classements', label: 'Classements' });
-
-        const tabsWrapper = document.getElementById('tabsWrapper');
-        tabsWrapper.innerHTML = '';
-        tabs.forEach((t,i)=>{
-            const btn = document.createElement('button');
-            btn.className = `tab-button ${i===0 ? 'active':''}`;
-            btn.dataset.tab = t.id;
-            btn.textContent = t.label;
-            tabsWrapper.appendChild(btn);
-        });
-
-        renderTabContents(match, tabs);
-        document.getElementById('detailsPage').classList.add('active');
-
-        // Scroll to top of details
-        document.querySelector('.tab-contents-wrapper').scrollTop = 0;
-    }
-
-    function renderTabContents(match, tabs) {
-        const container = document.getElementById('tabContentsContainer');
-        container.innerHTML = '';
-        tabs.forEach((tab, idx) => {
-            const div = document.createElement('div');
-            div.className = `tab-content ${idx===0 ? 'active':''}`;
-            div.id = 'tab-' + tab.id;
-            // Remplir contenu selon tab.id
-            switch (tab.id) {
-                case 'statistiques': div.innerHTML = renderStatistiquesTab(match); break;
-                case 'probabilites': div.innerHTML = renderProbabilitesTab(match); break;
-                case 'prediction': div.innerHTML = renderPredictionTab(match); break;
-                case 'recents': div.innerHTML = renderRecentsTab(match); break;
-                case 'h2h': div.innerHTML = renderH2HTab(match); break;
-                case 'classements': div.innerHTML = renderClassementsTab(match); break;
-                default: div.innerHTML = '<div class="info-box">Aucune donnée</div>';
-            }
-            container.appendChild(div);
-        });
-        // Assurer la liaison des boutons (délégué plus bas)
-    }
-
-    // Rendu des différents panels (réutilise vos fonctions mais avec protections)
-    function renderStatistiquesTab(match) {
-        const statsHome = match.stats_home || {};
-        const statsAway = match.stats_away || {};
-        return `
-            <div class="stat-card">
-                <div class="stat-title">Statistiques Générales</div>
-                <div class="vs-stat">
-                    <div class="vs-stat-team">
-                        <div class="vs-stat-value">${(statsHome.moyenne_marques||0).toFixed(1)}</div>
-                        <div class="vs-stat-label">Buts marqués</div>
-                    </div>
-                    <div class="vs-stat-vs">VS</div>
-                    <div class="vs-stat-team">
-                        <div class="vs-stat-value">${(statsAway.moyenne_marques||0).toFixed(1)}</div>
-                        <div class="vs-stat-label">Buts marqués</div>
-                    </div>
-                </div>
-
-                <div class="vs-stat">
-                    <div class="vs-stat-team">
-                        <div class="vs-stat-value">${(statsHome.moyenne_encaisses||0).toFixed(1)}</div>
-                        <div class="vs-stat-label">Buts encaissés</div>
-                    </div>
-                    <div class="vs-stat-vs">VS</div>
-                    <div class="vs-stat-team">
-                        <div class="vs-stat-value">${(statsAway.moyenne_encaisses||0).toFixed(1)}</div>
-                        <div class="vs-stat-label">Buts encaissés</div>
-                    </div>
-                </div>
-
-                <div class="stat-row"><span class="stat-label">Points sur 6 matchs</span><span class="stat-value">${statsHome.total_points_6||0} - ${statsAway.total_points_6||0}</span></div>
-                <div class="stat-row"><span class="stat-label">Points sur 10 matchs</span><span class="stat-value">${statsHome.total_points_10||0} - ${statsAway.total_points_10||0}</span></div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-title">Forme Récente (6 matchs)</div>
-                <div class="stat-row"><span class="stat-label">${escapeHtml(match.HomeTeam||'')}</span><span>${formatForm(statsHome.form_6)}</span></div>
-                <div class="stat-row"><span class="stat-label">${escapeHtml(match.AwayTeam||'')}</span><span>${formatForm(statsAway.form_6)}</span></div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-title">Performance Domicile/Extérieur</div>
-                <div class="stat-row"><span class="stat-label">${escapeHtml(match.HomeTeam||'')} à domicile</span><span>${formatForm(statsHome.serie_domicile)}</span></div>
-                <div class="stat-row"><span class="stat-label">Buts marqués/encaissés</span><span class="stat-value">${statsHome.buts_dom_marques||0} / ${statsHome.buts_dom_encaisses||0}</span></div>
-
-                <div class="stat-row" style="margin-top:15px;"><span class="stat-label">${escapeHtml(match.AwayTeam||'')} à l'extérieur</span><span>${formatForm(statsAway.serie_exterieur)}</span></div>
-                <div class="stat-row"><span class="stat-label">Buts marqués/encaissés</span><span class="stat-value">${statsAway.buts_ext_marques||0} / ${statsAway.buts_ext_encaisses||0}</span></div>
-            </div>
-        `;
-    }
-
-    function renderProbabilitesTab(match) {
-        const prob = match.Probabilites || match.Probabilites || null;
-        if (!prob) return '<div class="info-box">Aucune probabilité disponible</div>';
-        // Défensif: accès aux chemins possibles
-        const oneX2 = (prob['1x2']||prob['1X2']||prob['1x2']||{V1:0,X:0,V2:0});
-        const ou = prob.over_under || {plus_de_0_5:0, plus_de_1_5:0, plus_de_2_5:0, plus_de_3_5:0};
-        const btts = prob.btts || {oui:0, non:0};
-        const scores = prob.scores_probables || {};
-        return `
-            <div class="proba-card"><div class="proba-label">Victoire ${escapeHtml(match.HomeTeam||'')}</div><div class="proba-value">${oneX2.V1||0}%</div></div>
-            <div class="proba-card" style="background: linear-gradient(135deg, rgba(234,179,8,0.2) 0%, rgba(202,138,4,0.1) 100%); border-color: rgba(234,179,8,0.3);"><div class="proba-label">Match Nul</div><div class="proba-value" style="color:#eab308">${oneX2.X||0}%</div></div>
-            <div class="proba-card" style="background: linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(220,38,38,0.1) 100%); border-color: rgba(239,68,68,0.3);"><div class="proba-label">Victoire ${escapeHtml(match.AwayTeam||'')}</div><div class="proba-value" style="color:#ef4444">${oneX2.V2||0}%</div></div>
-
-            <div class="stat-card">
-                <div class="stat-title">Probabilités Over/Under</div>
-                <div class="stat-row"><span class="stat-label">Plus de 0.5 buts</span><span class="stat-value">${ou.plus_de_0_5||0}%</span></div>
-                <div class="progress-bar"><div class="progress-fill" style="width:${ou.plus_de_0_5||0}%"></div></div>
-                <div class="stat-row" style="margin-top:15px;"><span class="stat-label">Plus de 1.5 buts</span><span class="stat-value">${ou.plus_de_1_5||0}%</span></div>
-                <div class="progress-bar"><div class="progress-fill" style="width:${ou.plus_de_1_5||0}%"></div></div>
-                <div class="stat-row" style="margin-top:15px;"><span class="stat-label">Plus de 2.5 buts</span><span class="stat-value">${ou.plus_de_2_5||0}%</span></div>
-                <div class="progress-bar"><div class="progress-fill" style="width:${ou.plus_de_2_5||0}%"></div></div>
-                <div class="stat-row" style="margin-top:15px;"><span class="stat-label">Plus de 3.5 buts</span><span class="stat-value">${ou.plus_de_3_5||0}%</span></div>
-                <div class="progress-bar"><div class="progress-fill" style="width:${ou.plus_de_3_5||0}%"></div></div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-title">BTTS (Les deux équipes marquent)</div>
-                <div class="stat-row"><span class="stat-label">Oui</span><span class="stat-value">${btts.oui||0}%</span></div>
-                <div class="progress-bar"><div class="progress-fill" style="width:${btts.oui||0}%"></div></div>
-                <div class="stat-row" style="margin-top:15px;"><span class="stat-label">Non</span><span class="stat-value">${btts.non||0}%</span></div>
-                <div class="progress-bar"><div class="progress-fill" style="width:${btts.non||0}%"></div></div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-title">Scores Probables</div>
-                ${Object.entries(scores).map(([s,p])=>`<div class="stat-row"><span class="stat-label">${escapeHtml(s)}</span><span class="stat-value">${p}%</span></div>`).join('')}
-            </div>
-        `;
-    }
-
-    function renderPredictionTab(match) {
-        return `
-            <div class="prediction-card">
-                <div class="prediction-title">Prédiction Principale</div>
-                <div class="prediction-result">${escapeHtml(match.prediction_principale || match.prediction || 'N/A')}</div>
-                <div class="prediction-confidence">Confiance : ${Number(match.confiance_pourcentage||match.confiance||50)}%</div>
-            </div>
-
-            ${match.scores_probables ? `<div class="prediction-card" style="background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(5,150,105,0.1)); border-color: rgba(16,185,129,0.3);"><div class="prediction-title">Scores Probables</div><div class="prediction-result" style="color:#10b981">${escapeHtml(JSON.stringify(match.scores_probables))}</div></div>` : ''}
-
-            ${match.analyse_ia ? `<div class="info-box"><div class="info-box-title">🤖 Analyse IA Complète</div><div class="info-box-content">${escapeHtml(match.analyse_ia)}</div></div>` : ''}
-        `;
-    }
-
-    function renderRecentsTab(match) {
-        const renderMatchList = (matches, teamName) => {
-            if (!Array.isArray(matches) || matches.length===0) return '<div class="info-box">Aucun match récent</div>';
-            return matches.map(m => {
-                const isHomeTeam = m.home_team === teamName;
-                let result = 'N/A';
-                if (m.score && m.score.includes('-')) {
-                    const [a,b] = m.score.split('-').map(s=>parseInt(s.trim()));
-                    if (!isNaN(a) && !isNaN(b)) {
-                        if (isHomeTeam) result = a>b ? 'VICTOIRE' : a<b ? 'DÉFAITE' : 'NUL';
-                        else result = b>a ? 'VICTOIRE' : b<a ? 'DÉFAITE' : 'NUL';
-                    }
-                }
-                const resultColor = result==='VICTOIRE' ? '#10b981' : (result==='NUL' ? '#eab308' : '#ef4444');
-                return `
-                    <div class="recent-match">
-                        <div class="recent-match-header"><span class="recent-match-date">${escapeHtml(m.date||'N/A')}</span><span style="font-size:11px;color:${resultColor};font-weight:700">${result}</span></div>
-                        <div class="recent-match-teams"><span class="recent-team">${escapeHtml(m.home_team||'')}</span><span class="recent-score">${escapeHtml(m.score||'N/A')}</span><span class="recent-team">${escapeHtml(m.away_team||'')}</span></div>
-                        ${m.stats && Object.keys(m.stats||{}).length>0 ? `<div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(59,130,246,0.2)">${Object.entries(m.stats).map(([k,v])=>`<div class="stat-row" style="font-size:12px;margin-bottom:5px"><span class="stat-label">${escapeHtml(k)}</span><span class="stat-value">${Array.isArray(v)?escapeHtml(v.join(' - ')):escapeHtml(String(v))}</span></div>`).join('')}</div>` : ''}
-                    </div>
-                `;
-            }).join('');
+            ImageTracer.imageToSVG(img.src, svgString => {
+                svgString = svgString.replace(/\s+/g, ' ');
+                currentSvgString = svgString;
+                svgContainer.innerHTML = svgString;
+                svgCode.value = svgString;
+                const sizeKB = (new Blob([svgString]).size / 1024).toFixed(2);
+                svgInfo.textContent = `Taille: ${sizeKB} KB ${highPrecision ? '(haute précision)' : ''}`;
+                loadingSection.classList.add('hidden');
+                resultsSection.classList.remove('hidden');
+            }, opts);
         };
-        return `
-            <div class="stat-card"><div class="stat-title">${escapeHtml(match.HomeTeam||'')} - Derniers Matchs</div>${renderMatchList(match.last_matches_home||[], match.HomeTeam)}</div>
-            <div class="stat-card"><div class="stat-title">${escapeHtml(match.AwayTeam||'')} - Derniers Matchs</div>${renderMatchList(match.last_matches_away||[], match.AwayTeam)}</div>
-        `;
-    }
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(currentImageFile);
+}
 
-    function renderH2HTab(match) {
-        const h2h = match.confrontations_saison_derniere || [];
-        let homeWins = 0, awayWins = 0, draws = 0;
-        h2h.forEach(m => {
-            if (m.score && m.score.includes('-')) {
-                const [a,b] = m.score.split('-').map(s=>parseInt(s.trim()));
-                if (!isNaN(a) && !isNaN(b)) {
-                    const isHomeFirst = (m.team1 === match.HomeTeam);
-                    if (a>b) { if (isHomeFirst) homeWins++; else awayWins++; }
-                    else if (a<b) { if (isHomeFirst) awayWins++; else homeWins++; }
-                    else draws++;
-                }
-            }
-        });
-        return `
-            <div class="stat-card">
-                <div class="stat-title">Historique des Confrontations</div>
-                <div class="vs-stat">
-                    <div class="vs-stat-team"><div class="vs-stat-value">${homeWins}</div><div class="vs-stat-label">${escapeHtml(match.HomeTeam||'')}</div></div>
-                    <div class="vs-stat-vs">-</div>
-                    <div class="vs-stat-team"><div class="vs-stat-value">${draws}</div><div class="vs-stat-label">Nuls</div></div>
-                    <div class="vs-stat-vs">-</div>
-                    <div class="vs-stat-team"><div class="vs-stat-value">${awayWins}</div><div class="vs-stat-label">${escapeHtml(match.AwayTeam||'')}</div></div>
-                </div>
-            </div>
-            <div class="stat-card"><div class="stat-title">Dernières Confrontations</div>${h2h.map(m=>`<div class="recent-match"><div class="recent-match-header"><span class="recent-match-date">${escapeHtml(m.date||'N/A')}</span><span style="font-size:11px;color:#fff;font-weight:700">${escapeHtml(m.score||'')}</span></div><div class="recent-match-teams"><span class="recent-team">${escapeHtml(m.team1||'')}</span><span class="recent-score">${escapeHtml(m.score||'')}</span><span class="recent-team">${escapeHtml(m.team2||'')}</span></div></div>`).join('')}</div>
-        `;
-    }
+convertBtn.addEventListener('click', () => vectorize(false));
+highPrecisionBtn.addEventListener('click', () => vectorize(true));
 
-    function renderClassementsTab(match) {
-        const classement = match.classement_complet || [];
-        return `
-            <div class="stat-card"><div class="stat-title">Classement ${escapeHtml(match.league||'')}</div>${classement.map(t=>`<div class="ranking-item" style="${(t.team===match.HomeTeam||t.team===match.AwayTeam)?'border:2px solid #3b82f6;background:linear-gradient(135deg, rgba(37,99,235,0.3), rgba(29,78,216,0.2));':''}"><div class="ranking-position">${t.position||''}</div><div class="ranking-team">${escapeHtml(t.team||'')}</div><div class="ranking-points">${t.points||0} pts</div></div>`).join('')}</div>
+downloadBtn.addEventListener('click', () => {
+    const blob = new Blob([currentSvgString], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = currentImageFile.name.replace(/\.[^/.]+$/, '') + '.svg';
+    a.click();
+    URL.revokeObjectURL(url);
+});
 
-            <div class="stat-card">
-                <div class="stat-title">Comparaison</div>
-                <div class="stat-row"><span class="stat-label">Position ${escapeHtml(match.HomeTeam||'')}</span><span class="stat-value">${match.classement_home||'N/A'}ᵉ</span></div>
-                <div class="stat-row"><span class="stat-label">Points ${escapeHtml(match.HomeTeam||'')}</span><span class="stat-value">${match.points_classement_home||0} pts</span></div>
-                <div class="stat-row" style="margin-top:15px"><span class="stat-label">Position ${escapeHtml(match.AwayTeam||'')}</span><span class="stat-value">${match.classement_away||'N/A'}ᵉ</span></div>
-                <div class="stat-row"><span class="stat-label">Points ${escapeHtml(match.AwayTeam||'')}</span><span class="stat-value">${match.points_classement_away||0} pts</span></div>
-                <div class="stat-row" style="margin-top:15px"><span class="stat-label">Différence de position</span><span class="stat-value">${Math.abs((match.classement_home||0)-(match.classement_away||0))} places</span></div>
-                <div class="stat-row"><span class="stat-label">Différence de points</span><span class="stat-value">${Math.abs((match.points_classement_home||0)-(match.points_classement_away||0))} points</span></div>
-            </div>
-        `;
-    }
+copySvgBtn.addEventListener('click', () => {
+    svgCode.select();
+    document.execCommand('copy');
+    showNotification('Copié', 'Le code SVG a été copié dans le presse-papiers.');
+});
 
-    // Handler pour switching des tabs (délégué global)
-    document.addEventListener('click', function(e) {
-        if (e.target.classList && e.target.classList.contains('tab-button')) {
-            const tabName = e.target.dataset.tab;
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            e.target.classList.add('active');
-            const content = document.getElementById('tab-' + tabName);
-            if (content) content.classList.add('active');
-            // scroll top optionally
-            document.querySelector('.tab-contents-wrapper').scrollTop = 0;
-        }
-    });
+newImageBtn.addEventListener('click', () => {
+    currentImageFile = null;
+    currentSvgString = '';
+    fileInput.value = '';
+    controlsSection.classList.add('hidden');
+    resultsSection.classList.add('hidden');
+    originalImage.src = '';
+    svgContainer.innerHTML = '';
+});
 
-    document.getElementById('backButton').addEventListener('click', ()=> {
-        document.getElementById('detailsPage').classList.remove('active');
-    });
-
-    // Init
-    async function init() {
-        try {
-            const data = await loadData();
-            renderMatches(data);
-        } catch (err) {
-            console.error('Erreur chargement:', err);
-            document.getElementById('loadingContainer').style.display = 'none';
-            document.getElementById('errorContainer').style.display = 'flex';
-            document.getElementById('errorText').textContent = `Erreur de chargement des données pour aujourd'hui (${getTodayDate()}). Vérifiez que le fichier existe sur GitHub.`;
-        }
-    }
-
-    // navigation bottom active visual
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function() {
-            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-            this.classList.add('active');
-            // comportement additionnel si besoin
-            showNotification('Fonction non disponible dans la démo');
-        });
-    });
-
-    // start
-    init();
-    </script>
+function showNotification(title, message) {
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4';
+    modal.innerHTML = `
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">${title}</h3>
+            <p class="text-gray-600 dark:text-gray-300 mb-4">${message}</p>
+            <button class="w-full bg-[#5D5CDE] hover:bg-[#4a49b8] text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                    onclick="this.closest('.fixed').remove()">OK</button>
+        </div>`;
+    document.body.appendChild(modal);
+}
+</script>
 </body>
 </html>
