@@ -382,6 +382,55 @@
     text-overflow: ellipsis;
   }
 
+  /* Keep original row */
+  .keep-original-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    gap: 12px;
+  }
+  .keep-original-label {
+    font-size: .85rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .keep-original-sub {
+    font-size: .68rem;
+    color: var(--muted2);
+    font-family: var(--mono);
+  }
+
+  .toggle-btn {
+    width: 48px;
+    height: 28px;
+    border-radius: 99px;
+    background: var(--border2);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    transition: background .2s;
+    -webkit-appearance: none;
+  }
+  .toggle-btn.on { background: var(--accent); }
+  .toggle-thumb {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform .2s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 1px 4px rgba(0,0,0,.3);
+  }
+  .toggle-btn.on .toggle-thumb { transform: translateX(20px); }
+
+  /* Palette list dimmed when keep original is on */
+  .palettes-dimmed { opacity: .35; pointer-events: none; transition: opacity .2s; }
+
   /* Custom palette */
   .custom-section {
     background: var(--card);
@@ -723,6 +772,17 @@
     <div class="panel" id="panelPalette">
       <div id="paletteList"></div>
 
+      <!-- Keep original toggle -->
+      <div class="keep-original-row">
+        <div class="keep-original-info">
+          <div class="keep-original-label">Garder les couleurs d'origine</div>
+          <div class="keep-original-sub">Anime sans changer la palette</div>
+        </div>
+        <button class="toggle-btn" id="btnKeepOriginal" role="switch" aria-checked="false">
+          <span class="toggle-thumb"></span>
+        </button>
+      </div>
+
       <!-- Custom palette -->
       <div class="custom-section">
         <div class="custom-label">✦ Palette personnalisée</div>
@@ -844,6 +904,7 @@ let activePalette = PALETTES[0];
 let activeAnim    = 'colorCycle';
 let isPlaying     = true;
 let bgDark        = true;
+let keepOriginal  = false;
 
 // ══════════════════════════════════════════
 // DOM
@@ -861,6 +922,23 @@ const paletteList   = document.getElementById('paletteList');
 const speedInput    = document.getElementById('speed');
 const intensityInput= document.getElementById('intensity');
 const staggerInput  = document.getElementById('staggerDelay');
+
+// ══════════════════════════════════════════
+// KEEP ORIGINAL TOGGLE
+// ══════════════════════════════════════════
+const btnKeepOriginal = document.getElementById('btnKeepOriginal');
+btnKeepOriginal.addEventListener('click', () => {
+  keepOriginal = !keepOriginal;
+  btnKeepOriginal.classList.toggle('on', keepOriginal);
+  btnKeepOriginal.setAttribute('aria-checked', keepOriginal);
+  // Dim/undim palette list and custom section
+  const paletteSection = document.getElementById('paletteList');
+  const customSection  = document.querySelector('.custom-section');
+  paletteSection.classList.toggle('palettes-dimmed', keepOriginal);
+  customSection.classList.toggle('palettes-dimmed', keepOriginal);
+  if (svgDoc) applyAnimation();
+  showToast(keepOriginal ? '🔒 Couleurs d\'origine' : '🎨 Palette active');
+});
 
 // ══════════════════════════════════════════
 // TOAST
@@ -1024,23 +1102,32 @@ function applyAnimation() {
   const palette   = activePalette.colors.filter(c =>
     !['#111111','#0d0d0d','#1a0a2e','#1a237e','#1a1a2e','#2c2c2c','#003b00'].includes(c));
 
+  // Helper: returns color for group i, or keeps original if keepOriginal
+  const getColor = (g, i) => keepOriginal ? g.getAttribute('fill') : palette[i % palette.length];
+
   let css = '';
 
   if (activeAnim === 'colorCycle') {
     groups.forEach((g, i) => {
       const id = `_g${i}_${Date.now()}`;
       g.setAttribute('id', id);
-      const colors = palette;
-      const steps = colors.map((c, ci) => `${Math.round(ci/(colors.length)*100)}% { fill: ${c}; }`).join('\n  ');
-      css += `@keyframes cc_${id} { ${steps} 100% { fill: ${colors[0]}; } }
-              #${id} { animation: cc_${id} ${speed}s linear infinite; animation-delay: ${(i * stagger).toFixed(2)}s; }`;
+      if (keepOriginal) {
+        // Pulse opacity instead of cycling colors
+        css += `@keyframes cc_${id} { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+                #${id} { animation: cc_${id} ${speed}s ease-in-out infinite; animation-delay: ${(i * stagger).toFixed(2)}s; }`;
+      } else {
+        const colors = palette;
+        const steps = colors.map((c, ci) => `${Math.round(ci/(colors.length)*100)}% { fill: ${c}; }`).join(' ');
+        css += `@keyframes cc_${id} { ${steps} 100% { fill: ${colors[0]}; } }
+                #${id} { animation: cc_${id} ${speed}s linear infinite; animation-delay: ${(i * stagger).toFixed(2)}s; }`;
+      }
     });
 
   } else if (activeAnim === 'pulse') {
     groups.forEach((g, i) => {
       const id = `_g${i}_${Date.now()}`;
       g.setAttribute('id', id);
-      g.setAttribute('fill', palette[i % palette.length]);
+      if (!keepOriginal) g.setAttribute('fill', getColor(g, i));
       const s = 1 + (intensity * 0.08);
       css += `@keyframes pulse_${id} { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(${s.toFixed(2)}); opacity: ${(0.6 + intensity * 0.004).toFixed(2)}; } }
               #${id} { transform-origin: center; animation: pulse_${id} ${speed}s ease-in-out infinite; animation-delay: ${(i * stagger).toFixed(2)}s; }`;
@@ -1051,8 +1138,8 @@ function applyAnimation() {
     groups.forEach((g, i) => {
       const id = `_g${i}_${Date.now()}`;
       g.setAttribute('id', id);
-      const col = palette[i % palette.length];
-      g.setAttribute('fill', col);
+      const col = getColor(g, i);
+      if (!keepOriginal) g.setAttribute('fill', col);
       const glowSize = (intensity * 0.3).toFixed(1);
       css += `@keyframes glow_${id} { 0%,100% { filter: drop-shadow(0 0 2px ${col}); } 50% { filter: drop-shadow(0 0 ${glowSize}px ${col}) drop-shadow(0 0 ${(glowSize*2).toFixed(1)}px ${col}40); } }
               #${id} { animation: glow_${id} ${speed}s ease-in-out infinite; animation-delay: ${(i * stagger).toFixed(2)}s; }`;
@@ -1062,7 +1149,7 @@ function applyAnimation() {
     groups.forEach((g, i) => {
       const id = `_g${i}_${Date.now()}`;
       g.setAttribute('id', id);
-      g.setAttribute('fill', palette[i % palette.length]);
+      if (!keepOriginal) g.setAttribute('fill', getColor(g, i));
       const sk = (intensity * 0.08).toFixed(2);
       css += `@keyframes wave_${id} { 0%,100% { transform: skewX(0deg) skewY(0deg); } 25% { transform: skewX(${sk}deg) skewY(${(sk*0.3).toFixed(2)}deg); } 75% { transform: skewX(-${sk}deg) skewY(-${(sk*0.3).toFixed(2)}deg); } }
               #${id} { transform-origin: center; animation: wave_${id} ${speed}s ease-in-out infinite; animation-delay: ${(i * stagger).toFixed(2)}s; }`;
@@ -1073,7 +1160,7 @@ function applyAnimation() {
     groups.forEach((g, i) => {
       const id = `_g${i}_${Date.now()}`;
       g.setAttribute('id', id);
-      g.setAttribute('fill', palette[i % palette.length]);
+      if (!keepOriginal) g.setAttribute('fill', getColor(g, i));
       css += `@keyframes rot_${id} { from { transform: rotate(0deg); } to { transform: rotate(${i%2===0?'360':'-360'}deg); } }
               #${id} { transform-origin: center; animation: rot_${id} ${(speed * (1 + i*0.15)).toFixed(2)}s linear infinite; }`;
     });
@@ -1083,7 +1170,7 @@ function applyAnimation() {
     groups.forEach((g, i) => {
       const id = `_g${i}_${Date.now()}`;
       g.setAttribute('id', id);
-      g.setAttribute('fill', palette[i % palette.length]);
+      if (!keepOriginal) g.setAttribute('fill', getColor(g, i));
       const dist = (intensity * 0.06).toFixed(2);
       const dir  = i % 2 === 0 ? `translateX(${dist}px)` : `translateY(${dist}px)`;
       css += `@keyframes sh_${id} { 0%,100% { transform: translateX(0); } 50% { transform: ${dir}; } }
@@ -1094,7 +1181,7 @@ function applyAnimation() {
     groups.forEach((g, i) => {
       const id = `_g${i}_${Date.now()}`;
       g.setAttribute('id', id);
-      g.setAttribute('fill', palette[i % palette.length]);
+      if (!keepOriginal) g.setAttribute('fill', getColor(g, i));
       css += `@keyframes stg_${id} {
         0%,${Math.max(0,(i/groups.length*100-5)).toFixed(0)}% { opacity: 0; transform: scale(0.8) translateY(6px); }
         ${(i/groups.length*100).toFixed(0)}% { opacity: 1; transform: scale(1) translateY(0); }
@@ -1108,6 +1195,7 @@ function applyAnimation() {
     groups.forEach((g, i) => {
       const id = `_g${i}_${Date.now()}`;
       g.setAttribute('id', id);
+      // rainbow always uses hue-rotate so it works on original colors too
       const startHue = (i / groups.length) * 360;
       css += `@keyframes rb_${id} { 0% { filter: hue-rotate(${startHue}deg) saturate(${intensity*100}%); } 100% { filter: hue-rotate(${startHue + 360}deg) saturate(${intensity*100}%); } }
               #${id} { animation: rb_${id} ${speed}s linear infinite; }`;
@@ -1119,7 +1207,7 @@ function applyAnimation() {
     const H   = vb.height || svg.clientHeight || 800;
     const ts  = Date.now();
 
-    groups.forEach((g, i) => g.setAttribute('fill', palette[i % palette.length]));
+    if (!keepOriginal) groups.forEach((g, i) => g.setAttribute('fill', getColor(g, i)));
 
     const clipId = `clip_draw_${ts}`;
     const rectId = `rect_draw_${ts}`;
@@ -1144,16 +1232,13 @@ function applyAnimation() {
 
     const holdPct = 30;
     const drawPct = 70;
-
     css += `
       @keyframes draw_rect_${ts} {
         0%              { width: 0; }
         ${drawPct}%     { width: ${W}px; }
         ${drawPct + holdPct * 0.5}%, 100% { width: ${W}px; }
       }
-      #${rectId} {
-        animation: draw_rect_${ts} ${speed}s cubic-bezier(0.4,0,0.2,1) infinite;
-      }
+      #${rectId} { animation: draw_rect_${ts} ${speed}s cubic-bezier(0.4,0,0.2,1) infinite; }
     `;
     css += `svg { overflow: visible; }`;
 
@@ -1166,7 +1251,7 @@ function applyAnimation() {
     groups.forEach((g, i) => {
       const id = `_g${i}_${ts}`;
       g.setAttribute('id', id);
-      g.setAttribute('fill', palette[i % palette.length]);
+      if (!keepOriginal) g.setAttribute('fill', getColor(g, i));
       const groupStart = (i / totalGroups) * drawPhase;
       const groupEnd   = ((i + 1) / totalGroups) * drawPhase;
       const midPoint   = (groupStart + groupEnd) / 2;
