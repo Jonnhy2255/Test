@@ -169,7 +169,7 @@
     position: absolute; inset: 0;
     opacity: 0; cursor: pointer;
     width: 100%; height: 100%;
-    font-size: 16px; /* prevents iOS zoom */
+    font-size: 16px;
   }
   .dz-icon {
     font-size: 2.8rem;
@@ -239,6 +239,47 @@
     max-height: 86%;
   }
 
+  /* ── LIGHT SWEEP OVERLAY ── */
+  #lightSweepOverlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    border-radius: 20px;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  #lightSweepOverlay.active { opacity: 1; }
+
+  #lightSweepOverlay::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -60%;
+    width: 40%;
+    height: 300%;
+    background: linear-gradient(
+      105deg,
+      transparent 20%,
+      rgba(255,255,255,0.06) 40%,
+      rgba(255,255,255,0.22) 50%,
+      rgba(255,255,255,0.06) 60%,
+      transparent 80%
+    );
+    transform: skewX(-15deg);
+    animation: lightSweep 2.8s cubic-bezier(0.4,0,0.2,1) infinite;
+    animation-play-state: paused;
+  }
+  #lightSweepOverlay.active::after {
+    animation-play-state: running;
+  }
+
+  @keyframes lightSweep {
+    0%   { left: -60%; }
+    100% { left: 130%; }
+  }
+
   /* Stage controls */
   .stage-controls {
     display: none;
@@ -246,6 +287,7 @@
     gap: 10px;
     position: relative;
     z-index: 1;
+    flex-wrap: wrap;
   }
   .stage-controls.show { display: flex; }
 
@@ -285,6 +327,85 @@
     transition: all .15s;
   }
   .bg-btn:active { opacity: .7; }
+
+  /* Light sweep button */
+  .sweep-row {
+    width: 100%;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    gap: 12px;
+  }
+  .sweep-row.show { display: flex; }
+  .sweep-label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .sweep-label-title {
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sweep-label-sub {
+    font-size: .62rem;
+    color: var(--muted2);
+    font-family: var(--mono);
+  }
+
+  .toggle-btn {
+    width: 48px;
+    height: 28px;
+    border-radius: 99px;
+    background: var(--border2);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    transition: background .2s;
+    -webkit-appearance: none;
+  }
+  .toggle-btn.on { background: var(--accent); }
+  .toggle-thumb {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform .2s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 1px 4px rgba(0,0,0,.3);
+  }
+  .toggle-btn.on .toggle-thumb { transform: translateX(20px); }
+
+  /* Sweep speed row (only visible when sweep is on) */
+  .sweep-speed-row {
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 14px;
+    background: rgba(99,102,241,.06);
+    border: 1px solid rgba(99,102,241,.2);
+    border-radius: 12px;
+  }
+  .sweep-speed-row.show { display: flex; }
+  .sweep-speed-row label {
+    display: flex;
+    justify-content: space-between;
+    font-size: .68rem;
+    color: var(--muted2);
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: .8px;
+  }
+  .sweep-speed-row label span { color: var(--cyan); }
 
   /* Status chips */
   .status-chips {
@@ -403,30 +524,6 @@
     color: var(--muted2);
     font-family: var(--mono);
   }
-
-  .toggle-btn {
-    width: 48px;
-    height: 28px;
-    border-radius: 99px;
-    background: var(--border2);
-    border: none;
-    cursor: pointer;
-    position: relative;
-    flex-shrink: 0;
-    transition: background .2s;
-    -webkit-appearance: none;
-  }
-  .toggle-btn.on { background: var(--accent); }
-  .toggle-thumb {
-    position: absolute;
-    top: 3px; left: 3px;
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    background: #fff;
-    transition: transform .2s cubic-bezier(.4,0,.2,1);
-    box-shadow: 0 1px 4px rgba(0,0,0,.3);
-  }
-  .toggle-btn.on .toggle-thumb { transform: translateX(20px); }
 
   /* Palette list dimmed when keep original is on */
   .palettes-dimmed { opacity: .35; pointer-events: none; transition: opacity .2s; }
@@ -550,6 +647,19 @@
     color: var(--accent2);
     background: rgba(168,85,247,.1);
     box-shadow: 0 0 16px rgba(168,85,247,.12);
+  }
+
+  /* "one-shot" badge on draw/reveal */
+  .anim-type[data-oneshot]::after {
+    content: '1×';
+    display: inline-block;
+    margin-left: 5px;
+    font-size: .55rem;
+    background: rgba(99,102,241,.25);
+    color: var(--accent);
+    border-radius: 4px;
+    padding: 1px 4px;
+    vertical-align: middle;
   }
 
   /* Sliders */
@@ -749,7 +859,10 @@
       </div>
 
       <!-- SVG Stage -->
-      <div id="svgStage"></div>
+      <div id="svgStage">
+        <!-- Light sweep overlay (sits above SVG) -->
+        <div id="lightSweepOverlay"></div>
+      </div>
 
       <!-- Controls -->
       <div class="stage-controls" id="stageControls">
@@ -758,6 +871,23 @@
           <button class="bg-btn" id="btnBg">⬛ Sombre</button>
           <button class="bg-btn" id="btnBgLight">⬜ Clair</button>
         </div>
+      </div>
+
+      <!-- Light sweep toggle row (shown after SVG loaded) -->
+      <div class="sweep-row" id="sweepRow">
+        <div class="sweep-label">
+          <div class="sweep-label-title">✦ Faisceau lumineux</div>
+          <div class="sweep-label-sub">Reflet après animation</div>
+        </div>
+        <button class="toggle-btn" id="btnSweep" role="switch" aria-checked="false">
+          <span class="toggle-thumb"></span>
+        </button>
+      </div>
+
+      <!-- Sweep speed slider (shown when sweep is on) -->
+      <div class="sweep-speed-row" id="sweepSpeedRow">
+        <label>Vitesse du faisceau <span id="sweepSpeedVal">2.8s</span></label>
+        <input type="range" id="sweepSpeed" min="0.5" max="8" value="2.8" step="0.1">
       </div>
 
       <!-- Status chips -->
@@ -811,8 +941,8 @@
           <button class="anim-type" data-anim="shift">↔ Shift</button>
           <button class="anim-type" data-anim="stagger">⚡ Stagger</button>
           <button class="anim-type" data-anim="rainbow">🌈 Rainbow</button>
-          <button class="anim-type" data-anim="draw">✏️ Se dessine</button>
-          <button class="anim-type" data-anim="reveal">▶ Révélation</button>
+          <button class="anim-type" data-anim="draw" data-oneshot="">✏️ Se dessine</button>
+          <button class="anim-type" data-anim="reveal" data-oneshot="">▶ Révélation</button>
         </div>
       </div>
 
@@ -905,23 +1035,32 @@ let activeAnim    = 'colorCycle';
 let isPlaying     = true;
 let bgDark        = true;
 let keepOriginal  = false;
+let sweepActive   = false;
+
+// ONE-SHOT animations: play once, stay on final frame
+const ONE_SHOT_ANIMS = new Set(['draw', 'reveal']);
 
 // ══════════════════════════════════════════
 // DOM
 // ══════════════════════════════════════════
-const dropzone      = document.getElementById('dropzone');
-const fileInput     = document.getElementById('fileInput');
-const svgStage      = document.getElementById('svgStage');
-const stageControls = document.getElementById('stageControls');
-const btnPlay       = document.getElementById('btnPlay');
-const btnApply      = document.getElementById('btnApply');
-const btnExportFull = document.getElementById('btnExportFull');
-const btnReset      = document.getElementById('btnReset');
-const animStyles    = document.getElementById('animStyles');
-const paletteList   = document.getElementById('paletteList');
-const speedInput    = document.getElementById('speed');
-const intensityInput= document.getElementById('intensity');
-const staggerInput  = document.getElementById('staggerDelay');
+const dropzone        = document.getElementById('dropzone');
+const fileInput       = document.getElementById('fileInput');
+const svgStage        = document.getElementById('svgStage');
+const stageControls   = document.getElementById('stageControls');
+const btnPlay         = document.getElementById('btnPlay');
+const btnApply        = document.getElementById('btnApply');
+const btnExportFull   = document.getElementById('btnExportFull');
+const btnReset        = document.getElementById('btnReset');
+const animStyles      = document.getElementById('animStyles');
+const paletteList     = document.getElementById('paletteList');
+const speedInput      = document.getElementById('speed');
+const intensityInput  = document.getElementById('intensity');
+const staggerInput    = document.getElementById('staggerDelay');
+const lightSweepOverlay = document.getElementById('lightSweepOverlay');
+const sweepRow        = document.getElementById('sweepRow');
+const sweepSpeedRow   = document.getElementById('sweepSpeedRow');
+const sweepSpeedInput = document.getElementById('sweepSpeed');
+const btnSweep        = document.getElementById('btnSweep');
 
 // ══════════════════════════════════════════
 // KEEP ORIGINAL TOGGLE
@@ -931,7 +1070,6 @@ btnKeepOriginal.addEventListener('click', () => {
   keepOriginal = !keepOriginal;
   btnKeepOriginal.classList.toggle('on', keepOriginal);
   btnKeepOriginal.setAttribute('aria-checked', keepOriginal);
-  // Dim/undim palette list and custom section
   const paletteSection = document.getElementById('paletteList');
   const customSection  = document.querySelector('.custom-section');
   paletteSection.classList.toggle('palettes-dimmed', keepOriginal);
@@ -939,6 +1077,45 @@ btnKeepOriginal.addEventListener('click', () => {
   if (svgDoc) applyAnimation();
   showToast(keepOriginal ? '🔒 Couleurs d\'origine' : '🎨 Palette active');
 });
+
+// ══════════════════════════════════════════
+// LIGHT SWEEP TOGGLE
+// ══════════════════════════════════════════
+btnSweep.addEventListener('click', () => {
+  sweepActive = !sweepActive;
+  btnSweep.classList.toggle('on', sweepActive);
+  btnSweep.setAttribute('aria-checked', sweepActive);
+  lightSweepOverlay.classList.toggle('active', sweepActive);
+  sweepSpeedRow.classList.toggle('show', sweepActive);
+  showToast(sweepActive ? '✦ Faisceau activé' : '○ Faisceau désactivé');
+});
+
+// Sweep speed slider
+sweepSpeedInput.addEventListener('input', () => {
+  const val = sweepSpeedInput.value;
+  document.getElementById('sweepSpeedVal').textContent = val + 's';
+  // Update the CSS animation duration dynamically
+  lightSweepOverlay.style.setProperty('--sweep-duration', val + 's');
+  // Re-inject the sweep keyframe style with new speed
+  updateSweepStyle();
+});
+
+function updateSweepStyle() {
+  const dur = sweepSpeedInput.value;
+  // We override via inline style on the pseudo-element via a CSS variable trick
+  // Since we can't directly set pseudo-element styles, we use a dynamic <style> block
+  let existing = document.getElementById('sweepDynStyle');
+  if (!existing) {
+    existing = document.createElement('style');
+    existing.id = 'sweepDynStyle';
+    document.head.appendChild(existing);
+  }
+  existing.textContent = `
+    #lightSweepOverlay::after {
+      animation-duration: ${dur}s !important;
+    }
+  `;
+}
 
 // ══════════════════════════════════════════
 // TOAST
@@ -1044,6 +1221,7 @@ function loadSVG(file) {
     dropzone.style.display = 'none';
     svgStage.classList.add('show');
     stageControls.classList.add('show');
+    sweepRow.classList.add('show');
     document.getElementById('statusChips').style.display = 'flex';
     btnApply.disabled = false;
     btnExportFull.disabled = false;
@@ -1058,7 +1236,11 @@ function loadSVG(file) {
 // RENDER SVG
 // ══════════════════════════════════════════
 function renderSVG(svgStr) {
+  // Keep the lightSweepOverlay, replace everything else
+  const overlay = document.getElementById('lightSweepOverlay');
   svgStage.innerHTML = svgStr;
+  svgStage.appendChild(overlay); // re-attach overlay on top
+
   const svg = svgStage.querySelector('svg');
   if (svg) {
     svg.style.maxWidth  = '86%';
@@ -1105,6 +1287,13 @@ function applyAnimation() {
   // Helper: returns color for group i, or keeps original if keepOriginal
   const getColor = (g, i) => keepOriginal ? g.getAttribute('fill') : palette[i % palette.length];
 
+  // Is this a one-shot animation?
+  const isOneShot = ONE_SHOT_ANIMS.has(activeAnim);
+
+  // For one-shot: use "forwards" fill mode + play once
+  const iterationCount = isOneShot ? '1' : 'infinite';
+  const fillMode       = isOneShot ? 'forwards' : 'none';
+
   let css = '';
 
   if (activeAnim === 'colorCycle') {
@@ -1112,7 +1301,6 @@ function applyAnimation() {
       const id = `_g${i}_${Date.now()}`;
       g.setAttribute('id', id);
       if (keepOriginal) {
-        // Pulse opacity instead of cycling colors
         css += `@keyframes cc_${id} { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
                 #${id} { animation: cc_${id} ${speed}s ease-in-out infinite; animation-delay: ${(i * stagger).toFixed(2)}s; }`;
       } else {
@@ -1195,13 +1383,13 @@ function applyAnimation() {
     groups.forEach((g, i) => {
       const id = `_g${i}_${Date.now()}`;
       g.setAttribute('id', id);
-      // rainbow always uses hue-rotate so it works on original colors too
       const startHue = (i / groups.length) * 360;
       css += `@keyframes rb_${id} { 0% { filter: hue-rotate(${startHue}deg) saturate(${intensity*100}%); } 100% { filter: hue-rotate(${startHue + 360}deg) saturate(${intensity*100}%); } }
               #${id} { animation: rb_${id} ${speed}s linear infinite; }`;
     });
 
   } else if (activeAnim === 'draw') {
+    // ── DRAW: one-shot, stays on final frame (full reveal) ──
     const vb  = svg.viewBox.baseVal;
     const W   = vb.width  || svg.clientWidth  || 800;
     const H   = vb.height || svg.clientHeight || 800;
@@ -1227,40 +1415,48 @@ function applyAnimation() {
 
     const wrapper = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     wrapper.setAttribute('clip-path', `url(#${clipId})`);
+    // Move all children except defs into wrapper
     [...svg.children].forEach(c => { if (c !== defs) wrapper.appendChild(c); });
     svg.appendChild(wrapper);
 
-    const holdPct = 30;
-    const drawPct = 70;
+    // One-shot: draw from 0 to W, then hold at W forever (animation-fill-mode: forwards)
     css += `
       @keyframes draw_rect_${ts} {
-        0%              { width: 0; }
-        ${drawPct}%     { width: ${W}px; }
-        ${drawPct + holdPct * 0.5}%, 100% { width: ${W}px; }
+        0%   { width: 0; }
+        100% { width: ${W}px; }
       }
-      #${rectId} { animation: draw_rect_${ts} ${speed}s cubic-bezier(0.4,0,0.2,1) infinite; }
+      #${rectId} {
+        animation: draw_rect_${ts} ${speed}s cubic-bezier(0.4,0,0.2,1) 1 forwards;
+      }
     `;
     css += `svg { overflow: visible; }`;
 
   } else if (activeAnim === 'reveal') {
+    // ── REVEAL: one-shot, each group fades+slides in, then stays visible ──
     const ts = Date.now();
     const totalGroups = groups.length;
-    const drawPhase = 70;
-    const holdPhase = 30;
+    // Each group gets its own window within the total duration
+    // All groups finish by 100% of the animation duration
+    const lastGroupEnd = 100; // pct
 
     groups.forEach((g, i) => {
       const id = `_g${i}_${ts}`;
       g.setAttribute('id', id);
       if (!keepOriginal) g.setAttribute('fill', getColor(g, i));
-      const groupStart = (i / totalGroups) * drawPhase;
-      const groupEnd   = ((i + 1) / totalGroups) * drawPhase;
-      const midPoint   = (groupStart + groupEnd) / 2;
+
+      const groupStart = (i / totalGroups) * 80;        // stagger start
+      const groupEnd   = groupStart + (80 / totalGroups); // each group gets a slice
+
       css += `@keyframes rev_${id} {
-        0%, ${groupStart.toFixed(1)}%  { opacity: 0; transform: translateY(12px) scale(0.92); }
-        ${midPoint.toFixed(1)}%        { opacity: 1; transform: translateY(0px) scale(1); }
-        ${(drawPhase + holdPhase).toFixed(1)}%, 100% { opacity: 1; transform: translateY(0) scale(1); }
+        0%, ${groupStart.toFixed(1)}% { opacity: 0; transform: translateY(12px) scale(0.92); }
+        ${groupEnd.toFixed(1)}%       { opacity: 1; transform: translateY(0px) scale(1); }
+        100%                          { opacity: 1; transform: translateY(0) scale(1); }
       }
-      #${id} { transform-origin: center; animation: rev_${id} ${speed}s cubic-bezier(0.22,1,0.36,1) infinite; }`;
+      #${id} {
+        transform-origin: center;
+        opacity: 0;
+        animation: rev_${id} ${speed}s cubic-bezier(0.22,1,0.36,1) 1 forwards;
+      }`;
     });
     css += `svg { overflow: visible; }`;
   }
@@ -1348,14 +1544,85 @@ document.getElementById('btnApplyCustom').addEventListener('click', () => {
 function exportSVG() {
   const svg = svgStage.querySelector('svg');
   if (!svg) return;
+
+  const clone = svg.cloneNode(true);
+
+  // ── 1. Inject animation styles ──
   const style = document.createElement('style');
   style.textContent = animStyles.textContent;
-  const clone = svg.cloneNode(true);
   clone.insertBefore(style, clone.firstChild);
-  const out = new XMLSerializer().serializeToString(clone);
+
+  // ── 2. Inject SVG-native light sweep (only when active) ──
+  if (sweepActive) {
+    const vb = svg.viewBox.baseVal;
+    const W  = vb.width  || svg.clientWidth  || 800;
+    const H  = vb.height || svg.clientHeight || 800;
+    const dur = parseFloat(sweepSpeedInput.value);
+    const ts  = Date.now();
+
+    const gradId   = `sweep_grad_${ts}`;
+    const rectId   = `sweep_rect_${ts}`;
+    // Travel: from -60% to +130% of width → total = 190% of W
+    const startX   = -W * 0.6;
+    const endX     =  W * 1.3;
+    // Beam width = 40% of W
+    const beamW    = W * 0.4;
+
+    // Ensure <defs> exists in clone
+    let defs = clone.querySelector('defs');
+    if (!defs) {
+      defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      clone.insertBefore(defs, clone.firstChild);
+    }
+
+    // Linear gradient: transparent → white → transparent (the beam)
+    const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+    grad.setAttribute('id', gradId);
+    grad.setAttribute('x1', '0%'); grad.setAttribute('y1', '0%');
+    grad.setAttribute('x2', '100%'); grad.setAttribute('y2', '0%');
+    [
+      { offset: '0%',   color: 'rgba(255,255,255,0)' },
+      { offset: '30%',  color: 'rgba(255,255,255,0.04)' },
+      { offset: '50%',  color: 'rgba(255,255,255,0.18)' },
+      { offset: '70%',  color: 'rgba(255,255,255,0.04)' },
+      { offset: '100%', color: 'rgba(255,255,255,0)' },
+    ].forEach(s => {
+      const stop = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop.setAttribute('offset', s.offset);
+      stop.setAttribute('stop-color', s.color);
+      grad.appendChild(stop);
+    });
+    defs.appendChild(grad);
+
+    // The animated sweep rect
+    const sweepRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    sweepRect.setAttribute('id', rectId);
+    sweepRect.setAttribute('x', String(startX));
+    sweepRect.setAttribute('y', String(-H * 0.1));
+    sweepRect.setAttribute('width', String(beamW));
+    sweepRect.setAttribute('height', String(H * 1.2));
+    sweepRect.setAttribute('fill', `url(#${gradId})`);
+    sweepRect.setAttribute('transform', 'skewX(-15)');
+    clone.appendChild(sweepRect);
+
+    // Inject keyframes for the sweep rect via <style>
+    const sweepStyle = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+    sweepStyle.textContent = `
+      @keyframes svgSweep_${ts} {
+        0%   { transform: skewX(-15deg) translateX(0px); }
+        100% { transform: skewX(-15deg) translateX(${(endX - startX).toFixed(1)}px); }
+      }
+      #${rectId} {
+        animation: svgSweep_${ts} ${dur}s cubic-bezier(0.4,0,0.2,1) infinite;
+      }
+    `;
+    clone.insertBefore(sweepStyle, clone.firstChild);
+  }
+
+  const out  = new XMLSerializer().serializeToString(clone);
   const blob = new Blob([out], { type: 'image/svg+xml;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
   a.download = 'logo_anime.svg';
   a.click();
   showToast('⬇ Téléchargement lancé');
